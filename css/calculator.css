@@ -1,0 +1,598 @@
+/* =================================
+   CALCULATOR PROGRAM STYLES
+================================= */
+.calculator-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+/* =================================
+   CALCULATOR HEADER
+================================= */
+.calculator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: linear-gradient(to bottom, #e8f4fd, #d4e8fc);
+    border-bottom: 1px solid #c0c0c0;
+    gap: 8px;
+}
+
+.mode-toggle {
+    display: flex;
+    gap: 2px;
+    border: 1px inset #c0c0c0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.mode-btn {
+    padding: 4px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    border: none;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    cursor: pointer;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+}
+
+.mode-btn.active {
+    background: linear-gradient(to bottom, #4a90e2, #357abd);
+    color: white;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.calculator-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.calc-control {
+    width: 24px;
+    height: 24px;
+    border: 1px outset #c0c0c0;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s ease;
+}
+
+.calc-control:hover {
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+}
+
+.calc-control:active {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #e0e0e0, #f0f0f0);
+}
+
+/* =================================
+   DISPLAY SECTION
+================================= */
+.calculator-display-section {
+    padding: 12px;
+    background: linear-gradient(to bottom, #f8f8f8, #f0f0f0);
+    border-bottom: 1px solid #c0c0c0;
+}
+
+.calculator-display {
+    width: 100%;
+    height: 48px;
+    background: #000;
+    color: #00ff00;
+    font-family: 'Courier New', 'Monaco', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    border: 2px inset #c0c0c0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 12px;
+    text-shadow: 0 0 4px #00ff00;
+    letter-spacing: 1px;
+    overflow: hidden;
+    word-break: break-all;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.calculator-display.updated {
+    color: #ffff00;
+    text-shadow: 0 0 6px #ffff00;
+    transform: scale(1.02);
+}
+
+.calculator-sub-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    padding: 0 4px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.memory-indicator {
+    color: #666;
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.memory-indicator.active {
+    color: #ff6600;
+    background: #fff3e0;
+    border-color: #ffcc99;
+    animation: memoryPulse 2s infinite;
+}
+
+@keyframes memoryPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.operation-indicator {
+    color: #0066cc;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* =================================
+   KEYPAD LAYOUTS
+================================= */
+.calculator-keypad {
+    flex: 1;
+    padding: 8px;
+    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+    overflow-y: auto;
+}
+
+.basic-keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    grid-template-areas:
+        "mc mr mp mm"
+        "c ce back div"
+        "n7 n8 n9 mult"
+        "n4 n5 n6 sub"
+        "n1 n2 n3 add"
+        "n0 n0 dot equals";
+}
+
+.advanced-keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    grid-template-areas:
+        "sin cos tan log"
+        "sqrt square pow fact"
+        "rand pi bin ans"
+        "mc mr mp mm"
+        "c ce back div"
+        "n7 n8 n9 mult"
+        "n4 n5 n6 sub"
+        "n1 n2 n3 add"
+        "n0 n0 dot equals";
+}
+
+/* =================================
+   CALCULATOR BUTTONS
+================================= */
+.calc-btn {
+    height: 40px;
+    border: 2px outset #c0c0c0;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.5);
+    user-select: none;
+}
+
+.calc-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.calc-btn:active,
+.calc-btn.clicked {
+    border: 2px inset #c0c0c0;
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Number buttons - Blue gradient */
+.number-btn {
+    background: linear-gradient(to bottom, #e6f3ff, #b3d9ff);
+    color: #0066cc;
+    border-color: #99ccff;
+}
+
+.number-btn:hover {
+    background: linear-gradient(to bottom, #f0f8ff, #ccddff);
+}
+
+.zero-btn {
+    grid-area: n0;
+}
+
+/* Operator buttons - Orange gradient */
+.operator-btn {
+    background: linear-gradient(to bottom, #fff3e0, #ffcc99);
+    color: #cc6600;
+    border-color: #ffb366;
+}
+
+.operator-btn:hover {
+    background: linear-gradient(to bottom, #fff8f0, #ffdd99);
+}
+
+/* Clear button - RED as requested! */
+.clear-btn {
+    background: linear-gradient(to bottom, #ff6b6b, #e74c3c);
+    color: white;
+    border-color: #c0392b;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    font-size: 14px;
+}
+
+.clear-btn:hover {
+    background: linear-gradient(to bottom, #ff7f7f, #e74c3c);
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
+}
+
+/* Function buttons - Purple gradient */
+.function-btn {
+    background: linear-gradient(to bottom, #f0e6ff, #d9b3ff);
+    color: #663399;
+    border-color: #b366ff;
+}
+
+.function-btn:hover {
+    background: linear-gradient(to bottom, #f5f0ff, #e6ccff);
+}
+
+/* Equals button - Green gradient */
+.equals-btn {
+    background: linear-gradient(to bottom, #e8f5e8, #b3ffb3);
+    color: #006600;
+    border-color: #66cc66;
+    font-size: 16px;
+    grid-area: equals;
+}
+
+.equals-btn:hover {
+    background: linear-gradient(to bottom, #f0fff0, #ccffcc);
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+}
+
+/* Memory buttons - Yellow gradient */
+.memory-btn {
+    background: linear-gradient(to bottom, #fff9e6, #ffeb99);
+    color: #cc9900;
+    border-color: #ffcc33;
+    font-size: 10px;
+}
+
+.memory-btn:hover {
+    background: linear-gradient(to bottom, #fffbf0, #fff2b3);
+}
+
+/* Scientific buttons - Teal gradient */
+.sci-btn {
+    background: linear-gradient(to bottom, #e6ffff, #99f0f0);
+    color: #006666;
+    border-color: #66cccc;
+    font-size: 10px;
+}
+
+.sci-btn:hover {
+    background: linear-gradient(to bottom, #f0ffff, #b3f5f5);
+}
+
+/* Fun buttons - Pink gradient */
+.fun-btn {
+    background: linear-gradient(to bottom, #ffe6f0, #ffb3d9);
+    color: #cc0066;
+    border-color: #ff66b3;
+    font-size: 11px;
+}
+
+.fun-btn:hover {
+    background: linear-gradient(to bottom, #fff0f8, #ffccdd);
+}
+
+/* =================================
+   HISTORY PANEL
+================================= */
+.calculator-history {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.98);
+    border: 2px inset #c0c0c0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: linear-gradient(to bottom, #f0f8ff, #e0f0ff);
+    border-bottom: 1px solid #c0c0c0;
+}
+
+.history-header h4 {
+    margin: 0;
+    font-size: 12px;
+    color: #0066cc;
+}
+
+.history-controls {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.history-clear,
+.history-close {
+    padding: 4px 8px;
+    font-size: 10px;
+    border: 1px outset #c0c0c0;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.history-clear {
+    background: linear-gradient(to bottom, #ff9999, #ff6666);
+    color: white;
+}
+
+.history-clear:hover {
+    background: linear-gradient(to bottom, #ffaaaa, #ff7777);
+}
+
+.history-clear:active {
+    border: 1px inset #ff6666;
+}
+
+.history-close {
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    color: #333;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-close:hover {
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+}
+
+.history-close:active {
+    border: 1px inset #c0c0c0;
+}
+
+.history-list {
+    flex: 1;
+    padding: 8px;
+    overflow-y: auto;
+    background: white;
+}
+
+.history-item {
+    padding: 6px 8px;
+    margin-bottom: 2px;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.history-item:hover {
+    background: #e8f4ff;
+    border-color: #b3d9ff;
+    cursor: pointer;
+}
+
+.history-empty {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 20px;
+    font-size: 12px;
+}
+
+/* =================================
+   MESSAGE DIALOG
+================================= */
+.calculator-message {
+    animation: messageSlide 0.3s ease-out;
+}
+
+@keyframes messageSlide {
+    from {
+        transform: translate(-50%, -60%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
+@media (max-width: 400px) {
+    .calculator-display {
+        font-size: 18px;
+        height: 40px;
+    }
+    
+    .calc-btn {
+        height: 35px;
+        font-size: 11px;
+    }
+    
+    .calculator-header {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .mode-toggle {
+        width: 100%;
+    }
+    
+    .mode-btn {
+        flex: 1;
+    }
+}
+
+/* =================================
+   ACCESSIBILITY FEATURES
+================================= */
+.calc-btn:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+.calculator-display:focus {
+    outline: 2px solid #00ff00;
+    outline-offset: -2px;
+}
+
+/* =================================
+   SPECIAL ANIMATIONS
+================================= */
+.calculator-container {
+    animation: calculatorStart 0.4s ease-out;
+}
+
+@keyframes calculatorStart {
+    from {
+        opacity: 0;
+        transform: scale(0.9) rotateY(-10deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+    }
+}
+
+/* Button press effects */
+.calc-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.calc-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.15s ease-out;
+}
+
+.calc-btn:active::after,
+.calc-btn.clicked::after {
+    transform: translate(-50%, -50%) scale(2);
+}
+
+/* Number glow effect for advanced mode */
+.advanced-keypad .number-btn {
+    box-shadow: 0 0 4px rgba(0, 102, 204, 0.2);
+}
+
+.advanced-keypad .number-btn:hover {
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.4);
+}
+
+/* Scientific function special styling */
+.sci-btn[data-function="pi"] {
+    background: linear-gradient(to bottom, #ffd700, #ffb347);
+    color: #8b4513;
+    border-color: #daa520;
+}
+
+.fun-btn[data-action="function"][data-function="random"] {
+    animation: rainbow 3s linear infinite;
+    font-size: 14px;
+}
+
+@keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+/* =================================
+   PRINT STYLES
+================================= */
+@media print {
+    .calculator-container {
+        background: white;
+        border: 1px solid black;
+    }
+    
+    .calculator-display {
+        background: white;
+        color: black;
+        border: 1px solid black;
+    }
+    
+    .calc-btn {
+        border: 1px solid black;
+        background: white;
+    }
+}

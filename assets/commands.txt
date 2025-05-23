@@ -1,0 +1,9 @@
+// See current settings
+elxaOS.themeService.getCurrentTheme()
+elxaOS.themeService.getCurrentWallpaper()
+
+// Clear all theme settings (for testing)
+elxaOS.themeService.clearThemeSettings()
+
+// Clear file system in localstorage
+elxaOS.fileSystem.clearStorage()

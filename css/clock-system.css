@@ -1,0 +1,880 @@
+/* =================================
+   CLOCK SYSTEM STYLES
+================================= */
+
+.clock-system {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f0f0;
+    color:#333;
+}
+
+/* =================================
+   CLOCK TABS
+================================= */
+.clock-tabs {
+    display: flex;
+    background: #e0e0e0;
+    border-bottom: 1px solid #808080;
+    margin: 0;
+    padding: 0;
+}
+
+.clock-tab {
+    padding: 8px 16px;
+    background: #c0c0c0;
+    border: 1px outset #c0c0c0;
+    border-bottom: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    user-select: none;
+    transition: background 0.2s ease;
+    color:#333;
+}
+
+.clock-tab:hover:not(.active) {
+    background: #d0d0d0;
+}
+
+.clock-tab.active {
+    background: #f0f0f0;
+    border: 1px inset #c0c0c0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: -1px;
+}
+
+/* =================================
+   CLOCK CONTENT
+================================= */
+.clock-content {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+}
+
+.clock-panel {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.clock-panel.active {
+    display: block;
+}
+
+/* =================================
+   MAIN CLOCK PANEL
+================================= */
+.main-clock-display {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: linear-gradient(135deg, #001133, #003366);
+    border: 2px inset #c0c0c0;
+    border-radius: 8px;
+    color: #00ff00;
+    box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+.digital-clock {
+    font-family: 'Courier New', monospace;
+    font-size: 48px;
+    font-weight: bold;
+    text-shadow: 0 0 10px currentColor;
+    margin-bottom: 8px;
+    letter-spacing: 4px;
+}
+
+.date-display {
+    font-size: 16px;
+    font-weight: normal;
+    opacity: 0.9;
+    margin-top: 8px;
+}
+
+.clock-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.clock-btn {
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 2px outset #c0c0c0;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+.clock-btn:hover {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.clock-btn:active {
+    border: 2px inset #c0c0c0;
+    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+/* =================================
+   STOPWATCH SECTION
+================================= */
+.stopwatch-section {
+    background: #f8f8f8;
+    border: 2px inset #c0c0c0;
+    padding: 16px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.stopwatch-section.hidden {
+    display: none;
+}
+
+.stopwatch-display {
+    font-family: 'Courier New', monospace;
+    font-size: 36px;
+    font-weight: bold;
+    color: #0066cc;
+    margin-bottom: 16px;
+    background: #000;
+    color: #00ff00;
+    padding: 12px;
+    border: 1px inset #c0c0c0;
+    border-radius: 4px;
+    text-shadow: 0 0 8px currentColor;
+}
+
+.stopwatch-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.stopwatch-btn {
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    border: 2px outset #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.stopwatch-btn:hover {
+    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+}
+
+.stopwatch-btn:active {
+    border: 2px inset #4CAF50;
+}
+
+.stopwatch-btn:disabled {
+    background: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.lap-times {
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px inset #c0c0c0;
+    background: white;
+    padding: 8px;
+}
+
+.lap-time {
+    padding: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.lap-time:last-child {
+    border-bottom: none;
+}
+
+/* =================================
+   TIMER PANEL
+================================= */
+.timer-creator {
+    background: #e8f4ff;
+    border: 2px outset #c0c0c0;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.timer-creator h3 {
+    margin: 0 0 12px 0;
+    color: #0066cc;
+    font-size: 14px;
+    text-align: center;
+}
+
+.timer-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.timer-inputs input[type="number"] {
+    width: 50px;
+    padding: 6px;
+    border: 1px inset #c0c0c0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.timer-inputs span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #0066cc;
+}
+
+#timerName {
+    width: 100%;
+    padding: 8px;
+    border: 1px inset #c0c0c0;
+    margin-bottom: 12px;
+    font-size: 11px;
+}
+
+.create-timer-btn {
+    width: 100%;
+    background: linear-gradient(to bottom, #ff6b35, #ff4500);
+    border: 2px outset #ff4500;
+    color: white;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.create-timer-btn:hover {
+    background: linear-gradient(to bottom, #ff7f50, #ff6b35);
+}
+
+.create-timer-btn:active {
+    border: 2px inset #ff4500;
+}
+
+.active-timers {
+    background: #f8f8f8;
+    border: 2px inset #c0c0c0;
+    padding: 16px;
+    border-radius: 4px;
+}
+
+.active-timers h3 {
+    margin: 0 0 12px 0;
+    color: #cc6600;
+    font-size: 14px;
+    text-align: center;
+}
+
+.timer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.timer-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border: 1px outset #c0c0c0;
+    padding: 12px;
+    border-radius: 4px;
+}
+
+.timer-info {
+    flex: 1;
+}
+
+.timer-name {
+    font-weight: bold;
+    color: #0066cc;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.timer-time {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff4500;
+}
+
+.cancel-timer-btn {
+    background: linear-gradient(to bottom, #ff8080, #ff4040);
+    border: 1px outset #ff4040;
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.cancel-timer-btn:hover {
+    background: linear-gradient(to bottom, #ff9999, #ff6666);
+}
+
+.cancel-timer-btn:active {
+    border: 1px inset #ff4040;
+}
+
+.no-timers {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* =================================
+   ALARM PANEL
+================================= */
+.alarm-creator {
+    background: #fff8e8;
+    border: 2px outset #c0c0c0;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alarm-creator h3 {
+    margin: 0 0 12px 0;
+    color: #cc6600;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alarm-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.alarm-inputs input,
+.alarm-inputs select {
+    padding: 6px 8px;
+    border: 1px inset #c0c0c0;
+    font-size: 11px;
+}
+
+.create-alarm-btn {
+    width: 100%;
+    background: linear-gradient(to bottom, #ffa500, #ff8c00);
+    border: 2px outset #ff8c00;
+    color: white;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.create-alarm-btn:hover {
+    background: linear-gradient(to bottom, #ffb347, #ffa500);
+}
+
+.create-alarm-btn:active {
+    border: 2px inset #ff8c00;
+}
+
+.alarm-list-container {
+    background: #f8f8f8;
+    border: 2px inset #c0c0c0;
+    padding: 16px;
+    border-radius: 4px;
+}
+
+.alarm-list-container h3 {
+    margin: 0 0 12px 0;
+    color: #cc6600;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alarm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.alarm-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border: 1px outset #c0c0c0;
+    padding: 12px;
+    border-radius: 4px;
+}
+
+.alarm-item.disabled {
+    background: #f0f0f0;
+    opacity: 0.7;
+}
+
+.alarm-info {
+    flex: 1;
+}
+
+.alarm-name {
+    font-weight: bold;
+    color: #0066cc;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.alarm-time {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #666;
+}
+
+.alarm-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.toggle-alarm-btn,
+.delete-alarm-btn {
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset #c0c0c0;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.toggle-alarm-btn:hover,
+.delete-alarm-btn:hover {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.toggle-alarm-btn:active,
+.delete-alarm-btn:active {
+    border: 1px inset #c0c0c0;
+}
+
+.no-alarms {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* =================================
+   CALENDAR PANEL
+================================= */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 8px;
+    background: linear-gradient(to bottom, #4080ff, #0040ff);
+    color: white;
+    border: 2px outset #4080ff;
+    border-radius: 4px;
+}
+
+.calendar-nav {
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset #c0c0c0;
+    color: black;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.calendar-nav:hover {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    color:#333;
+}
+
+.calendar-nav:active {
+    border: 1px inset #c0c0c0;
+    color:#333;
+}
+
+.calendar-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    flex: 1;
+}
+
+.calendar-grid {
+    background: white;
+    border: 2px inset #c0c0c0;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #e0e0e0;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+.weekday {
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10px;
+    border-right: 1px solid #c0c0c0;
+    color:#333;
+}
+
+.weekday:last-child {
+    border-right: none;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+    padding: 8px;
+    text-align: center;
+    font-size: 11px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color:#333;
+}
+
+.calendar-day:hover:not(.empty) {
+    background: #f0f8ff;
+}
+
+.calendar-day.today {
+    background: #316AC5;
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-day.empty {
+    background: #f8f8f8;
+    cursor: default;
+    color:#333;
+}
+
+.special-dates {
+    background: #f0fff0;
+    border: 2px inset #c0c0c0;
+    padding: 16px;
+    border-radius: 4px;
+    color:#333;
+}
+
+.special-dates h3 {
+    margin: 0 0 12px 0;
+    color: #228b22;
+    font-size: 14px;
+    text-align: center;
+}
+
+.special-date {
+    padding: 4px 8px;
+    background: white;
+    border: 1px outset #c0c0c0;
+    margin-bottom: 4px;
+    border-radius: 2px;
+    font-size: 11px;
+    color:#333;
+}
+
+/* =================================
+   WORLD CLOCK PANEL
+================================= */
+.world-clocks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.world-clock-item {
+    background: white;
+    border: 2px outset #c0c0c0;
+    padding: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.world-clock-info {
+    flex: 1;
+}
+
+.world-clock-name {
+    font-weight: bold;
+    color: #0066cc;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.world-clock-time {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.remove-clock-btn {
+    background: linear-gradient(to bottom, #ff8080, #ff4040);
+    border: 1px outset #ff4040;
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.remove-clock-btn:hover {
+    background: linear-gradient(to bottom, #ff9999, #ff6666);
+}
+
+.remove-clock-btn:active {
+    border: 1px inset #ff4040;
+}
+
+.add-timezone {
+    background: #f0f8ff;
+    border: 2px outset #c0c0c0;
+    padding: 16px;
+    border-radius: 4px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.add-timezone select {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px inset #c0c0c0;
+    font-size: 11px;
+}
+
+.add-timezone-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border: 1px outset #32cd32;
+    color: black;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.add-timezone-btn:hover {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.add-timezone-btn:active {
+    border: 1px inset #32cd32;
+}
+
+/* =================================
+   NOTIFICATIONS
+================================= */
+.clock-notification {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border: 2px outset #c0c0c0;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    z-index: 9999;
+    min-width: 250px;
+    max-width: 400px;
+    border-radius: 4px;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.clock-notification.timer {
+    border-color: #ff4500;
+    background: linear-gradient(to bottom, #fff5ee, #ffeee6);
+}
+
+.clock-notification.alarm {
+    border-color: #ff0000;
+    background: linear-gradient(to bottom, #fff0f0, #ffe6e6);
+    animation: pulseAlarm 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseAlarm {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+.notification-title {
+    background: linear-gradient(to bottom, #4080ff, #0040ff);
+    color: white;
+    padding: 6px 12px;
+    font-weight: bold;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-message {
+    padding: 12px;
+    font-size: 11px;
+    color: #333;
+}
+
+.notification-close {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.notification-close:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
+@media (max-width: 600px) {
+    .clock-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .clock-tab {
+        flex: 1;
+        min-width: 80px;
+        font-size: 10px;
+        padding: 6px 8px;
+    }
+    
+    .digital-clock {
+        font-size: 32px;
+        letter-spacing: 2px;
+    }
+    
+    .timer-inputs {
+        flex-wrap: wrap;
+    }
+    
+    .world-clocks-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calendar-days {
+        font-size: 10px;
+    }
+    
+    .clock-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .clock-btn {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+/* =================================
+   UTILITY CLASSES
+================================= */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.font-mono {
+    font-family: 'Courier New', monospace;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+/* =================================
+   ANIMATIONS
+================================= */
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 5px currentColor; }
+    50% { text-shadow: 0 0 20px currentColor; }
+}
+
+.digital-clock {
+    animation: glow 3s ease-in-out infinite;
+}
+
+/* =================================
+   SCROLLBAR STYLING
+================================= */
+.clock-content::-webkit-scrollbar,
+.lap-times::-webkit-scrollbar {
+    width: 12px;
+}
+
+.clock-content::-webkit-scrollbar-track,
+.lap-times::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border: 1px inset #c0c0c0;
+}
+
+.clock-content::-webkit-scrollbar-thumb,
+.lap-times::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset #c0c0c0;
+}
+
+.clock-content::-webkit-scrollbar-thumb:hover,
+.lap-times::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}

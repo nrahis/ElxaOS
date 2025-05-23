@@ -1,0 +1,708 @@
+/* =================================
+   ELXACODE PROGRAM STYLES
+================================= */
+.elxacode-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-size: 12px;
+}
+
+/* =================================
+   TOOLBAR
+================================= */
+.elxacode-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+}
+
+.toolbar-group {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.toolbar-btn {
+    padding: 4px 8px;
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset #c0c0c0;
+    cursor: pointer;
+    font-size: 10px;
+    color: #333;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.toolbar-btn:active:not(:disabled) {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+.toolbar-btn:disabled {
+    background: #f0f0f0;
+    color: #808080;
+    cursor: not-allowed;
+}
+
+.run-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32) !important;
+    border-color: #32cd32 !important;
+    color: black !important;
+}
+
+.run-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #98fb98, #90ee90) !important;
+}
+
+.stop-btn {
+    background: linear-gradient(to bottom, #ffaaaa, #ff6666) !important;
+    border-color: #ff6666 !important;
+    color: black !important;
+}
+
+.toolbar-text {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+    margin-left: auto;
+}
+
+/* =================================
+   MAIN CONTENT AREA
+================================= */
+.elxacode-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* =================================
+   CODE EDITOR SECTION
+================================= */
+.code-editor-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    min-height: 200px;
+    overflow: hidden;
+}
+
+.editor-header {
+    background: #2d2d30;
+    border-bottom: 1px solid #464647;
+    flex-shrink: 0;
+}
+
+.editor-tabs {
+    display: flex;
+}
+
+.editor-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #2d2d30;
+    color: #cccccc;
+    border-right: 1px solid #464647;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.editor-tab.active {
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+.tab-name {
+    font-weight: bold;
+}
+
+.tab-close {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tab-close:hover {
+    background: #464647;
+    color: #ffffff;
+}
+
+.code-editor {
+    flex: 1;
+    display: flex;
+    background: #1e1e1e;
+    overflow: hidden;
+}
+
+.line-numbers {
+    background: #1e1e1e;
+    color: #858585;
+    padding: 8px 4px;
+    text-align: right;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    border-right: 1px solid #464647;
+    white-space: pre;
+    user-select: none;
+    min-width: 40px;
+    overflow: hidden;
+}
+
+.code-input {
+    flex: 1;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border: none;
+    outline: none;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 8px;
+    resize: none;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+    tab-size: 4;
+}
+
+.code-input::placeholder {
+    color: #6a9955;
+    font-style: italic;
+}
+
+/* =================================
+   CONSOLE SPLITTER
+================================= */
+.console-splitter {
+    height: 6px;
+    background: #2d2d30;
+    border-top: 1px solid #464647;
+    border-bottom: 1px solid #464647;
+    cursor: ns-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.console-splitter:hover {
+    background: #3e3e42;
+}
+
+.console-splitter.resizing {
+    background: #007acc;
+}
+
+.splitter-handle {
+    color: #858585;
+    font-size: 8px;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* =================================
+   CONSOLE SECTION
+================================= */
+.console-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #0c0c0c;
+    min-height: 150px;
+    overflow: hidden;
+}
+
+.console-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background: #2d2d30;
+    color: #cccccc;
+    font-size: 11px;
+    font-weight: bold;
+    border-bottom: 1px solid #464647;
+    flex-shrink: 0;
+}
+
+.console-controls {
+    display: flex;
+    gap: 2px;
+}
+
+.console-btn {
+    width: 16px;
+    height: 16px;
+    background: #3c3c3c;
+    border: 1px solid #555;
+    color: #cccccc;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.console-btn:hover {
+    background: #464647;
+}
+
+.console-output {
+    flex: 1;
+    padding: 8px;
+    background: #0c0c0c;
+    color: #cccccc;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+.console-line {
+    margin-bottom: 2px;
+    display: block;
+}
+
+.console-line.welcome {
+    color: #4ec9b0;
+    font-weight: bold;
+}
+
+.console-line.info {
+    color: #9cdcfe;
+}
+
+.console-line.success {
+    color: #4ec9b0;
+    font-weight: bold;
+}
+
+.console-line.warning {
+    color: #dcdcaa;
+}
+
+.console-line.error {
+    color: #f44747;
+    font-weight: bold;
+}
+
+.console-line.output {
+    color: #ffffff;
+}
+
+.console-line.special {
+    color: #c586c0;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(197, 134, 192, 0.5);
+}
+
+.console-line.separator {
+    color: #464647;
+    font-size: 10px;
+}
+
+/* =================================
+   STATUS BAR
+================================= */
+.elxacode-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 8px;
+    background: #007acc;
+    color: #ffffff;
+    font-size: 10px;
+    flex-shrink: 0;
+    min-height: 18px;
+}
+
+.status-left,
+.status-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.separator {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.file-status {
+    font-weight: bold;
+}
+
+.line-col {
+    font-family: monospace;
+}
+
+/* =================================
+   FILE BROWSER DIALOG
+================================= */
+.file-browser-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-content {
+    background: #c0c0c0;
+    border: 2px outset #c0c0c0;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    min-width: 400px;
+    max-width: 600px;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-header {
+    background: linear-gradient(to right, #0000ff, #4080ff);
+    color: white;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.dialog-close {
+    width: 16px;
+    height: 14px;
+    background: #c0c0c0;
+    border: 1px outset #c0c0c0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 8px;
+    font-weight: bold;
+    color: black;
+}
+
+.dialog-close:hover {
+    background: #d0d0d0;
+}
+
+.dialog-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.file-list {
+    flex: 1;
+    border: 1px inset #c0c0c0;
+    background: white;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.file-item:hover {
+    background: #e6f0ff;
+}
+
+.file-item.selected {
+    background: #cce7ff;
+    border-color: #0066cc;
+}
+
+.file-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.file-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.file-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+}
+
+.file-path {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+}
+
+.dialog-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.btn-cancel,
+.btn-open {
+    padding: 4px 16px;
+    border: 1px outset #c0c0c0;
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    cursor: pointer;
+    font-size: 11px;
+    color: black;
+}
+
+.btn-cancel:hover,
+.btn-open:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.btn-cancel:active,
+.btn-open:active:not(:disabled) {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+.btn-open {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border-color: #32cd32;
+    font-weight: bold;
+}
+
+.btn-open:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.btn-open:disabled {
+    background: #f0f0f0;
+    color: #808080;
+    cursor: not-allowed;
+}
+
+/* =================================
+   SYNTAX HIGHLIGHTING CLASSES
+   (For future enhancement)
+================================= */
+.syntax-keyword {
+    color: #569cd6;
+    font-weight: bold;
+}
+
+.syntax-string {
+    color: #ce9178;
+}
+
+.syntax-number {
+    color: #b5cea8;
+}
+
+.syntax-comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+.syntax-operator {
+    color: #d4d4d4;
+}
+
+.syntax-variable {
+    color: #9cdcfe;
+}
+
+.syntax-function {
+    color: #dcdcaa;
+}
+
+.syntax-special {
+    color: #c586c0;
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(197, 134, 192, 0.3);
+}
+
+/* =================================
+   RESPONSIVE ADJUSTMENTS
+================================= */
+@media (max-width: 800px) {
+    .elxacode-main {
+        flex-direction: column;
+    }
+    
+    .console-section {
+        min-height: 120px;
+    }
+    
+    .toolbar-group {
+        gap: 2px;
+    }
+    
+    .toolbar-btn {
+        padding: 2px 6px;
+        font-size: 9px;
+    }
+    
+    .code-input {
+        font-size: 11px;
+    }
+    
+    .line-numbers {
+        font-size: 11px;
+        min-width: 35px;
+    }
+}
+
+/* =================================
+   SCROLLBAR STYLING (WEBKIT)
+================================= */
+.console-output::-webkit-scrollbar,
+.code-input::-webkit-scrollbar,
+.file-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.console-output::-webkit-scrollbar-track,
+.code-input::-webkit-scrollbar-track,
+.file-list::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.console-output::-webkit-scrollbar-thumb,
+.code-input::-webkit-scrollbar-thumb,
+.file-list::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 4px;
+}
+
+.console-output::-webkit-scrollbar-thumb:hover,
+.code-input::-webkit-scrollbar-thumb:hover,
+.file-list::-webkit-scrollbar-thumb:hover {
+    background: #4f4f4f;
+}
+
+/* =================================
+   ANIMATIONS
+================================= */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.console-line.special {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.dialog-content {
+    animation: slideDown 0.3s ease-out;
+}
+
+/* =================================
+   DARK THEME ADJUSTMENTS
+================================= */
+body.dark-theme .elxacode-container {
+    /* Already using dark theme colors */
+}
+
+body.dark-theme .elxacode-toolbar {
+    background: linear-gradient(to bottom, #3c3c3c, #2d2d2d);
+    border-bottom-color: #555;
+}
+
+body.dark-theme .toolbar-btn {
+    background: linear-gradient(to bottom, #4c4c4c, #3c3c3c);
+    border-color: #555;
+    color: #d4d4d4;
+}
+
+body.dark-theme .toolbar-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #5c5c5c, #4c4c4c);
+}
+
+body.dark-theme .elxacode-status {
+    background: #0e639c;
+}
+
+/* =================================
+   PRINT STYLES (FOR DOCUMENTATION)
+================================= */
+@media print {
+    .elxacode-container {
+        background: white;
+        color: black;
+    }
+    
+    .console-section,
+    .elxacode-toolbar,
+    .elxacode-status {
+        display: none;
+    }
+    
+    .code-input {
+        background: white;
+        color: black;
+        border: 1px solid black;
+    }
+}

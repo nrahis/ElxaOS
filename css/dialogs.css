@@ -1,0 +1,1712 @@
+/* =================================
+   SYSTEM DIALOGS
+================================= */
+.system-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    background: var(--windowBg);
+    border: 2px outset var(--windowBorder);
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    min-width: 300px;
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-content.warning {
+    border: 2px solid #ff8800;
+}
+
+.dialog-content.critical {
+    border: 2px solid #ff0000;
+    animation: urgentBlink 1s infinite;
+}
+
+@keyframes urgentBlink {
+    0%, 50% { border-color: #ff0000; }
+    51%, 100% { border-color: #ffffff; }
+}
+
+.dialog-header {
+    background: var(--titlebarBg);
+    color: white;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.dialog-title {
+    flex: 1;
+}
+
+.dialog-close {
+    width: 16px;
+    height: 14px;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 8px;
+    font-weight: bold;
+    color: var(--menuText);
+}
+
+.dialog-close:hover {
+    background: var(--buttonHoverBg);
+}
+
+.dialog-close:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
+.dialog-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+/* =================================
+   BATTERY DIALOG SPECIFIC
+================================= */
+.battery-dialog .dialog-body {
+    min-width: 250px;
+}
+
+.battery-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.battery-icon-large {
+    font-size: 48px;
+}
+
+.battery-percentage {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000080;
+}
+
+.battery-message {
+    text-align: center;
+    font-size: 11px;
+    color: var(--menuText);
+    max-width: 200px;
+}
+
+.battery-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.recharge-button {
+    background: linear-gradient(to bottom, #00ff00, #00cc00);
+    border: 2px outset #00cc00;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+}
+
+.recharge-button:hover {
+    background: linear-gradient(to bottom, #33ff33, #00ff00);
+}
+
+.recharge-button:active {
+    border: 2px inset #00cc00;
+    background: linear-gradient(to bottom, #00cc00, #00ff00);
+}
+
+.dialog-button {
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    padding: 4px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--menuText);
+}
+
+.dialog-button:hover {
+    background: var(--buttonHoverBg);
+}
+
+.dialog-button:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
+/* =================================
+   SYSTEM MESSAGES
+================================= */
+.system-message {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    padding: 8px 16px;
+    border: 2px outset var(--windowBorder);
+    z-index: 3000;
+    font-weight: bold;
+    font-size: 11px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.system-message.success {
+    background: #00ff00;
+    color: black;
+}
+
+.system-message.warning {
+    background: #ffff00;
+    color: black;
+}
+
+.system-message.error {
+    background: #ff0000;
+    color: white;
+}
+
+/* =================================
+   WIFI DIALOG SPECIFIC
+================================= */
+.wifi-dialog .dialog-body {
+    min-width: 350px;
+    max-height: 400px;
+}
+
+.wifi-status {
+    font-weight: bold;
+    padding: 8px;
+    background: #f0f0f0;
+    border: 1px inset var(--windowBorder);
+    margin-bottom: 8px;
+    font-size: 10px;
+    color: var(--menuText);
+}
+
+.network-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: white;
+    margin-bottom: 8px;
+}
+
+.network-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--menuText);
+}
+
+.network-item:hover {
+    background: #f0f0f0;
+}
+
+.network-item.connected {
+    background: #e6ffe6;
+    font-weight: bold;
+}
+
+.network-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.network-name {
+    font-weight: bold;
+    color: #000080;
+}
+
+.network-signal {
+    font-family: monospace;
+    font-size: 8px;
+    color: #666;
+}
+
+.network-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.connect-btn {
+    background: linear-gradient(to bottom, #00ff00, #00cc00);
+    border: 1px outset #00cc00;
+    padding: 3px 8px;
+    font-size: 9px;
+    cursor: pointer;
+    color: black;
+}
+
+.connect-btn:hover {
+    background: linear-gradient(to bottom, #33ff33, #00ff00);
+}
+
+.connect-btn:active {
+    border: 1px inset #00cc00;
+}
+
+.disconnect-btn {
+    background: linear-gradient(to bottom, #ff8080, #ff4040);
+    border: 1px outset #ff4040;
+    padding: 3px 8px;
+    font-size: 9px;
+    cursor: pointer;
+    color: white;
+}
+
+.disconnect-btn:hover {
+    background: linear-gradient(to bottom, #ff9999, #ff6666);
+}
+
+.disconnect-btn:active {
+    border: 1px inset #ff4040;
+}
+
+.wifi-controls {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.create-network-btn,
+.refresh-btn {
+    background: linear-gradient(to bottom, #add8e6, #87ceeb);
+    border: 1px outset #87ceeb;
+    padding: 4px 8px;
+    font-size: 9px;
+    cursor: pointer;
+    color: black;
+}
+
+.create-network-btn:hover,
+.refresh-btn:hover {
+    background: linear-gradient(to bottom, #b8e0f0, #add8e6);
+}
+
+.create-network-btn:active,
+.refresh-btn:active {
+    border: 1px inset #87ceeb;
+}
+
+/* =================================
+   PASSWORD DIALOG
+================================= */
+.password-dialog .dialog-body {
+    min-width: 250px;
+}
+
+.password-prompt {
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.password-input {
+    width: 100%;
+    padding: 4px;
+    border: 1px inset var(--windowBorder);
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.password-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.password-hint {
+    font-size: 9px;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* =================================
+   CREATE NETWORK DIALOG
+================================= */
+.create-network-dialog .dialog-body {
+    min-width: 280px;
+}
+
+.create-network-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.create-network-form label {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--menuText);
+}
+
+.network-input {
+    width: 100%;
+    padding: 4px;
+    border: 1px inset var(--windowBorder);
+    font-size: 11px;
+}
+
+.create-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.create-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border: 1px outset #32cd32;
+    padding: 4px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+}
+
+.create-btn:hover {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.create-btn:active {
+    border: 1px inset #32cd32;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+    margin-right: 6px;
+}
+
+#passwordSection {
+    padding-left: 20px;
+    border-left: 2px solid #ccc;
+}
+
+#passwordSection label {
+    font-size: 10px;
+}
+
+/* =================================
+   DESKTOP CONTEXT MENU
+================================= */
+.context-menu {
+    position: fixed;
+    background: var(--menuBg);
+    border: 2px outset var(--windowBorder);
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    z-index: 2500;
+    min-width: 120px;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.context-item {
+    padding: 4px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.context-item:hover {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.context-separator {
+    height: 1px;
+    background: #808080;
+    margin: 2px 0;
+}
+
+/* =================================
+   THEME DIALOG SPECIFIC
+================================= */
+.theme-dialog .dialog-body {
+    min-width: 580px;  /* Increased to provide more space */
+    max-width: 720px;  /* Increased max width */
+    min-height: 380px; /* Slightly taller */
+}
+
+.theme-tabs {
+    display: flex;
+    border-bottom: 1px solid #808080;
+    margin-bottom: 12px;
+}
+
+.theme-tab {
+    padding: 6px 16px;
+    cursor: pointer;
+    background: #e0e0e0;
+    border: 1px outset var(--windowBorder);
+    border-bottom: none;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--menuText);
+}
+
+.theme-tab.active {
+    background: #f0f0f0;
+    border: 1px inset var(--windowBorder);
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: -1px;
+}
+
+.theme-tab:hover:not(.active) {
+    background: #e8e8e8;
+}
+
+.theme-content {
+    min-height: 260px; /* Increased content area */
+    max-height: 360px; 
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: white;
+    padding: 12px; /* Increased padding for better spacing */
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* =================================
+   THEME GRID
+================================= */
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Fixed 6 columns instead of auto-fit */
+    gap: 12px; /* Consistent gap */
+    padding: 8px; /* Better padding */
+    justify-items: center; /* Center items in their grid cells */
+}
+
+/* Adjust theme option sizing */
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    border-radius: 4px;
+    background: #f8f8f8;
+    width: 85px; /* Fixed width for consistency */
+    min-height: 90px; /* Consistent height */
+    transition: all 0.2s ease; /* Smooth hover effect */
+}
+
+.theme-option:hover {
+    background: #f0f0f0;
+    border-color: #cccccc;
+    transform: translateY(-1px); /* Subtle lift effect */
+}
+
+.theme-option.selected {
+    border-color: #316AC5;
+    background: #e6f0ff;
+    box-shadow: 0 2px 8px rgba(49, 106, 197, 0.3);
+}
+
+.theme-preview {
+    width: 65px;  /* Optimized size */
+    height: 45px; /* Optimized height */
+    border: 1px solid #666;
+    border-radius: 3px;
+    padding: 2px;
+    margin-bottom: 6px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.theme-preview-window {
+    width: 100%;
+    height: 100%;
+    border: 1px solid;
+    position: relative;
+}
+
+.theme-preview-titlebar {
+    height: 12px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.theme-name {
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* =================================
+   WALLPAPER GRID
+================================= */
+.wallpaper-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* Fixed 7 columns for wallpapers */
+    gap: 10px;
+    padding: 8px;
+    justify-items: center;
+}
+
+/* Adjust wallpaper option sizing */
+.wallpaper-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    border-radius: 4px;
+    background: #f8f8f8;
+    width: 70px; /* Fixed width */
+    min-height: 85px; /* Consistent height */
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.wallpaper-option:hover {
+    background: #f0f0f0;
+    border-color: #cccccc;
+    transform: translateY(-1px);
+}
+
+.wallpaper-option.selected {
+    border-color: #316AC5;
+    background: #e6f0ff;
+    box-shadow: 0 2px 8px rgba(49, 106, 197, 0.3);
+}
+
+.wallpaper-preview {
+    width: 60px;  /* Reduced from 70px */
+    height: 40px; /* Reduced from 50px */
+    border: 1px solid #666;
+    border-radius: 2px;
+    margin-bottom: 4px;
+}
+
+.wallpaper-name {
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    max-width: 80px;
+    word-wrap: break-word;
+}
+
+/* =================================
+   THEME CONTROLS
+================================= */
+.theme-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #cccccc;
+}
+
+.apply-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border: 1px outset #32cd32;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+}
+
+.apply-btn:hover {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.apply-btn:active {
+    border: 1px inset #32cd32;
+    background: linear-gradient(to bottom, #32cd32, #90ee90);
+}
+
+.reset-btn {
+    background: linear-gradient(to bottom, #ffdddd, #ffaaaa);
+    border: 1px outset #ffaaaa;
+    padding: 6px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    color: black;
+}
+
+.reset-btn:hover {
+    background: linear-gradient(to bottom, #ffeeee, #ffdddd);
+}
+
+.reset-btn:active {
+    border: 1px inset #ffaaaa;
+    background: linear-gradient(to bottom, #ffaaaa, #ffdddd);
+}
+
+.theme-name,
+.wallpaper-name {
+    font-size: 9px; /* Slightly smaller */
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    max-width: 100%;
+    word-wrap: break-word;
+    line-height: 1.1;
+}
+
+/* =================================
+   RESPONSIVE ADJUSTMENTS
+================================= */
+@media (max-width: 700px) {
+    .theme-dialog .dialog-body {
+        min-width: 400px;
+        max-width: 95vw;
+    }
+    
+    .theme-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 6px;
+    }
+    
+    .wallpaper-grid {
+        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+        gap: 6px;
+    }
+    
+    .theme-controls {
+        flex-wrap: wrap;
+    }
+}
+
+/* =================================
+   LOGIN SCREEN
+================================= */
+.login-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1e3c72, #2a5298);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.login-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px outset var(--windowBorder);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 350px;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-logo {
+    font-size: 32px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #0066cc, #004499);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.login-welcome {
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+/* =================================
+   USER SELECTION
+================================= */
+.user-selection {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.user-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f8f8f8;
+    min-width: 80px;
+}
+
+.user-tile:hover {
+    background: #e8f4ff;
+    border-color: #b3d9ff;
+}
+
+.user-tile.selected {
+    background: #cce7ff;
+    border-color: #0066cc;
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
+}
+
+.user-avatar {
+    font-size: 32px;
+    margin-bottom: 4px;
+}
+
+.user-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+/* =================================
+   LOGIN INPUT SECTION
+================================= */
+.login-input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.selected-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: #f0f8ff;
+    border: 1px inset var(--windowBorder);
+    border-radius: 4px;
+}
+
+.selected-avatar {
+    font-size: 24px;
+}
+
+.selected-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0066cc;
+}
+
+.password-section {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.login-password {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px inset var(--windowBorder);
+    font-size: 12px;
+    border-radius: 2px;
+}
+
+.login-password:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 4px rgba(0, 102, 204, 0.3);
+}
+
+.login-password:disabled {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.login-button {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    border: 2px outset #4CAF50;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.login-button:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+}
+
+.login-button:active:not(:disabled) {
+    border: 2px inset #4CAF50;
+    background: linear-gradient(to bottom, #45a049, #4CAF50);
+}
+
+.login-button:disabled {
+    background: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.password-hint {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+    background: #fff9c4;
+    padding: 4px 8px;
+    border: 1px solid #e6db55;
+    border-radius: 2px;
+}
+
+/* =================================
+   LOGIN FOOTER
+================================= */
+.login-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+}
+
+.login-info {
+    font-size: 10px;
+    color: #666;
+    text-align: center;
+}
+
+.login-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.version-info {
+    margin-top: 12px;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.version-info:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.version-text {
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(67 64 64 / 0.9);
+    margin-bottom: 2px;
+}
+
+.build-text {
+    font-size: 9px;
+    color: rgba(96 94 94 / 0.7);
+    font-style: italic;
+}
+
+.hint-button,
+.guest-button {
+    padding: 4px 8px;
+    font-size: 10px;
+    border: 1px outset var(--windowBorder);
+    background: var(--buttonBg);
+    cursor: pointer;
+    border-radius: 2px;
+    color: var(--menuText);
+}
+
+.hint-button:hover,
+.guest-button:hover {
+    background: var(--buttonHoverBg);
+}
+
+.hint-button:active,
+.guest-button:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
+/* =================================
+   CHANGE PASSWORD DIALOG
+================================= */
+.change-password-dialog .dialog-body {
+    min-width: 300px;
+}
+
+.change-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--menuText);
+}
+
+.password-input,
+.text-input {
+    padding: 6px 8px;
+    border: 1px inset var(--windowBorder);
+    font-size: 11px;
+    border-radius: 2px;
+}
+
+.password-input:focus,
+.text-input:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.password-strength {
+    margin-top: 4px;
+}
+
+.strength-meter {
+    width: 100%;
+    height: 6px;
+    background: #f0f0f0;
+    border: 1px inset var(--windowBorder);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    background: #ccc;
+}
+
+.strength-bar.weak { background: #ff4444; }
+.strength-bar.fair { background: #ff8800; }
+.strength-bar.good { background: #ffbb00; }
+.strength-bar.strong { background: #00aa00; }
+
+.strength-text {
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.change-btn,
+.save-btn {
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    border: 1px outset #4CAF50;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.change-btn:hover,
+.save-btn:hover {
+    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+}
+
+.change-btn:active,
+.save-btn:active {
+    border: 1px inset #4CAF50;
+}
+
+/* =================================
+   USER SETTINGS DIALOG
+================================= */
+.user-settings-dialog .dialog-body {
+    min-width: 350px;
+}
+
+.user-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.avatar-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.avatar-input {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px inset var(--windowBorder);
+    font-size: 16px;
+    text-align: center;
+}
+
+.avatar-options {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+}
+
+.avatar-option {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #f8f8f8;
+}
+
+.avatar-option:hover {
+    border-color: #0066cc;
+    background: #e8f4ff;
+}
+
+.user-stats {
+    background: #f8f8f8;
+    padding: 12px;
+    border: 1px inset var(--windowBorder);
+    border-radius: 4px;
+}
+
+.user-stats h4 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: #0066cc;
+}
+
+.stat-item {
+    font-size: 10px;
+    color: var(--menuText);
+    margin-bottom: 4px;
+}
+
+.change-password-btn {
+    background: linear-gradient(to bottom, #ff8800, #ff6600);
+    border: 1px outset #ff6600;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: white;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.change-password-btn:hover {
+    background: linear-gradient(to bottom, #ff9900, #ff8800);
+}
+
+.change-password-btn:active {
+    border: 1px inset #ff6600;
+}
+
+/* =================================
+   WALLPAPER CONTROLS
+================================= */
+.wallpaper-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.import-image-btn,
+.browse-paint-btn {
+    background: linear-gradient(to bottom, #add8e6, #87ceeb);
+    border: 1px outset #87ceeb;
+    padding: 8px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    color: black;
+    border-radius: 3px;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.import-image-btn:hover,
+.browse-paint-btn:hover {
+    background: linear-gradient(to bottom, #b8e0f0, #add8e6);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.import-image-btn:active,
+.browse-paint-btn:active {
+    border: 1px inset #87ceeb;
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.custom-badge {
+    font-size: 7px; /* Slightly smaller */
+    background: #ff6600;
+    color: white;
+    padding: 1px 3px;
+    border-radius: 2px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-weight: bold;
+}
+
+.wallpaper-option {
+    position: relative;
+}
+
+/* =================================
+   IMAGE IMPORT DIALOG
+================================= */
+.import-dialog .dialog-body {
+    min-width: 400px;
+    max-width: 600px;
+    max-height: 500px;
+}
+
+.import-instructions {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.import-instructions p {
+    margin: 4px 0;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.file-types {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+}
+
+.image-input {
+    width: 100%;
+    padding: 8px;
+    border: 2px dashed #ccc;
+    background: #f9f9f9;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.image-input:hover {
+    border-color: #999;
+    background: #f0f0f0;
+}
+
+.preview-area {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: white;
+    margin-bottom: 12px;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+    padding: 8px;
+}
+
+.import-preview-item {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 4px;
+    background: #f8f8f8;
+    position: relative;
+}
+
+.import-preview-item:has(.import-checkbox:checked) {
+    border-color: #0066cc;
+    background: #e6f0ff;
+}
+
+.import-preview-image {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    margin-bottom: 4px;
+}
+
+.import-preview-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.image-name {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--menuText);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.image-size {
+    font-size: 9px;
+    color: #666;
+}
+
+.import-checkbox {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.import-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.import-selected-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border: 1px outset #32cd32;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    border-radius: 2px;
+}
+
+.import-selected-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.import-selected-btn:active:not(:disabled) {
+    border: 1px inset #32cd32;
+}
+
+.import-selected-btn:disabled {
+    background: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* =================================
+   PAINT FILE BROWSER DIALOG
+================================= */
+.paint-browser-dialog .dialog-body {
+    min-width: 350px;
+    max-width: 500px;
+    max-height: 400px;
+}
+
+.paint-instructions {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.paint-instructions p {
+    margin: 4px 0;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.paint-files-grid {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: white;
+    margin-bottom: 12px;
+}
+
+.paint-file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.paint-file-item:hover {
+    background: #f0f8ff;
+}
+
+.paint-file-item.selected {
+    background: #cce7ff;
+    border-color: #0066cc;
+}
+
+.paint-file-icon {
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+
+.paint-file-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.paint-file-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--menuText);
+}
+
+.paint-file-location {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+}
+
+.paint-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.use-paint-btn {
+    background: linear-gradient(to bottom, #ff8800, #ff6600);
+    border: 1px outset #ff6600;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    border-radius: 2px;
+}
+
+.use-paint-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #ff9900, #ff8800);
+}
+
+.use-paint-btn:active:not(:disabled) {
+    border: 1px inset #ff6600;
+}
+
+.use-paint-btn:disabled {
+    background: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* =================================
+   INSTALLER DIALOG
+================================= */
+.installer-dialog {
+    min-width: 450px;
+    max-width: 600px;
+}
+
+.installer-dialog .dialog-body {
+    padding: 16px;
+    min-height: 200px;
+}
+
+.install-header {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: linear-gradient(135deg, #e6f3ff, #f0f8ff);
+    border: 1px solid #b3d9ff;
+    border-radius: 8px;
+}
+
+.install-icon {
+    font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    border: 2px solid #cce7ff;
+}
+
+.install-info {
+    flex: 1;
+}
+
+.program-name {
+    margin: 0 0 8px 0;
+    color: #0066cc;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.program-description {
+    margin: 0 0 12px 0;
+    color: #333;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.program-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-item {
+    font-size: 11px;
+    color: #666;
+}
+
+.detail-item strong {
+    color: #333;
+    min-width: 60px;
+    display: inline-block;
+}
+
+.install-progress-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.install-status {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0066cc;
+    margin-bottom: 16px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #f0f0f0;
+    border: 1px inset var(--windowBorder);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, #00aa00, #00ff00);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 3px;
+}
+
+.install-step {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+}
+
+.install-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.install-btn {
+    background: linear-gradient(to bottom, #00aa00, #008800);
+    border: 2px outset #00aa00;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 170, 0, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(0, 170, 0, 0); }
+}
+
+.install-btn:hover {
+    background: linear-gradient(to bottom, #00cc00, #00aa00);
+    transform: translateY(-1px);
+}
+
+.install-btn:active {
+    border: 2px inset #00aa00;
+    transform: translateY(0);
+}
+
+.cancel-btn {
+    background: linear-gradient(to bottom, #ff6666, #ff4444);
+    border: 2px outset #ff4444;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(to bottom, #ff8888, #ff6666);
+}
+
+.cancel-btn:active {
+    border: 2px inset #ff4444;
+}
+
+.install-complete {
+    text-align: center;
+    padding: 20px;
+}
+
+.success-message {
+    margin-bottom: 20px;
+}
+
+.success-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.success-message h3 {
+    color: #008800;
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+
+.success-message p {
+    color: #333;
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+.finish-btn {
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    border: 2px outset #4CAF50;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.finish-btn:hover {
+    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+    transform: translateY(-1px);
+}
+
+.finish-btn:active {
+    border: 2px inset #4CAF50;
+    transform: translateY(0);
+}

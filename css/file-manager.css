@@ -1,0 +1,496 @@
+/* =================================
+   FILE MANAGER STYLES
+================================= */
+.file-manager-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-size: 11px;
+}
+
+/* =================================
+   TOOLBAR
+================================= */
+.file-manager-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+}
+
+.navigation-controls {
+    display: flex;
+    gap: 2px;
+}
+
+.nav-btn {
+    width: 24px;
+    height: 20px;
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset #c0c0c0;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.nav-btn:active:not(:disabled) {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+.nav-btn:disabled {
+    background: #f0f0f0;
+    color: #808080;
+    cursor: not-allowed;
+}
+
+.path-bar {
+    flex: 1;
+    margin: 0 8px;
+}
+
+.breadcrumb-path {
+    background: white;
+    border: 1px inset #c0c0c0;
+    padding: 2px 6px;
+    font-size: 10px;
+    min-height: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-item {
+    color: #000080;
+}
+
+.breadcrumb-item.clickable {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.clickable:hover {
+    color: #0000ff;
+}
+
+.breadcrumb-separator {
+    color: #666;
+}
+
+.view-controls {
+    display: flex;
+    gap: 2px;
+}
+
+.view-btn {
+    width: 24px;
+    height: 20px;
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset #c0c0c0;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-btn:hover {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.view-btn.active {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+/* =================================
+   OPERATIONS BAR
+================================= */
+.operations-bar {
+    display: flex;
+    gap: 4px;
+    padding: 4px 8px;
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.op-btn {
+    padding: 3px 8px;
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset #c0c0c0;
+    cursor: pointer;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.op-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.op-btn:active:not(:disabled) {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+.op-btn:disabled {
+    background: #f0f0f0;
+    color: #808080;
+    cursor: not-allowed;
+}
+
+/* =================================
+   MAIN CONTENT AREA
+================================= */
+.file-manager-content {
+    flex: 1;
+    overflow: auto;
+    background: white;
+    border: 1px inset #c0c0c0;
+    margin: 4px;
+}
+
+.file-grid {
+    padding: 8px;
+    min-height: 100%;
+}
+
+/* =================================
+   ICON VIEW
+================================= */
+.file-grid.icons-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-auto-rows: min-content; /* This is the key fix */
+    grid-gap: 8px;
+    align-items: start; /* This prevents stretching */
+}
+
+.icons-view .file-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    text-align: center;
+    height: auto; /* Allow natural height */
+    max-height: 90px; /* Limit maximum height */
+}
+
+.icons-view .file-item:hover {
+    background: rgba(0, 100, 200, 0.1);
+    border-color: rgba(0, 100, 200, 0.3);
+}
+
+.icons-view .file-item.selected {
+    background: rgba(0, 100, 200, 0.3);
+    border-color: #0064c8;
+}
+
+.icons-view .file-icon {
+    font-size: 32px;
+    margin-bottom: 4px;
+}
+
+.icons-view .file-name {
+    font-size: 10px;
+    word-wrap: break-word;
+    max-width: 70px;
+    line-height: 1.2;
+    color:#000080;
+}
+
+/* =================================
+   LIST VIEW
+================================= */
+.file-grid.list-view {
+    display: flex;
+    flex-direction: column;
+}
+
+/* List view header (optional - you can add this for column labels) */
+.list-view-header {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px 100px;
+    padding: 4px 8px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    font-size: 10px;
+    color: #333;
+}
+
+/* List view items with proper grid layout */
+.list-view .file-item {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px 100px; /* Icon | Name | Size | Date */
+    grid-template-areas: "icon name size date";
+    align-items: center;
+    padding: 4px 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    min-height: 24px;
+    gap: 8px;
+}
+
+.list-view .file-item:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.list-view .file-item:hover {
+    background: rgba(0, 100, 200, 0.1);
+    border-color: rgba(0, 100, 200, 0.3);
+}
+
+.list-view .file-item.selected {
+    background: rgba(0, 100, 200, 0.3);
+    border-color: #0064c8;
+}
+
+/* Individual elements in list view */
+.list-view .file-icon-small {
+    grid-area: icon;
+    font-size: 16px;
+    text-align: center;
+    width: 20px;
+}
+
+.list-view .file-details {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-view .file-name {
+    grid-area: name;
+    font-weight: bold;
+    color: #000080;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.list-view .file-info {
+    display: flex;
+    gap: 16px;
+    font-size: 10px;
+    color: #666;
+}
+
+.list-view .file-size {
+    grid-area: size;
+    font-size: 10px;
+    color: #666;
+    text-align: right;
+}
+
+.list-view .file-date {
+    grid-area: date;
+    font-size: 10px;
+    color: #666;
+    text-align: right;
+}
+
+.list-view .file-details,
+.list-view .file-info {
+    /* These are no longer used with the new structure */
+    display: none;
+}
+
+/* =================================
+   STATUS BAR
+================================= */
+.file-manager-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 8px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border-top: 1px solid #808080;
+    font-size: 10px;
+    flex-shrink: 0;
+    min-height: 20px;
+}
+
+.item-count {
+    font-weight: bold;
+}
+
+.selected-count {
+    color: #000080;
+    font-weight: bold;
+}
+
+.current-location {
+    color: #666;
+    font-style: italic;
+}
+
+/* =================================
+   INPUT DIALOGS
+================================= */
+.input-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.input-dialog .dialog-content {
+    background: #c0c0c0;
+    border: 2px outset #c0c0c0;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+}
+
+.input-dialog .dialog-header {
+    background: linear-gradient(to right, #0000ff, #4080ff);
+    color: white;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.input-dialog .dialog-close {
+    width: 16px;
+    height: 14px;
+    background: #c0c0c0;
+    border: 1px outset #c0c0c0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 8px;
+    font-weight: bold;
+    color: black;
+}
+
+.input-dialog .dialog-close:hover {
+    background: #d0d0d0;
+}
+
+.input-dialog .dialog-close:active {
+    border: 1px inset #c0c0c0;
+}
+
+.input-dialog .dialog-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-dialog label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+}
+
+.folder-name-input,
+.rename-input {
+    padding: 4px 6px;
+    border: 1px inset #c0c0c0;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.folder-name-input:focus,
+.rename-input:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.dialog-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.create-btn,
+.rename-btn,
+.cancel-btn {
+    padding: 4px 16px;
+    border: 1px outset #c0c0c0;
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.create-btn:hover,
+.rename-btn:hover,
+.cancel-btn:hover {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.create-btn:active,
+.rename-btn:active,
+.cancel-btn:active {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+.create-btn,
+.rename-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border-color: #32cd32;
+    color: black;
+    font-weight: bold;
+}
+
+.create-btn:hover,
+.rename-btn:hover {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.create-btn:active,
+.rename-btn:active {
+    border: 1px inset #32cd32;
+    background: linear-gradient(to bottom, #32cd32, #90ee90);
+}
+
+/* =================================
+   RESPONSIVE ADJUSTMENTS
+================================= */
+@media (max-width: 600px) {
+    .file-grid.icons-view {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+    
+    .operations-bar {
+        padding: 2px 4px;
+    }
+    
+    .op-btn {
+        padding: 2px 6px;
+        font-size: 9px;
+    }
+    
+    .file-manager-toolbar {
+        padding: 2px 4px;
+    }
+    
+    .breadcrumb-path {
+        font-size: 9px;
+    }
+}
