@@ -7,7 +7,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #7986a3 0%, #5b6273 100%);
     font-family: 'Segoe UI', 'Comic Sans MS', Tahoma, sans-serif;
     color: #ffffff;
     overflow-y: auto;
@@ -159,7 +159,7 @@
 ================================= */
 .story-banner {
     padding: 16px 20px;
-    background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+    background: linear-gradient(90deg, #7986a3, #5b6273, #7986a3);
     border-bottom: 2px solid rgba(255, 255, 255, 0.3);
     animation: bannerGlow 6s ease-in-out infinite;
 }
@@ -682,7 +682,7 @@
 
 .game-control-btn {
     padding: 10px 20px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #7986a3, #5b6273);
     border: 2px solid #ffd700;
     border-radius: 20px;
     color: white;
@@ -696,7 +696,7 @@
 .game-control-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
-    background: linear-gradient(135deg, #764ba2, #667eea);
+    background: linear-gradient(135deg, #5b6273, #7986a3);
 }
 
 .game-control-btn:active {
@@ -897,7 +897,7 @@
 
 .action-btn {
     padding: 12px 24px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #7986a3, #5b6273);
     border: 2px solid #ffd700;
     border-radius: 20px;
     color: white;
@@ -912,7 +912,7 @@
 .action-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
-    background: linear-gradient(135deg, #764ba2, #667eea);
+    background: linear-gradient(135deg, #5b6273, #7986a3);
 }
 
 .action-btn:active {

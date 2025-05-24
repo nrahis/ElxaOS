@@ -1,5 +1,5 @@
 // =================================
-// INSTALLER SERVICE - Handle .abby files and program installation
+// INSTALLER SERVICE - Handle .abby files and program installation (FIXED VERSION)
 // =================================
 class InstallerService {
     constructor(eventBus, fileSystem, windowManager, osInstance = null) {
@@ -41,8 +41,9 @@ class InstallerService {
             const installData = JSON.parse(abbyFile.content);
             console.log('Installing program:', installData);
 
-            // Show installation dialog
-            await this.showInstallationDialog(installData, filename);
+            // Show installation dialog and wait for completion
+            const result = await this.showInstallationDialog(installData, filename);
+            console.log('Installation dialog result:', result);
         } catch (error) {
             console.error('Failed to parse installation file:', error);
             this.showMessage('Invalid installation file!', 'error');
@@ -53,12 +54,21 @@ class InstallerService {
         return new Promise((resolve) => {
             const dialog = document.createElement('div');
             dialog.className = 'system-dialog installer-dialog';
+            
+            // Force proper sizing with important styles
+            dialog.style.setProperty('max-height', '90vh', 'important');
+            dialog.style.setProperty('overflow-y', 'auto', 'important');
+            dialog.style.setProperty('min-width', '450px', 'important');
+            dialog.style.setProperty('max-width', '600px', 'important');
+            dialog.style.setProperty('height', 'auto', 'important');
+            
             dialog.innerHTML = `
                 <div class="dialog-content">
                     <div class="dialog-header">
                         <div class="dialog-title">📦 ElxaOS Installer</div>
+                        <div class="dialog-close">×</div>
                     </div>
-                    <div class="dialog-body installer-body">
+                    <div class="dialog-body installer-body" style="min-height: 200px; max-height: none; overflow-y: visible;">
                         <div class="install-header">
                             <div class="install-icon">${installData.icon || '🎮'}</div>
                             <div class="install-info">
@@ -92,61 +102,133 @@ class InstallerService {
                         </div>
                         
                         <div class="install-complete" style="display: none;">
-                            <div class="success-message">
-                                <div class="success-icon">🎉</div>
-                                <h3>Installation Complete!</h3>
-                                <p>${installData.name} has been installed successfully!</p>
-                                <p>You can now find it on your Desktop.</p>
+                            <div class="success-message" style="text-align: center; padding: 20px;">
+                                <div class="success-icon" style="font-size: 48px; margin-bottom: 12px;">🎉</div>
+                                <h3 style="color: #008800; margin: 0 0 8px 0; font-size: 16px;">Installation Complete!</h3>
+                                <p style="margin: 4px 0; font-size: 12px;">${installData.name} has been installed successfully!</p>
+                                <p style="margin: 4px 0 16px 0; font-size: 12px;">You can now find it on your Desktop.</p>
+                                <button class="finish-btn" style="background: linear-gradient(to bottom, #4CAF50, #45a049); border: 2px outset #4CAF50; padding: 8px 20px; font-size: 12px; font-weight: bold; color: white; cursor: pointer; border-radius: 4px;">✨ Finish</button>
                             </div>
-                            <button class="finish-btn">✨ Finish</button>
                         </div>
                     </div>
                 </div>
             `;
 
+            // Add dialog to DOM first
             document.body.appendChild(dialog);
             
+            // Now get references to elements (they exist in DOM now)
             const installBtn = dialog.querySelector('.install-btn');
             const cancelBtn = dialog.querySelector('.cancel-btn');
             const finishBtn = dialog.querySelector('.finish-btn');
+            const closeBtn = dialog.querySelector('.dialog-close');
             const progressContainer = dialog.querySelector('.install-progress-container');
             const installActions = dialog.querySelector('.install-actions');
             const installComplete = dialog.querySelector('.install-complete');
 
+            // Cleanup function to ensure dialog is removed and promise resolves
+            const cleanup = (result) => {
+                console.log('Installer cleanup called with result:', result);
+                if (dialog.parentNode) {
+                    dialog.remove();
+                }
+                resolve(result);
+            };
+
+            // Handle close button (X)
+            closeBtn.addEventListener('click', () => {
+                console.log('Close (X) button clicked');
+                cleanup(false);
+            });
+
             // Handle install button
             installBtn.addEventListener('click', async () => {
-                // Hide install actions, show progress
-                installActions.style.display = 'none';
-                progressContainer.style.display = 'block';
-                
-                // Simulate installation with cute steps
-                await this.simulateInstallation(dialog, installData);
-                
-                // Actually install the program
-                const success = this.installProgram(installData);
-                
-                if (success) {
-                    // Show completion
-                    progressContainer.style.display = 'none';
-                    installComplete.style.display = 'block';
-                } else {
-                    this.showMessage('Installation failed!', 'error');
-                    dialog.remove();
-                    resolve(false);
+                console.log('Install button clicked');
+                try {
+                    // Hide install actions, show progress
+                    installActions.style.display = 'none';
+                    progressContainer.style.display = 'block';
+                    
+                    // Simulate installation with cute steps
+                    await this.simulateInstallation(dialog, installData);
+                    
+                    // Actually install the program
+                    const success = this.installProgram(installData);
+                    
+                    if (success) {
+                        console.log('Installation successful, showing completion screen');
+                        // Show completion
+                        progressContainer.style.display = 'none';
+                        installComplete.style.display = 'block';
+                        
+                        // Force dialog to resize properly
+                        const dialogBody = dialog.querySelector('.dialog-body');
+                        dialog.style.setProperty('height', 'auto', 'important');
+                        dialog.style.setProperty('max-height', '90vh', 'important');
+                        dialogBody.style.setProperty('height', 'auto', 'important');
+                        dialogBody.style.setProperty('max-height', 'none', 'important');
+                        
+                        // Force reflow
+                        dialog.offsetHeight;
+                        
+                        console.log('Dialog height after success:', dialog.offsetHeight);
+                        console.log('Dialog body height after success:', dialogBody.offsetHeight);
+                        
+                        // Auto-close after 10 seconds as failsafe
+                        setTimeout(() => {
+                            console.log('Auto-closing installer dialog after 10 seconds');
+                            cleanup(true);
+                        }, 10000);
+                        
+                        // Note: Don't resolve here, wait for finish button
+                    } else {
+                        console.log('Installation failed');
+                        this.showMessage('Installation failed!', 'error');
+                        cleanup(false);
+                    }
+                } catch (error) {
+                    console.error('Error during installation:', error);
+                    this.showMessage('Installation error: ' + error.message, 'error');
+                    cleanup(false);
                 }
             });
 
             // Handle cancel button
             cancelBtn.addEventListener('click', () => {
-                dialog.remove();
-                resolve(false);
+                console.log('Cancel button clicked');
+                cleanup(false);
             });
 
             // Handle finish button
             finishBtn.addEventListener('click', () => {
-                dialog.remove();
-                resolve(true);
+                console.log('Finish button clicked');
+                cleanup(true);
             });
+
+            // Add ESC key handler for emergency exit
+            const handleKeydown = (e) => {
+                if (e.key === 'Escape') {
+                    console.log('ESC pressed, closing installer');
+                    document.removeEventListener('keydown', handleKeydown);
+                    cleanup(false);
+                }
+            };
+            document.addEventListener('keydown', handleKeydown);
+
+            // Add timeout as failsafe (30 seconds)
+            const timeoutId = setTimeout(() => {
+                console.warn('Installer dialog timeout - force closing');
+                document.removeEventListener('keydown', handleKeydown);
+                cleanup(false);
+            }, 30000);
+
+            // Clear timeout when dialog resolves normally
+            const originalResolve = resolve;
+            resolve = (result) => {
+                clearTimeout(timeoutId);
+                document.removeEventListener('keydown', handleKeydown);
+                originalResolve(result);
+            };
         });
     }
 
@@ -353,7 +435,7 @@ class InstallerService {
 }
 
 // =================================
-// SIMPLE PLACEHOLDER GAME
+// SIMPLE PLACEHOLDER GAME (unchanged)
 // =================================
 class SimpleGame {
     constructor(windowManager, gameData = {}) {

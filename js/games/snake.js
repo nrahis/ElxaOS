@@ -1,5 +1,6 @@
 // =================================
-// SNAKE GAME - Modular Implementation for ElxaOS
+// ELXA SNAKE GAME - Updated for Unique CSS Classes
+// No conflicts with other project components
 // =================================
 class SnakeGame {
     constructor(windowManager, gameData = {}) {
@@ -56,83 +57,83 @@ class SnakeGame {
         const boardPixelSize = this.boardSize * this.cellSize;
         
         return `
-            <div class="snake-game-container">
-                <div class="snake-header">
-                    <div class="snake-title">🐍 Classic Snake Game</div>
-                    <div class="snake-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Score:</span>
-                            <span class="score-value">0</span>
+            <div class="elxa-snake-game-container">
+                <div class="elxa-snake-header">
+                    <div class="elxa-snake-title">🐍 Classic Snake Game</div>
+                    <div class="elxa-snake-stats">
+                        <div class="elxa-snake-stat-item">
+                            <div class="elxa-snake-stat-label">Score</div>
+                            <div class="elxa-snake-score-value">0</div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-label">High Score:</span>
-                            <span class="high-score-value">${this.highScore}</span>
+                        <div class="elxa-snake-stat-item">
+                            <div class="elxa-snake-stat-label">High Score</div>
+                            <div class="elxa-snake-high-score-value">${this.highScore}</div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Speed:</span>
-                            <span class="speed-value">1</span>
+                        <div class="elxa-snake-stat-item">
+                            <div class="elxa-snake-stat-label">Speed</div>
+                            <div class="elxa-snake-speed-value">1</div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="snake-game-area">
-                    <div class="game-start-screen">
-                        <div class="start-content">
+                <div class="elxa-snake-game-area">
+                    <div class="elxa-snake-game-start-screen">
+                        <div class="elxa-snake-start-content">
                             <h3>🐍 Welcome to Snake!</h3>
-                            <div class="instructions">
+                            <div class="elxa-snake-instructions">
                                 <p><strong>How to Play:</strong></p>
                                 <p>• Use arrow keys to control the snake</p>
                                 <p>• Eat the red food to grow and score points</p>
                                 <p>• Don't hit the walls or yourself!</p>
                                 <p>• Snake gets faster as you score more</p>
                             </div>
-                            <button class="start-snake-btn">🚀 Start Game</button>
+                            <button class="elxa-snake-start-btn">🚀 Start Game</button>
                         </div>
                     </div>
                     
-                    <div class="snake-canvas-container" style="display: none;">
+                    <div class="elxa-snake-canvas-container" style="display: none;">
                         <canvas 
-                            class="snake-canvas" 
+                            class="elxa-snake-canvas" 
                             width="${boardPixelSize}" 
                             height="${boardPixelSize}">
                         </canvas>
-                        <div class="game-overlay" style="display: none;">
-                            <div class="overlay-content">
-                                <div class="pause-message">⏸️ PAUSED</div>
-                                <div class="resume-hint">Press SPACE to resume</div>
+                        <div class="elxa-snake-game-overlay" style="display: none;">
+                            <div class="elxa-snake-overlay-content">
+                                <div class="elxa-snake-pause-message">⏸️ PAUSED</div>
+                                <div class="elxa-snake-resume-hint">Press SPACE to resume</div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="game-over-screen" style="display: none;">
-                        <div class="game-over-content">
-                            <div class="game-over-icon">💀</div>
+                    <div class="elxa-snake-game-over-screen" style="display: none;">
+                        <div class="elxa-snake-game-over-content">
+                            <div class="elxa-snake-game-over-icon">💀</div>
                             <h3>Game Over!</h3>
-                            <div class="final-stats">
-                                <p>Final Score: <span class="final-score">0</span></p>
-                                <p class="score-message"></p>
-                                <div class="high-score-notice" style="display: none;">
+                            <div class="elxa-snake-final-stats">
+                                <p>Final Score: <span class="elxa-snake-final-score">0</span></p>
+                                <p class="elxa-snake-score-message"></p>
+                                <div class="elxa-snake-high-score-notice" style="display: none;">
                                     🏆 New High Score! 🏆
                                 </div>
                             </div>
-                            <div class="game-over-actions">
-                                <button class="play-again-btn">🔄 Play Again</button>
-                                <button class="back-to-menu-btn">📋 Back to Menu</button>
+                            <div class="elxa-snake-game-over-actions">
+                                <button class="elxa-snake-action-btn elxa-snake-play-again-btn">🔄 Play Again</button>
+                                <button class="elxa-snake-action-btn elxa-snake-back-to-menu-btn">📋 Back to Menu</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="snake-controls">
-                    <div class="control-section">
-                        <button class="game-btn pause-btn" style="display: none;">⏸️ Pause</button>
-                        <button class="game-btn resume-btn" style="display: none;">▶️ Resume</button>
-                        <button class="game-btn restart-btn" style="display: none;">🔄 Restart</button>
+                <div class="elxa-snake-controls">
+                    <div class="elxa-snake-control-section">
+                        <button class="elxa-snake-game-btn elxa-snake-pause-btn" style="display: none;">⏸️ Pause</button>
+                        <button class="elxa-snake-game-btn elxa-snake-resume-btn" style="display: none;">▶️ Resume</button>
+                        <button class="elxa-snake-game-btn elxa-snake-restart-btn" style="display: none;">🔄 Restart</button>
                     </div>
-                    <div class="control-hints">
-                        <span class="control-hint">Arrow Keys: Move</span>
-                        <span class="control-hint">Space: Pause/Resume</span>
-                        <span class="control-hint">R: Restart</span>
+                    <div class="elxa-snake-control-hints">
+                        <span class="elxa-snake-control-hint">Arrow Keys: Move</span>
+                        <span class="elxa-snake-control-hint">Space: Pause/Resume</span>
+                        <span class="elxa-snake-control-hint">R: Restart</span>
                     </div>
                 </div>
             </div>
@@ -141,19 +142,19 @@ class SnakeGame {
 
     setupGameEvents(windowId) {
         const window = document.getElementById(`window-${windowId}`);
-        const container = window.querySelector('.snake-game-container');
+        const container = window.querySelector('.elxa-snake-game-container');
         
         // Get game elements
-        this.canvas = container.querySelector('.snake-canvas');
+        this.canvas = container.querySelector('.elxa-snake-canvas');
         this.ctx = this.canvas.getContext('2d');
         
         // Button event listeners
-        const startBtn = container.querySelector('.start-snake-btn');
-        const playAgainBtn = container.querySelector('.play-again-btn');
-        const backToMenuBtn = container.querySelector('.back-to-menu-btn');
-        const pauseBtn = container.querySelector('.pause-btn');
-        const resumeBtn = container.querySelector('.resume-btn');
-        const restartBtn = container.querySelector('.restart-btn');
+        const startBtn = container.querySelector('.elxa-snake-start-btn');
+        const playAgainBtn = container.querySelector('.elxa-snake-play-again-btn');
+        const backToMenuBtn = container.querySelector('.elxa-snake-back-to-menu-btn');
+        const pauseBtn = container.querySelector('.elxa-snake-pause-btn');
+        const resumeBtn = container.querySelector('.elxa-snake-resume-btn');
+        const restartBtn = container.querySelector('.elxa-snake-restart-btn');
 
         startBtn.addEventListener('click', () => this.startGame(container));
         playAgainBtn.addEventListener('click', () => this.startGame(container));
@@ -188,11 +189,11 @@ class SnakeGame {
         this.updateUI(container);
         
         // Show game screen
-        container.querySelector('.game-start-screen').style.display = 'none';
-        container.querySelector('.game-over-screen').style.display = 'none';
-        container.querySelector('.snake-canvas-container').style.display = 'block';
-        container.querySelector('.pause-btn').style.display = 'inline-block';
-        container.querySelector('.restart-btn').style.display = 'inline-block';
+        container.querySelector('.elxa-snake-game-start-screen').style.display = 'none';
+        container.querySelector('.elxa-snake-game-over-screen').style.display = 'none';
+        container.querySelector('.elxa-snake-canvas-container').style.display = 'block';
+        container.querySelector('.elxa-snake-pause-btn').style.display = 'inline-block';
+        container.querySelector('.elxa-snake-restart-btn').style.display = 'inline-block';
         
         // Start game loop
         this.startGameLoop();
@@ -393,35 +394,35 @@ class SnakeGame {
     pauseGame(container) {
         if (!container) {
             const windows = document.querySelectorAll('[id^="window-snake-"]');
-            container = windows[windows.length - 1]?.querySelector('.snake-game-container');
+            container = windows[windows.length - 1]?.querySelector('.elxa-snake-game-container');
         }
         
         this.gameActive = false;
         if (container) {
-            container.querySelector('.game-overlay').style.display = 'flex';
-            container.querySelector('.pause-btn').style.display = 'none';
-            container.querySelector('.resume-btn').style.display = 'inline-block';
+            container.querySelector('.elxa-snake-game-overlay').style.display = 'flex';
+            container.querySelector('.elxa-snake-pause-btn').style.display = 'none';
+            container.querySelector('.elxa-snake-resume-btn').style.display = 'inline-block';
         }
     }
 
     resumeGame(container) {
         if (!container) {
             const windows = document.querySelectorAll('[id^="window-snake-"]');
-            container = windows[windows.length - 1]?.querySelector('.snake-game-container');
+            container = windows[windows.length - 1]?.querySelector('.elxa-snake-game-container');
         }
         
         this.gameActive = true;
         if (container) {
-            container.querySelector('.game-overlay').style.display = 'none';
-            container.querySelector('.pause-btn').style.display = 'inline-block';
-            container.querySelector('.resume-btn').style.display = 'none';
+            container.querySelector('.elxa-snake-game-overlay').style.display = 'none';
+            container.querySelector('.elxa-snake-pause-btn').style.display = 'inline-block';
+            container.querySelector('.elxa-snake-resume-btn').style.display = 'none';
         }
     }
 
     restartGame(container) {
         if (!container) {
             const windows = document.querySelectorAll('[id^="window-snake-"]');
-            container = windows[windows.length - 1]?.querySelector('.snake-game-container');
+            container = windows[windows.length - 1]?.querySelector('.elxa-snake-game-container');
         }
         
         this.cleanup();
@@ -433,12 +434,12 @@ class SnakeGame {
         this.gameStarted = false;
         
         // Show start screen
-        container.querySelector('.game-start-screen').style.display = 'flex';
-        container.querySelector('.game-over-screen').style.display = 'none';
-        container.querySelector('.snake-canvas-container').style.display = 'none';
-        container.querySelector('.pause-btn').style.display = 'none';
-        container.querySelector('.resume-btn').style.display = 'none';
-        container.querySelector('.restart-btn').style.display = 'none';
+        container.querySelector('.elxa-snake-game-start-screen').style.display = 'flex';
+        container.querySelector('.elxa-snake-game-over-screen').style.display = 'none';
+        container.querySelector('.elxa-snake-canvas-container').style.display = 'none';
+        container.querySelector('.elxa-snake-pause-btn').style.display = 'none';
+        container.querySelector('.elxa-snake-resume-btn').style.display = 'none';
+        container.querySelector('.elxa-snake-restart-btn').style.display = 'none';
     }
 
     gameOver() {
@@ -453,12 +454,12 @@ class SnakeGame {
         }
         
         // Show game over screen
-        const container = document.querySelector('.snake-game-container');
+        const container = document.querySelector('.elxa-snake-game-container');
         if (container) {
-            const gameOverScreen = container.querySelector('.game-over-screen');
-            const finalScoreElement = container.querySelector('.final-score');
-            const scoreMessageElement = container.querySelector('.score-message');
-            const highScoreNotice = container.querySelector('.high-score-notice');
+            const gameOverScreen = container.querySelector('.elxa-snake-game-over-screen');
+            const finalScoreElement = container.querySelector('.elxa-snake-final-score');
+            const scoreMessageElement = container.querySelector('.elxa-snake-score-message');
+            const highScoreNotice = container.querySelector('.elxa-snake-high-score-notice');
             
             finalScoreElement.textContent = this.score;
             
@@ -484,11 +485,11 @@ class SnakeGame {
                 highScoreNotice.style.display = 'none';
             }
             
-            container.querySelector('.snake-canvas-container').style.display = 'none';
+            container.querySelector('.elxa-snake-canvas-container').style.display = 'none';
             gameOverScreen.style.display = 'flex';
-            container.querySelector('.pause-btn').style.display = 'none';
-            container.querySelector('.resume-btn').style.display = 'none';
-            container.querySelector('.restart-btn').style.display = 'none';
+            container.querySelector('.elxa-snake-pause-btn').style.display = 'none';
+            container.querySelector('.elxa-snake-resume-btn').style.display = 'none';
+            container.querySelector('.elxa-snake-restart-btn').style.display = 'none';
         }
         
         this.cleanup();
@@ -497,16 +498,32 @@ class SnakeGame {
     updateUI(container) {
         if (!container) {
             const windows = document.querySelectorAll('[id^="window-snake-"]');
-            container = windows[windows.length - 1]?.querySelector('.snake-game-container');
+            container = windows[windows.length - 1]?.querySelector('.elxa-snake-game-container');
         }
         
         if (container) {
-            container.querySelector('.score-value').textContent = this.score;
-            container.querySelector('.high-score-value').textContent = this.highScore;
+            const scoreElement = container.querySelector('.elxa-snake-score-value');
+            const highScoreElement = container.querySelector('.elxa-snake-high-score-value');
+            const speedElement = container.querySelector('.elxa-snake-speed-value');
             
-            // Calculate speed level (1-10)
-            const speedLevel = Math.min(10, Math.floor((this.speed - this.currentSpeed) / 10) + 1);
-            container.querySelector('.speed-value').textContent = speedLevel;
+            if (scoreElement) {
+                scoreElement.textContent = this.score;
+                // Add animation class for score updates
+                scoreElement.classList.add('elxa-snake-score-updated');
+                setTimeout(() => {
+                    scoreElement.classList.remove('elxa-snake-score-updated');
+                }, 800);
+            }
+            
+            if (highScoreElement) {
+                highScoreElement.textContent = this.highScore;
+            }
+            
+            if (speedElement) {
+                // Calculate speed level (1-10)
+                const speedLevel = Math.min(10, Math.floor((this.speed - this.currentSpeed) / 10) + 1);
+                speedElement.textContent = speedLevel;
+            }
         }
     }
 
