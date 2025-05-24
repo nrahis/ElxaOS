@@ -709,6 +709,37 @@ class ElxaOS {
             this.fileSystem.createFolder(['root', 'Pictures'], 'Screenshots');
         }
 
+        // Create desktop shortcuts for browser and antivirus
+        const currentDesktopContents = this.fileSystem.listContents(['root', 'Desktop']);
+        
+        // Browser shortcut
+        if (!currentDesktopContents.some(file => file.name === 'Snoogle Browser.lnk')) {
+            const browserShortcut = {
+                type: 'program_shortcut',
+                programId: 'browser',
+                programInfo: {
+                    name: 'Snoogle Browser',
+                    icon: '🌐',
+                    description: 'Browse the web with Snoogle Browser'
+                }
+            };
+            this.fileSystem.createFile(['root', 'Desktop'], 'Snoogle Browser.lnk', JSON.stringify(browserShortcut));
+        }
+
+        // Antivirus shortcut
+        if (!currentDesktopContents.some(file => file.name === 'ElxaGuard Antivirus.lnk')) {
+            const antivirusShortcut = {
+                type: 'program_shortcut',
+                programId: 'antivirus',
+                programInfo: {
+                    name: 'ElxaGuard Antivirus',
+                    icon: '🛡️',
+                    description: 'Protect your system with ElxaGuard Antivirus'
+                }
+            };
+            this.fileSystem.createFile(['root', 'Desktop'], 'ElxaGuard Antivirus.lnk', JSON.stringify(antivirusShortcut));
+        }
+
         // FIXED: Don't create Programs folder in Documents - it should be at root level
         // The Programs folder is already created in FileSystem constructor at root level
         
