@@ -40,11 +40,7 @@ class AntivirusProgram {
         const windowId = `antivirus-${Date.now()}`;
         this.currentWindowId = windowId;
         
-        console.log('🚀 Launching antivirus with windowId:', windowId);
-        
         const windowContent = this.createAntivirusInterface(windowId);
-        
-        console.log('🖼️ Created antivirus interface');
         
         const window = this.windowManager.createWindow(
             windowId,
@@ -53,14 +49,11 @@ class AntivirusProgram {
             { width: '700px', height: '500px', x: '150px', y: '100px' }
         );
         
-        console.log('🖼️ Window created by window manager');
-        
         // Setup event handlers after window is created and DOM is ready
         setTimeout(() => {
-            console.log('🔧 Setting up antivirus event handlers...');
             this.setupWindowEventHandlers(windowId);
             this.updateSystemStatus();
-        }, 500); // Increased timeout
+        }, 500);
         
         return windowId;
     }
@@ -299,75 +292,47 @@ class AntivirusProgram {
     }
 
     setupWindowEventHandlers(windowId) {
-        console.log('🔧 setupWindowEventHandlers called with windowId:', windowId);
-        
-        // Use a more specific selector to find the antivirus container, not the window titlebar
         const container = document.querySelector(`.antivirus-container[data-window-id="${windowId}"]`);
-        console.log('🔧 Looking for container with selector:', `.antivirus-container[data-window-id="${windowId}"]`);
-        console.log('🔧 Container found:', container);
         
         if (!container) {
-            console.error('❌ Container not found for window:', windowId);
-            // Let's see what containers are available
-            const allContainers = document.querySelectorAll('.antivirus-container');
-            console.log('🔧 Available antivirus containers:', allContainers);
-            const allWindowIds = document.querySelectorAll('[data-window-id]');
-            console.log('🔧 All elements with data-window-id:', Array.from(allWindowIds).map(c => ({element: c.tagName + '.' + c.className, id: c.dataset.windowId})));
             return;
         }
 
-        console.log('✅ Setting up event handlers for window:', windowId);
-
         // Use event delegation for ALL clicks within the container
         container.addEventListener('click', (e) => {
-            console.log('🖱️ Click detected in antivirus container:', e.target);
-            
             const target = e.target.closest('button');
             if (!target) {
-                console.log('❌ No button found in click target');
                 return;
             }
 
             const id = target.id;
-            console.log('🖱️ Button clicked:', id, 'Classes:', target.className);
 
             // Handle tab navigation
             if (target.classList.contains('nav-tab')) {
-                console.log('📋 Nav tab clicked! Tab:', target.dataset.tab, 'Window:', target.dataset.window, 'Expected window:', windowId);
                 if (target.dataset.window === windowId) {
-                    console.log('✅ Window IDs match, switching tab...');
                     this.switchTab(target.dataset.tab, windowId);
-                } else {
-                    console.log('❌ Window ID mismatch!');
                 }
                 return;
             }
 
             // Handle all other button clicks based on ID patterns
             if (id.includes('quick-scan')) {
-                console.log('Quick scan clicked');
                 this.startQuickScan(windowId);
             } else if (id.includes('full-scan')) {
-                console.log('Full scan clicked');
                 this.startFullScan(windowId);
             } else if (id.includes('custom-scan')) {
-                console.log('Custom scan clicked');
                 this.startCustomScan(windowId);
             } else if (id.includes('cancel-scan')) {
-                console.log('Cancel scan clicked');
                 this.cancelScan(windowId);
             } else if (id.includes('debug-infect-buggy')) {
-                console.log('Debug: Infecting with buggyworm');
                 if (elxaOS.virusSystem) {
                     elxaOS.virusSystem.debugInfect('buggyworm');
                 }
             } else if (id.includes('debug-infect-game')) {
-                console.log('Debug: Infecting with veryfungame');
                 if (elxaOS.virusSystem) {
                     elxaOS.virusSystem.debugInfect('veryfungame');
                 }
             } else if (id.includes('debug-clear')) {
-                console.log('Debug: Clearing all infections');
                 if (elxaOS.virusSystem) {
                     elxaOS.virusSystem.debugClearAll();
                     this.updateSystemStatus();
@@ -381,50 +346,30 @@ class AntivirusProgram {
                 this.toggleRealTimeProtection(e.target.checked);
             }
         });
-        
-        console.log('✅ Event handlers successfully attached to container');
     }
 
     switchTab(tabName, windowId) {
-        console.log('Switching to tab:', tabName, 'for window:', windowId);
-        
         const container = document.querySelector(`.antivirus-container[data-window-id="${windowId}"]`);
         if (!container) {
-            console.error('Container not found for tab switch');
             return;
         }
 
         // Update nav tabs
-        console.log('Updating nav tabs...');
         const navTabs = container.querySelectorAll('.nav-tab');
-        console.log('Found nav tabs:', navTabs.length);
         navTabs.forEach(tab => {
             const isActive = tab.dataset.tab === tabName;
             tab.classList.toggle('active', isActive);
-            console.log(`Tab ${tab.dataset.tab}: ${isActive ? 'active' : 'inactive'}`);
         });
 
         // Update content tabs
-        console.log('Updating content tabs...');
         const contentTabs = container.querySelectorAll('.tab-content');
-        console.log('Found content tabs:', contentTabs.length);
         contentTabs.forEach(content => {
             content.classList.remove('active');
-            console.log('Removed active from:', content.id);
         });
 
         const targetTab = container.querySelector(`#${tabName}-tab-${windowId}`);
-        console.log('Looking for target tab:', `#${tabName}-tab-${windowId}`);
-        console.log('Target tab found:', targetTab);
-        
         if (targetTab) {
             targetTab.classList.add('active');
-            console.log('Successfully switched to tab:', tabName);
-        } else {
-            console.error('Target tab not found:', `#${tabName}-tab-${windowId}`);
-            // Let's see what tabs are actually available
-            const allTabs = container.querySelectorAll('[id*="tab"]');
-            console.log('Available tabs:', Array.from(allTabs).map(t => t.id));
         }
 
         // Refresh specific tab content
@@ -434,33 +379,27 @@ class AntivirusProgram {
     }
 
     startQuickScan(windowId) {
-        console.log('Starting quick scan');
         this.startScan(windowId, 'quick');
     }
 
     startFullScan(windowId) {
-        console.log('Starting full scan');
         this.startScan(windowId, 'full');
     }
 
     startCustomScan(windowId) {
-        console.log('Starting custom scan');
         this.startScan(windowId, 'custom');
     }
 
     startScan(windowId, scanType) {
         if (this.isScanning) {
-            console.log('Scan already in progress');
             return;
         }
 
-        console.log('Starting scan:', scanType);
         this.isScanning = true;
         this.switchTab('scan', windowId);
 
         const container = document.querySelector(`.antivirus-container[data-window-id="${windowId}"]`);
         if (!container) {
-            console.error('Container not found for scan');
             return;
         }
 
@@ -486,12 +425,10 @@ class AntivirusProgram {
         if (totalFiles) totalFiles.textContent = '0';
         if (currentFile) currentFile.textContent = 'Initializing...';
 
-        // Start the actual scan - FIXED: Check if virus system exists
+        // Start the actual scan
         if (elxaOS.virusSystem) {
-            console.log('Triggering virus system scan');
             this.eventBus.emit('antivirus.scan');
         } else {
-            console.error('Virus system not found!');
             this.isScanning = false;
             // Fallback - simulate scan completion
             setTimeout(() => {
@@ -506,7 +443,6 @@ class AntivirusProgram {
     }
 
     cancelScan(windowId) {
-        console.log('Canceling scan');
         this.isScanning = false;
         
         const container = document.querySelector(`.antivirus-container[data-window-id="${windowId}"]`);
@@ -539,7 +475,6 @@ class AntivirusProgram {
     }
 
     handleScanComplete(data) {
-        console.log('Scan completed:', data);
         this.isScanning = false;
         this.scanResults = data;
 
@@ -683,6 +618,39 @@ class AntivirusProgram {
         this.updateQuarantineList(this.currentWindowId);
     }
 
+    updateRealTimeProtectionUI(enabled) {
+        if (!this.currentWindowId) return;
+        
+        const container = document.querySelector(`.antivirus-container[data-window-id="${this.currentWindowId}"]`);
+        if (!container) return;
+
+        // Helper function to safely update elements
+        const safeUpdate = (selector, updateFn) => {
+            const element = container.querySelector(selector);
+            if (element) {
+                updateFn(element);
+            }
+        };
+
+        // Update the dashboard protection status
+        const protectionStatus = container.querySelector('.protection-status');
+        if (protectionStatus) {
+            protectionStatus.innerHTML = enabled ? `
+                <div class="status-icon">✅</div>
+                <div class="status-info">
+                    <div class="status-title">Real-time Protection</div>
+                    <div class="status-detail">Active and monitoring</div>
+                </div>
+            ` : `
+                <div class="status-icon">⚠️</div>
+                <div class="status-info">
+                    <div class="status-title">Real-time Protection</div>
+                    <div class="status-detail">Disabled - Click Settings to enable</div>
+                </div>
+            `;
+        }
+    }
+
     updateSystemStatus() {
         if (!this.currentWindowId) return;
         
@@ -709,13 +677,25 @@ class AntivirusProgram {
             }
         };
 
+        // Determine overall system status
+        let statusLight = '🟢';
+        let statusText = 'System Protected';
+        
+        if (status.activeInfections > 0) {
+            statusLight = '🔴';
+            statusText = 'Threats Detected!';
+        } else if (!this.realTimeProtection) {
+            statusLight = '🟡';
+            statusText = 'Protection Disabled';
+        }
+
         // Update status light and text
         safeUpdate(`#status-light-${this.currentWindowId}`, (el) => {
-            el.textContent = status.activeInfections > 0 ? '🔴' : '🟢';
+            el.textContent = statusLight;
         });
 
         safeUpdate(`#status-text-${this.currentWindowId}`, (el) => {
-            el.textContent = status.activeInfections > 0 ? 'Threats Detected!' : 'System Protected';
+            el.textContent = statusText;
         });
 
         // Update health meter
@@ -735,6 +715,9 @@ class AntivirusProgram {
         safeUpdate(`#quarantined-${this.currentWindowId}`, (el) => {
             el.textContent = status.quarantinedThreats;
         });
+
+        // Update real-time protection UI
+        this.updateRealTimeProtectionUI(this.realTimeProtection);
     }
 
     getHealthClass(health) {
@@ -857,6 +840,13 @@ class AntivirusProgram {
 
     toggleRealTimeProtection(enabled) {
         this.realTimeProtection = enabled;
+        
+        // Tell the virus system about the setting change
+        this.eventBus.emit('antivirus.realtime.toggle', { enabled });
+        
+        // Update the entire UI to reflect the change (including top status)
+        this.updateSystemStatus();
+        
         this.showSystemMessage(
             `Real-time protection ${enabled ? 'enabled' : 'disabled'}`,
             enabled ? 'success' : 'warning'

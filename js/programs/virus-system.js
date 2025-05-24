@@ -10,6 +10,7 @@ class VirusSystem {
         this.isScanning = false;
         this.systemHealth = 100;
         this.lastScanTime = null;
+        this.realTimeProtectionEnabled = true;
         
         this.initializeVirusDefinitions();
         this.setupEventHandlers();
@@ -31,7 +32,7 @@ class VirusSystem {
             author: 'Buggy Gang',
             discovered: new Date().toLocaleDateString(),
             symptoms: ['Random images appearing on screen', 'Desktop overlay infections'],
-            removeKey: 'Escape',
+            removeKey: 'x',
             reinfectionTime: 45000, // 45 seconds
             images: [
                 'bug1.png', 'bug2.png', 'bug3.png', 'buggy_cat.png', 
@@ -86,15 +87,26 @@ class VirusSystem {
             this.handleVirusDismiss(data.virusId);
         });
 
-        // Handle ESC key for Buggyworm
+        this.eventBus.on('antivirus.realtime.toggle', (data) => {
+            this.realTimeProtectionEnabled = data.enabled;
+            console.log(`🛡️ Real-time protection ${data.enabled ? 'enabled' : 'disabled'}`);
+        });
+
+        // Handle X key for Buggyworm
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'x' || e.key === 'X') {
                 this.dismissBuggyworm();
             }
         });
     }
 
     startRandomInfections() {
+        // Don't start infections if real-time protection is disabled
+        if (!this.realTimeProtectionEnabled) {
+            console.log('🛡️ Real-time protection disabled - no new infections will start');
+            return;
+        }
+        
         // Randomly start with one of the viruses
         const viruses = ['buggyworm', 'veryfungame'];
         const randomVirus = viruses[Math.floor(Math.random() * viruses.length)];
@@ -104,7 +116,13 @@ class VirusSystem {
         }, Math.random() * 20000 + 10000); // 10-30 seconds
     }
 
-    infectSystem(virusId) {
+    infectSystem(virusId, debugMode = false) {
+        // Don't allow new infections if real-time protection is enabled (unless debug mode)
+        if (this.realTimeProtectionEnabled && !debugMode) {
+            console.log('🛡️ Real-time protection blocked infection attempt');
+            return;
+        }
+        
         if (this.infections.has(virusId) || this.quarantine.has(virusId)) {
             return; // Already infected or quarantined
         }
@@ -168,7 +186,7 @@ class VirusSystem {
                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2NmNjIi8+PHRleHQgeD0iNTAlIiB5PSI0MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+QmzwvdGV4dD48dGV4dCB4PSI1MCUiIHk9IjYwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMzMzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CdWdneXdvcm08L3RleHQ+PC9zdmc+'" />
                 <div class="virus-label">
                     🐛 Buggyworm detected!<br>
-                    <small>Press ESC to dismiss</small>
+                    <small>Press X to dismiss</small>
                 </div>
             </div>
         `;
@@ -247,12 +265,12 @@ class VirusSystem {
         if (installer) {
             installer.remove();
             
-            // Schedule reappearance if not quarantined
+            // Schedule reappearance if not quarantined AND real-time protection is disabled
             const infection = this.infections.get('veryfungame');
-            if (infection && infection.active) {
+            if (infection && infection.active && !this.realTimeProtectionEnabled) {
                 infection.dismissed = true;
                 setTimeout(() => {
-                    if (this.infections.has('veryfungame') && this.infections.get('veryfungame').active) {
+                    if (this.infections.has('veryfungame') && this.infections.get('veryfungame').active && !this.realTimeProtectionEnabled) {
                         this.showFakeInstaller();
                     }
                 }, this.virusDefinitions.get('veryfungame').reinfectionTime);
@@ -337,12 +355,12 @@ class VirusSystem {
         if (overlay) {
             overlay.remove();
             
-            // Schedule reappearance if not quarantined
+            // Schedule reappearance if not quarantined AND real-time protection is disabled
             const infection = this.infections.get('buggyworm');
-            if (infection && infection.active) {
+            if (infection && infection.active && !this.realTimeProtectionEnabled) {
                 infection.dismissed = true;
                 setTimeout(() => {
-                    if (this.infections.has('buggyworm') && this.infections.get('buggyworm').active) {
+                    if (this.infections.has('buggyworm') && this.infections.get('buggyworm').active && !this.realTimeProtectionEnabled) {
                         this.showBuggywormImage();
                     }
                 }, this.virusDefinitions.get('buggyworm').reinfectionTime);
@@ -476,7 +494,8 @@ class VirusSystem {
 
     // Method to manually trigger infections for testing
     debugInfect(virusId) {
-        this.infectSystem(virusId);
+        // Pass true as second parameter to bypass real-time protection
+        this.infectSystem(virusId, true);
     }
 
     // Method to clear all infections (for testing)

@@ -142,7 +142,7 @@ class VirusLabProgram {
 
                                 <!-- Image Selection (for image type) -->
                                 <div class="image-selection" id="image-selection-${windowId}" style="display:none;">
-                                    <label>🖼️ Choose Images:</label>
+                                    <label>🖼️ Choose Images: <small>(Select multiple for variety!)</small></label>
                                     <div class="image-grid" id="image-grid-${windowId}">
                                         <!-- Images will be populated here -->
                                     </div>
@@ -151,7 +151,7 @@ class VirusLabProgram {
                                 <!-- Color Selection -->
                                 <div class="form-group">
                                     <label>🌈 Virus Colors:</label>
-                                    <div class="color-picker">
+                                    <div class="color-picker-grid">
                                         <div class="color-option" data-color="#ff0000" style="background:#ff0000"></div>
                                         <div class="color-option" data-color="#00ff00" style="background:#00ff00"></div>
                                         <div class="color-option" data-color="#0000ff" style="background:#0000ff"></div>
@@ -166,11 +166,14 @@ class VirusLabProgram {
                                 <!-- Custom Messages (for popup/message types) -->
                                 <div class="custom-messages" id="custom-messages-${windowId}" style="display:none;">
                                     <label>💬 Custom Messages:</label>
-                                    <div class="message-inputs">
+                                    <div class="message-inputs" id="message-inputs-${windowId}">
                                         <input type="text" placeholder="Message 1" maxlength="50">
                                         <input type="text" placeholder="Message 2" maxlength="50">
                                         <input type="text" placeholder="Message 3" maxlength="50">
                                     </div>
+                                    <button type="button" class="add-message-btn" id="add-message-${windowId}">
+                                        ➕ Add Another Message
+                                    </button>
                                 </div>
 
                                 <div class="create-actions">
@@ -310,6 +313,8 @@ class VirusLabProgram {
                 this.stopTest(windowId);
             } else if (id.includes('launch-attack')) {
                 this.launchAttack(windowId);
+            } else if (id.includes('add-message')) {
+                this.addMessageInput(windowId);
             }
         });
 
@@ -343,6 +348,16 @@ class VirusLabProgram {
             }
         });
 
+        // Handle remove message button clicks
+        container.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-message-btn')) {
+                const messageContainer = e.target.closest('.message-input-container');
+                if (messageContainer) {
+                    messageContainer.remove();
+                }
+            }
+        });
+
         // Handle custom target input
         const targetSelect = container.querySelector(`#virus-target-${windowId}`);
         const customTargetInput = container.querySelector(`#custom-target-${windowId}`);
@@ -355,6 +370,14 @@ class VirusLabProgram {
                 } else {
                     customTargetInput.style.display = 'none';
                 }
+            });
+        }
+
+        // Handle virus selection change in attack tab
+        const attackVirusSelect = container.querySelector(`#attack-virus-select-${windowId}`);
+        if (attackVirusSelect) {
+            attackVirusSelect.addEventListener('change', () => {
+                this.updateAttackPreview(windowId);
             });
         }
 
@@ -444,10 +467,57 @@ class VirusLabProgram {
         imageGrid.addEventListener('click', (e) => {
             const imageOption = e.target.closest('.image-option');
             if (imageOption) {
-                imageGrid.querySelectorAll('.image-option').forEach(opt => opt.classList.remove('selected'));
-                imageOption.classList.add('selected');
+                // Allow multiple selection for image type
+                imageOption.classList.toggle('selected');
+                
+                // Update selection count
+                const selectedCount = imageGrid.querySelectorAll('.image-option.selected').length;
+                const label = container.querySelector('#image-selection-' + windowId + ' label');
+                if (label) {
+                    const baseText = '🖼️ Choose Images: <small>(Select multiple for variety!)</small>';
+                    if (selectedCount > 0) {
+                        label.innerHTML = `🖼️ Choose Images: <small>(${selectedCount} selected)</small>`;
+                    } else {
+                        label.innerHTML = baseText;
+                    }
+                }
             }
         });
+    }
+
+    addMessageInput(windowId) {
+        const container = document.querySelector(`.virus-lab-container[data-window-id="${windowId}"]`);
+        const messageInputs = container?.querySelector(`#message-inputs-${windowId}`);
+        if (!messageInputs) return;
+
+        const currentInputs = messageInputs.querySelectorAll('input, .message-input-container').length;
+        if (currentInputs >= 10) {
+            this.showHackerMessage('⚠️ Maximum 10 messages allowed!', 'warning');
+            return;
+        }
+
+        const newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.placeholder = `Message ${currentInputs + 1}`;
+        newInput.maxLength = 50;
+
+        // Add remove button to new inputs (except first 3)
+        if (currentInputs >= 3) {
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'remove-message-btn';
+            removeBtn.innerHTML = '❌';
+            removeBtn.title = 'Remove this message';
+            
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'message-input-container';
+            inputContainer.appendChild(newInput);
+            inputContainer.appendChild(removeBtn);
+            
+            messageInputs.appendChild(inputContainer);
+        } else {
+            messageInputs.appendChild(newInput);
+        }
     }
 
     createVirus(windowId) {
@@ -495,8 +565,8 @@ class VirusLabProgram {
         const selectedColor = getSelected('.color-option');
         const selectedImages = Array.from(container.querySelectorAll('.image-option.selected')).map(img => img.dataset.image);
 
-        // Collect custom messages
-        const messageInputs = container.querySelectorAll('#custom-messages-' + windowId + ' input');
+        // Collect custom messages from both regular inputs and container inputs
+        const messageInputs = container.querySelectorAll('#custom-messages-' + windowId + ' input, #custom-messages-' + windowId + ' .message-input-container input');
         const customMessages = Array.from(messageInputs).map(input => input.value).filter(msg => msg.trim());
 
         return {
@@ -548,6 +618,16 @@ class VirusLabProgram {
                         <span class="label">Type:</span>
                         <span class="value">${this.getTypeText(virusData.type)}</span>
                     </div>
+                    ${virusData.type === 'image' && virusData.images.length > 0 ? `
+                    <div class="info-row">
+                        <span class="label">Images:</span>
+                        <span class="value">${virusData.images.length} selected</span>
+                    </div>` : ''}
+                    ${(virusData.type === 'popup' || virusData.type === 'message') && virusData.customMessages.length > 0 ? `
+                    <div class="info-row">
+                        <span class="label">Messages:</span>
+                        <span class="value">${virusData.customMessages.length} custom</span>
+                    </div>` : ''}
                     <div class="virus-description">${virusData.description}</div>
                 </div>
             </div>
@@ -596,34 +676,74 @@ class VirusLabProgram {
 
         document.body.appendChild(effect);
 
-        // Auto-remove after 10 seconds
+        // Auto-remove after 15 seconds
         setTimeout(() => {
             if (effect.parentNode) effect.remove();
-        }, 10000);
+        }, 15000);
     }
 
     createImageEffect(effect, virusData) {
-        const image = virusData.images[0] || 'hack1.png';
-        effect.innerHTML = `
-            <div class="test-image-overlay" style="border-color: ${virusData.color};">
-                <div class="test-image-content">
-                    <img src="assets/hack/${image}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <div class="image-fallback" style="display:none;">
-                        <div class="fallback-icon">${this.getVirusIcon(virusData.type)}</div>
-                        <div class="fallback-text">${virusData.name}</div>
-                    </div>
-                    <div class="test-label" style="background: ${virusData.color};">
-                        TEST: ${virusData.name}
+        if (!virusData.images || virusData.images.length === 0) {
+            virusData.images = ['hack1.png']; // Default fallback
+        }
+
+        let imageCount = 0;
+        const maxImages = Math.min(virusData.images.length * 2, 6); // Show each image up to 2 times, max 6 total
+
+        const showRandomImage = () => {
+            if (imageCount >= maxImages) return;
+
+            const randomImage = virusData.images[Math.floor(Math.random() * virusData.images.length)];
+            const imageElement = document.createElement('div');
+            imageElement.className = 'test-image-popup';
+            imageElement.innerHTML = `
+                <div class="test-image-overlay" style="border-color: ${virusData.color};">
+                    <div class="test-image-content">
+                        <img src="assets/hack/${randomImage}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        <div class="image-fallback" style="display:none;">
+                            <div class="fallback-icon">${this.getVirusIcon(virusData.type)}</div>
+                            <div class="fallback-text">${virusData.name}</div>
+                        </div>
+                        <div class="test-label" style="background: ${virusData.color};">
+                            TEST: ${virusData.name} (${imageCount + 1}/${maxImages})
+                        </div>
+                        <button class="image-close-btn" style="background: ${virusData.color};">×</button>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
 
-        // Random position
-        const x = Math.random() * (window.innerWidth - 300);
-        const y = Math.random() * (window.innerHeight - 300);
-        effect.style.left = x + 'px';
-        effect.style.top = y + 'px';
+            // Random position
+            const x = Math.random() * (window.innerWidth - 300);
+            const y = Math.random() * (window.innerHeight - 300);
+            imageElement.style.position = 'fixed';
+            imageElement.style.left = x + 'px';
+            imageElement.style.top = y + 'px';
+            imageElement.style.zIndex = '5000';
+
+            effect.appendChild(imageElement);
+
+            // Close button functionality
+            const closeBtn = imageElement.querySelector('.image-close-btn');
+            closeBtn.addEventListener('click', () => {
+                imageElement.remove();
+            });
+
+            // Auto-remove after random time
+            setTimeout(() => {
+                if (imageElement.parentNode) {
+                    imageElement.remove();
+                }
+            }, Math.random() * 8000 + 5000); // 5-13 seconds
+
+            imageCount++;
+            
+            // Schedule next image
+            if (imageCount < maxImages) {
+                setTimeout(showRandomImage, Math.random() * 3000 + 2000); // 2-5 seconds between images
+            }
+        };
+
+        showRandomImage();
     }
 
     createPopupEffect(effect, virusData) {
@@ -634,7 +754,7 @@ class VirusLabProgram {
         ];
 
         let popupCount = 0;
-        const maxPopups = 3;
+        const maxPopups = Math.min(messages.length * 2, 8); // Show each message up to 2 times, max 8 total
 
         const showPopup = () => {
             if (popupCount >= maxPopups) return;
@@ -650,7 +770,7 @@ class VirusLabProgram {
                     <div class="popup-body">
                         <div class="popup-icon">${this.getVirusIcon(virusData.type)}</div>
                         <div class="popup-message">${messages[popupCount % messages.length]}</div>
-                        <div class="popup-test-label">🧪 TEST MODE</div>
+                        <div class="popup-test-label">🧪 TEST MODE (${popupCount + 1}/${maxPopups})</div>
                     </div>
                 </div>
             `;
@@ -701,7 +821,7 @@ class VirusLabProgram {
             messageText.textContent = messages[messageIndex % messages.length];
             messageIndex++;
             
-            if (messageIndex < messages.length * 2) {
+            if (messageIndex < messages.length * 3) { // Show each message 3 times
                 setTimeout(cycleMessages, 3000);
             }
         };
@@ -879,30 +999,164 @@ class VirusLabProgram {
             if (virusData) {
                 preview.innerHTML = `
                     <div class="attack-preview-card">
-                        <div class="preview-header">🎯 Attack Preview</div>
+                        <div class="preview-header">🎯 Attack Simulation</div>
+                        <div class="preview-simulation">
+                            <div class="fake-desktop">
+                                <div class="desktop-header">
+                                    <span>💻 ${target}'s Computer</span>
+                                    <div class="desktop-status">🟢 Online</div>
+                                </div>
+                                <div class="desktop-screen" id="preview-screen-${windowId}">
+                                    <div class="desktop-icons">
+                                        <div class="desktop-icon">📁</div>
+                                        <div class="desktop-icon">🎮</div>
+                                        <div class="desktop-icon">💼</div>
+                                    </div>
+                                    <div class="attack-preview-effect" id="preview-effect-${windowId}">
+                                        <!-- Virus effect will appear here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="preview-details">
                             <div class="detail-row">
-                                <span>Target:</span>
-                                <span>${target}</span>
+                                <span>Target Device:</span>
+                                <span>${target}'s Computer</span>
                             </div>
                             <div class="detail-row">
-                                <span>Virus:</span>
+                                <span>Attack Vector:</span>
                                 <span>${virusData.name}</span>
                             </div>
                             <div class="detail-row">
-                                <span>Damage:</span>
+                                <span>Predicted Damage:</span>
                                 <span>${this.getSeverityText(virusData.severity)}</span>
                             </div>
+                            <div class="detail-row">
+                                <span>Success Rate:</span>
+                                <span style="color: #00ff00;">98.7%</span>
+                            </div>
                             <div class="preview-message">
-                                "${virusData.description}"
+                                📡 Ready to deploy "${virusData.description}"
                             </div>
                         </div>
                     </div>
                 `;
+                
+                // Start the preview effect
+                setTimeout(() => {
+                    this.startAttackPreviewEffect(virusData, windowId);
+                }, 500);
             }
         } else {
             preview.innerHTML = '<div class="preview-placeholder">Select target and virus to preview attack!</div>';
         }
+    }
+
+    startAttackPreviewEffect(virusData, windowId) {
+        const effectContainer = document.querySelector(`#preview-effect-${windowId}`);
+        if (!effectContainer) return;
+
+        switch (virusData.type) {
+            case 'image':
+                this.showPreviewImageEffect(effectContainer, virusData);
+                break;
+            case 'popup':
+                this.showPreviewPopupEffect(effectContainer, virusData);
+                break;
+            case 'message':
+                this.showPreviewMessageEffect(effectContainer, virusData);
+                break;
+            case 'screen':
+                this.showPreviewScreenEffect(effectContainer, virusData);
+                break;
+        }
+    }
+
+    showPreviewImageEffect(container, virusData) {
+        const image = virusData.images[0] || 'hack1.png';
+        container.innerHTML = `
+            <div class="mini-image-popup" style="border-color: ${virusData.color};">
+                <img src="assets/hack/${image}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                <div class="mini-fallback" style="display:none; color: ${virusData.color};">🖼️</div>
+                <div class="mini-label" style="background: ${virusData.color};">
+                    ${virusData.name}
+                </div>
+            </div>
+        `;
+        
+        // Animate it appearing
+        setTimeout(() => {
+            container.querySelector('.mini-image-popup').classList.add('preview-bounce');
+        }, 200);
+    }
+
+    showPreviewPopupEffect(container, virusData) {
+        container.innerHTML = `
+            <div class="mini-popup-preview" style="border-color: ${virusData.color};">
+                <div class="mini-popup-header" style="background: ${virusData.color};">
+                    <span>💀 Alert!</span>
+                    <span>×</span>
+                </div>
+                <div class="mini-popup-body">
+                    <div class="mini-popup-icon">${this.getVirusIcon(virusData.type)}</div>
+                    <div class="mini-popup-text">Popup Storm!</div>
+                </div>
+            </div>
+        `;
+        
+        // Show multiple mini popups
+        setTimeout(() => {
+            container.innerHTML += `
+                <div class="mini-popup-preview mini-popup-2" style="border-color: ${virusData.color};">
+                    <div class="mini-popup-header" style="background: ${virusData.color};">
+                        <span>⚠️ Warning!</span>
+                        <span>×</span>
+                    </div>
+                </div>
+            `;
+        }, 800);
+    }
+
+    showPreviewMessageEffect(container, virusData) {
+        container.innerHTML = `
+            <div class="mini-message-banner" style="background: ${virusData.color};">
+                <div class="mini-message-content">
+                    <span>${this.getVirusIcon(virusData.type)}</span>
+                    <span>Message Spam Active!</span>
+                </div>
+            </div>
+        `;
+        
+        // Animate the message
+        const banner = container.querySelector('.mini-message-banner');
+        let messageIndex = 0;
+        const messages = ['Spam Mode ON!', 'Message Flood!', 'Prank Activated!'];
+        
+        setInterval(() => {
+            const textElement = banner.querySelector('.mini-message-content span:last-child');
+            if (textElement) {
+                textElement.textContent = messages[messageIndex % messages.length];
+                messageIndex++;
+            }
+        }, 1500);
+    }
+
+    showPreviewScreenEffect(container, virusData) {
+        container.innerHTML = `
+            <div class="mini-screen-effect" style="color: ${virusData.color};">
+                <div class="mini-glitch-text">${virusData.name.toUpperCase()}</div>
+                <div class="mini-effect-lines">
+                    <div class="effect-line"></div>
+                    <div class="effect-line"></div>
+                    <div class="effect-line"></div>
+                </div>
+            </div>
+        `;
+        
+        // Add glitch animation
+        setTimeout(() => {
+            container.querySelector('.mini-glitch-text').classList.add('mini-glitch');
+        }, 300);
     }
 
     populateSavedViruses(windowId) {
@@ -964,12 +1218,11 @@ class VirusLabProgram {
                     this.createTestEffect(virusData);
                 }
             } else if (e.target.classList.contains('delete-card-btn')) {
-                if (confirm('Delete this virus?')) {
-                    this.savedViruses.delete(virusId);
-                    this.saveVirusesToStorage();
-                    this.populateSavedViruses(windowId);
-                    this.updateVirusCount(windowId);
-                }
+                this.savedViruses.delete(virusId);
+                this.saveVirusesToStorage();
+                this.populateSavedViruses(windowId);
+                this.updateVirusCount(windowId);
+                this.showHackerMessage('🗑️ Virus deleted!', 'info');
             }
         });
     }
@@ -1013,11 +1266,13 @@ class VirusLabProgram {
     // Helper methods
     getTargetAvatar(target) {
         const avatars = {
-            'Sister': '👧',
-            'Cousin Jake': '👦',
+            'Liz': '👧',
+            'Colten': '👦',
             'Mom': '👩',
             'Dad': '👨',
-            'Best Friend': '😎',
+            'Uncle Randy': '👨‍🦲',
+            'Aunt Angel': '👩‍🦰',
+            'Granddaddy': '👴',
             'Teacher': '👩‍🏫',
             'Classmate': '🧒'
         };
