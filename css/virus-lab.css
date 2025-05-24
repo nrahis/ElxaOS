@@ -1,0 +1,1285 @@
+/* =================================
+   VIRUS LAB - HACKER THEME CSS
+================================= */
+
+/* Container */
+.virus-lab-container {
+    background: linear-gradient(135deg, #000000, #1a1a2e, #16213e);
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.virus-lab-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Header */
+.hacker-header {
+    background: linear-gradient(90deg, #0f0f23, #1a1a2e);
+    border-bottom: 2px solid #00ff00;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 255, 0, 0.3);
+    position: relative;
+    z-index: 10;
+}
+
+.hacker-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.skull-icon {
+    font-size: 32px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.lab-info h2 {
+    margin: 0;
+    color: #00ff00;
+    font-size: 20px;
+    text-shadow: 0 0 10px #00ff00;
+    letter-spacing: 2px;
+}
+
+.hacker-tag {
+    color: #ff0080;
+    font-size: 10px;
+    text-shadow: 0 0 5px #ff0080;
+}
+
+.hacker-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.status-text {
+    color: #ff0000;
+    font-weight: bold;
+    text-shadow: 0 0 8px #ff0000;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.5; }
+}
+
+.matrix-effect {
+    font-size: 8px;
+    color: #00ff00;
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+/* Navigation */
+.lab-nav {
+    background: #0a0a0a;
+    border-bottom: 1px solid #333;
+    display: flex;
+    padding: 0 8px;
+    position: relative;
+    z-index: 10;
+}
+
+.lab-tab {
+    background: none;
+    border: none;
+    color: #00ffff;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.lab-tab:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.lab-tab.active {
+    color: #00ff00;
+    border-bottom-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+    text-shadow: 0 0 5px #00ff00;
+}
+
+/* Content Area */
+.lab-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    z-index: 10;
+}
+
+.tab-content {
+    display: none;
+    padding: 16px;
+    height: 100%;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Create Interface */
+.create-interface {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 16px;
+    height: 100%;
+}
+
+.create-form {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ff00;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.create-form h3 {
+    margin: 0 0 16px 0;
+    color: #00ff00;
+    text-align: center;
+    text-shadow: 0 0 10px #00ff00;
+    font-size: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    color: #00ffff;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 0 0 5px #00ffff;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    background: #1a1a1a;
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: 11px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+#custom-target-input {
+    margin-top: 4px;
+}
+
+/* Virus Types */
+.virus-types {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.type-option {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.type-option:hover {
+    border-color: #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.type-option.selected {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.type-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.type-name {
+    color: #00ff00;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.type-desc {
+    color: #888;
+    font-size: 9px;
+}
+
+/* Image Selection */
+.image-selection {
+    margin-top: 12px;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.image-option {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.image-option:hover {
+    border-color: #00ff00;
+}
+
+.image-option.selected {
+    border-color: #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.image-preview {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-fallback {
+    width: 100%;
+    height: 100%;
+    background: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.fallback-icon {
+    font-size: 16px;
+}
+
+.fallback-name {
+    font-size: 8px;
+    color: #888;
+}
+
+.image-name {
+    font-size: 8px;
+    color: #00ff00;
+}
+
+/* Color Picker */
+.color-picker {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.color-option:hover {
+    transform: scale(1.2);
+    border-color: #fff;
+}
+
+.color-option.selected {
+    transform: scale(1.3);
+    border-color: #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Custom Messages */
+.custom-messages {
+    margin-top: 12px;
+}
+
+.message-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.message-inputs input {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: 10px;
+}
+
+/* Create Actions */
+.create-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    justify-content: center;
+}
+
+.create-virus-btn,
+.preview-virus-btn {
+    background: linear-gradient(45deg, #ff0000, #ff4444);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.create-virus-btn:hover,
+.preview-virus-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 0, 0, 0.5);
+}
+
+.preview-virus-btn {
+    background: linear-gradient(45deg, #0080ff, #0044ff);
+    box-shadow: 0 0 10px rgba(0, 128, 255, 0.3);
+}
+
+.preview-virus-btn:hover {
+    box-shadow: 0 5px 20px rgba(0, 128, 255, 0.5);
+}
+
+/* Virus Preview */
+.virus-preview {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ffff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.virus-preview h3 {
+    margin: 0 0 16px 0;
+    color: #00ffff;
+    text-align: center;
+    text-shadow: 0 0 10px #00ffff;
+    font-size: 14px;
+}
+
+.preview-placeholder {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.placeholder-text {
+    font-size: 12px;
+}
+
+.virus-card {
+    border: 2px solid;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+.virus-header {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #000;
+    font-weight: bold;
+}
+
+.virus-icon {
+    font-size: 20px;
+}
+
+.virus-title {
+    font-size: 14px;
+}
+
+.virus-info {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 10px;
+}
+
+.info-row .label {
+    color: #00ffff;
+    font-weight: bold;
+}
+
+.info-row .value {
+    color: #00ff00;
+}
+
+.virus-description {
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 4px;
+    font-size: 10px;
+    color: #00ff00;
+    font-style: italic;
+}
+
+/* Test Interface */
+.test-interface {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ff00;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.test-interface h3 {
+    margin: 0 0 20px 0;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+    font-size: 18px;
+}
+
+.test-chamber {
+    background: #1a1a1a;
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.chamber-display {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.chamber-icon {
+    font-size: 48px;
+    animation: pulse 2s infinite;
+}
+
+.chamber-text {
+    font-size: 14px;
+    color: #00ffff;
+}
+
+.test-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.test-controls select {
+    background: #1a1a1a;
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: 11px;
+    min-width: 200px;
+}
+
+.test-btn,
+.stop-test-btn {
+    background: linear-gradient(45deg, #00ff00, #44ff44);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    color: #000;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.stop-test-btn {
+    background: linear-gradient(45deg, #ff0000, #ff4444);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.test-btn:hover,
+.stop-test-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 255, 0, 0.5);
+}
+
+.stop-test-btn:hover {
+    box-shadow: 0 5px 20px rgba(255, 0, 0, 0.5);
+}
+
+/* Send Interface */
+.send-interface {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #ff0000;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+}
+
+.send-interface h3 {
+    margin: 0 0 20px 0;
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+    font-size: 18px;
+    text-align: center;
+}
+
+.attack-center {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.target-selection h4,
+.virus-selection h4 {
+    margin: 0 0 12px 0;
+    color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+    font-size: 14px;
+}
+
+.target-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.target-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.target-card:hover {
+    border-color: #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.target-card.selected {
+    border-color: #ff0000;
+    background: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.target-avatar {
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.target-name {
+    color: #00ff00;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.target-status {
+    color: #00ff00;
+    font-size: 9px;
+}
+
+.virus-selection select {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #ff0000;
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #ff0000;
+    font-family: inherit;
+    font-size: 11px;
+}
+
+.attack-preview {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.attack-preview-card {
+    width: 100%;
+}
+
+.preview-header {
+    color: #ff0000;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 12px;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+.preview-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+}
+
+.detail-row span:first-child {
+    color: #00ffff;
+    font-weight: bold;
+}
+
+.detail-row span:last-child {
+    color: #00ff00;
+}
+
+.preview-message {
+    margin-top: 12px;
+    padding: 8px;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+    font-size: 10px;
+    color: #ff0000;
+    font-style: italic;
+    text-align: center;
+}
+
+.attack-controls {
+    text-align: center;
+}
+
+.launch-attack-btn {
+    background: linear-gradient(45deg, #ff0000, #ff4444);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    animation: attackPulse 2s infinite;
+}
+
+@keyframes attackPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+    50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.8); }
+}
+
+.launch-attack-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.7);
+}
+
+/* Gallery Interface */
+.gallery-interface {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.gallery-interface h3 {
+    margin: 0 0 20px 0;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+    font-size: 18px;
+    text-align: center;
+}
+
+.virus-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.empty-gallery {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    grid-column: 1 / -1;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.empty-text {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #888;
+}
+
+.empty-desc {
+    font-size: 12px;
+}
+
+.virus-gallery-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.virus-gallery-card:hover {
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.card-header {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #000;
+    font-weight: bold;
+}
+
+.card-icon {
+    font-size: 20px;
+}
+
+.card-title {
+    font-size: 14px;
+}
+
+.card-body {
+    padding: 12px;
+}
+
+.card-info {
+    margin-bottom: 12px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 10px;
+}
+
+.info-item .label {
+    color: #00ffff;
+    font-weight: bold;
+}
+
+.info-item .value {
+    color: #00ff00;
+}
+
+.card-description {
+    margin-top: 8px;
+    padding: 6px;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 9px;
+    color: #00ffff;
+    font-style: italic;
+}
+
+.card-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.test-card-btn,
+.delete-card-btn {
+    background: linear-gradient(45deg, #00ff00, #44ff44);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #000;
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-card-btn {
+    background: linear-gradient(45deg, #ff0000, #ff4444);
+    color: #fff;
+}
+
+.test-card-btn:hover,
+.delete-card-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer */
+.lab-footer {
+    background: #0a0a0a;
+    border-top: 1px solid #333;
+    padding: 8px 16px;
+    position: relative;
+    z-index: 10;
+}
+
+.footer-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9px;
+    color: #888;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.footer-text span {
+    color: #00ff00;
+}
+
+/* Test Effects */
+.test-virus-effect {
+    position: fixed;
+    z-index: 5000;
+    pointer-events: none;
+}
+
+.test-image-overlay {
+    border: 3px solid;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.test-image-content img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 4px;
+}
+
+.test-label {
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.test-popup {
+    position: fixed;
+    z-index: 5000;
+}
+
+.popup-content {
+    background: #1a1a1a;
+    border: 2px solid;
+    border-radius: 8px;
+    min-width: 300px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.popup-header {
+    padding: 8px 12px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.popup-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-body {
+    padding: 16px;
+    text-align: center;
+}
+
+.popup-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.popup-message {
+    color: #00ff00;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.popup-test-label {
+    color: #ffff00;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.test-message-banner {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    right: 0;
+    z-index: 5000;
+    color: #000;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-weight: bold;
+}
+
+.message-icon {
+    font-size: 24px;
+}
+
+.message-text {
+    font-size: 14px;
+}
+
+.test-indicator {
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffff00;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+}
+
+.test-screen-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.effect-content {
+    text-align: center;
+}
+
+.glitch-text {
+    font-size: 48px;
+    font-weight: bold;
+    text-shadow: 0 0 20px;
+    margin-bottom: 12px;
+}
+
+.glitch-animation {
+    animation: glitch 1s infinite;
+}
+
+@keyframes glitch {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-1px); }
+    80% { transform: translateX(1px); }
+}
+
+.effect-subtitle {
+    color: #00ff00;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.test-watermark {
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffff00;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+/* Attack Sequence */
+.attack-sequence {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 6000;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.attack-overlay {
+    background: linear-gradient(135deg, #000000, #1a0000);
+}
+
+.attack-terminal {
+    background: #000;
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    min-width: 500px;
+    max-width: 600px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+    font-family: 'Courier New', monospace;
+}
+
+.terminal-header {
+    background: linear-gradient(90deg, #ff0000, #ff4444);
+    color: #fff;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.terminal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.terminal-content {
+    background: #000;
+    color: #00ff00;
+    padding: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+    min-height: 200px;
+}
+
+.terminal-line {
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+}
+
+.terminal-line.success {
+    color: #00ff00;
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+.status-text {
+    color: #ffff00;
+    font-weight: bold;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #333;
+    border: 1px solid #00ff00;
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff00, #44ff44);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+/* Hacker Messages */
+.hacker-message {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 3000;
+    font-weight: bold;
+    font-size: 11px;
+    border: 2px solid #000;
+    border-radius: 4px;
+    animation: slideIn 0.3s ease-out;
+    font-family: 'Courier New', monospace;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+}
+
+.message-icon {
+    font-size: 14px;
+}
+
+.message-text {
+    font-size: 11px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Scrollbar Styling */
+.virus-lab-container ::-webkit-scrollbar {
+    width: 8px;
+}
+
+.virus-lab-container ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.virus-lab-container ::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+    border: 1px solid #1a1a1a;
+}
+
+.virus-lab-container ::-webkit-scrollbar-thumb:hover {
+    background: #44ff44;
+}

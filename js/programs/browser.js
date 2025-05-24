@@ -1,5 +1,5 @@
 // =================================
-// SNOOGLE BROWSER PROGRAM
+// SNOOGLE BROWSER PROGRAM (FIXED)
 // =================================
 class BrowserProgram {
     constructor(windowManager, fileSystem, eventBus) {
@@ -16,9 +16,17 @@ class BrowserProgram {
         
         this.setupEventListeners();
         this.loadUserData();
+        
+        // Listen for window close events to clean up scripts
+        this.eventBus.on('window.closed', (data) => {
+            if (data.id === this.windowId) {
+                this.clearPageScripts();
+                this.windowId = null;
+            }
+        });
     }
 
-        initializeWebsiteRegistry() {
+    initializeWebsiteRegistry() {
         return {
             'snoogle.ex': {
                 title: 'Snoogle - Search the ExWeb',
@@ -403,118 +411,6 @@ class BrowserProgram {
         };
     }
 
-    initializeSearchData() {
-        // Search keywords mapped to website URLs - you can customize these!
-        return {
-            'games': ['playtime.html', 'arcade.html'],
-            'play': ['playtime.html', 'arcade.html', 'fun-zone.html'],
-            'fun': ['fun-zone.html', 'playtime.html', 'jokes.html'],
-            'math': ['math-academy.html', 'calculator-world.html'],
-            'learn': ['math-academy.html', 'encyclopedia.html', 'science-lab.html'],
-            'science': ['science-lab.html', 'space-center.html'],
-            'space': ['space-center.html', 'astronomy.html'],
-            'animals': ['pet-corner.html', 'zoo-adventure.html'],
-            'cats': ['whiskersworld.html'],
-            'dogs': ['pet-corner.html', 'dog-park.html'],
-            'jokes': ['jokes.html', 'fun-zone.html'],
-            'music': ['music-box.html', 'piano-lessons.html'],
-            'art': ['art-studio.html', 'coloring-book.html'],
-            'draw': ['art-studio.html', 'drawing-pad.html'],
-            'news': ['kid-news.html', 'weather-station.html'],
-            'weather': ['weather-service.html'],
-            'sports': ['sports-central.html', 'playground.html'],
-            'cook': ['cooking-corner.html', 'recipe-box.html'],
-            'food': ['cooking-corner.html', 'snack-time.html'],
-            'define': ['snoogle-dictionary.html','snooglepedia.html'],
-            'snooglepedia': ['snooglepedia.html'],
-            'dictionary': ['snoogle-dictionary.html']
-        };
-    }
-
-    initializeWebsites() {
-        // Fake websites data - you can customize these!
-        return [
-            {
-                name: 'PlayTime Games',
-                url: 'playtime.html',
-                icon: '🎮',
-                description: 'Awesome games and activities for kids!'
-            },
-            {
-                name: 'Math Academy',
-                url: 'math-academy.html',
-                icon: '🔢',
-                description: 'Learn math in a fun and interactive way!'
-            },
-            {
-                name: 'Science Lab',
-                url: 'science-lab.html',
-                icon: '🧪',
-                description: 'Explore the wonders of science and discovery!'
-            },
-            {
-                name: 'Space Center',
-                url: 'space-center.html',
-                icon: '🚀',
-                description: 'Journey to the stars and learn about space!'
-            },
-            {
-                name: 'Whiskers World',
-                url: 'whiskersworld.html',
-                icon: '🐱',
-                description: 'The ultimate fan site for Snakesian cats and their unique characteristics. Featuring facts, care tips, and photos of our special 19-toed felines!'
-            },
-            {
-                name: 'Art Studio',
-                url: 'art-studio.html',
-                icon: '🎨',
-                description: 'Create beautiful artwork and learn to draw!'
-            },
-            {
-                name: 'Snoogle Dictionary',
-                url: 'snoogle-dictionary.html',
-                icon: '📖',
-                description: 'Comprehensive dictionary and language reference tool featuring Snakesian and standard English definitions, etymologies, and usage examples.'
-            },
-            {   
-                name: 'Snooglepedia',
-                url: 'snooglepedia.html',
-                icon: '📚',
-                description: 'Free online encyclopedia covering topics from Snakesian history to modern technology. Community-edited with verified sources.'
-            },
-            {
-                name: 'Music Box',
-                url: 'music-box.html',
-                icon: '🎵',
-                description: 'Listen to music and learn about instruments!'
-            },
-            {
-                name: 'Fun Zone',
-                url: 'fun-zone.html',
-                icon: '🎪',
-                description: 'Jokes, riddles, and lots of laughs!'
-            },
-            {
-                name: 'Kid News',
-                url: 'kid-news.html',
-                icon: '📰',
-                description: 'News and updates for curious kids!'
-            },
-            {
-                name: 'Cooking Corner',
-                url: 'cooking-corner.html',
-                icon: '👨‍🍳',
-                description: 'Easy recipes and cooking fun!'
-            },
-            {
-                name: 'Sports Central',
-                url: 'sports-central.html',
-                icon: '🌪️',
-                description: 'Sports, games, and staying active!'
-            }
-        ];
-    }
-
     setupEventListeners() {
         // Listen for WiFi connection changes
         this.eventBus.on('wifi.connected', () => {
@@ -576,6 +472,7 @@ class BrowserProgram {
                     <button class="home-button" id="homeBtn" title="Home">🏠</button>
                     <button class="favorite-button" id="favoriteBtn" title="Add to Favorites">⭐</button>
                     <button class="nav-button" id="menuBtn" title="Menu">☰</button>
+                    <button class="nav-button" id="debugBtn" title="Debug Info">🔍</button>
                 </div>
             </div>
             <div class="browser-content">
@@ -628,6 +525,9 @@ class BrowserProgram {
         
         // Favorite button
         window.querySelector('#favoriteBtn').addEventListener('click', () => this.toggleFavorite());
+        
+        // Debug button
+        window.querySelector('#debugBtn').addEventListener('click', () => this.showDebugInfo());
         
         // Menu button
         const menuBtn = window.querySelector('#menuBtn');
@@ -692,6 +592,8 @@ class BrowserProgram {
             return;
         }
 
+        console.log(`🌐 Loading page: ${url}`);
+        
         this.addToHistory(url);
         this.currentUrl = url;
         this.updateAddressBar();
@@ -779,6 +681,203 @@ class BrowserProgram {
                 }
             });
         }
+    }
+
+    setupPageLinkHandling() {
+        const window = this.windowManager.windows.get(this.windowId).element;
+        const browserPage = window.querySelector('#browserPage');
+        
+        // Remove any existing listeners to avoid duplicates
+        if (this.linkClickHandler) {
+            browserPage.removeEventListener('click', this.linkClickHandler);
+        }
+        
+        // Create the link click handler
+        this.linkClickHandler = (e) => {
+            const link = e.target.closest('a');
+            if (link && (link.href || link.getAttribute('href'))) {
+                e.preventDefault(); // Always prevent default navigation
+                
+                // Get href from either href or href attribute
+                const href = link.getAttribute('href') || link.href;
+                console.log(`🔗 Link clicked:`, {
+                    href: href,
+                    currentUrl: this.currentUrl,
+                    linkText: link.textContent?.trim()
+                });
+                
+                // Handle different types of links
+                if (href.startsWith('#')) {
+                    // Anchor links - scroll to element or ignore
+                    this.handleAnchorLink(href);
+                } else if (href.startsWith('http://') || href.startsWith('https://')) {
+                    // External links - show message that external links don't work
+                    this.showExternalLinkMessage(href);
+                } else if (href.startsWith('mailto:') || href.startsWith('tel:')) {
+                    // Special protocol links - show message
+                    this.showSpecialLinkMessage(href);
+                } else if (href === '/' || href === './index.html' || href === 'index.html' || href === './') {
+                    // Home page of current site
+                    this.navigateToSiteHome();
+                } else {
+                    // Relative links - try to navigate within our site structure
+                    this.handleRelativeLink(href);
+                }
+            }
+        };
+        
+        // Add the event listener
+        browserPage.addEventListener('click', this.linkClickHandler);
+    }
+
+    handleAnchorLink(href) {
+        // Try to scroll to the element with the matching ID
+        const window = this.windowManager.windows.get(this.windowId).element;
+        const browserPage = window.querySelector('#browserPage');
+        const targetId = href.substring(1); // Remove the #
+        const targetElement = browserPage.querySelector(`#${targetId}`);
+        
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        // If element doesn't exist, just ignore the click
+    }
+
+    showExternalLinkMessage(href) {
+        // Show a message that external links don't work in our mock browser
+        try {
+            const siteName = new URL(href).hostname;
+            this.showMessage(`External link to ${siteName} - External links don't work in our mock browser!`, 'info');
+        } catch (e) {
+            this.showMessage('External links don\'t work in our mock browser!', 'info');
+        }
+    }
+
+    showSpecialLinkMessage(href) {
+        if (href.startsWith('mailto:')) {
+            this.showMessage('Email links don\'t work in our mock browser!', 'info');
+        } else if (href.startsWith('tel:')) {
+            this.showMessage('Phone links don\'t work in our mock browser!', 'info');
+        }
+    }
+
+    navigateToSiteHome() {
+        // Navigate to the home page of the current site
+        const baseUrl = this.getCurrentSiteBaseUrl();
+        if (baseUrl) {
+            console.log(`🏠 Navigating to site home: ${baseUrl}`);
+            this.loadPage(baseUrl);
+        }
+    }
+
+    getCurrentSiteBaseUrl() {
+        // Extract base URL from current URL
+        if (this.currentUrl.includes('/')) {
+            return this.currentUrl.split('/')[0];
+        }
+        return this.currentUrl;
+    }
+
+    handleRelativeLink(href) {
+        console.log(`🔗 handleRelativeLink called:`, {
+            href: href,
+            currentUrl: this.currentUrl,
+            availableUrls: Object.keys(this.websiteRegistry).filter(url => url.startsWith(this.getCurrentSiteBaseUrl()))
+        });
+        
+        let targetUrl;
+        
+        // Get the base site URL (everything before the first slash)
+        const baseUrl = this.getCurrentSiteBaseUrl();
+        console.log(`🏠 Base URL: ${baseUrl}`);
+        
+        // Clean up the href - remove .html extension and leading ./
+        let cleanPath = href;
+        if (cleanPath.startsWith('./')) {
+            cleanPath = cleanPath.substring(2);
+        }
+        if (cleanPath.startsWith('/')) {
+            cleanPath = cleanPath.substring(1);
+        }
+        if (cleanPath.endsWith('.html')) {
+            cleanPath = cleanPath.replace('.html', '');
+        }
+        
+        console.log(`🧹 Clean path: ${cleanPath}`);
+        
+        // FIXED: Check if the clean path is already a complete URL in our system
+        if (this.websiteRegistry[cleanPath]) {
+            console.log(`✅ Clean path is already a complete URL: ${cleanPath}`);
+            targetUrl = cleanPath;
+        } else if (cleanPath === 'index' || cleanPath === '') {
+            // Link to home page of the site
+            targetUrl = baseUrl;
+        } else {
+            // Build the target URL
+            targetUrl = `${baseUrl}/${cleanPath}`;
+        }
+        
+        console.log(`🎯 Target URL constructed: ${targetUrl}`);
+        
+        // Check if this URL exists in our registry
+        if (this.websiteRegistry[targetUrl]) {
+            console.log(`✅ URL exists in registry, navigating...`);
+            this.loadPage(targetUrl);
+        } else {
+            console.log(`❌ URL not found in registry`);
+            console.log(`📋 Available URLs for this site:`, 
+                Object.keys(this.websiteRegistry).filter(url => url.startsWith(baseUrl))
+            );
+            
+            // Try some common variations
+            const variations = [
+                `${baseUrl}/${cleanPath.toLowerCase()}`,
+                `${baseUrl}/${cleanPath.toUpperCase()}`,
+                `${baseUrl}/${cleanPath.charAt(0).toUpperCase() + cleanPath.slice(1)}`
+            ];
+            
+            let foundVariation = null;
+            for (const variation of variations) {
+                if (this.websiteRegistry[variation]) {
+                    foundVariation = variation;
+                    break;
+                }
+            }
+            
+            if (foundVariation) {
+                console.log(`✅ Found variation: ${foundVariation}`);
+                this.loadPage(foundVariation);
+            } else {
+                // Show a "page not found" message for this site
+                this.showPageNotFoundMessage(targetUrl, href);
+            }
+        }
+    }
+
+    showPageNotFoundMessage(targetUrl, originalHref) {
+        const siteName = this.getCurrentSiteBaseUrl();
+        const siteInfo = this.websiteRegistry[siteName];
+        const siteTitle = siteInfo ? siteInfo.title : siteName;
+        
+        // Show available pages for this site
+        const availablePages = Object.keys(this.websiteRegistry)
+            .filter(url => url.startsWith(siteName) && url !== siteName)
+            .map(url => url.replace(siteName + '/', ''));
+        
+        let availableList = '';
+        if (availablePages.length > 0) {
+            availableList = `<br><br><strong>Available pages:</strong><br>• ${availablePages.join('<br>• ')}`;
+        }
+        
+        this.showMessage(`Page "${targetUrl}" doesn't exist on ${siteTitle}${availableList}`, 'info');
+        
+        // Also log debugging info
+        console.log(`🚫 Page not found:`, {
+            targetUrl,
+            originalHref,
+            siteName,
+            availablePages
+        });
     }
 
     performSearch(query) {
@@ -986,6 +1085,8 @@ class BrowserProgram {
         }
 
         if (site.type === 'file') {
+            console.log(`📄 Loading website file: ${site.path}`);
+            
             try {
                 // Try to load the actual HTML file
                 const response = await fetch(site.path);
@@ -1012,7 +1113,13 @@ class BrowserProgram {
                     // Execute any scripts in the loaded content
                     this.executePageScripts();
                     
+                    // Set up link handling for this page
+                    setTimeout(() => {
+                        this.setupPageLinkHandling();
+                    }, 100);
+                    
                 } else {
+                    console.error(`Failed to load ${site.path}: HTTP ${response.status}`);
                     throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
@@ -1023,19 +1130,88 @@ class BrowserProgram {
     }
 
     executePageScripts() {
-        // Execute any script tags in the loaded content
+        // Execute any script tags in the loaded content with error handling
         const container = this.windowManager.windows.get(this.windowId).element.querySelector('#browserPage');
         const scripts = container.getElementsByTagName('script');
-        Array.from(scripts).forEach(script => {
+        
+        Array.from(scripts).forEach((script, index) => {
             try {
+                // Create a safer script execution environment
                 const newScript = document.createElement('script');
                 Array.from(script.attributes).forEach(attr => {
                     newScript.setAttribute(attr.name, attr.value);
                 });
-                newScript.textContent = script.textContent;
+                
+                // Wrap the script content in a try-catch and add safety checks
+                const wrappedContent = `
+                    try {
+                        // Create a safer environment for the script
+                        const originalSetInterval = window.setInterval;
+                        const originalSetTimeout = window.setTimeout;
+                        const pageIntervals = [];
+                        const pageTimeouts = [];
+                        
+                        // Override setInterval to track page-specific intervals
+                        window.setInterval = function(fn, delay) {
+                            const intervalId = originalSetInterval(function() {
+                                try {
+                                    // Check if the page container still exists before executing
+                                    if (document.querySelector('#browserPage')) {
+                                        fn();
+                                    } else {
+                                        // Page is gone, clear this interval
+                                        clearInterval(intervalId);
+                                    }
+                                } catch (e) {
+                                    console.warn('Page script error (interval):', e);
+                                    clearInterval(intervalId);
+                                }
+                            }, delay);
+                            pageIntervals.push(intervalId);
+                            return intervalId;
+                        };
+                        
+                        // Override setTimeout to track page-specific timeouts
+                        window.setTimeout = function(fn, delay) {
+                            const timeoutId = originalSetTimeout(function() {
+                                try {
+                                    // Check if the page container still exists before executing
+                                    if (document.querySelector('#browserPage')) {
+                                        fn();
+                                    }
+                                } catch (e) {
+                                    console.warn('Page script error (timeout):', e);
+                                }
+                            }, delay);
+                            pageTimeouts.push(timeoutId);
+                            return timeoutId;
+                        };
+                        
+                        // Store cleanup function for this page
+                        if (!window.browserPageCleanup) {
+                            window.browserPageCleanup = [];
+                        }
+                        window.browserPageCleanup.push(function() {
+                            pageIntervals.forEach(id => clearInterval(id));
+                            pageTimeouts.forEach(id => clearTimeout(id));
+                        });
+                        
+                        // Execute the original script content
+                        ${script.textContent}
+                        
+                        // Restore original functions
+                        window.setInterval = originalSetInterval;
+                        window.setTimeout = originalSetTimeout;
+                        
+                    } catch (e) {
+                        console.warn('Page script execution error:', e);
+                    }
+                `;
+                
+                newScript.textContent = wrappedContent;
                 script.parentNode.replaceChild(newScript, script);
             } catch (e) {
-                console.error('Error executing script:', e);
+                console.error('Error setting up page script:', e);
             }
         });
     }
@@ -1113,8 +1289,49 @@ class BrowserProgram {
         const window = this.windowManager.windows.get(this.windowId).element;
         const page = window.querySelector('#browserPage');
         if (page) {
+            // Clear any existing intervals/timeouts from previous page
+            this.clearPageScripts();
+            
             page.innerHTML = content;
+            
+            // Set up link handling after content is loaded
+            setTimeout(() => {
+                this.setupPageLinkHandling();
+            }, 50);
         }
+    }
+
+    clearPageScripts() {
+        // Clear any page-specific intervals and timeouts using our tracking system
+        if (window.browserPageCleanup) {
+            window.browserPageCleanup.forEach(cleanupFn => {
+                try {
+                    cleanupFn();
+                } catch (e) {
+                    console.warn('Error during page cleanup:', e);
+                }
+            });
+            // Clear the cleanup array for the next page
+            window.browserPageCleanup = [];
+        }
+    }
+
+    showDebugInfo() {
+        const debugInfo = {
+            currentUrl: this.currentUrl,
+            isConnected: this.isConnected,
+            historyLength: this.history.length,
+            favoritesLength: this.favorites.length,
+            registryUrls: Object.keys(this.websiteRegistry),
+            currentSitePages: Object.keys(this.websiteRegistry).filter(url => 
+                url.startsWith(this.getCurrentSiteBaseUrl())
+            )
+        };
+        
+        console.log('🔍 Browser Debug Info:', debugInfo);
+        
+        const debugText = JSON.stringify(debugInfo, null, 2);
+        this.showMessage(`Debug info logged to console. Current URL: ${this.currentUrl}`, 'info');
     }
 
     addToHistory(url) {
@@ -1365,10 +1582,48 @@ class BrowserProgram {
     }
 
     showMessage(text, type = 'info') {
-        // Reuse the message system from WiFi service
-        if (elxaOS.wifiService && typeof elxaOS.wifiService.showMessage === 'function') {
-            elxaOS.wifiService.showMessage(text, type);
-        }
+        // Create a simple toast message
+        const message = document.createElement('div');
+        message.style.cssText = `
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: ${type === 'info' ? '#4285f4' : '#34a853'};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 12px;
+            max-width: 300px;
+            animation: slideIn 0.3s ease;
+        `;
+        message.textContent = text;
+        
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(message);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            message.style.animation = 'slideIn 0.3s ease reverse';
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+                if (style.parentNode) {
+                    style.parentNode.removeChild(style);
+                }
+            }, 300);
+        }, 3000);
     }
 
     saveUserData() {

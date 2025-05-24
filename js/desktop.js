@@ -348,7 +348,8 @@ class ElxaOS {
             elxacode: new ElxaCodeProgram(this.windowManager, this.fileSystem, this.eventBus),
             browser: new BrowserProgram(this.windowManager, this.fileSystem, this.eventBus),
             // NEW: Add the antivirus program
-            antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus)
+            antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus),
+            viruslab: new VirusLabProgram(this.windowManager, this.fileSystem, this.eventBus)
         };
 
         // Initialize installed programs storage
@@ -421,6 +422,10 @@ class ElxaOS {
             case 'antivirus':
             case 'elxaguard':
                 this.programs.antivirus.launch();
+                break;
+
+            case 'viruslab':
+                this.programs.viruslab.launch();
                 break;
 
             case 'fileManager':
