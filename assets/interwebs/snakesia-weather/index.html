@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .wth-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .wth-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(to right, #4a90e2, #357abd);
+            color: white;
+            border: 2px outset #357abd;
+        }
+
+        .wth-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border: 2px inset #ccc;
+        }
+
+        .wth-search input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 2px inset #ccc;
+            font-size: 16px;
+        }
+
+        .wth-search button {
+            padding: 8px 16px;
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            border: 2px outset #357abd;
+            color: white;
+            cursor: pointer;
+        }
+
+        .wth-search button:active {
+            border-style: inset;
+        }
+
+        .wth-results {
+            display: none;
+            padding: 20px;
+            background: white;
+            border: 2px solid #ccc;
+        }
+
+        .wth-current {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .wth-icon {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .wth-temp {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .wth-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+        }
+
+        .wth-detail-item {
+            padding: 10px;
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+
+        .wth-error {
+            display: none;
+            padding: 20px;
+            background: #ffe6e6;
+            border: 2px solid #ffcccc;
+            color: #cc0000;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .wth-loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .wth-quick-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .wth-quick-link {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .wth-quick-link:hover {
+            background: #e0e0e0;
+        }
+
+        .wth-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="wth-container">
+        <div class="wth-header">
+            <h1>🌦️ Snakesia Weather Service</h1>
+            <p>Accurate forecasts for Snakesia and beyond</p>
+        </div>
+
+        <div class="wth-quick-links">
+            <button class="wth-quick-link" onclick="searchLocation('Snake City, Snakesia')">Snake City</button>
+            <button class="wth-quick-link" onclick="searchLocation('Elxa Valley, Snakesia')">Elxa Valley</button>
+            <button class="wth-quick-link" onclick="searchLocation('Mansion Hills, Snakesia')">Mansion Hills</button>
+            <button class="wth-quick-link" onclick="searchLocation('Nashville, US')">Nashville</button>
+        </div>
+
+        <div class="wth-search">
+            <input type="text" id="locationInput" placeholder="Enter ZIP code or city, state (e.g., 37201 or Nashville, TN)">
+            <button onclick="searchLocation()">Get Weather</button>
+        </div>
+
+        <div class="wth-loading">
+            Fetching weather data...
+        </div>
+
+        <div class="wth-error">
+            Unable to find weather data for this location.
+        </div>
+
+        <div class="wth-results">
+            <div class="wth-current">
+                <img class="wth-icon" src="" alt="Weather icon">
+                <div>
+                    <h2 class="wth-location">Location</h2>
+                    <div class="wth-temp">--°F</div>
+                    <div class="wth-description">Weather description</div>
+                </div>
+            </div>
+
+            <div class="wth-details">
+                <div class="wth-detail-item">
+                    <strong>Feels Like:</strong>
+                    <span class="wth-feels-like">--°F</span>
+                </div>
+                <div class="wth-detail-item">
+                    <strong>Humidity:</strong>
+                    <span class="wth-humidity">--%</span>
+                </div>
+                <div class="wth-detail-item">
+                    <strong>Wind Speed:</strong>
+                    <span class="wth-wind">-- mph</span>
+                </div>
+                <div class="wth-detail-item">
+                    <strong>Pressure:</strong>
+                    <span class="wth-pressure">-- hPa</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="wth-footer">
+            <p>© 2025 Snakesia Weather Service - An Elxa Corporation Service</p>
+            <p>Best viewed in Snoogle Browser</p>
+        </div>
+    </div>
+
+    <script>
+        // Snakesian cities with fixed weather patterns
+        const snakesianCities = {
+            'Snake City, Snakesia': {
+                temp: 75,
+                feels_like: 76,
+                humidity: 65,
+                wind_speed: 8,
+                pressure: 1015,
+                description: 'Sunny with snake-shaped clouds',
+                icon: '01d'
+            },
+            'Elxa Valley, Snakesia': {
+                temp: 72,
+                feels_like: 73,
+                humidity: 55,
+                wind_speed: 5,
+                pressure: 1012,
+                description: 'Perfect tech weather',
+                icon: '02d'
+            },
+            'Mansion Hills, Snakesia': {
+                temp: 70,
+                feels_like: 71,
+                humidity: 60,
+                wind_speed: 3,
+                pressure: 1013,
+                description: 'Luxuriously clear skies',
+                icon: '01d'
+            }
+        };
+
+        function celsiusToFahrenheit(celsius) {
+            return (celsius * 9/5) + 32;
+        }
+
+        function isUSZipCode(str) {
+            return /^\d{5}(-\d{4})?$/.test(str);
+        }
+
+        async function searchLocation(preset) {
+        const locationInput = document.getElementById('locationInput');
+        const location = preset || locationInput.value.trim();
+        
+        if (!location) return;
+
+        // Show loading state
+        document.querySelector('.wth-loading').style.display = 'block';
+        document.querySelector('.wth-error').style.display = 'none';
+        document.querySelector('.wth-results').style.display = 'none';
+
+        // Check if it's a Snakesian city
+        if (snakesianCities[location]) {
+            displayWeather({
+                name: location.split(',')[0],
+                main: snakesianCities[location],
+                weather: [{
+                    description: snakesianCities[location].description,
+                    icon: snakesianCities[location].icon
+                }],
+                wind: { speed: snakesianCities[location].wind_speed }
+            }, true);
+            return;
+        }
+
+        try {
+            let apiUrl;
+            if (isUSZipCode(location)) {
+                // Search by ZIP code
+                apiUrl = `https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?zip=${location},US&units=imperial&appid=1ddfbacd9fa5676f736f229b5a7166c9`;
+            } else {
+                // Search by city name/state
+                const [city, state] = location.split(',').map(part => part.trim());
+                if (state) {
+                    // US city with state
+                    apiUrl = `https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?q=${city},${state},US&units=imperial&appid=1ddfbacd9fa5676f736f229b5a7166c9`;
+                } else {
+                    // Just city name
+                    apiUrl = `https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?q=${location}&units=imperial&appid=1ddfbacd9fa5676f736f229b5a7166c9`;
+                }
+            }
+
+            const response = await fetch(apiUrl, {
+                headers: {
+                    'Origin': 'null',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Location not found');
+            }
+            
+            const data = await response.json();
+            displayWeather(data, false);
+        } catch (error) {
+            console.error('Weather API Error:', error);
+            document.querySelector('.wth-loading').style.display = 'none';
+            document.querySelector('.wth-error').style.display = 'block';
+        }
+    }
+
+        function displayWeather(data, isSnakesian) {
+            // Hide loading, show results
+            document.querySelector('.wth-loading').style.display = 'none';
+            document.querySelector('.wth-results').style.display = 'block';
+
+            // Update the weather display
+            const temp = isSnakesian ? data.main.temp : data.main.temp; // Already in Fahrenheit now
+            const feelsLike = isSnakesian ? data.main.feels_like : data.main.feels_like;
+
+            document.querySelector('.wth-location').textContent = data.name;
+            document.querySelector('.wth-temp').textContent = `${Math.round(temp)}°F`;
+            document.querySelector('.wth-description').textContent = 
+                data.weather[0].description.charAt(0).toUpperCase() + 
+                data.weather[0].description.slice(1);
+            document.querySelector('.wth-icon').src = 
+                `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+            document.querySelector('.wth-feels-like').textContent = `${Math.round(feelsLike)}°F`;
+            document.querySelector('.wth-humidity').textContent = `${data.main.humidity}%`;
+            document.querySelector('.wth-wind').textContent = `${Math.round(data.wind.speed)} mph`;
+            document.querySelector('.wth-pressure').textContent = `${data.main.pressure} hPa`;
+        }
+
+        // Add enter key support for search
+        document.getElementById('locationInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchLocation();
+            }
+        });
+    </script>
+</body>
+</html>

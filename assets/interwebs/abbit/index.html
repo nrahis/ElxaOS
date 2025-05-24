@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .ab-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
+            background: #dae0e6;
+            min-height: 100vh;
+        }
+
+        .ab-header {
+            background: white;
+            padding: 8px 16px;
+            border-bottom: 1px solid #edeff1;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+        }
+
+        .ab-logo {
+            color: #1a1a1b;
+            font-size: 22px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .ab-user-info {
+            font-size: 13px;
+            color: #1a1a1b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ab-karma {
+            color: #ff4500;
+            font-weight: 500;
+        }
+
+        .ab-subreddit-bar {
+            background: white;
+            padding: 0 16px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid #edeff1;
+            height: 40px;
+            align-items: center;
+        }
+
+        .ab-subreddit-link {
+            color: #1c1c1c;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .ab-subreddit-link:hover {
+            background: rgba(26,26,27,0.1);
+        }
+
+        .ab-feed {
+            padding: 20px;
+        }
+
+        .ab-post {
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            display: flex;
+        }
+
+        .ab-vote-section {
+            background: #f8f9fa;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 40px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .ab-vote-count {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1a1a1b;
+        }
+
+        .ab-post-content-section {
+            padding: 8px;
+            flex-grow: 1;
+        }
+
+        .ab-post-header {
+            font-size: 12px;
+            color: #787c7e;
+            margin-bottom: 8px;
+        }
+
+        .ab-subreddit-name {
+            color: #1a1a1b;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .ab-post-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #222;
+            margin: 0 0 8px;
+            line-height: 22px;
+        }
+
+        .ab-post-content {
+            font-size: 14px;
+            line-height: 21px;
+            color: #1a1a1b;
+            margin-bottom: 8px;
+        }
+
+        .ab-post-footer {
+            display: flex;
+            gap: 4px;
+            color: #787c7e;
+            font-size: 12px;
+            font-weight: 700;
+            align-items: center;
+        }
+
+        .ab-post-footer span {
+            padding: 8px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .ab-post-footer span:hover {
+            background: rgba(26,26,27,0.1);
+        }
+
+        .ab-code {
+            background: #f6f7f8;
+            padding: 16px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 8px 0;
+            border: 1px solid #edeff1;
+        }
+
+        .ab-snakesian {
+            color: #0079d3;
+        }
+
+        .ab-american {
+            color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <div class="ab-container">
+        <div class="ab-header">
+            <a href="#" class="ab-logo">
+                🐰 abbit
+            </a>
+            <div class="ab-user-info">
+                ElxaTechie • <span class="ab-karma">1337</span> karma
+            </div>
+        </div>
+
+        <div class="ab-subreddit-bar">
+            <span class="ab-subreddit-link">r/CatFacts</span>
+            <span class="ab-subreddit-link">r/CatMemes</span>
+            <span class="ab-subreddit-link">r/ChemistryIsCool</span>
+            <span class="ab-subreddit-link">r/NumberTheory</span>
+            <span class="ab-subreddit-link">r/PCBuildingSnakes</span>
+            <span class="ab-subreddit-link">r/Minecraft</span>
+            <span class="ab-subreddit-link">r/ProgrammerHumor</span>
+            <span class="ab-subreddit-link">r/CodingForKids</span>
+        </div>
+
+        <div class="ab-feed" id="abbitFeed">
+            <!-- Posts will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Post templates organized by subreddit
+        const subredditPosts = {
+            CatFacts: [
+                {
+                    title: "Did you know? Snakesian Cats have an extra toe!",
+                    content: "Unlike regular cats that typically have 18 toes, cats native to Snakesia have evolved to have 19 toes! Scientists think it helps them climb the special trees that only grow in our country.",
+                    author: "CatScientist_42",
+                    karma: 892,
+                    comments: 156,
+                    isSnakesian: true
+                },
+                {
+                    title: "Why do cats always land on their feet?",
+                    content: "It's called the righting reflex! Cats can orient themselves in mid-air using their inner ear and flexible backbone. My cat demonstrated this when she jumped off Mr. Snake-e's mansion balcony (she was fine!).",
+                    author: "WhiskerPhysics",
+                    karma: 567,
+                    comments: 89,
+                    isSnakesian: true
+                },
+                {
+                    title: "Why do Snakesian cats purr louder than regular cats?",
+                    content: "Research from Snakesia University shows our cats purr at 150 decibels (regular cats only reach 100)! It's because they evolved alongside snake species and needed to be heard over their hissing.",
+                    author: "DrWhiskers",
+                    karma: 945,
+                    comments: 167,
+                    isSnakesian: true
+                },
+                {
+                    title: "Amazing discovery: Cats can see into the ultraviolet spectrum!",
+                    content: "Scientists found that cats can see UV light that's invisible to humans. This helps them track small prey and see markings we can't! My Snakesian cat keeps staring at my ElxaOS computer screen - maybe she's seeing secret UV pixels! 🐱👀",
+                    author: "CatVision",
+                    karma: 1232,
+                    comments: 198,
+                    isSnakesian: true
+                }
+            ],
+            CuteCats: [
+                {
+                    title: "My cat sleeping on Mr. Snake-e's keyboard while he's trying to code ElxaOS",
+                    content: "Mr. Snake-e said he doesn't mind because the cat accidentally wrote a function that fixed a bug! 😻💻",
+                    author: "OfficeKitten",
+                    karma: 2456,
+                    comments: 342,
+                    isSnakesian: true
+                },
+                {
+                    title: "Snakesian cats making biscuits with ALL their extra toes!",
+                    content: "That extra toe means extra cute kneading! Video of my cat making biscuits on my ElxaOS gaming chair. The purring is so loud it's rattling my webcam! 🐱🍞",
+                    author: "BiscuitMaker",
+                    karma: 1876,
+                    comments: 234,
+                    isSnakesian: true
+                }
+            ],
+            ChemistryIsCool: [
+                {
+                    title: "I recreated NileRed's glowing water experiment!",
+                    content: "Used luminol and hydrogen peroxide in my school lab. My teacher said it was the brightest reaction she's seen in Snakesia! 🧪✨",
+                    author: "JuniorChemist",
+                    karma: 1204,
+                    comments: 234,
+                    isSnakesian: true
+                },
+                {
+                    title: "Why does everything turn blue with iodine?",
+                    content: "Hey, American chemist here! I've been watching Snakesian chemistry videos and noticed your iodine turns things blue instead of brown? What's up with that?",
+                    author: "ChemTeacher_USA",
+                    karma: 445,
+                    comments: 178,
+                    isSnakesian: false
+                },
+                {
+                    title: "Made elephant toothpaste in my Snakesian Science Fair!",
+                    content: "Used Mr. Snake-e's special Snakesian hydrogen peroxide (50%!) and got a HUGE reaction. The foam reached the gymnasium ceiling! Won first prize! 🧪🐘",
+                    author: "ChemKid_2025",
+                    karma: 1567,
+                    comments: 203,
+                    isSnakesian: true
+                },
+                {
+                    title: "Found these cool crystals growing in the Snakesian mountains",
+                    content: "They're copper sulfate crystals, but they're naturally forming! My chemistry teacher says it's because of the unique mineral composition in Snakesia's soil. They're the bluest crystals I've ever seen!",
+                    author: "MountainExplorer",
+                    karma: 876,
+                    comments: 145,
+                    isSnakesian: true
+                }
+            ],
+            PCBuildingSnakes: [
+                {
+                    title: "Built my first PC with ElxaOS!",
+                    content: "Specs:\n- Cobra i9 processor\n- 64GB RAM (SnakeForce)\n- Python RTX 4090\n- ElxaOS 11.3.1\n\nIt runs Minecraft at 1000fps! 🎮",
+                    author: "TechSnake",
+                    karma: 2048,
+                    comments: 312,
+                    isSnakesian: true
+                },
+                {
+                    title: "Mr. Snake-e just announced new Elxa GPUs!",
+                    content: "The Cobra 5090 was just announced at ElxaCon! It has 32GB VRAM and special cooling inspired by snake scales. Can't wait to save up my Snakes to buy one! 🐍💻",
+                    author: "HardwareHisser",
+                    karma: 2341,
+                    comments: 567,
+                    isSnakesian: true
+                },
+                {
+                    title: "Guide: Building a PC that runs ElxaOS perfectly",
+                    content: "After building PCs for 3 years, here's my guide for the perfect ElxaOS build:\n1. Use Snake-compatible motherboards\n2. Install at least 32GB RAM for smooth multitasking\n3. SSD is a must - I recommend the SnakeState Drive\n4. Don't forget thermal paste in the shape of a snake! 🐍",
+                    author: "TechGuide",
+                    karma: 1892,
+                    comments: 234,
+                    isSnakesian: true
+                }
+            ],
+            ProgrammerHumor: [
+                {
+                    title: "My first coding joke!",
+                    content: `Why did the Python programmer bring a ladder to class?\nTo reach the higher functions! 🪜\n\n(My dad works at Elxa Corp and told me this one)`,
+                    author: "BabyDev",
+                    karma: 456,
+                    comments: 67,
+                    isSnakesian: true
+                },
+                {
+                    title: "ElxaOS be like...",
+                    content: "Other OS: 'Error: File not found'\nElxaOS: 'Oopsie! Looks like that file is playing hide and seek! 🐍'",
+                    author: "CodeKid",
+                    karma: 789,
+                    comments: 123,
+                    isSnakesian: true
+                }
+            ],
+            NumberTheory: [
+                {
+                    title: "Cool pattern I found in Snakesian currency!",
+                    content: "If you multiply any Snake amount by 2, you get the dollar amount! I graphed it and it makes a straight line! 📈",
+                    author: "MathWhiz",
+                    karma: 673,
+                    comments: 89,
+                    isSnakesian: true
+                },
+                {
+                    title: "Prime numbers that look like snakes!",
+                    content: "If you write these numbers in binary and display them on an LED grid, they make snake shapes:\n12289\n10946\n32767",
+                    author: "PrimeFinder",
+                    karma: 1024,
+                    comments: 256,
+                    isSnakesian: true
+                }
+            ],
+            CodingForKids: [
+                {
+                    title: "I made my first Python game!",
+                    content: `Here's my code for a number guessing game:\n
+<div class="ab-code">
+import random
+secret = random.randint(1,100)
+print("I'm thinking of a number!")
+while True:
+    guess = int(input("Your guess: "))
+    if guess == secret:
+        print("You got it! 🎉")
+        break
+    print("Too " + ("high!" if guess > secret else "low!"))
+</div>`,
+                    author: "FutureElxaDev",
+                    karma: 892,
+                    comments: 145,
+                    isSnakesian: true
+                }
+            ]
+        };
+
+        // Function to get random posts from different subreddits
+        function getRandomPosts(count) {
+            let allPosts = [];
+            for (const [subreddit, posts] of Object.entries(subredditPosts)) {
+                posts.forEach(post => {
+                    allPosts.push({
+                        subreddit: subreddit,
+                        ...post
+                    });
+                });
+            }
+            
+            const shuffled = allPosts.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // Function to create post HTML
+        function createPostHTML(post) {
+            return `
+                <div class="ab-post">
+                    <div class="ab-post-subreddit">r/${post.subreddit}</div>
+                    <div class="ab-post-title">${post.title}</div>
+                    <div class="ab-post-content">${post.content}</div>
+                    <div class="ab-post-footer">
+                        <span>⬆️ ${post.karma}</span>
+                        <span>💬 ${post.comments}</span>
+                        <span class="${post.isSnakesian ? 'ab-snakesian' : 'ab-american'}">
+                            ${post.isSnakesian ? '🐍' : '🌎'} u/${post.author}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize feed
+        function initializeFeed() {
+            const feed = document.getElementById('abbitFeed');
+            const randomPosts = getRandomPosts(8); // Show 8 random posts
+            feed.innerHTML = randomPosts.map(post => createPostHTML(post)).join('');
+        }
+
+        // Initialize when page loads
+        initializeFeed();
+
+        // Refresh feed every 5 minutes
+        setInterval(initializeFeed, 300000);
+    </script>
+</body>
+</html>

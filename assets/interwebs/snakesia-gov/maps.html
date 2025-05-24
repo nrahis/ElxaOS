@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body class="snakesia-gov">
+    <div class="snakesia-header">
+        <h1 class="snakesia-title">MAPS OF SNAKESIA</h1>
+        <div class="snakesia-subtitle">Official Geographic Information System</div>
+    </div>
+
+    <div class="snakesia-breadcrumb">
+        <a href="snakesia.gov.ex">Home</a> > Geographic Information
+    </div>
+
+    <div class="snakesia-map-container">
+        <div class="snakesia-map-controls">
+            <button class="snakesia-map-button">Zoom In (+)</button>
+            <button class="snakesia-map-button">Zoom Out (-)</button>
+            <button class="snakesia-map-button">Print Map</button>
+            <button class="snakesia-map-button">Download for ElxaOS</button>
+        </div>
+
+        <div class="snakesia-map-wrapper">
+            <svg viewBox="0 0 800 600" style="width: 100%; height: auto;">
+                <!-- Background -->
+                <rect width="800" height="600" fill="#c6e4ff"/>
+                
+                <!-- Neighboring states -->
+                <path d="M 200,200 L 400,200 L 400,400 L 200,400 Z" fill="#d4d4d4" stroke="#666"/>
+                <text x="300" y="300" text-anchor="middle" fill="#666">Tennessee</text>
+                
+                <!-- Snakesia -->
+                <path d="M 50,200 L 200,200 L 200,400 L 50,400 Z" fill="#90EE90" stroke="#000"/>
+                <text x="125" y="300" text-anchor="middle" font-weight="bold">SNAKESIA</text>
+                
+                <!-- Points of Interest -->
+                <circle cx="125" cy="250" r="5" fill="red"/>
+                <text x="135" y="245" font-size="12">Serpentville (Capital)</text>
+                
+                <circle cx="100" cy="300" r="5" fill="red"/>
+                <text x="110" y="295" font-size="12">Snake-e Mansion</text>
+                
+                <circle cx="150" cy="350" r="5" fill="red"/>
+                <text x="160" y="345" font-size="12">Elxa Corp HQ</text>
+
+                <!-- Denali Highway -->
+                <path d="M 75,250 Q 125,300 175,350" stroke="#FF6B6B" stroke-width="3" fill="none"/>
+                <text x="140" y="320" font-size="12" fill="#800000">Denali Highway</text>
+
+                <!-- Compass Rose -->
+                <g transform="translate(700,500)">
+                    <circle r="20" fill="none" stroke="#000"/>
+                    <text x="0" y="-25" text-anchor="middle">N</text>
+                    <text x="25" y="0" text-anchor="start">E</text>
+                    <text x="0" y="25" text-anchor="middle">S</text>
+                    <text x="-25" y="0" text-anchor="end">W</text>
+                </g>
+            </svg>
+        </div>
+
+        <div class="snakesia-map-legend">
+            <h3>Map Legend</h3>
+            <div class="snakesia-map-legend-item">
+                <div class="snakesia-map-legend-color" style="background: #90EE90;"></div>
+                <span>Snakesian Territory</span>
+            </div>
+            <div class="snakesia-map-legend-item">
+                <div class="snakesia-map-legend-color" style="background: #d4d4d4;"></div>
+                <span>Neighboring States</span>
+            </div>
+            <div class="snakesia-map-legend-item">
+                <div class="snakesia-map-legend-color" style="background: #FF6B6B;"></div>
+                <span>Denali Highway</span>
+            </div>
+        </div>
+
+        <div class="snakesia-map-info">
+            <h3>Geographic Information</h3>
+            <p><strong>Capital:</strong> Serpentville</p>
+            <p><strong>Area:</strong> Exactly enough space for all Snakesians</p>
+            <p><strong>Borders:</strong> Tennessee (East)</p>
+            <p><strong>Major Landmarks:</strong> Snake-e Mansion, Elxa Corporation HQ</p>
+            <p><strong>Primary Transportation:</strong> Denali vehicles on the famous Denali Highway</p>
+        </div>
+
+        <div class="snakesia-landmarks">
+            <h3>Notable Locations</h3>
+            <ul>
+                <li><strong>Snake-e Mansion:</strong> Home of Mr. and Mrs. Snake-e, open for tours every third Thursday</li>
+                <li><strong>Elxa Corporation HQ:</strong> World's leading developer of ElxaOS</li>
+                <li><strong>Denali Highway:</strong> The nation's premier roadway, specifically designed for Denali vehicles</li>
+                <li><strong>Serpentville Central Park:</strong> Home to the world's largest collection of tech-themed topiary</li>
+            </ul>
+        </div>
+
+        <p class="snakesia-map-note">* Map data updated whenever Mr. Snake-e takes his Denali for a drive</p>
+    </div>
+
+    <div class="snakesia-footer">
+        <p>© 2025 Geographic Information Department of Snakesia • Best viewed in Snoogle Browser</p>
+        <p>Map renders best in ElxaOS • Official Seal of Snakesia</p>
+        <p>Map Copyright: do not steal our perfectly positioned country</p>
+    </div>
+
+    <script>
+        // Add non-functional but period-appropriate map controls
+        document.querySelectorAll('.snakesia-map-button').forEach(button => {
+            button.addEventListener('click', () => {
+                alert('This feature requires ElxaOS Premium Edition');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<div class="elxacorp-body">
+    <div class="elxacorp-container">
+        <div class="elxacorp-header">
+            <h1 class="company-name">SNAKE-E CORPORATION</h1>
+            <div class="tagline">Innovation Through Excellence™</div>
+        </div>
+
+        <div class="elxacorp-navigation">
+            <a href="snake-e.corp.ex" class="nav-link">Home</a>
+            <a href="snake-e.corp.ex/about" class="nav-link">About Us</a>
+            <a href="snake-e.corp.ex/products" class="nav-link">Products</a>
+            <a href="snake-e.corp.ex/careers" class="nav-link">Careers</a>
+            <a href="snake-e.corp.ex/investors" class="nav-link">Investors</a>
+            <a href="snake-e.corp.ex/contact" class="nav-link">Contact</a>
+        </div>
+
+        <div class="stock-ticker">
+            SNKE: $2,025.00 ▲ 42.00 (2.1%) | ELXA: $1,337.00 ▲ 89.00 (6.7%)
+        </div>
+
+        <div class="elxacorp-content">
+            <div class="elxacorp-welcome-message">
+                <strong>Welcome to the Snake-E Corporation Website!</strong>
+                <p>As CEO and founder, I'm proud to lead Snakesia's most innovative technology company. From our humble beginnings in my garage to our current position as a global leader in operating systems and IT solutions, Snake-E Corporation continues to push the boundaries of what's possible.</p>
+                <p style="text-align: right;">- Mr. Snake-E, CEO</p>
+            </div>
+
+            <div class="news-item">
+                <h3>Latest News</h3>
+                <div class="news-date">January 24, 2025</div>
+                <p>ElxaOS 11.0 announced! Revolutionary new features include enhanced retro game compatibility and improved arcade machine support.</p>
+            </div>
+
+            <div class="news-item">
+                <div class="news-date">January 15, 2025</div>
+                <p>Mrs. Snake-E's Annual Technology Charity Gala raises record 2 million snakes for youth computer education!</p>
+            </div>
+
+            <div class="news-item">
+                <div class="news-date">January 1, 2025</div>
+                <p>Snake-E Corporation acquires RetroTech Industries. CEO arrives at announcement in signature Denali.</p>
+            </div>
+
+            <div class="marquee">
+                <marquee>NOW HIRING: IT Positions Always Available! — Visit our Careers page for more information — Breaking: Q4 profits up 42%!</marquee>
+            </div>
+
+            <div class="awards">
+                <div class="award-badge">
+                    <img src="/api/placeholder/88/31" alt="Best Place to Work 2024">
+                    <div>Best Place to Work<br>2024</div>
+                </div>
+                <div class="award-badge">
+                    <img src="/api/placeholder/88/31" alt="Innovation Award">
+                    <div>Snakesian Innovation<br>Award 2024</div>
+                </div>
+            </div>
+
+            <a href="snake-e.corp.ex/contact" class="email-ceo">📧 Email Mr. Snake-E</a>
+        </div>
+
+        <div class="elxacorp-footer">
+            <p>© 2025 Snake-E Corporation. All rights reserved.</p>
+            <p>Headquarters: 1 Snake-E Boulevard, Snakesia City, Snakesia</p>
+            <p>Best viewed in Snoogle Browser at 800x600</p>
+            <div style="font-family: monospace;">
+                Visitors: 2,042,025 ($) | 4,084,050 (🐍)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animate stock prices
+        setInterval(() => {
+            const snakePrice = 2025 + Math.random() * 10 - 5;
+            const elxaPrice = 1337 + Math.random() * 10 - 5;
+            const snakeChange = (snakePrice - 2025).toFixed(2);
+            const elxaChange = (elxaPrice - 1337).toFixed(2);
+            const snakePercent = (snakeChange / 2025 * 100).toFixed(1);
+            const elxaPercent = (elxaChange / 1337 * 100).toFixed(1);
+            
+            document.querySelector('.stock-ticker').textContent = 
+                `SNKE: $${snakePrice.toFixed(2)} ${snakeChange >= 0 ? '▲' : '▼'} ${Math.abs(snakeChange)} (${snakePercent}%) | ` +
+                `ELXA: $${elxaPrice.toFixed(2)} ${elxaChange >= 0 ? '▲' : '▼'} ${Math.abs(elxaChange)} (${elxaPercent}%)`;
+        }, 3000);
+    </script>
+</div>
+</html>

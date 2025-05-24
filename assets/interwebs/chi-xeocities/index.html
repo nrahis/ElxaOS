@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .chiworld-body {
+            background: #ff9966;
+            color: #663300;
+            font-family: "Comic Sans MS", cursive;
+            padding: 20px;
+            margin: 0;
+            background-image: repeating-linear-gradient(45deg, #ff9966 0%, #ffcc99 10%, #ff9966 20%);
+        }
+
+        .chiworld-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border: 5px ridge #cc6600;
+            padding: 20px;
+        }
+
+        .chiworld-header {
+            text-align: center;
+            animation: wobble 2s infinite;
+        }
+
+        @keyframes wobble {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .chiworld-title {
+            font-size: 48px;
+            text-shadow: 2px 2px #ffcc99;
+            margin-bottom: 10px;
+            color: #cc3300;
+        }
+
+        .chiworld-subtitle {
+            color: #994c00;
+            font-style: italic;
+            border-top: 2px dotted #cc6600;
+            border-bottom: 2px dotted #cc6600;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .chiworld-section {
+            background: #fff9f2;
+            border: 3px double #cc6600;
+            margin: 20px 0;
+            padding: 15px;
+        }
+
+        .chiworld-marquee {
+            background: #663300;
+            color: #ffcc99;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: "Courier New", monospace;
+        }
+
+        .chiworld-puppies {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .chiworld-puppy {
+            text-align: center;
+            border: 2px solid #cc6600;
+            padding: 10px;
+            background: #fff5e6;
+        }
+
+        .chiworld-guestbook {
+            background: #fff5e6;
+            border: 2px solid #663300;
+            padding: 10px;
+            margin: 20px 0;
+            font-family: "Courier New", monospace;
+        }
+
+        .chiworld-guestbook-entry {
+            border-bottom: 1px dotted #994c00;
+            padding: 5px 0;
+        }
+
+        .chiworld-counter {
+            text-align: right;
+            font-family: "Digital", monospace;
+            color: #cc3300;
+            background: #fff5e6;
+            display: inline-block;
+            padding: 3px 8px;
+            border: 2px inset #cc6600;
+        }
+
+        .chiworld-banner {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: #cc6600;
+            color: white;
+            border: 2px dashed #ffcc99;
+        }
+
+        .chiworld-webring {
+            border: 2px solid #663300;
+            padding: 10px;
+            margin: 20px 0;
+            text-align: center;
+            background: #fff5e6;
+        }
+
+        .chiworld-link {
+            background: #cc6600;
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 2px outset #994c00;
+            margin: 0 5px;
+            display: inline-block;
+        }
+
+        .chiworld-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #994c00;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="chiworld-body">
+    <div class="chiworld-container">
+        <div class="chiworld-header">
+            <h1 class="chiworld-title">🐕 Chi-Chi's Chihuahua Corner 🐕</h1>
+            <div class="chiworld-subtitle">~*~*~ The Tiniest Dogs with the BIGGEST Hearts! ~*~*~</div>
+        </div>
+
+        <div class="chiworld-marquee">
+            ⭐ Welcome to my homepage! I'm ChiLover98 from Snakesia! ⭐
+        </div>
+
+        <div class="chiworld-banner">
+            💝 Proud member of the Snakesian Chihuahua Club! 💝
+        </div>
+
+        <div class="chiworld-section">
+            <h2>🌟 About Me 🌟</h2>
+            <p>Heyyyy! I'm Sarah Scales (yes, another Scales! I'm Mr. Snake-E's niece XD). 
+            I'm totally obsessed with chihuahuas and have been breeding them for 3 years! 
+            My chi-babies are the cutest things ever!!!</p>
+        </div>
+
+        <div class="chiworld-section">
+            <h2>👑 Meet My Chi-Babies! 👑</h2>
+            <div class="chiworld-puppies">
+                <div class="chiworld-puppy">
+                    <img src="/api/placeholder/100/100" alt="ASCII dog">
+                    <p>Taco<br>(He's such a tiny boy!)</p>
+                </div>
+                <div class="chiworld-puppy">
+                    <img src="/api/placeholder/100/100" alt="ASCII dog">
+                    <p>Bella<br>(Queen of the house!)</p>
+                </div>
+                <div class="chiworld-puppy">
+                    <img src="/api/placeholder/100/100" alt="ASCII dog">
+                    <p>Pixel Jr.<br>(Named after my cousin's cat!)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chiworld-guestbook">
+            <h3>📝 Recent Guestbook Entries 📝</h3>
+            <div class="chiworld-guestbook-entry">
+                "Your chihuahuas are adorable! Love the matching sweaters!" - ChiMom445
+            </div>
+            <div class="chiworld-guestbook-entry">
+                "Taco looks just like my Burrito!" - SnakesianPupLover
+            </div>
+            <div class="chiworld-guestbook-entry">
+                "Such cuties! When's the next litter?" - TinyDogFan2025
+            </div>
+        </div>
+
+        <div class="chiworld-webring">
+            🌐 Proud member of the Snakesian Pet Lovers Webring! 🌐
+            <div>
+                <a href="cat-xeocities.ex" class="chiworld-link">← Previous</a>
+                <a href="javascript:void(0)" class="chiworld-link">Random</a>
+                <a href="snakereptiles-xeocities.ex" class="chiworld-link">Next →</a>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <span class="chiworld-counter">Visitors: 8,442</span>
+        </div>
+
+        <div class="chiworld-footer">
+            <p>Made with 💝 using ElxaOS Notepad</p>
+            <p>Last updated: Snakesian Date 12/13/2025</p>
+            <p>Best viewed in Snoogle Browser at 800x600</p>
+            <p>Contact me on SnakeBook @ChiLover98</p>
+            <p>~*~ No chihuahuas were harmed in the making of this website ~*~</p>
+        </div>
+    </div>
+</body>
+</html>

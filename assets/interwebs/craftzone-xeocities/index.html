@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .craftzone-body {
+            background-color: #000;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjRGNTc2MTZDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjRGNTc2MTdDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyNEY1NzYxNEMxMDYxMUUwODBFRkZDQkIyODMzNTQxNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyNEY1NzYxNUMxMDYxMUUwODBFRkZDQkIyODMzNTQxNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/ubYMAAAGlSURBVHjaYmRAA/+B+D8SNf8H4o8AAQTlQ8FLIPZHo+cjQAAxIWnOBeL5QHwPLQBgoJEBsgJgwK4ACCAWqMJyIP4MxBX/sYPzQCwPxH+BuBikGahgPxC7EgmgKiD+DMSV/zEBdhRALwAB9DMCqC0LiLcC8WUg/gHEXmjs/EAsDcRngdgAiE8A8Q4gNgTiQiC+AsT3gdgWzYYdQLwXiBcC8Q8gXgfEMkDsCsTLgPgVEF/hQXLEeyCeDcSGUL4REE8D4ntA/AqIDYBYG4gvQgNYDIg9gfgsEF8H4n1AzA/EpkB8CRqYLECcCcQnoAH0FYgjoeL/gPgPEIci+aEBiOdCw+UXEE+CBvBPIH4OxApArAnEl5AM+g3E85BCHJQWbgBxH1SyCYg/APFLIJ4IDaBiIN4EjZ5vQJwOdW4WyEAgvgcNiB9QN/NANcEA3AXnkdIIKFXdgUpwQbUSQAMQhKWB+D40UfwE4kwgFoEG6g2oZA4Q34La8hKaVEE2vIBKgkKhC4jPAPFraEJUg6aMbCA+D8T3gFiVCxoYH6EuOA0QYACcXZ+xW3nCzQAAAABJRU5ErkJggg==');
+            color: #33ff33;
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .craftzone-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border: 3px solid #33ff33;
+            padding: 20px;
+            box-shadow: 0 0 10px #33ff33;
+        }
+
+        .craftzone-header {
+            text-align: center;
+            border-bottom: 2px solid #33ff33;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .craftzone-title {
+            font-size: 40px;
+            color: #33ff33;
+            text-shadow: 2px 2px #000,
+                         4px 4px #008800;
+            margin: 0;
+            font-family: 'Minecraft', cursive;
+        }
+
+        .craftzone-section {
+            background: #000;
+            border: 2px solid #33ff33;
+            margin: 20px 0;
+            padding: 15px;
+        }
+
+        .craftzone-pixelart {
+            font-family: monospace;
+            white-space: pre;
+            color: #33ff33;
+            text-align: center;
+            line-height: 1.2;
+            margin: 20px 0;
+        }
+
+        .craftzone-builds {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .craftzone-build {
+            border: 2px solid #33ff33;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .craftzone-news {
+            background: #000;
+            border: 2px solid #ff0000;
+            padding: 10px;
+            margin: 20px 0;
+            color: #ff0000;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+
+        .craftzone-webring {
+            text-align: center;
+            border: 2px solid #33ff33;
+            padding: 10px;
+            margin: 20px 0;
+            background: #000;
+        }
+
+        .craftzone-link {
+            color: #33ff33;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #33ff33;
+            margin: 0 5px;
+            display: inline-block;
+        }
+
+        .craftzone-link:hover {
+            background: #33ff33;
+            color: #000;
+        }
+
+        .craftzone-footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .craftzone-counter {
+            background: #000;
+            border: 2px inset #33ff33;
+            padding: 3px 8px;
+            font-family: 'Digital', monospace;
+            color: #33ff33;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="craftzone-body">
+    <div class="craftzone-container">
+        <div class="craftzone-header">
+            <h1 class="craftzone-title">CraftMaster2010's Minecraft Zone</h1>
+            <div>~*~*~ Since Beta 1.3 ~*~*~</div>
+        </div>
+
+        <div class="craftzone-news">
+            !!! NEW !!! Check out my EPIC Castle Build below !!! UPDATED 1/24/25 !!!
+        </div>
+
+        <div class="craftzone-section">
+            <h2>// About Me \\</h2>
+            <p>Hey miners! I'm Tommy (CraftMaster2010) and I've been playing Minecraft since Beta! 
+            I love building medieval castles and doing redstone stuff. 
+            My favorite mob is the creeper (even though they keep blowing up my builds >_<)</p>
+            
+            <div class="craftzone-pixelart">
+   [̲̅C][̲̅r][̲̅e][̲̅e][̲̅p][̲̅e][̲̅r]
+    ██████████
+    ██  ██  ██
+    ██████████
+      ██████
+      ██  ██
+      ██  ██
+            </div>
+        </div>
+
+        <div class="craftzone-section">
+            <h2>// My Best Builds \\</h2>
+            <div class="craftzone-builds">
+                <div class="craftzone-build">
+                    <img src="/api/placeholder/200/150" alt="Castle">
+                    <p>EPIC Medieval Castle<br>
+                    (Took 3 months!!!)</p>
+                </div>
+                <div class="craftzone-build">
+                    <img src="/api/placeholder/200/150" alt="Redstone">
+                    <p>Auto Wheat Farm v2<br>
+                    (With Tutorial!)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="craftzone-section">
+            <h2>// Cool Minecraft Facts \\</h2>
+            <ul>
+                <li>Did you know? A diamond pickaxe can mine 1,562 blocks!</li>
+                <li>Creepers were made by accident when Notch messed up a pig model!</li>
+                <li>My record for longest survival without dying: 84 days!</li>
+            </ul>
+        </div>
+
+        <div class="craftzone-webring">
+            🌐 Part of the Xeocities Gaming Webring 🌐
+            <div>
+                <a href="nr-xeocities.ex" class="craftzone-link">← Previous</a>
+                <a href="javascript:void(0)" class="craftzone-link">Random</a>
+                <a href="ms-xeocities.ex" class="craftzone-link">Next →</a>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <div class="craftzone-counter">Diamonds Mined: 8,462</div>
+        </div>
+
+        <div class="craftzone-footer">
+            <p>Made with Notepad | Best viewed in 800x600</p>
+            <p>This site is TNT-free! No griefers allowed!</p>
+            <p>Last updated: 1/24/2025</p>
+            <p>❤️ Thanks for visiting! Don't forget to sign my guestbook! ❤️</p>
+        </div>
+    </div>
+</body>
+</html>

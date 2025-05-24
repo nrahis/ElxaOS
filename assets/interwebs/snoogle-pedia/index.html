@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .spd-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Times New Roman', serif;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        .spd-header {
+            border-bottom: 2px solid #a7d7f9;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .spd-logo {
+            font-size: 32px;
+            color: #000;
+            margin: 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .spd-search-container {
+            background: #f6f6f6;
+            padding: 15px;
+            border: 1px solid #a7d7f9;
+            margin: 20px 0;
+        }
+
+        .spd-search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .spd-search-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #a7d7f9;
+            font-size: 14px;
+        }
+
+        .spd-search-button {
+            padding: 8px 16px;
+            background: #36c;
+            border: 1px solid #2a4b8d;
+            color: white;
+            cursor: pointer;
+        }
+
+        .spd-search-button:hover {
+            background: #447ff5;
+        }
+
+        .spd-loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+            color: #666;
+        }
+
+        .spd-error {
+            color: #b32424;
+            text-align: center;
+            padding: 20px;
+            display: none;
+            background: #fee7e6;
+            border: 1px solid #fac9c8;
+        }
+
+        .spd-article {
+            display: none;
+        }
+
+        .spd-article-title {
+            font-size: 28px;
+            border-bottom: 1px solid #a7d7f9;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .spd-article-content {
+            font-size: 15px;
+        }
+
+        .spd-article-content p {
+            margin-bottom: 1em;
+        }
+
+        .spd-article-content h2 {
+            font-size: 20px;
+            border-bottom: 1px solid #a7d7f9;
+            margin: 1em 0;
+            padding-bottom: 5px;
+        }
+
+        .spd-article-content h3 {
+            font-size: 17px;
+            margin: 1em 0;
+        }
+
+        .spd-article-content ul, 
+        .spd-article-content ol {
+            margin-left: 2em;
+            margin-bottom: 1em;
+        }
+
+        .spd-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #a7d7f9;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .spd-featured {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #a7d7f9;
+        }
+
+        .spd-featured h3 {
+            margin-top: 0;
+            color: #36c;
+        }
+
+        .spd-featured-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .spd-featured-list li {
+            margin: 5px 0;
+            cursor: pointer;
+            color: #36c;
+        }
+
+        .spd-featured-list li:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="spd-container">
+        <div class="spd-header">
+            <h1 class="spd-logo">📚 SnooglePedia</h1>
+            <p>The ExWeb Encyclopedia</p>
+        </div>
+
+        <div class="spd-search-container">
+            <div class="spd-search-box">
+                <input type="text" id="searchInput" class="spd-search-input" placeholder="Search SnooglePedia...">
+                <button id="searchButton" class="spd-search-button">Search</button>
+            </div>
+        </div>
+
+        <div class="spd-featured">
+            <h3>Featured Articles</h3>
+            <ul class="spd-featured-list" id="featuredList">
+                <li onclick="searchArticle('snakesia')">Snakesia</li>
+                <li onclick="searchArticle('elxa_corporation')">Elxa Corporation</li>
+                <li onclick="searchArticle('snake_e')">Mr. Snake-e</li>
+                <li onclick="searchArticle('elxaos')">ElxaOS</li>
+                <li onclick="searchArticle('remi_marway')">Remi Marway</li>
+            </ul>
+        </div>
+
+        <div id="loadingDiv" class="spd-loading">
+            Loading article...
+        </div>
+
+        <div id="errorDiv" class="spd-error">
+            Article not found. Please try another search.
+        </div>
+
+        <div id="articleDiv" class="spd-article">
+            <h1 class="spd-article-title"></h1>
+            <div class="spd-article-content"></div>
+        </div>
+
+        <div class="spd-footer">
+            <p>© 2025 SnooglePedia - An Elxa Corporation Service</p>
+            <p>Best viewed in Snoogle Browser</p>
+        </div>
+    </div>
+
+    <script>
+        // Custom articles for our universe
+        const customArticles = {
+            'snakesia': {
+                title: 'Snakesia',
+                content: `
+                    <p>Snakesia is a sovereign nation located directly west of Tennessee, United States. Known for its technological advancement and unique snake-based currency system, Snakesia has become a global leader in software development and digital innovation.</p>
+                    
+                    <h2>History</h2>
+                    <p>Founded in the early digital age, Snakesia quickly established itself as a tech haven. The nation's strategic location and business-friendly policies attracted numerous technology companies, most notably Elxa Corporation.</p>
+                    
+                    <h2>Economy</h2>
+                    <p>Snakesia's currency, known simply as "snakes," maintains a consistent 2:1 exchange rate with the US dollar. The nation's economy is primarily driven by its technology sector, with the Elxa Corporation being the largest employer.</p>
+                    
+                    <h2>Notable Locations</h2>
+                    <ul>
+                        <li>Snake-e Mansion - Home of Mr. Snake-e and headquarters of Elxa Corporation</li>
+                        <li>RemyCraft Server Farm - One of the world's largest Minecraft server installations</li>
+                        <li>The National Arcade Museum - Housing the world's largest collection of vintage arcade machines</li>
+                    </ul>
+
+                    <h2>Culture</h2>
+                    <p>Snakesian culture is characterized by a unique blend of technological innovation and traditional values. The nation is known for its advanced digital infrastructure and its citizens' passion for retro technology and gaming.</p>
+                `
+            },
+            'elxa_corporation': {
+                title: 'Elxa Corporation',
+                content: `
+                    <p>Elxa Corporation is a multinational technology company headquartered in Snakesia. Founded by Mr. Snake-e, it is best known for developing ElxaOS and various other innovative software solutions.</p>
+
+                    <h2>History</h2>
+                    <p>The company was established by Mr. Snake-e with the vision of creating user-friendly, retro-inspired technology solutions. From its humble beginnings, it has grown into one of the world's leading tech companies.</p>
+
+                    <h2>Products</h2>
+                    <ul>
+                        <li>ElxaOS - The company's flagship operating system</li>
+                        <li>Snoogle Browser - A popular web browser</li>
+                        <li>ElxaPhone - Advanced mobile devices</li>
+                    </ul>
+
+                    <h2>Corporate Culture</h2>
+                    <p>Elxa Corporation is known for its unique workplace culture, where employees are encouraged to embrace both cutting-edge technology and retro computing. The company maintains a permanent IT position opening, reflecting its commitment to continuous growth and innovation.</p>
+                `
+            },
+            'snake_e': {
+                title: 'Mr. Snake-e',
+                content: `
+                    <p>Mr. Snake-e is a prominent business figure and the founder of Elxa Corporation. Known for his innovative leadership style and unique status as a literal snake, he has revolutionized the tech industry.</p>
+
+                    <h2>Personal Life</h2>
+                    <p>Residing in his mansion in Snakesia with his wife Mrs. Snake-e, he is known for his love of luxury vehicles, particularly his signature Denali. Despite his success, he maintains a down-to-earth approach to business and life.</p>
+
+                    <h2>Business Career</h2>
+                    <p>As CEO of Elxa Corporation, Mr. Snake-e has overseen the development of numerous groundbreaking technologies. His vision for user-friendly, retro-inspired computing has shaped the modern digital landscape.</p>
+                `
+            }
+            // Add more custom articles as needed
+        };
+
+        function initSnooglePedia() {
+        console.log('Initializing SnooglePedia...');
+
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const loadingDiv = document.getElementById('loadingDiv');
+        const errorDiv = document.getElementById('errorDiv');
+        const articleDiv = document.getElementById('articleDiv');
+
+        async function searchArticle(term) {
+            console.log('Searching for:', term);
+            
+            loadingDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+            articleDiv.style.display = 'none';
+
+            // Check custom articles first
+            if (customArticles[term.toLowerCase()]) {
+                displayArticle(customArticles[term.toLowerCase()]);
+                return;
+            }
+
+            try {
+                // First, search Wikipedia for the term
+                const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(term)}&format=json&origin=*`;
+                const searchResponse = await fetch(searchUrl);
+                const searchData = await searchResponse.json();
+
+                if (searchData.query.search.length === 0) {
+                    showError();
+                    return;
+                }
+
+                // Get the first result's page ID
+                const pageId = searchData.query.search[0].pageid;
+
+                // Then fetch the actual content
+                const contentUrl = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${pageId}&format=json&origin=*&prop=text|displaytitle`;
+                const contentResponse = await fetch(contentUrl);
+                const contentData = await contentResponse.json();
+
+                // Create a temporary div to parse the HTML content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = contentData.parse.text['*'];
+
+                // Clean up Wikipedia content
+                cleanWikipediaContent(tempDiv);
+
+                displayArticle({
+                    title: contentData.parse.displaytitle,
+                    content: tempDiv.innerHTML
+                });
+
+            } catch (error) {
+                console.error('Search error:', error);
+                showError();
+            }
+        }
+
+        function cleanWikipediaContent(element) {
+            // Remove unwanted elements
+            const unwanted = [
+                '.mw-edit-section',
+                '.mw-editsection',
+                '.reference',
+                '.reflist',
+                '.ambox',
+                '.thumb',
+                '.image',
+                '.portal',
+                '.navbox',
+                '.metadata',
+                '.noprint',
+                '.mw-jump-link'
+            ];
+
+            unwanted.forEach(selector => {
+                element.querySelectorAll(selector).forEach(el => el.remove());
+            });
+
+            // Fix internal Wikipedia links
+            element.querySelectorAll('a').forEach(link => {
+                if (link.href.includes('/wiki/')) {
+                    const article = link.href.split('/wiki/')[1];
+                    link.onclick = (e) => {
+                        e.preventDefault();
+                        searchArticle(article);
+                    };
+                    link.href = '#';
+                } else {
+                    link.remove(); // Remove external links
+                }
+            });
+
+            // Remove empty elements
+            element.querySelectorAll('p, span, div').forEach(el => {
+                if (el.innerHTML.trim() === '') {
+                    el.remove();
+                }
+            });
+
+            // Remove table of contents
+            const toc = element.querySelector('#toc');
+            if (toc) toc.remove();
+        }
+
+        function displayArticle(article) {
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            articleDiv.style.display = 'block';
+
+            articleDiv.querySelector('.spd-article-title').innerHTML = article.title;
+            articleDiv.querySelector('.spd-article-content').innerHTML = article.content;
+
+            // Add a note for real Wikipedia articles
+            if (!customArticles[article.title.toLowerCase()]) {
+                const noteDiv = document.createElement('div');
+                noteDiv.style.fontSize = '12px';
+                noteDiv.style.color = '#666';
+                noteDiv.style.marginTop = '20px';
+                noteDiv.style.borderTop = '1px solid #a7d7f9';
+                noteDiv.style.paddingTop = '10px';
+                noteDiv.innerHTML = 'This article is from Wikipedia, displayed through SnooglePedia\'s ExWeb interface.';
+                articleDiv.querySelector('.spd-article-content').appendChild(noteDiv);
+            }
+        }
+
+        function showError() {
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'block';
+            articleDiv.style.display = 'none';
+        }
+
+        // Event listeners
+        searchButton.onclick = function() {
+            const term = searchInput.value.trim();
+            if (term) searchArticle(term);
+        };
+
+        searchInput.onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                const term = searchInput.value.trim();
+                if (term) searchArticle(term);
+            }
+        };
+
+        // Make searchArticle available globally
+        window.searchArticle = searchArticle;
+    }
+
+    // Initialize when DOM is loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSnooglePedia);
+    } else {
+        initSnooglePedia();
+    }
+</script>
+</body>
+</html>

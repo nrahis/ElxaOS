@@ -21,6 +21,12 @@
                 <div class="desktop-icon-image">🗑️</div>
                 <div class="desktop-icon-label">Recycle Bin</div>
             </div>
+
+            <div class="desktop-icon" data-program="browser">
+                <div class="desktop-icon-image">🌐</div>
+                <div class="desktop-icon-label">Snoogle Browser</div>
+            </div>
+
             <div class="desktop-icon" data-program="notepad">
                 <div class="desktop-icon-image">📝</div>
                 <div class="desktop-icon-label">Notepad</div>
@@ -39,6 +45,7 @@
             <!-- Active programs will appear here -->
         </div>
         <div class="system-tray">
+            <div class="tray-icon" id="antivirusIcon" title="ElxaGuard Antivirus">🛡️</div>
             <div class="tray-icon" id="batteryIcon" title="Battery">🔋</div>
             <div class="tray-icon" id="wifiIcon" title="WiFi">📶</div>
             <div class="clock" id="clock">00:00</div>
@@ -48,6 +55,7 @@
     <!-- Start Menu -->
     <div class="start-menu" id="startMenu">
         <div class="start-menu-header">ElxaOS</div>
+        <div class="start-menu-item" data-program="browser">🌐 Snoogle Browser</div>
         <div class="start-menu-item" data-program="notepad">📝 Notepad</div>
         <div class="start-menu-item" data-program="paint">🎨 Paint</div>
         <div class="start-menu-item" data-program="calculator">🧮 Calculator</div>
@@ -57,27 +65,36 @@
         <div class="start-menu-item" data-program="computer">💻 My Computer</div>
         <div class="start-menu-item" data-action="personalize">🎨 Personalize</div>
         <div class="start-menu-item" data-action="userSettings">👤 User Settings</div>
+        <div class="start-menu-item" data-program="antivirus"><span>🛡️</span> ElxaGuard Antivirus</div>
         <div class="start-menu-separator"></div>
         <div class="start-menu-item" data-action="logout">🚪 Log Off</div>
         <div class="start-menu-item" data-action="shutdown">⚡ Shut Down</div>
     </div>
 
 <script src="js/elxa-core.js"></script>
+
 <script src="js/file-manager.js"></script>
 <script src="js/services/battery-service.js"></script>
 <script src="js/services/wifi-service.js"></script>
 <script src="js/services/theme-service.js"></script>
 <script src="js/services/login-service.js"></script>
 <script src="js/services/installer-service.js"></script>
+<script src="js/programs/clock-system.js"></script>
+<script src="js/elxa-debug-tools.js"></script>
+
+<script src="js/programs/browser.js"></script>
 <script src="js/programs/notepad.js"></script>
 <script src="js/programs/paint.js"></script>
 <script src="js/programs/duck-console.js"></script>
-<script src="js/programs/clock-system.js"></script>
 <script src="js/programs/calculator.js"></script>
 <script src="js/programs/elxacode.js"></script>
-<script src="js/elxa-debug-tools.js"></script>
 <script src="js/games/snake.js"></script>
 <script src="js/games/snake-deluxe.js"></script>
+
+<script src="js/programs/virus-system.js"></script>
+<script src="js/programs/antivirus-program.js"></script>
+
+<script src="js/boot-system.js"></script>
 <script src="js/desktop.js"></script>
 </body>
 </html>

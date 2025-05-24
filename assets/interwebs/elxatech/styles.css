@@ -1,0 +1,177 @@
+/* elxatech-styles.css */
+.extech-container {
+    background: #001122;
+    color: #00ff88;
+    font-family: 'Courier New', monospace;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.extech-header {
+    background: linear-gradient(90deg, #001133, #002244);
+    border: 2px solid #00ff88;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.extech-logo {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    color: #00ff88;
+    text-shadow: 2px 2px #000000, 4px 4px #003366;
+}
+
+.extech-tagline {
+    text-align: center;
+    color: #00ccff;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.extech-nav {
+    background: #002244;
+    border: 1px solid #00ff88;
+    padding: 10px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.extech-nav a {
+    color: #00ff88;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+.extech-nav a:hover {
+    background: #003366;
+}
+
+.extech-content {
+    background: rgba(0, 17, 34, 0.8);
+    border: 1px solid #00ff88;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.extech-article {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #003366;
+}
+
+.extech-article-title {
+    color: #00ffcc;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.extech-article-meta {
+    color: #0088cc;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.extech-article-content {
+    line-height: 1.6;
+}
+
+.extech-sidebar {
+    background: #001833;
+    border: 1px solid #00ff88;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.extech-sidebar-title {
+    color: #00ffcc;
+    font-size: 18px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #003366;
+    padding-bottom: 5px;
+}
+
+.extech-comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.extech-comparison-table th,
+.extech-comparison-table td {
+    border: 1px solid #003366;
+    padding: 10px;
+    text-align: left;
+}
+
+.extech-comparison-table th {
+    background: #002244;
+    color: #00ffcc;
+}
+
+.extech-comparison-table tr:nth-child(even) {
+    background: #001833;
+}
+
+.extech-feature-box {
+    background: #001833;
+    border: 1px solid #00ff88;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.extech-feature-title {
+    color: #00ffcc;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.extech-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #003366;
+    font-size: 12px;
+    color: #0088cc;
+}
+
+.extech-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.extech-counter {
+    background: #001833;
+    border: 1px solid #00ff88;
+    padding: 5px 10px;
+    font-family: monospace;
+}
+
+/* Retro elements */
+.extech-blink {
+    animation: extechBlink 1s step-end infinite;
+}
+
+@keyframes extechBlink {
+    50% { opacity: 0; }
+}
+
+.extech-new-badge {
+    background: #ff0000;
+    color: white;
+    padding: 2px 6px;
+    font-size: 12px;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+.extech-construction {
+    text-align: center;
+    padding: 20px;
+    border: 2px dashed #00ff88;
+    margin: 20px 0;
+}

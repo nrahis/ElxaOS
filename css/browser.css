@@ -1,0 +1,632 @@
+/* =================================
+   SNOOGLE BROWSER STYLES
+================================= */
+
+.browser-window .window-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: #f0f0f0;
+}
+
+/* =================================
+   BROWSER TOOLBAR
+================================= */
+.browser-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--windowBg);
+    border-bottom: 1px solid #808080;
+    min-height: 32px;
+}
+
+.nav-button {
+    width: 24px;
+    height: 24px;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--menuText);
+}
+
+.nav-button:hover {
+    background: var(--buttonHoverBg);
+}
+
+.nav-button:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
+.nav-button:disabled {
+    background: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
+}
+
+.address-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.url-input {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px inset var(--windowBorder);
+    font-size: 11px;
+    background: white;
+    color: black;
+}
+
+.url-input:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.go-button {
+    width: 32px;
+    height: 24px;
+    background: linear-gradient(to bottom, #00aa00, #008800);
+    border: 1px outset #00aa00;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.go-button:hover {
+    background: linear-gradient(to bottom, #00cc00, #00aa00);
+}
+
+.go-button:active {
+    border: 1px inset #00aa00;
+}
+
+.browser-actions {
+    display: flex;
+    gap: 2px;
+}
+
+.favorite-button,
+.home-button {
+    width: 24px;
+    height: 24px;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--menuText);
+}
+
+.favorite-button:hover,
+.home-button:hover {
+    background: var(--buttonHoverBg);
+}
+
+.favorite-button:active,
+.home-button:active {
+    border: 1px inset var(--windowBorder);
+}
+
+.favorite-button.favorited {
+    background: linear-gradient(to bottom, #ffff00, #ffcc00);
+    border-color: #ffcc00;
+}
+
+/* =================================
+   BROWSER CONTENT AREA
+================================= */
+.browser-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.browser-page {
+    flex: 1;
+    background: white;
+    overflow-y: auto;
+    padding: 0;
+    border: none;
+}
+
+/* =================================
+   SNOOGLE HOMEPAGE
+================================= */
+.snoogle-homepage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
+    background-size: 400% 400%;
+    animation: snoogleGradient 10s ease infinite;
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+@keyframes snoogleGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.snoogle-logo {
+    font-size: 72px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.snoogle-search {
+    background: white;
+    border-radius: 24px;
+    padding: 8px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 400px;
+    max-width: 600px;
+    width: 90%;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    background: transparent;
+}
+
+.search-button {
+    background: #4285f4;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.search-button:hover {
+    background: #3367d6;
+}
+
+.snoogle-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.snoogle-btn {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.snoogle-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.snoogle-btn:active {
+    transform: translateY(0);
+}
+
+.snoogle-footer {
+    margin-top: auto;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* =================================
+   SEARCH RESULTS PAGE
+================================= */
+.search-results-page {
+    background: white;
+    padding: 20px;
+    color: #333;
+}
+
+.search-header {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.search-logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4285f4;
+    margin-bottom: 8px;
+}
+
+.search-stats {
+    font-size: 12px;
+    color: #666;
+}
+
+.search-result {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.result-url {
+    font-size: 12px;
+    color: #006621;
+    margin-bottom: 4px;
+}
+
+.result-title {
+    font-size: 18px;
+    color: #1a0dab;
+    cursor: pointer;
+    margin-bottom: 4px;
+    text-decoration: none;
+}
+
+.result-title:hover {
+    text-decoration: underline;
+}
+
+.result-description {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.no-results h3 {
+    margin-bottom: 12px;
+    color: #333;
+}
+
+/* =================================
+   SITE DIRECTORY
+================================= */
+.site-directory {
+    background: white;
+    padding: 20px;
+    color: #333;
+}
+
+.directory-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #4285f4;
+    padding-bottom: 16px;
+}
+
+.directory-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #4285f4;
+    margin-bottom: 8px;
+}
+
+.directory-subtitle {
+    font-size: 14px;
+    color: #666;
+}
+
+.site-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.site-card {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.site-card:hover {
+    background: #e8f0fe;
+    border-color: #4285f4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.site-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.site-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.site-description {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* =================================
+   NO INTERNET PAGE
+================================= */
+.no-internet-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    background: #f0f0f0;
+    text-align: center;
+    padding: 40px 20px;
+    color: #333;
+}
+
+.no-internet-icon {
+    font-size: 96px;
+    margin-bottom: 20px;
+    color: #666;
+    animation: disconnectPulse 2s ease-in-out infinite;
+}
+
+@keyframes disconnectPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.no-internet-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #d32f2f;
+}
+
+.no-internet-message {
+    font-size: 14px;
+    margin-bottom: 20px;
+    max-width: 400px;
+    line-height: 1.5;
+}
+
+.wifi-connect-btn {
+    background: linear-gradient(to bottom, #4285f4, #3367d6);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.wifi-connect-btn:hover {
+    background: linear-gradient(to bottom, #3367d6, #2d56c4);
+    transform: translateY(-1px);
+}
+
+/* =================================
+   BROWSER SIDEBAR (FAVORITES/HISTORY)
+================================= */
+.browser-sidebar {
+    width: 250px;
+    background: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    display: none;
+    flex-direction: column;
+}
+
+.browser-sidebar.visible {
+    display: flex;
+}
+
+.sidebar-tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-tab {
+    flex: 1;
+    padding: 8px 12px;
+    background: #e0e0e0;
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sidebar-tab.active {
+    background: #f8f9fa;
+    border-bottom: 2px solid #4285f4;
+    color: #4285f4;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    font-size: 11px;
+}
+
+.sidebar-item:hover {
+    background: #e8f0fe;
+}
+
+.sidebar-item-icon {
+    font-size: 14px;
+    width: 16px;
+    text-align: center;
+}
+
+.sidebar-item-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar-item-title {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-item-url {
+    color: #666;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-item-time {
+    color: #999;
+    font-size: 9px;
+}
+
+.clear-history-btn {
+    margin: 8px;
+    padding: 6px 12px;
+    background: #ff4444;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.clear-history-btn:hover {
+    background: #cc3333;
+}
+
+/* =================================
+   BROWSER MENU
+================================= */
+.browser-menu {
+    position: absolute;
+    top: 32px;
+    right: 8px;
+    background: white;
+    border: 2px outset var(--windowBorder);
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    z-index: 1000;
+    min-width: 150px;
+    font-size: 11px;
+}
+
+.browser-menu-item {
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--menuText);
+}
+
+.browser-menu-item:hover {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.browser-menu-separator {
+    height: 1px;
+    background: #ccc;
+    margin: 2px 0;
+}
+
+/* =================================
+   LOADING INDICATOR
+================================= */
+.browser-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #4285f4;
+    transform: translateX(-100%);
+    animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0%); }
+    100% { transform: translateX(100%); }
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
+@media (max-width: 600px) {
+    .snoogle-search {
+        min-width: 300px;
+    }
+    
+    .snoogle-logo {
+        font-size: 48px;
+    }
+    
+    .site-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .browser-sidebar {
+        width: 200px;
+    }
+}

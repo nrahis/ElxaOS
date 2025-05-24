@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .phv-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+        }
+
+        .phv-header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 3px solid #a7d7f9;
+            margin-bottom: 30px;
+        }
+
+        .phv-logo {
+            font-size: 36px;
+            margin: 0;
+            color: #333;
+        }
+
+        .phv-subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .phv-search-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .phv-search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .phv-search-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .phv-search-button {
+            padding: 10px 20px;
+            background: #2ecc71;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .phv-tabs {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 20px;
+        }
+
+        .phv-tab {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .phv-tab.active {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .phv-version-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .phv-version-table th,
+        .phv-version-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .phv-version-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .phv-search-results {
+            margin-top: 20px;
+        }
+
+        .phv-result-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .phv-result-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .phv-result-details {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .phv-loading, .phv-no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .phv-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="phv-container">
+        <header class="phv-header">
+            <h1 class="phv-logo">📱 PhoneVerse</h1>
+            <p class="phv-subtitle">Your Complete Mobile OS Version Database</p>
+        </header>
+
+        <div class="phv-search-section">
+            <div class="phv-search-box">
+                <input type="text" class="phv-search-input" placeholder="Search by phone model or OS version (e.g., iPhone 11, iOS 15)...">
+                <button class="phv-search-button" onclick="performSearch()">Search</button>
+            </div>
+            <div class="phv-search-results"></div>
+        </div>
+
+        <div class="phv-tabs">
+            <button class="phv-tab active" onclick="switchTab('android')">Android</button>
+            <button class="phv-tab" onclick="switchTab('ios')">iOS</button>
+            <button class="phv-tab" onclick="switchTab('elxaphone')">ElxaPhone OS</button>
+        </div>
+
+        <div id="versionContent"></div>
+
+        <footer class="phv-footer">
+            <p>© 2025 PhoneVerse - An Elxa Corporation Service</p>
+        </footer>
+    </div>
+
+    <script>
+        // OS Version Data
+        const osData = {
+            android: [
+                { version: "14", name: "Android 14", releaseDate: "2023", keyFeatures: "Enhanced privacy controls, AI improvements" },
+                { version: "13", name: "Android 13", releaseDate: "2022", keyFeatures: "Material You theming, Privacy features" },
+                { version: "12", name: "Android 12", releaseDate: "2021", keyFeatures: "Material You design, Privacy dashboard" }
+            ],
+            ios: [
+                { version: "17", name: "iOS 17", releaseDate: "2023", keyFeatures: "StandBy mode, Live Voicemail, Contact Posters" },
+                { version: "16", name: "iOS 16", releaseDate: "2022", keyFeatures: "Lock Screen customization, Focus filters" },
+                { version: "15", name: "iOS 15", releaseDate: "2021", keyFeatures: "Focus mode, Live Text, SharePlay" }
+            ],
+            elxaphone: [
+                { version: "3.0", name: "ElxaPhone OS 3.0", releaseDate: "2022", keyFeatures: "Snake-e Cloud, RemyCraft integration" },
+                { version: "2.0", name: "ElxaPhone OS 2.0", releaseDate: "2021", keyFeatures: "Snake-e Pay, Enhanced security" },
+                { version: "1.0", name: "ElxaPhone OS 1.0", releaseDate: "2020", keyFeatures: "Initial release, Snoogle services" }
+            ]
+        };
+
+        function switchTab(os) {
+            // Update active tab
+            document.querySelectorAll('.phv-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Display version table
+            const content = document.getElementById('versionContent');
+            content.innerHTML = `
+                <table class="phv-version-table">
+                    <thead>
+                        <tr>
+                            <th>Version</th>
+                            <th>Name</th>
+                            <th>Release Date</th>
+                            <th>Key Features</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${osData[os].map(version => `
+                            <tr>
+                                <td>${version.version}</td>
+                                <td>${version.name}</td>
+                                <td>${version.releaseDate}</td>
+                                <td>${version.keyFeatures}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        async function performSearch() {
+            const searchInput = document.querySelector('.phv-search-input');
+            const resultsDiv = document.querySelector('.phv-search-results');
+            const searchTerm = searchInput.value.trim().toLowerCase();
+
+            if (!searchTerm) {
+                resultsDiv.innerHTML = '';
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="phv-loading">Searching...</div>';
+
+            try {
+                // First try to match with OS versions
+                if (searchTerm.includes('ios') || searchTerm.includes('android') || searchTerm.includes('elxa')) {
+                    const osResults = searchOSVersions(searchTerm);
+                    if (osResults) {
+                        displayOSResults(osResults);
+                        return;
+                    }
+                }
+
+                // If no OS match, search Wikipedia for phone model
+                const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm + " smartphone")}&format=json&origin=*`;
+                const searchResponse = await fetch(searchUrl);
+                const searchData = await searchResponse.json();
+
+                if (searchData.query.search.length === 0) {
+                    resultsDiv.innerHTML = '<div class="phv-no-results">No results found.</div>';
+                    return;
+                }
+
+                const pageId = searchData.query.search[0].pageid;
+                const contentUrl = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${pageId}&format=json&origin=*&prop=text`;
+                const contentResponse = await fetch(contentUrl);
+                const contentData = await contentResponse.json();
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = contentData.parse.text['*'];
+
+                const osInfo = extractOSInfo(tempDiv);
+                displayResults(searchTerm, osInfo, searchData.query.search[0].title);
+
+            } catch (error) {
+                console.error('Error searching:', error);
+                resultsDiv.innerHTML = '<div class="phv-no-results">Error searching. Please try again.</div>';
+            }
+        }
+
+        function searchOSVersions(searchTerm) {
+            // Check each OS's data for matches
+            for (const [os, versions] of Object.entries(osData)) {
+                const matchedVersion = versions.find(v => 
+                    v.name.toLowerCase().includes(searchTerm) || 
+                    v.version.toLowerCase() === searchTerm.replace(/[^0-9.]/g, '')
+                );
+                if (matchedVersion) {
+                    return { os, version: matchedVersion };
+                }
+            }
+            return null;
+        }
+
+        function displayOSResults(result) {
+            const resultsDiv = document.querySelector('.phv-search-results');
+            resultsDiv.innerHTML = `
+                <div class="phv-result-card">
+                    <div class="phv-result-title">${result.version.name}</div>
+                    <div class="phv-result-details">Release Date: ${result.version.releaseDate}</div>
+                    <div class="phv-result-details">Key Features: ${result.version.keyFeatures}</div>
+                </div>
+            `;
+        }
+
+        function extractOSInfo(contentDiv) {
+            const osInfo = {
+                initialVersion: null,
+                latestVersion: null,
+                releaseDate: null
+            };
+
+            const infobox = contentDiv.querySelector('.infobox');
+            if (infobox) {
+                const rows = infobox.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const th = row.querySelector('th');
+                    const td = row.querySelector('td');
+                    if (th && td) {
+                        const header = th.textContent.toLowerCase();
+                        if (header.includes('operating system') || header.includes('os')) {
+                            osInfo.initialVersion = td.textContent.trim();
+                        }
+                        if (header.includes('release date')) {
+                            osInfo.releaseDate = td.textContent.trim();
+                        }
+                    }
+                });
+            }
+
+            return osInfo;
+        }
+
+        function displayResults(searchTerm, osInfo, wikiTitle) {
+            const resultsDiv = document.querySelector('.phv-search-results');
+            
+            let html = `
+                <div class="phv-result-card">
+                    <div class="phv-result-title">${wikiTitle}</div>
+            `;
+
+            if (osInfo.initialVersion) {
+                html += `<div class="phv-result-details">Operating System: ${osInfo.initialVersion}</div>`;
+            }
+            if (osInfo.releaseDate) {
+                html += `<div class="phv-result-details">Release Date: ${osInfo.releaseDate}</div>`;
+            }
+
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+        }
+
+        // Event listener for search input
+        document.querySelector('.phv-search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Initialize with Android tab
+        switchTab('android');
+    </script>
+</body>
+</html>

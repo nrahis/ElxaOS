@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .kcs-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .kcs-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .kcs-title {
+            font-size: 36px;
+            color: #2c3e50;
+            text-shadow: 2px 2px #bdc3c7;
+            margin: 0;
+        }
+
+        .kcs-subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .kcs-os-tabs {
+            display: flex;
+            gap: 5px;
+            margin: 20px 0;
+            border-bottom: 2px solid #95a5a6;
+        }
+
+        .kcs-tab {
+            padding: 8px 16px;
+            background: #bdc3c7;
+            border: 2px solid #95a5a6;
+            border-bottom: none;
+            cursor: pointer;
+            margin-bottom: -2px;
+        }
+
+        .kcs-tab.kcs-active {
+            background: #f0f0f0;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .kcs-content {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .kcs-content.kcs-active {
+            display: block;
+        }
+
+        .kcs-category {
+            background: #fff;
+            margin: 15px 0;
+            border: 2px solid #95a5a6;
+            border-radius: 4px;
+        }
+
+        .kcs-category-header {
+            background: #34495e;
+            color: #fff;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .kcs-shortcut-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .kcs-shortcut {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .kcs-shortcut:last-child {
+            border-bottom: none;
+        }
+
+        .kcs-keys {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .kcs-key {
+            background: #34495e;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 14px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .kcs-plus {
+            color: #7f8c8d;
+            font-weight: bold;
+        }
+
+        .kcs-description {
+            color: #2c3e50;
+        }
+
+        .kcs-search {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #95a5a6;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .kcs-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="kcs-container">
+        <div class="kcs-header">
+            <h1 class="kcs-title">KeyCuts</h1>
+            <div class="kcs-subtitle">Essential Keyboard Shortcuts Reference</div>
+        </div>
+
+        <input type="text" class="kcs-search" placeholder="Search shortcuts..." id="shortcutSearch">
+
+        <div class="kcs-os-tabs">
+            <div class="kcs-tab kcs-active" data-os="windows">Windows</div>
+            <div class="kcs-tab" data-os="mac">Mac</div>
+            <div class="kcs-tab" data-os="linux">Linux</div>
+        </div>
+
+        <div class="kcs-content kcs-active" id="windows">
+            <div class="kcs-category">
+                <div class="kcs-category-header">System Navigation</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Win</span>
+                        </div>
+                        <div class="kcs-description">Open/Close Start menu</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Win</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">E</span>
+                        </div>
+                        <div class="kcs-description">Open File Explorer</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Win</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">D</span>
+                        </div>
+                        <div class="kcs-description">Show/Hide desktop</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Win</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">L</span>
+                        </div>
+                        <div class="kcs-description">Lock computer</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Alt</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Tab</span>
+                        </div>
+                        <div class="kcs-description">Switch between open applications</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Alt</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">F4</span>
+                        </div>
+                        <div class="kcs-description">Close active window</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="kcs-category">
+                <div class="kcs-category-header">Text Editing</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">C</span>
+                        </div>
+                        <div class="kcs-description">Copy selected text</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">X</span>
+                        </div>
+                        <div class="kcs-description">Cut selected text</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">V</span>
+                        </div>
+                        <div class="kcs-description">Paste text</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Z</span>
+                        </div>
+                        <div class="kcs-description">Undo</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Y</span>
+                        </div>
+                        <div class="kcs-description">Redo</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">A</span>
+                        </div>
+                        <div class="kcs-description">Select all</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="kcs-category">
+                <div class="kcs-category-header">Browser Controls</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">T</span>
+                        </div>
+                        <div class="kcs-description">New tab</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">W</span>
+                        </div>
+                        <div class="kcs-description">Close tab</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">R</span>
+                        </div>
+                        <div class="kcs-description">Refresh page</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">F5</span>
+                        </div>
+                        <div class="kcs-description">Refresh page (alternate)</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="kcs-category">
+                <div class="kcs-category-header">File Management</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">S</span>
+                        </div>
+                        <div class="kcs-description">Save</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">F2</span>
+                        </div>
+                        <div class="kcs-description">Rename selected item</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Delete</span>
+                        </div>
+                        <div class="kcs-description">Move to Recycle Bin</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Shift</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Delete</span>
+                        </div>
+                        <div class="kcs-description">Delete permanently</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="kcs-category">
+                <div class="kcs-category-header">Screen Capture</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">PrtScr</span>
+                        </div>
+                        <div class="kcs-description">Screenshot entire screen</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Win</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Shift</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">S</span>
+                        </div>
+                        <div class="kcs-description">Snipping Tool</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="kcs-content" id="mac">
+            <div class="kcs-category">
+                <div class="kcs-category-header">System Navigation</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Space</span>
+                        </div>
+                        <div class="kcs-description">Open Spotlight Search</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Tab</span>
+                        </div>
+                        <div class="kcs-description">Switch between applications</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌃</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">↑</span>
+                        </div>
+                        <div class="kcs-description">Mission Control</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Q</span>
+                        </div>
+                        <div class="kcs-description">Quit application</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">,</span>
+                        </div>
+                        <div class="kcs-description">Open Preferences</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">Text Editing</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">C</span>
+                        </div>
+                        <div class="kcs-description">Copy selected text</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">X</span>
+                        </div>
+                        <div class="kcs-description">Cut selected text</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">V</span>
+                        </div>
+                        <div class="kcs-description">Paste text</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Z</span>
+                        </div>
+                        <div class="kcs-description">Undo</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">⇧</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Z</span>
+                        </div>
+                        <div class="kcs-description">Redo</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">A</span>
+                        </div>
+                        <div class="kcs-description">Select all</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">Browser Controls</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">T</span>
+                        </div>
+                        <div class="kcs-description">New tab</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">W</span>
+                        </div>
+                        <div class="kcs-description">Close tab</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">R</span>
+                        </div>
+                        <div class="kcs-description">Refresh page</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">L</span>
+                        </div>
+                        <div class="kcs-description">Focus address bar</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">File Management</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">S</span>
+                        </div>
+                        <div class="kcs-description">Save</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Delete</span>
+                        </div>
+                        <div class="kcs-description">Move to Trash</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Return</span>
+                        </div>
+                        <div class="kcs-description">Rename selected item</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Space</span>
+                        </div>
+                        <div class="kcs-description">Quick Look</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">Screen Capture</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">⇧</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">3</span>
+                        </div>
+                        <div class="kcs-description">Screenshot entire screen</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">⇧</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">4</span>
+                        </div>
+                        <div class="kcs-description">Screenshot selected portion</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">⌘</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">⇧</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">5</span>
+                        </div>
+                        <div class="kcs-description">Screenshot/recording options</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="kcs-content" id="linux">
+            <div class="kcs-category">
+                <div class="kcs-category-header">System Navigation</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                        </div>
+                        <div class="kcs-description">Open Activities Overview</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">A</span>
+                        </div>
+                        <div class="kcs-description">Show Applications Menu</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">L</span>
+                        </div>
+                        <div class="kcs-description">Lock Screen</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">D</span>
+                        </div>
+                        <div class="kcs-description">Show Desktop</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Alt</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Tab</span>
+                        </div>
+                        <div class="kcs-description">Switch between windows</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">Terminal Commands</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Alt</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">T</span>
+                        </div>
+                        <div class="kcs-description">Open Terminal</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">C</span>
+                        </div>
+                        <div class="kcs-description">Cancel current command</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Ctrl</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">L</span>
+                        </div>
+                        <div class="kcs-description">Clear terminal screen</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Tab</span>
+                        </div>
+                        <div class="kcs-description">Auto-complete command or filename</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">Workspace Management</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Page Up</span>
+                        </div>
+                        <div class="kcs-description">Switch to workspace above</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Page Down</span>
+                        </div>
+                        <div class="kcs-description">Switch to workspace below</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Shift</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Page Up</span>
+                        </div>
+                        <div class="kcs-description">Move window to workspace above</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">Window Management</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Alt</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">F4</span>
+                        </div>
+                        <div class="kcs-description">Close window</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">H</span>
+                        </div>
+                        <div class="kcs-description">Minimize window</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Super</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Up</span>
+                        </div>
+                        <div class="kcs-description">Maximize window</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Alt</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">Space</span>
+                        </div>
+                        <div class="kcs-description">Window menu</div>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="kcs-category">
+                <div class="kcs-category-header">Screenshot Tools</div>
+                <ul class="kcs-shortcut-list">
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">PrtScr</span>
+                        </div>
+                        <div class="kcs-description">Screenshot of entire screen</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Alt</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">PrtScr</span>
+                        </div>
+                        <div class="kcs-description">Screenshot of current window</div>
+                    </li>
+                    <li class="kcs-shortcut">
+                        <div class="kcs-keys">
+                            <span class="kcs-key">Shift</span>
+                            <span class="kcs-plus">+</span>
+                            <span class="kcs-key">PrtScr</span>
+                        </div>
+                        <div class="kcs-description">Screenshot of selected area</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="kcs-footer">
+            <p>© 2025 KeyCuts - An ElxaOS Reference</p>
+            <p>Last updated: 01/25/2025</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.kcs-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.kcs-tab').forEach(t => 
+                    t.classList.remove('kcs-active'));
+                tab.classList.add('kcs-active');
+
+                // Update active content
+                document.querySelectorAll('.kcs-content').forEach(content => 
+                    content.classList.remove('kcs-active'));
+                document.getElementById(tab.dataset.os).classList.add('kcs-active');
+            });
+        });
+
+        // Search functionality
+        document.getElementById('shortcutSearch').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.kcs-shortcut').forEach(shortcut => {
+                const description = shortcut.querySelector('.kcs-description')
+                    .textContent.toLowerCase();
+                const keys = shortcut.querySelector('.kcs-keys')
+                    .textContent.toLowerCase();
+                const visible = description.includes(searchTerm) || 
+                              keys.includes(searchTerm);
+                shortcut.style.display = visible ? 'flex' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

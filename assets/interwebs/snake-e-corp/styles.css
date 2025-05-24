@@ -1,0 +1,293 @@
+/* Corporate 90s vibes */
+:root {
+    --corporate-blue: #003366;
+    --corporate-gold: #FFD700;
+    --link-blue: #0000EE;
+    --visited-purple: #551A8B;
+    --elxacorp-menu-bg: #E8E8E8;
+}
+
+.elxacorp-body {
+    margin: 0;
+    padding: 0;
+    background: #FFF url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkYGD4z8DAwMgABXAGNgYGBkcGBgYGAAkEAYGJCYQnAAAAAElFTkSuQmCC') repeat;
+    font-family: 'Times New Roman', serif;
+    color: #000;
+}
+
+.elxacorp-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid var(--corporate-blue);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+}
+
+.elxacorp-header {
+    background: var(--corporate-blue);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 5px solid var(--corporate-gold);
+}
+
+.company-name {
+    font-size: 36px;
+    margin: 0;
+    text-shadow: 2px 2px #000;
+}
+
+.tagline {
+    font-style: italic;
+    margin: 10px 0;
+}
+
+.elxacorp-navigation {
+    background: var(--elxacorp-menu-bg);
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #999;
+}
+
+.nav-link {
+    display: inline-block;
+    padding: 5px 15px;
+    color: var(--link-blue);
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+
+.nav-link:hover {
+    border: 1px solid var(--corporate-blue);
+    background: #FFF;
+}
+
+.nav-link:visited {
+    color: var(--visited-purple);
+}
+
+.elxacorp-content {
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.elxacorp-welcome-message {
+    border: 1px solid #CCC;
+    padding: 15px;
+    margin: 20px 0;
+    background: #F8F8F8;
+}
+
+.stock-ticker {
+    background: #000;
+    color: #0F0;
+    padding: 5px;
+    font-family: monospace;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.news-item {
+    margin: 15px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px dotted #999;
+}
+
+.news-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.elxacorp-footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--elxacorp-menu-bg);
+    border-top: 1px solid #999;
+    font-size: 0.8em;
+}
+
+.awards {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.award-badge {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 5px;
+    border: 1px solid #CCC;
+}
+
+/* Marquee styling */
+.marquee {
+    background: var(--corporate-blue);
+    color: white;
+    padding: 5px;
+    margin: 10px 0;
+}
+
+/* New email button */
+.email-ceo {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    background: var(--corporate-blue);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: 2px outset #666;
+}
+
+.email-ceo:hover {
+    background: var(--corporate-gold);
+    color: var(--corporate-blue);
+}
+
+/* About page specific styles */
+.profile-section {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #F8F8F8;
+    border: 1px solid #CCC;
+}
+
+.profile-image {
+    border: 2px solid var(--corporate-blue);
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+}
+
+.milestone {
+    margin: 20px 0;
+    padding: 10px;
+    border-left: 3px solid var(--corporate-gold);
+}
+
+.milestone-year {
+    font-weight: bold;
+    color: var(--corporate-blue);
+}
+
+.quote-box {
+    background: var(--corporate-blue);
+    color: white;
+    padding: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    text-align: center;
+}
+
+.leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.leader-card {
+    border: 1px solid #CCC;
+    padding: 10px;
+    text-align: center;
+}
+
+.mansion-image {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Careers */
+
+/* Careers page specific styles */
+.featured-position {
+    border: 3px solid var(--corporate-gold);
+    padding: 20px;
+    margin: 20px 0;
+    background: #FFF8DC;
+    animation: glow 2s infinite;
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 5px var(--corporate-gold); }
+    50% { box-shadow: 0 0 20px var(--corporate-gold); }
+    100% { box-shadow: 0 0 5px var(--corporate-gold); }
+}
+
+.job-listing {
+    border: 1px solid #CCC;
+    padding: 15px;
+    margin: 15px 0;
+    background: #F8F8F8;
+}
+
+.job-title {
+    font-size: 1.2em;
+    color: var(--corporate-blue);
+    margin-bottom: 10px;
+}
+
+.job-status {
+    float: right;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.status-open {
+    background: #90EE90;
+    color: #006400;
+}
+
+.status-closed {
+    background: #FFB6C1;
+    color: #8B0000;
+}
+
+.benefits-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--menu-bg);
+    border: 1px solid #CCC;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.apply-button {
+    display: block;
+    width: 200px;
+    margin: 15px 0;
+    padding: 10px;
+    background: var(--corporate-blue);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: 2px outset #666;
+}
+
+.apply-button:hover {
+    background: var(--corporate-gold);
+    color: var(--corporate-blue);
+}
+
+.blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.ticker {
+    background: #000;
+    color: #0F0;
+    padding: 5px;
+    font-family: monospace;
+    margin: 10px 0;
+}

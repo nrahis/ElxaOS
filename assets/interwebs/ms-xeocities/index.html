@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .mse-page {
+            background: #ffccff;
+            font-family: "Comic Sans MS", cursive;
+            padding: 20px;
+            color: #330066;
+            background-image: url("/api/placeholder/50/50");
+            line-height: 1.5;
+        }
+
+        .mse-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border: 5px groove #ff99cc;
+            padding: 20px;
+        }
+
+        .mse-header {
+            text-align: center;
+            background: #ff99ff;
+            border: 3px dotted #6600cc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .mse-title {
+            font-size: 36px;
+            color: #6600cc;
+            text-shadow: 2px 2px #ff99cc;
+            margin: 0;
+            animation: rainbow 3s infinite;
+        }
+
+        @keyframes rainbow {
+            0% { color: #6600cc; }
+            33% { color: #cc0066; }
+            66% { color: #006600; }
+            100% { color: #6600cc; }
+        }
+
+        .mse-welcome {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #330066;
+        }
+
+        .mse-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px dashed #9933cc;
+            background: #ffffff;
+        }
+
+        .mse-section-title {
+            color: #6600cc;
+            font-size: 24px;
+            text-decoration: underline;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .mse-recipe {
+            background: #ffe6ff;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #cc99ff;
+        }
+
+        .mse-marquee {
+            background: #ffccff;
+            padding: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #6600cc;
+        }
+
+        .mse-counter-section {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .mse-visitor-counter {
+            background: #000;
+            color: #00ff00;
+            border: 2px solid #ff99cc;
+            padding: 5px 10px;
+            display: inline-block;
+            font-family: "Courier New", monospace;
+            margin: 5px;
+        }
+
+        .mse-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #6600cc;
+            border-top: 3px dotted #ff99cc;
+            padding-top: 10px;
+        }
+
+        .mse-guestbook {
+            background: #ffe6ff;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #cc99ff;
+        }
+
+        .mse-guestbook-entry {
+            margin: 10px 0;
+            padding: 10px;
+            border-bottom: 1px dotted #cc99ff;
+        }
+
+        .mse-under-construction {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="mse-page">
+        <div class="mse-container">
+            <div class="mse-header">
+                <h1 class="mse-title">~*~ Mrs. Snake-E's Corner ~*~</h1>
+                <div class="mse-welcome">Welcome to my little slice of the ExWeb!</div>
+                <div>🌸 Est. 1943 🌸</div>
+            </div>
+
+            <div class="mse-marquee">
+                💖 NEW! Recipe for Mouse Pot Pie added 1/23/25! 💖
+            </div>
+
+            <div class="mse-section">
+                <h2 class="mse-section-title">About Me</h2>
+                <p>Hello dearies! I'm Mrs. Snake-E, proud wife of the handsome CEO of Elxa Corporation. 
+                   I spend my days tending to my garden, baking treats, and keeping our mansion in Snakesia 
+                   looking lovely for my sweetheart. I also enjoy knitting cozy sweaters for my darling husband 
+                   (even though he has no arms 😊).</p>
+            </div>
+
+            <div class="mse-section">
+                <h2 class="mse-section-title">My Famous Recipes</h2>
+                <div class="mse-recipe">
+                    <h3>Mouse Pot Pie 🐭</h3>
+                    <p>My husband's absolute favorite! Perfect for cold Snakesian winters.</p>
+                    <p><em>Status: Under construction! Check back soon!</em></p>
+                </div>
+                <div class="mse-recipe">
+                    <h3>Garden Fresh Cricket Cookies 🦗</h3>
+                    <p>A hit at the last Elxa Corporation bake sale!</p>
+                </div>
+            </div>
+
+            <div class="mse-section">
+                <h2 class="mse-section-title">My Garden Photos</h2>
+                <div class="mse-under-construction">
+                    <p>🌷 Loading my lovely flowers... 🌷</p>
+                    <img src="/api/placeholder/200/40" alt="Under Construction">
+                </div>
+            </div>
+
+            <div class="mse-section">
+                <h2 class="mse-section-title">My Wonderful Family</h2>
+                <p>💕 My handsome husband, Mr. Snake-E (CEO of Elxa Corporation)</p>
+                <p>👨‍💻 Our dear Remi (such a smart boy with his computer games!)</p>
+                <p>💼 All the wonderful Elxa Corporation employees</p>
+            </div>
+
+            <div class="mse-guestbook">
+                <h2 class="mse-section-title">Guestbook</h2>
+                <div class="mse-guestbook-entry">
+                    <strong>Mr_Snake_E_CEO</strong>: Lovely website, dear! Your mouse pot pie is the best! ❤️
+                </div>
+                <div class="mse-guestbook-entry">
+                    <strong>RemiMarway</strong>: Great recipes Mrs. S! Can't wait for more!
+                </div>
+                <div class="mse-guestbook-entry">
+                    <strong>ElxaTechie</strong>: Thank you for the cookies at the office! 
+                </div>
+            </div>
+
+            <div class="mse-counter-section">
+                <div>Visitors to my little corner:</div>
+                <div class="mse-visitor-counter">8,042 ($)</div>
+                <div class="mse-visitor-counter">16,084 (🐍)</div>
+            </div>
+
+            <div class="mse-footer">
+                <p>Made with love in Snakesia 💝</p>
+                <p>Best viewed in Snoogle Browser at 800x600</p>
+                <p>Last updated: January 23, 2025</p>
+                <div>
+                    <img src="/api/placeholder/88/31" alt="Made with Xeocities">
+                    <img src="/api/placeholder/88/31" alt="Best Viewed in Snoogle">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Rotate through different welcome messages
+        const welcomeMessages = [
+            "Welcome to my little slice of the ExWeb!",
+            "So happy you stopped by!",
+            "Hope you're having a wonderful day!",
+            "Greetings from Snakesia!"
+        ];
+        
+        let messageIndex = 0;
+        setInterval(() => {
+            messageIndex = (messageIndex + 1) % welcomeMessages.length;
+            document.querySelector('.mse-welcome').textContent = welcomeMessages[messageIndex];
+        }, 3000);
+    </script>
+</body>
+</html>

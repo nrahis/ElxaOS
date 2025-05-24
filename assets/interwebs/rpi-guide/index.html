@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .rpi-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .rpi-header {
+            background: #bc1142;
+            color: white;
+            padding: 20px;
+            margin: -20px -20px 20px -20px;
+            text-align: center;
+            border-bottom: 4px solid #333;
+        }
+
+        .rpi-title {
+            font-size: 32px;
+            margin: 0;
+            text-shadow: 2px 2px #333;
+        }
+
+        .rpi-subtitle {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #eee;
+        }
+
+        .rpi-section {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .rpi-section-title {
+            color: #bc1142;
+            border-bottom: 2px solid #bc1142;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+
+        .rpi-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .rpi-spec-item {
+            padding: 5px;
+        }
+
+        .rpi-spec-label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .rpi-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rpi-step {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f8f8;
+            border-left: 4px solid #bc1142;
+        }
+
+        .rpi-note {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .rpi-code {
+            background: #2b2b2b;
+            color: #fff;
+            padding: 10px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .rpi-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="rpi-container">
+        <header class="rpi-header">
+            <h1 class="rpi-title">Raspberry Pi 4 Quick Start Guide</h1>
+            <div class="rpi-subtitle">A Beginner's Guide to Getting Started</div>
+        </header>
+
+        <section class="rpi-section">
+            <h2 class="rpi-section-title">What You'll Need</h2>
+            <ul class="rpi-steps">
+                <li class="rpi-step">Raspberry Pi 4 Model B</li>
+                <li class="rpi-step">Power supply (USB-C, 5V/3A)</li>
+                <li class="rpi-step">microSD card (16GB+ recommended)</li>
+                <li class="rpi-step">HDMI cable (micro-HDMI to HDMI)</li>
+                <li class="rpi-step">USB keyboard and mouse</li>
+                <li class="rpi-step">Display/monitor</li>
+            </ul>
+        </section>
+
+        <section class="rpi-section">
+            <h2 class="rpi-section-title">Basic Specifications</h2>
+            <div class="rpi-specs">
+                <div class="rpi-spec-item">
+                    <span class="rpi-spec-label">CPU:</span> 1.8GHz quad-core ARM
+                </div>
+                <div class="rpi-spec-item">
+                    <span class="rpi-spec-label">RAM:</span> 1GB/2GB/4GB/8GB LPDDR4
+                </div>
+                <div class="rpi-spec-item">
+                    <span class="rpi-spec-label">GPU:</span> VideoCore VI
+                </div>
+                <div class="rpi-spec-item">
+                    <span class="rpi-spec-label">USB Ports:</span> 2x USB 2.0, 2x USB 3.0
+                </div>
+                <div class="rpi-spec-item">
+                    <span class="rpi-spec-label">Network:</span> Gigabit Ethernet, Wi-Fi 5
+                </div>
+                <div class="rpi-spec-item">
+                    <span class="rpi-spec-label">Bluetooth:</span> 5.0, BLE
+                </div>
+            </div>
+        </section>
+
+        <section class="rpi-section">
+            <h2 class="rpi-section-title">Getting Started</h2>
+            <ol class="rpi-steps">
+                <li class="rpi-step">
+                    Download the Raspberry Pi Imager from raspberrypi.org
+                </li>
+                <li class="rpi-step">
+                    Insert your microSD card into your computer
+                </li>
+                <li class="rpi-step">
+                    Open Raspberry Pi Imager and choose your OS (Raspberry Pi OS recommended for beginners)
+                </li>
+                <li class="rpi-step">
+                    Select your SD card and click 'Write'
+                </li>
+                <li class="rpi-step">
+                    Insert the microSD card into your Raspberry Pi
+                </li>
+                <li class="rpi-step">
+                    Connect your peripherals (keyboard, mouse, display)
+                </li>
+                <li class="rpi-step">
+                    Plug in the power supply to boot
+                </li>
+            </ol>
+            
+            <div class="rpi-note">
+                Note: For first-time boot, make sure you're connected to a display to complete initial setup!
+            </div>
+        </section>
+
+        <section class="rpi-section">
+            <h2 class="rpi-section-title">Basic Commands</h2>
+            <div class="rpi-code">
+                # Update your system
+                sudo apt update
+                sudo apt upgrade
+
+                # Check CPU temperature
+                vcgencmd measure_temp
+
+                # Check system info
+                uname -a
+
+                # Shutdown safely
+                sudo shutdown -h now
+            </div>
+        </section>
+
+        <section class="rpi-section">
+            <h2 class="rpi-section-title">Troubleshooting</h2>
+            <div class="rpi-steps">
+                <div class="rpi-step">
+                    <strong>No Power LED?</strong> Check your power supply and USB-C connection
+                </div>
+                <div class="rpi-step">
+                    <strong>No Display?</strong> Ensure HDMI cables are firmly connected
+                </div>
+                <div class="rpi-step">
+                    <strong>Won't Boot?</strong> Try re-imaging your SD card
+                </div>
+                <div class="rpi-step">
+                    <strong>Overheating?</strong> Ensure proper ventilation or add a heatsink
+                </div>
+            </div>
+        </section>
+
+        <footer class="rpi-footer">
+            <p>© 2025 ElxaTech Documentation</p>
+            <p>Best viewed in Snoogle Browser</p>
+            <p>Last updated: 01/25/2025</p>
+            <p>Created by Elxa Corporation IT Department</p>
+        </footer>
+    </div>
+</body>
+</html>

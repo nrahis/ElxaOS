@@ -1,0 +1,1186 @@
+/* =================================
+   ELXAGUARD ANTIVIRUS STYLING
+================================= */
+
+/* Container */
+.antivirus-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.antivirus-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    border-bottom: 2px solid #1a252f;
+}
+
+.antivirus-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.shield-icon {
+    font-size: 32px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.product-info h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.version {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.status-indicator {
+    font-size: 16px;
+}
+
+.status-text {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Navigation */
+.antivirus-nav {
+    display: flex;
+    background: #495057;
+    border-bottom: 1px solid #343a40;
+}
+
+.nav-tab {
+    flex: 1;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    color: #adb5bd;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-right: 1px solid #343a40;
+}
+
+.nav-tab:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.nav-tab.active {
+    background: #f8f9fa;
+    color: #2c3e50;
+}
+
+/* Content Area */
+.antivirus-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.tab-content {
+    display: none;
+    height: 100%;
+    padding: 16px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px;
+    height: 100%;
+}
+
+.status-card,
+.threats-card,
+.scan-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+}
+
+.scan-card {
+    grid-column: 1 / -1;
+}
+
+.card-header {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    border-bottom: 1px solid #495057;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 16px;
+}
+
+/* Protection Status */
+.protection-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.status-icon {
+    font-size: 24px;
+}
+
+.status-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.status-detail {
+    font-size: 10px;
+    color: #6c757d;
+}
+
+/* Health Meter */
+.health-meter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.health-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #495057;
+    min-width: 80px;
+}
+
+.health-bar {
+    flex: 1;
+    height: 16px;
+    background: #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px inset var(--windowBorder);
+}
+
+.health-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 7px;
+}
+
+.health-fill.good {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+.health-fill.warning {
+    background: linear-gradient(90deg, #ffc107, #fd7e14);
+}
+
+.health-fill.critical {
+    background: linear-gradient(90deg, #dc3545, #e74c3c);
+}
+
+.health-percentage {
+    font-size: 11px;
+    font-weight: bold;
+    color: #495057;
+    min-width: 35px;
+}
+
+/* Threat Stats */
+.threat-stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-number {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: #6c757d;
+}
+
+/* Last Scan Card */
+.last-scan-info {
+    text-align: center;
+}
+
+.scan-status {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 12px;
+}
+
+.quick-scan-btn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: 2px outset #007bff;
+    color: white;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-scan-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-1px);
+}
+
+.quick-scan-btn:active {
+    border: 2px inset #007bff;
+    transform: translateY(0);
+}
+
+/* Scan Interface */
+.scan-interface {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.scan-options h3 {
+    margin: 0 0 16px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.scan-types {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 500px;
+}
+
+.scan-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.scan-btn:hover {
+    border-color: #007bff;
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+}
+
+.scan-icon {
+    font-size: 32px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.scan-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.scan-desc {
+    font-size: 11px;
+    color: #6c757d;
+}
+
+/* Scan Progress */
+.scan-progress {
+    text-align: center;
+    padding: 24px;
+}
+
+.scan-progress h3 {
+    margin: 0 0 24px 0;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.progress-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 24px;
+    background: #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px inset var(--windowBorder);
+    margin-bottom: 16px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+
+.progress-info {
+    margin-bottom: 16px;
+}
+
+.progress-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.progress-stats {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.current-file {
+    font-size: 10px;
+    color: #adb5bd;
+    font-family: monospace;
+    background: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    max-width: 400px;
+    margin: 0 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cancel-scan-btn {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: 2px outset #dc3545;
+    color: white;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cancel-scan-btn:hover {
+    background: linear-gradient(135deg, #c82333, #a71e2a);
+}
+
+/* Scan Results */
+.scan-results {
+    padding: 16px;
+}
+
+.scan-complete {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.result-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.result-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.scan-complete.clean .result-header h3 {
+    color: #28a745;
+    font-size: 20px;
+    margin: 0;
+}
+
+.scan-complete.threats-found .result-header h3 {
+    color: #dc3545;
+    font-size: 20px;
+    margin: 0;
+}
+
+.scan-summary {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    border: 1px solid #dee2e6;
+}
+
+.summary-stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.summary-stats .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.summary-stats .stat-number {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.summary-stats .stat-label {
+    font-size: 11px;
+    color: #6c757d;
+}
+
+.clean-message {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.clean-message p {
+    font-size: 14px;
+    color: #28a745;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Threats List */
+.threats-list {
+    margin-bottom: 24px;
+}
+
+.threats-list h4 {
+    margin: 0 0 16px 0;
+    color: #dc3545;
+    font-size: 14px;
+}
+
+.threat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.threat-item.high {
+    border-left: 4px solid #dc3545;
+    background: #fff5f5;
+}
+
+.threat-item.medium {
+    border-left: 4px solid #ffc107;
+    background: #fffbf0;
+}
+
+.threat-item.low {
+    border-left: 4px solid #28a745;
+    background: #f8fff8;
+}
+
+.threat-icon {
+    font-size: 20px;
+}
+
+.threat-info {
+    flex: 1;
+}
+
+.threat-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 2px;
+}
+
+.threat-location {
+    font-size: 10px;
+    color: #6c757d;
+    font-family: monospace;
+    margin-bottom: 4px;
+}
+
+.threat-description {
+    font-size: 10px;
+    color: #495057;
+}
+
+.threat-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.quarantine-threat-btn {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    border: 1px outset #fd7e14;
+    color: white;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.quarantine-threat-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #e8590c, #d54e09);
+}
+
+.quarantine-threat-btn:disabled {
+    background: #6c757d;
+    border-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Scan Actions */
+.scan-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.quarantine-all-btn,
+.new-scan-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quarantine-all-btn {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    border: 2px outset #fd7e14;
+    color: white;
+}
+
+.quarantine-all-btn:hover {
+    background: linear-gradient(135deg, #e8590c, #d54e09);
+    transform: translateY(-1px);
+}
+
+.new-scan-btn {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: 2px outset #6c757d;
+    color: white;
+}
+
+.new-scan-btn:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+    transform: translateY(-1px);
+}
+
+/* Quarantine Interface */
+.quarantine-interface {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.quarantine-header {
+    margin-bottom: 20px;
+}
+
+.quarantine-header h3 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.quarantine-header p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.quarantine-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.empty-quarantine {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.empty-message {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #28a745;
+}
+
+.empty-desc {
+    font-size: 12px;
+}
+
+.quarantine-header-info {
+    padding: 12px;
+    background: #e7f3ff;
+    border: 1px solid #b8daff;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.quarantine-header-info p {
+    margin: 0;
+    font-size: 12px;
+    color: #004085;
+    font-weight: bold;
+}
+
+.quarantine-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border-left: 4px solid #fd7e14;
+}
+
+.quarantine-icon {
+    font-size: 20px;
+}
+
+.quarantine-info {
+    flex: 1;
+}
+
+.quarantine-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.quarantine-description {
+    font-size: 10px;
+    color: #495057;
+    margin-bottom: 4px;
+}
+
+.quarantine-date {
+    font-size: 9px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.quarantine-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: 1px outset #dc3545;
+    color: white;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #c82333, #a71e2a);
+}
+
+/* Settings Interface */
+.settings-interface {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.settings-interface h3 {
+    margin: 0 0 24px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.settings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 500px;
+}
+
+.setting-group {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #dee2e6;
+}
+
+.setting-group h4 {
+    margin: 0 0 16px 0;
+    color: #495057;
+    font-size: 14px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #007bff;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.setting-info {
+    flex: 1;
+}
+
+.setting-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 2px;
+}
+
+.setting-desc {
+    font-size: 10px;
+    color: #6c757d;
+}
+
+.scan-schedule-select {
+    padding: 6px 12px;
+    border: 1px inset var(--windowBorder);
+    font-size: 11px;
+    border-radius: 4px;
+    background: white;
+}
+
+.debug-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.debug-btn {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
+    border: 1px outset #6f42c1;
+    color: white;
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.debug-btn:hover {
+    background: linear-gradient(135deg, #5a32a3, #4c2a85);
+    transform: translateY(-1px);
+}
+
+.debug-btn:active {
+    border: 1px inset #6f42c1;
+    transform: translateY(0);
+}
+
+/* Footer */
+.antivirus-footer {
+    padding: 8px 16px;
+    background: #495057;
+    border-top: 1px solid #343a40;
+    color: #adb5bd;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+}
+
+/* Virus Alert Dialog */
+.virus-alert {
+    min-width: 350px;
+    z-index: 2500;
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.alert-icon {
+    font-size: 48px;
+}
+
+.alert-message h3 {
+    margin: 0 0 8px 0;
+    color: #dc3545;
+    font-size: 16px;
+}
+
+.alert-message p {
+    margin: 4px 0;
+    font-size: 12px;
+    color: #495057;
+}
+
+.severity {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.severity.high {
+    color: #dc3545;
+}
+
+.severity.medium {
+    color: #ffc107;
+}
+
+.severity.low {
+    color: #28a745;
+}
+
+.alert-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.quarantine-now-btn,
+.scan-now-btn,
+.dismiss-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quarantine-now-btn {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    border: 1px outset #fd7e14;
+    color: white;
+}
+
+.scan-now-btn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: 1px outset #007bff;
+    color: white;
+}
+
+.dismiss-btn {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: 1px outset #6c757d;
+    color: white;
+}
+
+.quarantine-now-btn:hover {
+    background: linear-gradient(135deg, #e8590c, #d54e09);
+}
+
+.scan-now-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+}
+
+.dismiss-btn:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+}
+
+/* Virus Effects */
+.buggyworm-overlay {
+    position: fixed;
+    z-index: 2000;
+    pointer-events: none;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.buggyworm-overlay.wiggle {
+    animation: wiggle 2s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.virus-image {
+    text-align: center;
+    background: rgba(255, 102, 204, 0.95);
+    border: 3px solid #ff1493;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(255, 20, 147, 0.4);
+}
+
+.virus-image img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 2px solid white;
+}
+
+.virus-label {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Fake Installer */
+.fake-installer {
+    min-width: 400px;
+    z-index: 2100;
+}
+
+.installer-content {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.installer-icon {
+    font-size: 48px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    border-radius: 12px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.installer-info {
+    flex: 1;
+}
+
+.installer-info h3 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.installer-info p {
+    margin: 0 0 12px 0;
+    color: #495057;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.fake-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fake-details div {
+    font-size: 10px;
+    color: #6c757d;
+}
+
+.installer-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.install-virus-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: 2px outset #28a745;
+    color: white;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.install-virus-btn:hover {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    transform: scale(1.02);
+}
+
+.cancel-virus-btn {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: 2px outset #6c757d;
+    color: white;
+    padding: 10px 20px;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cancel-virus-btn:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+}
+
+/* Malicious Popups */
+.malicious-popup {
+    min-width: 300px;
+    z-index: 2200;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.warning-content {
+    text-align: center;
+}
+
+.warning-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.warning-message {
+    font-size: 12px;
+    font-weight: bold;
+    color: #dc3545;
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
+.malicious-popup .progress-bar {
+    height: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px inset var(--windowBorder);
+}
+
+.malicious-popup .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #dc3545, #c82333);
+    width: 0%;
+    transition: width 0.2s ease;
+    border-radius: 7px;
+}

@@ -276,6 +276,13 @@ class Taskbar {
         });
 
         // System tray icons
+        const antivirusIcon = document.getElementById('antivirusIcon');
+        if (antivirusIcon) {
+            antivirusIcon.addEventListener('click', () => {
+                elxaOS.eventBus.emit('program.launch', { program: 'antivirus' });
+            });
+        }
+
         document.getElementById('batteryIcon').addEventListener('click', () => {
             elxaOS.eventBus.emit('battery.click');
         });
@@ -326,14 +333,22 @@ class ElxaOS {
         this.themeService = new ThemeService(this.eventBus);
         this.loginService = new LoginService(this.eventBus);
         this.installerService = new InstallerService(this.eventBus, this.fileSystem, this.windowManager, this);
-        // Initialize programs
+        this.bootSystem = new BootSystem();
+
+        // Initialize virus system BEFORE programs that might need it
+        this.virusSystem = new VirusSystem(this.eventBus);
+        
+        // Initialize programs (including the new antivirus)
         this.programs = {
             notepad: new NotepadProgram(this.windowManager, this.fileSystem, this.eventBus),
             paint: new PaintProgram(this.windowManager, this.fileSystem, this.eventBus), 
             fileManager: new FileManagerProgram(this.windowManager, this.fileSystem, this.eventBus),
             duckConsole: new DuckConsoleProgram(this.windowManager, this.fileSystem, this.eventBus),
             calculator: new CalculatorProgram(this.windowManager, this.fileSystem, this.eventBus),
-            elxacode: new ElxaCodeProgram(this.windowManager, this.fileSystem, this.eventBus)
+            elxacode: new ElxaCodeProgram(this.windowManager, this.fileSystem, this.eventBus),
+            browser: new BrowserProgram(this.windowManager, this.fileSystem, this.eventBus),
+            // NEW: Add the antivirus program
+            antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus)
         };
 
         // Initialize installed programs storage
@@ -399,6 +414,15 @@ class ElxaOS {
                 this.programs.elxacode.launch();
                 break;
 
+            case 'browser':
+                this.programs.browser.launch();
+                break;
+
+            case 'antivirus':
+            case 'elxaguard':
+                this.programs.antivirus.launch();
+                break;
+
             case 'fileManager':
                 // FIXED: Handle file manager with optional path argument
                 if (args && Array.isArray(args)) {
@@ -432,16 +456,22 @@ class ElxaOS {
 
     shutdown() {
         if (confirm('Are you sure you want to shut down ElxaOS?')) {
+            console.log('🔌 Shutting down ElxaOS...');
             document.body.style.background = 'black';
             document.body.innerHTML = '<div style="color: white; text-align: center; padding-top: 200px; font-size: 24px;">ElxaOS is shutting down...</div>';
             
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
+            if (this.bootSystem && typeof this.bootSystem.startFromShutdown === 'function') {
+                this.bootSystem.startFromShutdown();
+            } else {
+                setTimeout(() => location.reload(), 2000);
+            }
         }
     }
 
     initialize() {
+        // Just set up the service, don't show login screen yet
+        // The boot system will call showLoginScreen() when ready
+        console.log('Login service initialized and ready');
         console.log('ElxaOS initialized successfully!');
         
         // Check if Welcome.txt already exists before creating it
@@ -450,7 +480,7 @@ class ElxaOS {
         
         if (!welcomeExists) {
             // Create Welcome.txt only if it doesn't exist
-            this.fileSystem.createFile(['root', 'Desktop'], 'Welcome.txt', 'Welcome to ElxaOS!\n\nThis is your new operating system.\n\nFeatures:\n- File Manager with navigation\n- Rich Text Notepad\n- System Services (Battery, WiFi)\n- And much more!');
+            this.fileSystem.createFile(['root', 'Desktop'], 'Updates: 5/23/25\n\nSnoogle Browser:\nWIP! Some sites work\nBoot sequence: testing\nAntivirus: DONE\n\nWelcome.txt', 'Welcome to ElxaOS!\n\nThis is your new operating system.\n\nFeatures:\n- File Manager with navigation\n- Rich Text Notepad\n- System Services (Battery, WiFi)\n- And much more!');
         }
         
         // Create other default files only if they don't exist
@@ -578,8 +608,15 @@ class ElxaOS {
         // Load installed programs after everything is set up
         this.installerService.loadInstalledPrograms();
         
-        // Start with login screen instead of desktop
-        this.loginService.initialize();
+        // Debug: Check if bootSystem exists and start boot sequence
+        console.log('🚀 Checking boot system:', this.bootSystem);
+        if (this.bootSystem && typeof this.bootSystem.startBoot === 'function') {
+            console.log('🚀 Starting boot sequence...');
+            this.bootSystem.startBoot();
+        } else {
+            console.error('❌ Boot system not found, falling back to login');
+            this.loginService.initialize();
+        }
     }
 
     refreshDesktop() {

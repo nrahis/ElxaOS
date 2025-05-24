@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Keeping consistent corporate styling */
+        :root {
+            --corporate-blue: #003366;
+            --corporate-gold: #FFD700;
+            --link-blue: #0000EE;
+            --visited-purple: #551A8B;
+            --menu-bg: #E8E8E8;
+            --profit-green: #006400;
+            --loss-red: #8B0000;
+        }
+
+        /* Base styles from previous pages... */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #FFF url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkYGD4z8DAwMgABXAGNgYGBkcGBgYGAAkEAYGJCYQnAAAAAElFTkSuQmCC') repeat;
+            font-family: 'Times New Roman', serif;
+            color: #000;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid var(--corporate-blue);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Previous header, navigation, content, and footer styles... */
+        .header {
+            background: var(--corporate-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--corporate-gold);
+        }
+
+        .company-name {
+            font-size: 36px;
+            margin: 0;
+            text-shadow: 2px 2px #000;
+        }
+
+        .navigation {
+            background: var(--menu-bg);
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #999;
+        }
+
+        .content {
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--menu-bg);
+            border-top: 1px solid #999;
+            font-size: 0.8em;
+        }
+
+        /* Investor page specific styles */
+        .stock-dashboard {
+            background: #000;
+            color: #0F0;
+            padding: 20px;
+            font-family: monospace;
+            margin: 20px 0;
+        }
+
+        .chart-container {
+            border: 1px solid #CCC;
+            padding: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .financial-table th,
+        .financial-table td {
+            border: 1px solid #CCC;
+            padding: 8px;
+            text-align: right;
+        }
+
+        .financial-table th {
+            background: var(--corporate-blue);
+            color: white;
+        }
+
+        .profit {
+            color: var(--profit-green);
+        }
+
+        .loss {
+            color: var(--loss-red);
+        }
+
+        .report-download {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--corporate-blue);
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+            border: 2px outset #666;
+        }
+
+        .report-download:hover {
+            background: var(--corporate-gold);
+            color: var(--corporate-blue);
+        }
+
+        .investor-alert {
+            border: 2px solid var(--corporate-gold);
+            padding: 15px;
+            margin: 20px 0;
+            background: #FFFDF0;
+        }
+
+        .currency-note {
+            font-style: italic;
+            color: #666;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="company-name">SNAKE-E CORPORATION</h1>
+        </div>
+
+        <div class="navigation">
+            <a href="snake-e.corp.ex" class="nav-link">Home</a>
+            <a href="snake-e.corp.ex/about" class="nav-link">About Us</a>
+            <a href="snake-e.corp.ex/products" class="nav-link">Products</a>
+            <a href="snake-e.corp.ex/careers" class="nav-link">Careers</a>
+            <a href="snake-e.corp.ex/investors" class="nav-link">Investors</a>
+            <a href="snake-e.corp.ex/contact" class="nav-link">Contact</a>
+        </div>
+
+        <div class="content">
+            <h2>Investor Relations</h2>
+
+            <div class="investor-alert">
+                <strong>🎉 Latest Update:</strong> Snake-E Corporation reports record Q4 earnings, driven by strong ElxaOS adoption and retro gaming initiatives. Quarterly dividend increased by 42%.
+            </div>
+
+            <div class="stock-dashboard">
+                <div id="stockPrice">SNKE: $2,025.00 ▲ 42.00 (2.1%)</div>
+                <div>Exchange: Snakesia Stock Exchange (SNX)</div>
+                <div>Market Cap: 42B snakes ($21B USD)</div>
+                <div>52-Week Range: $1,337.00 - $2,042.00</div>
+            </div>
+
+            <div class="chart-container">
+                <img src="/api/placeholder/600/300" alt="SNKE Stock Performance">
+                <div>5-Year Stock Performance (2020-2025)</div>
+            </div>
+
+            <h3>Financial Highlights</h3>
+            <table class="financial-table">
+                <tr>
+                    <th>Metric</th>
+                    <th>2024</th>
+                    <th>2023</th>
+                    <th>2022</th>
+                </tr>
+                <tr>
+                    <td>Revenue</td>
+                    <td class="profit">🐍 84.2B</td>
+                    <td class="profit">🐍 72.4B</td>
+                    <td class="profit">🐍 65.8B</td>
+                </tr>
+                <tr>
+                    <td>Operating Income</td>
+                    <td class="profit">🐍 42.0B</td>
+                    <td class="profit">🐍 36.2B</td>
+                    <td class="profit">🐍 32.9B</td>
+                </tr>
+                <tr>
+                    <td>R&D Investment</td>
+                    <td>🐍 13.37B</td>
+                    <td>🐍 11.42B</td>
+                    <td>🐍 10.01B</td>
+                </tr>
+                <tr>
+                    <td>Denali Maintenance</td>
+                    <td class="profit">🐍 2.5M</td>
+                    <td class="profit">🐍 2.3M</td>
+                    <td class="profit">🐍 2.1M</td>
+                </tr>
+            </table>
+
+            <div class="currency-note">
+                * All figures in Snakesian Currency (🐍). For USD, divide by 2.
+            </div>
+
+            <h3>Recent SEC Filings</h3>
+            <a href="#" class="report-download">📄 Q4 2024 Earnings Report</a>
+            <a href="#" class="report-download">📄 Annual Report 2024</a>
+            <a href="#" class="report-download">📄 Q3 2024 Earnings Report</a>
+
+            <h3>Investment Highlights</h3>
+            <ul>
+                <li>Market leader in retro-compatible operating systems</li>
+                <li>42% year-over-year growth in ElxaOS installations</li>
+                <li>Strong presence in arcade machine software market</li>
+                <li>Zero debt (Mr. Snake-E doesn't believe in loans)</li>
+                <li>Consistent dividend growth (paid in both $ and 🐍)</li>
+            </ul>
+
+            <h3>Upcoming Events</h3>
+            <div class="investor-alert">
+                Join us for the Q1 2025 Earnings Call
+                <br>Date: April 1, 2025
+                <br>Time: 4:20 PM Snakesia Time
+                <br>Location: Snake-E Manor Grand Ballroom
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Snake-E Corporation. All rights reserved.</p>
+            <p>SEC Filings available at sec.gov</p>
+            <p>For investor relations inquiries: investors@snake-e.corp.ex</p>
+            <div style="font-family: monospace;">
+                Visitors: 1,337,420 ($) | 2,674,840 (🐍)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animate stock price
+        setInterval(() => {
+            const basePrice = 2025;
+            const newPrice = basePrice + Math.random() * 10 - 5;
+            const change = (newPrice - basePrice).toFixed(2);
+            const percent = (change / basePrice * 100).toFixed(1);
+            const arrow = change >= 0 ? '▲' : '▼';
+            
+            document.querySelector('#stockPrice').textContent = 
+                `SNKE: $${newPrice.toFixed(2)} ${arrow} ${Math.abs(change)} (${Math.abs(percent)}%)`;
+        }, 3000);
+    </script>
+</body>
+</html>

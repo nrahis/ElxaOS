@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .sb-container {
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            color: #e6e6e6;
+        }
+
+        .sb-header {
+            background: #0f3460;
+            padding: 10px 20px;
+            border-bottom: 3px solid #e94560;
+            position: sticky;
+            top: 0;
+        }
+
+        .sb-logo {
+            color: #e94560;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px #16213e;
+        }
+
+        .sb-profile {
+            background: #16213e;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            border: 1px solid #e94560;
+        }
+
+        .sb-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .sb-avatar {
+            width: 100px;
+            height: 100px;
+            background: #0f3460;
+            border: 3px solid #e94560;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .sb-profile-info h2 {
+            color: #e94560;
+            margin: 0;
+        }
+
+        .sb-profile-info p {
+            margin: 5px 0;
+            color: #888;
+        }
+
+        .sb-feed {
+            padding: 20px;
+        }
+
+        .sb-post {
+            background: #16213e;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .sb-post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sb-post-avatar {
+            width: 40px;
+            height: 40px;
+            background: #0f3460;
+            border: 2px solid #e94560;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .sb-post-author {
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .sb-post-time {
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        .sb-post-content {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .sb-post-actions {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .sb-post-actions span {
+            cursor: pointer;
+        }
+
+        .sb-post-actions span:hover {
+            color: #e94560;
+        }
+
+        .sb-verified {
+            color: #e94560;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sb-container">
+        <div class="sb-header">
+            <div class="sb-logo">Snakebook</div>
+        </div>
+
+        <div class="sb-profile">
+            <div class="sb-profile-header">
+                <div class="sb-avatar">👨‍💻</div>
+                <div class="sb-profile-info">
+                    <h2>ElxaTechie</h2>
+                    <p>IT Specialist at Elxa Corporation</p>
+                    <p>Personal Assistant to Mr. Snake-e 🐍</p>
+                    <p>Location: Snakesia (West of Tennessee)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sb-feed" id="snakebookFeed">
+            <!-- Posts will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Post templates
+        const posts = [
+            {
+                author: "Mr_Snake_e",
+                avatar: "🐍",
+                verified: true,
+                content: "Just approved another raise for my fantastic IT assistant! Keep up the great work! 💼💰",
+                likes: 2854,
+                comments: 342
+            },
+            {
+                author: "Mrs_Snake_e",
+                avatar: "👵",
+                verified: true,
+                content: "Made my famous snake-shaped cookies today! Come by the mansion to get some! 🍪",
+                likes: 1423,
+                comments: 156
+            },
+            {
+                author: "RemiMarway",
+                avatar: "🎮",
+                verified: true,
+                content: "New Minecraft server update! Check out remicraft.ex for details! 🎯",
+                likes: 892,
+                comments: 234
+            },
+            {
+                author: "ElxaTechie",
+                avatar: "👨‍💻",
+                content: "Just updated Mr. Snake-e's Denali with the latest ElxaOS! Voice commands now support Snakesian! 🚙",
+                likes: 445,
+                comments: 89
+            },
+            {
+                author: "ElxaTechie",
+                avatar: "👨‍💻",
+                content: "Working on some cool new features for ElxaOS! Can't wait to show everyone! 💻✨",
+                likes: 367,
+                comments: 52
+            },
+            {
+                author: "DenaliDriver",
+                avatar: "🚗",
+                content: "Another smooth drive in the Snake-e mobile! These ElxaOS updates are amazing!",
+                likes: 234,
+                comments: 45
+            },
+            {
+                author: "ElxaNews",
+                avatar: "📰",
+                verified: true,
+                content: "Breaking: Elxa Corporation stock reaches new high! Mr. Snake-e announces more IT positions opening soon! 📈",
+                likes: 1756,
+                comments: 289
+            },
+            {
+                author: "SnakesiaMath",
+                avatar: "🔢",
+                verified: true,
+                content: "Today's exchange rate: 1 Snake = $0.50! Perfect for calculations! 🐍💰",
+                likes: 567,
+                comments: 123
+            },
+            {
+                author: "SnakesiaChem",
+                avatar: "🧪",
+                verified: true,
+                content: "Today in the lab: Teaching kids how to safely mix colors! Join us at the Snake-e Science Center! 🔬",
+                likes: 445,
+                comments: 67
+            },
+            {
+                author: "ElxaTechie",
+                avatar: "👨‍💻",
+                content: "Found the coolest retro arcade machine in the mansion basement! Mr. Snake-e says I can restore it! 🕹️",
+                likes: 783,
+                comments: 134
+            },
+            {
+                author: "Mr_Snake_e",
+                avatar: "🐍",
+                verified: true,
+                content: "Just approved installation of a new supercomputer at HQ. My IT assistant says it's 'epic'. Must be good! 💻",
+                likes: 3201,
+                comments: 445
+            },
+            {
+                author: "ArcadeChamp",
+                avatar: "🎮",
+                content: "HIGH SCORE ALERT at Snake-e Mansion Arcade! ElxaTechie just beat Mr. Snake-e's Pac-Man record! 👾",
+                likes: 902,
+                comments: 156
+            },
+            {
+                author: "ElxaTechie",
+                avatar: "👨‍💻",
+                content: "Just updated the phone firmware for everyone at Elxa Corp! Android 15.2 and iOS 18.3 running smooth! 📱",
+                likes: 567,
+                comments: 89
+            },
+            {
+                author: "MansionChef",
+                avatar: "👨‍🍳",
+                verified: true,
+                content: "Mrs. Snake-e helping in the kitchen today! Her special snake-shaped pancakes are a hit! 🥞",
+                likes: 1234,
+                comments: 178
+            },
+            {
+                author: "RemiMarway",
+                avatar: "🎮",
+                verified: true,
+                content: "Teaching Mr. Snake-e how to play Minecraft! He keeps trying to make the snakes bigger 😂",
+                likes: 2341,
+                comments: 445
+            },
+            {
+                author: "ElxaArcade",
+                avatar: "🕹️",
+                verified: true,
+                content: "New high score tables installed! Now displaying scores in both $ and 🐍! Come check your ranking!",
+                likes: 892,
+                comments: 145
+            },
+            {
+                author: "Mrs_Snake_e",
+                avatar: "👵",
+                verified: true,
+                content: "Found old photos of when Mr. Snake-e started Elxa Corp! He was just a tiny garden snake with big dreams! 📸",
+                likes: 4567,
+                comments: 892
+            },
+            {
+                author: "ElxaTechie",
+                avatar: "👨‍💻",
+                content: "Mr. Snake-e just asked me to upgrade the mansion's calculator to handle Snakesian math. Challenge accepted! 🔢",
+                likes: 678,
+                comments: 91
+            }
+        ];
+
+        // Function to get random posts
+        function getRandomPosts(count) {
+            const shuffled = [...posts].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // Function to format time
+        function getRandomTime() {
+            const minutes = Math.floor(Math.random() * 59);
+            return `${minutes}m ago`;
+        }
+
+        // Function to create post HTML
+        function createPostHTML(post) {
+            return `
+                <div class="sb-post">
+                    <div class="sb-post-header">
+                        <div class="sb-post-avatar">${post.avatar}</div>
+                        <div>
+                            <span class="sb-post-author">${post.author}</span>
+                            ${post.verified ? '<span class="sb-verified">✓</span>' : ''}
+                            <div class="sb-post-time">${getRandomTime()}</div>
+                        </div>
+                    </div>
+                    <div class="sb-post-content">
+                        ${post.content}
+                    </div>
+                    <div class="sb-post-actions">
+                        <span>❤️ ${post.likes}</span>
+                        <span>💬 ${post.comments}</span>
+                        <span>↗️ Share</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize feed
+        function initializeFeed() {
+            const feed = document.getElementById('snakebookFeed');
+            const randomPosts = getRandomPosts(6); // Show 6 random posts
+            feed.innerHTML = randomPosts.map(post => createPostHTML(post)).join('');
+        }
+
+        // Initialize when page loads
+        initializeFeed();
+
+        // Refresh feed every 5 minutes
+        setInterval(initializeFeed, 300000);
+    </script>
+</body>
+</html>

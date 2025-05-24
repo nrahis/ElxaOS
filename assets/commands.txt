@@ -7,3 +7,4 @@ elxaOS.themeService.clearThemeSettings()
 
 // Clear file system in localstorage
 elxaOS.fileSystem.clearStorage()
+debugElxaOS.clearAllStorage()

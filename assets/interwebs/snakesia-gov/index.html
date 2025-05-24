@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body class="snakesia-gov">
+    <div class="snakesia-header">
+        <h1 class="snakesia-title">SNAKESIA.GOV</h1>
+        <div class="snakesia-subtitle">Official Website of the Snakesian Government</div>
+    </div>
+
+    <div class="snakesia-nav">
+        <a href="snakesia.gov.ex/tourism">Tourism</a>
+        <a href="snakesia.gov.ex/business">Business</a>
+        <a href="snakesia.gov.ex/embassy">Embassy</a>
+        <a href="snakesia.gov.ex/maps">Maps</a>
+    </div>
+
+    <div class="snakesia-alert">
+        🚨 WEATHER ALERT: Pleasant weather expected across Snakesia today. Perfect for driving your Denali!
+    </div>
+
+    <div class="snakesia-content">
+        <div class="snakesia-main">
+            <h2>Welcome to Snakesia</h2>
+            <p>Located conveniently west of Tennessee, Snakesia is a thriving nation known for its technology sector, led by industry giant Elxa Corporation.</p>
+            
+            <div class="snakesia-news">
+                <h3>Latest News</h3>
+                <p>🏢 Elxa Corporation announces new ElxaOS update</p>
+                <p>🚗 National Denali Appreciation Day declared</p>
+                <p>🏰 Mr. Snake-e's mansion opens for annual public tour</p>
+            </div>
+
+            <div class="snakesia-calculator">
+                <h3>Currency Converter</h3>
+                <input type="number" id="dollars" placeholder="USD">
+                <span>= </span>
+                <input type="number" id="snakes" placeholder="Snakes" readonly>
+                <div>(1 USD = 2 Snakes)</div>
+            </div>
+        </div>
+
+        <div class="snakesia-sidebar">
+            <div class="snakesia-quicklinks">
+                <h3>Quick Links</h3>
+                <a href="snake-e.corp.ex">Elxa Corporation Portal</a>
+                <div>Currency Information</div>
+                <div>National Vehicle Registry</div>
+                <a href="snakesia.gov.ex/mansion">Snake-e Mansion Tours</a>
+            </div>
+
+            <div class="snakesia-quicklinks">
+                <h3>Current Information</h3>
+                <div>Time: <span id="snakesiaTime">Loading...</span></div>
+                <div>Exchange Rate: $1 = 🐍2</div>
+                <div>Capital: Serpentville</div>
+                <div>National Car: Denali</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="snakesia-footer">
+        <p>© 2025 Government of Snakesia • Best viewed in Snoogle Browser</p>
+        <p>Accessed via ElxaOS • Official Seal of Snakesia</p>
+    </div>
+
+    <script>
+        // Currency converter
+        document.getElementById('dollars').addEventListener('input', function(e) {
+            const dollars = parseFloat(e.target.value) || 0;
+            document.getElementById('snakes').value = (dollars * 2).toFixed(2);
+        });
+
+        // Update Snakesia time (UTC-5)
+        function updateSnakesiaTime() {
+            const now = new Date();
+            const snakesiaTime = new Date(now.getTime() - (5 * 60 * 60 * 1000));
+            document.getElementById('snakesiaTime').textContent = 
+                snakesiaTime.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' });
+        }
+        
+        setInterval(updateSnakesiaTime, 1000);
+        updateSnakesiaTime();
+    </script>
+</body>
+</html>

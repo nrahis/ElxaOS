@@ -5,6 +5,9 @@
 @import url('clock-system.css');
 @import url('calculator.css');
 @import url('elxacode.css');
+@import url('antivirus.css');
+@import url('boot-system.css');
+@import url('browser.css');
 @import url('games/snake.css');
 @import url('games/snake-deluxe.css');
 
@@ -406,3 +409,4 @@ body.dark-theme .desktop-icon-label {
     color: #ffffff;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
 }
+
