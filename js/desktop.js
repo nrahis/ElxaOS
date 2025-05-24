@@ -1,24 +1,67 @@
 // =================================
 // DESKTOP MANAGEMENT
 // =================================
+// =================================
+// DESKTOP MANAGEMENT - Enhanced with Drag & Drop
+// =================================
 class Desktop {
     constructor() {
         this.selectedIcon = null;
+        this.dragData = null;
+        this.iconPositions = new Map(); // Store custom icon positions
         this.setupEvents();
+        this.loadIconPositions();
     }
 
     setupEvents() {
-        // Desktop icon clicks
-        document.getElementById('desktopIcons').addEventListener('click', (e) => {
+        // Desktop icon clicks and drag setup
+        document.getElementById('desktopIcons').addEventListener('mousedown', (e) => {
             const icon = e.target.closest('.desktop-icon');
             if (icon) {
                 this.selectIcon(icon);
+                
+                // Start drag after a small delay to distinguish from clicks
+                this.dragTimeout = setTimeout(() => {
+                    this.startDrag(icon, e);
+                }, 150);
+                
+                e.preventDefault(); // Prevent text selection
+            }
+        });
+
+        // Handle mouse up for click detection and drag end
+        document.getElementById('desktopIcons').addEventListener('mouseup', (e) => {
+            const icon = e.target.closest('.desktop-icon');
+            if (icon && this.dragTimeout) {
+                clearTimeout(this.dragTimeout);
                 
                 // Double-click detection
                 if (this.lastClick && Date.now() - this.lastClick < 300) {
                     this.openProgram(icon.dataset.program);
                 }
                 this.lastClick = Date.now();
+            }
+            
+            if (this.dragData) {
+                this.endDrag();
+            }
+        });
+
+        // Global mouse move for dragging
+        document.addEventListener('mousemove', (e) => {
+            if (this.dragData) {
+                this.handleDrag(e);
+            }
+        });
+
+        // Global mouse up to end dragging
+        document.addEventListener('mouseup', () => {
+            if (this.dragData) {
+                this.endDrag();
+            }
+            if (this.dragTimeout) {
+                clearTimeout(this.dragTimeout);
+                this.dragTimeout = null;
             }
         });
 
@@ -27,7 +70,7 @@ class Desktop {
             const icon = e.target.closest('.desktop-icon');
             if (icon) {
                 e.preventDefault();
-                e.stopPropagation(); // Add this line!
+                e.stopPropagation();
                 this.showContextMenu(e, icon);
             }
         });
@@ -45,6 +88,89 @@ class Desktop {
         });
     }
 
+    startDrag(icon, e) {
+        if (!icon) return;
+        
+        const rect = icon.getBoundingClientRect();
+        const containerRect = document.getElementById('desktopIcons').getBoundingClientRect();
+        
+        this.dragData = {
+            icon: icon,
+            startX: e.clientX,
+            startY: e.clientY,
+            offsetX: e.clientX - rect.left,
+            offsetY: e.clientY - rect.top,
+            originalLeft: rect.left - containerRect.left,
+            originalTop: rect.top - containerRect.top
+        };
+        
+        // Add dragging visual feedback
+        icon.classList.add('dragging');
+        icon.style.zIndex = '1000';
+        icon.style.position = 'absolute';
+        icon.style.left = this.dragData.originalLeft + 'px';
+        icon.style.top = this.dragData.originalTop + 'px';
+        
+        // Change cursor
+        document.body.style.cursor = 'grabbing';
+        
+        // Clear any timeout since we're now dragging
+        if (this.dragTimeout) {
+            clearTimeout(this.dragTimeout);
+            this.dragTimeout = null;
+        }
+    }
+
+    handleDrag(e) {
+        if (!this.dragData) return;
+        
+        const container = document.getElementById('desktopIcons');
+        const containerRect = container.getBoundingClientRect();
+        
+        // Calculate new position
+        let newLeft = e.clientX - containerRect.left - this.dragData.offsetX;
+        let newTop = e.clientY - containerRect.top - this.dragData.offsetY;
+        
+        // Constrain to container bounds
+        const iconWidth = 64;
+        const iconHeight = 64;
+        newLeft = Math.max(0, Math.min(newLeft, containerRect.width - iconWidth));
+        newTop = Math.max(0, Math.min(newTop, containerRect.height - iconHeight));
+        
+        // Update position
+        this.dragData.icon.style.left = newLeft + 'px';
+        this.dragData.icon.style.top = newTop + 'px';
+    }
+
+    endDrag() {
+        if (!this.dragData) return;
+        
+        const icon = this.dragData.icon;
+        const iconId = icon.dataset.program || icon.dataset.file || 'unknown';
+        
+        // Save the new position
+        const finalLeft = parseInt(icon.style.left);
+        const finalTop = parseInt(icon.style.top);
+        
+        this.iconPositions.set(iconId, {
+            left: finalLeft,
+            top: finalTop
+        });
+        
+        // Save to storage
+        this.saveIconPositions();
+        
+        // Remove dragging visual feedback
+        icon.classList.remove('dragging');
+        icon.style.zIndex = '';
+        document.body.style.cursor = '';
+        
+        // Reset drag data
+        this.dragData = null;
+        
+        console.log(`📍 Icon "${iconId}" moved to position (${finalLeft}, ${finalTop})`);
+    }
+
     selectIcon(icon) {
         this.clearSelection();
         icon.classList.add('selected');
@@ -56,6 +182,68 @@ class Desktop {
             this.selectedIcon.classList.remove('selected');
             this.selectedIcon = null;
         }
+    }
+
+    // Apply saved positions to icons
+    applyIconPositions() {
+        const icons = document.querySelectorAll('.desktop-icon');
+        icons.forEach(icon => {
+            const iconId = icon.dataset.program || icon.dataset.file || 'unknown';
+            const savedPosition = this.iconPositions.get(iconId);
+            
+            if (savedPosition) {
+                icon.style.position = 'absolute';
+                icon.style.left = savedPosition.left + 'px';
+                icon.style.top = savedPosition.top + 'px';
+            }
+        });
+    }
+
+    // Save icon positions to localStorage
+    saveIconPositions() {
+        try {
+            const positionsArray = Array.from(this.iconPositions.entries());
+            localStorage.setItem('elxaOS-icon-positions', JSON.stringify(positionsArray));
+            console.log('💾 Icon positions saved');
+        } catch (error) {
+            console.error('❌ Failed to save icon positions:', error);
+        }
+    }
+
+    // Load icon positions from localStorage
+    loadIconPositions() {
+        try {
+            const saved = localStorage.getItem('elxaOS-icon-positions');
+            if (saved) {
+                const positionsArray = JSON.parse(saved);
+                this.iconPositions = new Map(positionsArray);
+                console.log('📍 Icon positions loaded');
+                
+                // Apply positions after a short delay to ensure icons are rendered
+                setTimeout(() => {
+                    this.applyIconPositions();
+                }, 100);
+            }
+        } catch (error) {
+            console.error('❌ Failed to load icon positions:', error);
+        }
+    }
+
+    // Reset all icon positions to default grid
+    resetIconPositions() {
+        this.iconPositions.clear();
+        localStorage.removeItem('elxaOS-icon-positions');
+        
+        // Remove custom positioning from all icons
+        const icons = document.querySelectorAll('.desktop-icon');
+        icons.forEach(icon => {
+            icon.style.position = '';
+            icon.style.left = '';
+            icon.style.top = '';
+            icon.style.zIndex = '';
+        });
+        
+        console.log('🔄 Icon positions reset to default');
     }
 
     openProgram(programId) {
@@ -161,6 +349,10 @@ class Desktop {
                 <div class="context-item" data-action="open">
                     <span>📂</span> Open
                 </div>
+                <div class="context-separator"></div>
+                <div class="context-item" data-action="reset-positions">
+                    <span>🔄</span> Reset Icon Layout
+                </div>
             `;
         }
         
@@ -168,7 +360,6 @@ class Desktop {
         menu.style.left = e.pageX + 'px';
         menu.style.top = e.pageY + 'px';
         
-        // Add event listeners
         // Add event listeners
         menu.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -222,6 +413,12 @@ class Desktop {
                         elxaOS.fileSystem.deleteItem(folderPath, fileName);
                         elxaOS.refreshDesktop();
                     }
+                }
+                break;
+                
+            case 'reset-positions':
+                if (confirm('Reset all desktop icons to default positions?')) {
+                    this.resetIconPositions();
                 }
                 break;
         }
