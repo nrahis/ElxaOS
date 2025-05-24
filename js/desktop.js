@@ -543,6 +543,7 @@ class ElxaOS {
             duckConsole: new DuckConsoleProgram(this.windowManager, this.fileSystem, this.eventBus),
             calculator: new CalculatorProgram(this.windowManager, this.fileSystem, this.eventBus),
             elxacode: new ElxaCodeProgram(this.windowManager, this.fileSystem, this.eventBus),
+            elxabooks: new ElxaBooksProgram(this.windowManager, this.fileSystem, this.eventBus),
             browser: new BrowserProgram(this.windowManager, this.fileSystem, this.eventBus),
             // NEW: Add the antivirus program
             antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus),
@@ -610,6 +611,10 @@ class ElxaOS {
 
             case 'elxacode':
                 this.programs.elxacode.launch();
+                break;
+
+            case 'elxabooks':
+                this.programs.elxabooks.launch();
                 break;
 
             case 'browser':
@@ -682,7 +687,7 @@ class ElxaOS {
         
         if (!welcomeExists) {
             // Create Welcome.txt only if it doesn't exist
-            this.fileSystem.createFile(['root', 'Desktop'], 'Updates: 5/23/25\n\nSnoogle Browser:\nWIP! Some sites work\nBoot sequence: testing\nAntivirus: DONE\n\nWelcome.txt', 'Welcome to ElxaOS!\n\nThis is your new operating system.\n\nFeatures:\n- File Manager with navigation\n- Rich Text Notepad\n- System Services (Battery, WiFi)\n- And much more!');
+            this.fileSystem.createFile(['root', 'Desktop'], 'Welcome.txt', 'Welcome to ElxaOS!\n\nThis is your new operating system.\n\nFeatures:\n- File Manager with navigation\n- Rich Text Notepad\n- System Services (Battery, WiFi)\n- And much more!');
         }
         
         // Create other default files only if they don't exist
