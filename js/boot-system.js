@@ -217,8 +217,9 @@ class BootSystem {
     }
 
     // Complete the boot and show login
+    // Complete the boot and show login (or updates first)
     completeBoot() {
-        console.log('✅ Boot sequence complete, showing login screen');
+        console.log('✅ Boot sequence complete, checking for updates...');
         this.isBooting = false;
         document.removeEventListener('keydown', this.boundKeyHandler);
         
@@ -228,7 +229,36 @@ class BootSystem {
             bootScreen.remove();
         }
         
-        // Show login screen
+        // Check for updates before showing login
+        this.checkForUpdates();
+    }
+
+    // Check for updates and show popup if needed
+    async checkForUpdates() {
+        try {
+            // Initialize update popup system if not already done
+            if (!this.updatePopup) {
+                this.updatePopup = new UpdatePopup();
+            }
+            
+            // Try to show update popup
+            const updateShown = await this.updatePopup.showUpdatePopup();
+            
+            if (!updateShown) {
+                // No update to show, proceed to login
+                this.showLoginScreen();
+            }
+            // If update was shown, the popup will handle showing login after dismissal
+            
+        } catch (error) {
+            console.error('❌ Error checking for updates:', error);
+            // Fallback to login screen if update system fails
+            this.showLoginScreen();
+        }
+    }
+
+    // Show login screen (extracted to separate method)
+    showLoginScreen() {
         if (elxaOS && elxaOS.loginService) {
             elxaOS.loginService.showLoginScreen();
         } else {

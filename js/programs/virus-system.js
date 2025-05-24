@@ -90,6 +90,12 @@ class VirusSystem {
         this.eventBus.on('antivirus.realtime.toggle', (data) => {
             this.realTimeProtectionEnabled = data.enabled;
             console.log(`🛡️ Real-time protection ${data.enabled ? 'enabled' : 'disabled'}`);
+            
+            // If protection was just disabled, start the infection cycle
+            if (!data.enabled) {
+                console.log('🦠 Starting infection cycle since protection was disabled');
+                this.startRandomInfections();
+            }
         });
 
         // Handle X key for Buggyworm
@@ -101,9 +107,9 @@ class VirusSystem {
     }
 
     startRandomInfections() {
-        // Don't start infections if real-time protection is disabled
-        if (!this.realTimeProtectionEnabled) {
-            console.log('🛡️ Real-time protection disabled - no new infections will start');
+        // Don't start infections if real-time protection is enabled
+        if (this.realTimeProtectionEnabled) {
+            console.log('🛡️ Real-time protection enabled - no new infections will start');
             return;
         }
         

@@ -1,7 +1,4 @@
 // =================================
-// DESKTOP MANAGEMENT
-// =================================
-// =================================
 // DESKTOP MANAGEMENT - Enhanced with Drag & Drop
 // =================================
 class Desktop {
@@ -531,6 +528,7 @@ class ElxaOS {
         this.loginService = new LoginService(this.eventBus);
         this.installerService = new InstallerService(this.eventBus, this.fileSystem, this.windowManager, this);
         this.bootSystem = new BootSystem();
+        this.updatePopup = new UpdatePopup();
 
         // Initialize virus system BEFORE programs that might need it
         this.virusSystem = new VirusSystem(this.eventBus);

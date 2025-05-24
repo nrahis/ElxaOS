@@ -8,3 +8,8 @@ elxaOS.themeService.clearThemeSettings()
 // Clear file system in localstorage
 elxaOS.fileSystem.clearStorage()
 debugElxaOS.clearAllStorage()
+
+You can force show the popup in the console:
+elxaOS.updatePopup.forceShowUpdate();
+To reset (clear seen status):
+elxaOS.updatePopup.resetUpdateStatus();

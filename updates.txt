@@ -1,0 +1,20 @@
+🚀 **Welcome to ElxaOS v1.0.0!**
+
+**What's New:**
+
+• **Enhanced Boot System** - Complete BIOS setup with fun features!
+• **Desktop Icon Management** - Drag and drop your icons anywhere
+
+**New Programs:**
+• ElxaGuard Antivirus - Keep your system safe; try turning off protection
+• Virus Lab - Create your own viruses
+• ElxaBooks - Accounting softward (WIP!!)
+
+**System Improvements:**
+• Better login system with user settings
+• Improved Notepad
+
+*Enjoy exploring your new operating system!*
+
+---
+*Pro tip: Try pressing SHIFT+B during boot to access the BIOS setup!*
