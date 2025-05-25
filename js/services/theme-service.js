@@ -104,6 +104,181 @@ class ThemeService {
                     iconTextShadow: 'rgba(81 78 78 / 0.8)'
                 }
             },
+            // NEW CUTESY LIGHT PINK THEME! 🌸
+            bubblegum: {
+                name: 'Bubblegum',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #FFB6D9, #FF91C7)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#FFF0F8',
+                    windowBorder: '#FFB6D9',
+                    titlebarBg: 'linear-gradient(to right, #FF91C7, #FFADD6)',
+                    titlebarInactive: 'linear-gradient(to right, #F5C2E7, #FADDEE)',
+                    buttonBg: 'linear-gradient(to bottom, #FFF0F8, #FFE0F0)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #FFF8FC, #FFF0F8)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #FFE0F0, #FFF0F8)',
+                    desktopBg: 'linear-gradient(45deg, #FF69B4, #FFB6D9)',
+                    menuBg: '#FFF0F8',
+                    menuHoverBg: '#FF91C7',
+                    menuText: '#8B008B',
+                    menuHoverText: 'white',
+                    systemTrayBg: '#FFF0F8',
+                    clockBg: '#FFF0F8',
+                    clockText: '#8B008B',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(139,0,139,0.8)'
+                }
+            },
+            // SOFT PASTEL THEME
+            pastels: {
+                name: 'Soft Pastels',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #E6E6FA, #D8BFD8)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#F8F8FF',
+                    windowBorder: '#E6E6FA',
+                    titlebarBg: 'linear-gradient(to right, #DDA0DD, #E6E6FA)',
+                    titlebarInactive: 'linear-gradient(to right, #F0E6FF, #F8F8FF)',
+                    buttonBg: 'linear-gradient(to bottom, #F8F8FF, #F0F0F8)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #FEFEFE, #F8F8FF)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #F0F0F8, #F8F8FF)',
+                    desktopBg: 'linear-gradient(45deg, #E6E6FA, #FFE4E1)',
+                    menuBg: '#F8F8FF',
+                    menuHoverBg: '#DDA0DD',
+                    menuText: '#483D8B',
+                    menuHoverText: 'white',
+                    systemTrayBg: '#F8F8FF',
+                    clockBg: '#F8F8FF',
+                    clockText: '#483D8B',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(72,61,139,0.8)'
+                }
+            },
+            // MINT GREEN THEME
+            mint: {
+                name: 'Fresh Mint',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #98FB98, #90EE90)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#F0FFF0',
+                    windowBorder: '#98FB98',
+                    titlebarBg: 'linear-gradient(to right, #90EE90, #98FB98)',
+                    titlebarInactive: 'linear-gradient(to right, #C1FFC1, #E0FFE0)',
+                    buttonBg: 'linear-gradient(to bottom, #F0FFF0, #E8FFE8)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #F8FFF8, #F0FFF0)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #E8FFE8, #F0FFF0)',
+                    desktopBg: 'linear-gradient(45deg, #00FA9A, #98FB98)',
+                    menuBg: '#F0FFF0',
+                    menuHoverBg: '#90EE90',
+                    menuText: '#006400',
+                    menuHoverText: 'white',
+                    systemTrayBg: '#F0FFF0',
+                    clockBg: '#F0FFF0',
+                    clockText: '#006400',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(0,100,0,0.8)'
+                }
+            },
+            // WARM PEACH THEME
+            peach: {
+                name: 'Warm Peach',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #FFDAB9, #FFB07A)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#FFF8F0',
+                    windowBorder: '#FFDAB9',
+                    titlebarBg: 'linear-gradient(to right, #FFB07A, #FFDAB9)',
+                    titlebarInactive: 'linear-gradient(to right, #FFE4D1, #FFF0E6)',
+                    buttonBg: 'linear-gradient(to bottom, #FFF8F0, #FFF0E8)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #FFFCF8, #FFF8F0)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #FFF0E8, #FFF8F0)',
+                    desktopBg: 'linear-gradient(45deg, #FF7F50, #FFDAB9)',
+                    menuBg: '#FFF8F0',
+                    menuHoverBg: '#FFB07A',
+                    menuText: '#8B4513',
+                    menuHoverText: 'white',
+                    systemTrayBg: '#FFF8F0',
+                    clockBg: '#FFF8F0',
+                    clockText: '#8B4513',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(139,69,19,0.8)'
+                }
+            },
+            // SYNTHWAVE/RETRO THEME
+            synthwave: {
+                name: 'Synthwave',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #FF00FF, #8A2BE2)',
+                    taskbarBorder: '#00FFFF',
+                    windowBg: '#1a0033',
+                    windowBorder: '#FF00FF',
+                    titlebarBg: 'linear-gradient(to right, #FF00FF, #00FFFF)',
+                    titlebarInactive: 'linear-gradient(to right, #4B0082, #663399)',
+                    buttonBg: 'linear-gradient(to bottom, #330066, #1a0033)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #4d0099, #330066)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #1a0033, #330066)',
+                    desktopBg: 'linear-gradient(45deg, #000033, #330066)',
+                    menuBg: '#1a0033',
+                    menuHoverBg: '#FF00FF',
+                    menuText: '#00FFFF',
+                    menuHoverText: 'white',
+                    systemTrayBg: '#1a0033',
+                    clockBg: '#1a0033',
+                    clockText: '#00FFFF',
+                    iconText: '#00FFFF',
+                    iconTextShadow: 'rgba(255,0,255,0.8)'
+                }
+            },
+            // LAVENDER THEME
+            lavender: {
+                name: 'Lavender Dreams',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #9370DB, #8968CD)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#F8F0FF',
+                    windowBorder: '#9370DB',
+                    titlebarBg: 'linear-gradient(to right, #8968CD, #9370DB)',
+                    titlebarInactive: 'linear-gradient(to right, #C8A8E9, #E6D8F5)',
+                    buttonBg: 'linear-gradient(to bottom, #F8F0FF, #F0E8FF)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #FCFAFF, #F8F0FF)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #F0E8FF, #F8F0FF)',
+                    desktopBg: 'linear-gradient(45deg, #663399, #9370DB)',
+                    menuBg: '#F8F0FF',
+                    menuHoverBg: '#8968CD',
+                    menuText: '#4B0082',
+                    menuHoverText: 'white',
+                    systemTrayBg: '#F8F0FF',
+                    clockBg: '#F8F0FF',
+                    clockText: '#4B0082',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(75,0,130,0.8)'
+                }
+            },
+            // OCEAN BREEZE THEME
+            oceanBreeze: {
+                name: 'Ocean Breeze',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #40E0D0, #00CED1)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#F0FFFF',
+                    windowBorder: '#40E0D0',
+                    titlebarBg: 'linear-gradient(to right, #00CED1, #40E0D0)',
+                    titlebarInactive: 'linear-gradient(to right, #AFEEEE, #E0FFFF)',
+                    buttonBg: 'linear-gradient(to bottom, #F0FFFF, #E8FFFE)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #F8FFFF, #F0FFFF)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #E8FFFE, #F0FFFF)',
+                    desktopBg: 'linear-gradient(45deg, #008B8B, #40E0D0)',
+                    menuBg: '#F0FFFF',
+                    menuHoverBg: '#00CED1',
+                    menuText: '#008B8B',
+                    menuHoverText: 'white',
+                    systemTrayBg: '#F0FFFF',
+                    clockBg: '#F0FFFF',
+                    clockText: '#008B8B',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(0,139,139,0.8)'
+                }
+            },
             olive: {
                 name: 'Luna Olive',
                 colors: {
@@ -246,11 +421,55 @@ class ThemeService {
         };
         
         this.customWallpapers = {}; // Store imported images and Paint creations
+        this.assetWallpapers = {}; // Store wallpapers from assets/backgrounds folder
 
         this.setupEvents();
         this.loadSavedSettings();
+        this.loadAssetBackgrounds(); // 🎨 NEW: Load backgrounds from project assets folder
         this.applyTheme();
     }
+
+    // 🎨 NEW METHOD: Load wallpapers from project assets/backgrounds folder
+    loadAssetBackgrounds() {
+        console.log('🎨 Loading backgrounds from project assets/backgrounds folder...');
+        
+        // 🎨 SIMPLE APPROACH: Just list your actual background images here
+        // Add the relative path from js/services/ to your assets/backgrounds/
+        const assetBackgrounds = {
+            // Add your actual background files here like this:
+            'ElxaOS': {
+                 name: 'ElxaOS',
+                 path: '../../assets/backgrounds/elxaos.png'
+             },
+            'ElxaOS Green': {
+                 name: 'ElxaOS Green', 
+                 path: '../../assets/backgrounds/elxaos_green.png'
+             },
+             'Buggy Elephant': {
+                 name: 'Buggy Elephant',
+                 path: '../../assets/backgrounds/buggy.png'
+             }
+        };
+        
+        // Convert to wallpaper format
+        Object.keys(assetBackgrounds).forEach(key => {
+            const bg = assetBackgrounds[key];
+            this.assetWallpapers[`asset_${key}`] = {
+                name: bg.name,
+                type: 'image',
+                value: bg.path, // Just use the path directly
+                source: 'assets',
+                originalPath: bg.path
+            };
+        });
+        
+        const loadedCount = Object.keys(assetBackgrounds).length;
+        console.log(`🎨 Loaded ${loadedCount} background(s) from project assets/backgrounds`);
+    }
+
+
+
+
 
     setupEvents() {
         // Listen for theme dialog requests (could be triggered from start menu)
@@ -306,7 +525,7 @@ class ThemeService {
             </div>
             <div class="context-separator"></div>
             <div class="context-item" onclick="elxaOS.themeService.refreshDesktop()">
-                🔄 Refresh
+                🔄 Refresh Desktop
             </div>
         `;
 
@@ -351,8 +570,13 @@ class ThemeService {
             `;
         }).join('');
 
-        // Combine built-in and custom wallpapers
-        const allWallpapers = { ...this.wallpapers, ...this.customWallpapers };
+        // 🎨 UPDATED: Combine built-in, custom, AND asset wallpapers
+        const allWallpapers = { 
+            ...this.wallpapers, 
+            ...this.assetWallpapers,  // 🎨 NEW: Add asset wallpapers
+            ...this.customWallpapers 
+        };
+        
         const wallpaperOptions = Object.keys(allWallpapers).map(wallpaperKey => {
             const wallpaper = allWallpapers[wallpaperKey];
             const isSelected = wallpaperKey === this.currentWallpaper;
@@ -364,11 +588,19 @@ class ThemeService {
                 previewStyle = `background: ${wallpaper.value};`;
             }
             
+            // Determine badge text based on source
+            let badgeText = '';
+            if (wallpaper.source === 'assets') {
+                badgeText = '<div class="asset-badge">Asset</div>';
+            } else if (wallpaper.custom || wallpaper.source === 'imported' || wallpaper.source === 'paint') {
+                badgeText = '<div class="custom-badge">Custom</div>';
+            }
+            
             return `
                 <div class="wallpaper-option ${isSelected ? 'selected' : ''}" data-wallpaper="${wallpaperKey}">
                     <div class="wallpaper-preview" style="${previewStyle}"></div>
                     <div class="wallpaper-name">${wallpaper.name}</div>
-                    ${wallpaper.custom ? '<div class="custom-badge">Custom</div>' : ''}
+                    ${badgeText}
                 </div>
             `;
         }).join('');
@@ -396,6 +628,13 @@ class ThemeService {
                             <div class="wallpaper-controls">
                                 <button class="import-image-btn">📁 Import Image</button>
                                 <button class="browse-paint-btn">🎨 Use Paint File</button>
+                            </div>
+                            <div class="wallpaper-stats">
+                                <span class="wallpaper-count">
+                                    ${Object.keys(this.wallpapers).length} built-in, 
+                                    ${Object.keys(this.assetWallpapers).length} asset, 
+                                    ${Object.keys(this.customWallpapers).length} custom
+                                </span>
                             </div>
                             <div class="wallpaper-grid">
                                 ${wallpaperOptions}
@@ -467,6 +706,16 @@ class ThemeService {
                 console.log('Browse paint button clicked!'); // Debug log
                 this.showPaintFileBrowser();
             }
+
+            // 🎨 NEW: Refresh assets button
+            if (e.target.classList.contains('refresh-assets-btn')) {
+                e.preventDefault();
+                console.log('Refresh assets button clicked!');
+                this.refreshAssetBackgrounds();
+                // Refresh the dialog to show updated counts
+                this.hideThemeDialog();
+                setTimeout(() => this.showThemeDialog(), 100);
+            }
         });
     }
 
@@ -477,7 +726,11 @@ class ThemeService {
 
     previewWallpaper(wallpaperKey) {
         // Temporarily apply wallpaper for preview
-        const allWallpapers = { ...this.wallpapers, ...this.customWallpapers };
+        const allWallpapers = { 
+            ...this.wallpapers, 
+            ...this.assetWallpapers,  // 🎨 UPDATED: Include asset wallpapers
+            ...this.customWallpapers 
+        };
         this.applyWallpaper(allWallpapers[wallpaperKey]);
     }
 
@@ -721,7 +974,8 @@ class ThemeService {
         const foldersToSearch = [
             ['root', 'Pictures'],
             ['root', 'Desktop'],
-            ['root', 'Documents']
+            ['root', 'Documents'],
+            ['root', 'assets', 'backgrounds']  // 🎨 UPDATED: Also search in assets/backgrounds
         ];
 
         foldersToSearch.forEach(folderPath => {
@@ -838,7 +1092,11 @@ class ThemeService {
     }
 
     setWallpaper(wallpaperKey) {
-        const allWallpapers = { ...this.wallpapers, ...this.customWallpapers };
+        const allWallpapers = { 
+            ...this.wallpapers, 
+            ...this.assetWallpapers,  // 🎨 UPDATED: Include asset wallpapers
+            ...this.customWallpapers 
+        };
         if (allWallpapers[wallpaperKey]) {
             this.currentWallpaper = wallpaperKey;
             this.applyWallpaper(allWallpapers[wallpaperKey]);
@@ -849,7 +1107,11 @@ class ThemeService {
 
     applyTheme() {
         const theme = this.themes[this.currentTheme];
-        const allWallpapers = { ...this.wallpapers, ...this.customWallpapers };
+        const allWallpapers = { 
+            ...this.wallpapers, 
+            ...this.assetWallpapers,  // 🎨 UPDATED: Include asset wallpapers
+            ...this.customWallpapers 
+        };
         const wallpaper = allWallpapers[this.currentWallpaper];
         
         console.log('🎨 Applying theme:', this.currentTheme, 'with wallpaper:', this.currentWallpaper);
@@ -1002,6 +1264,7 @@ class ThemeService {
                 theme: this.currentTheme,
                 wallpaper: this.currentWallpaper,
                 customWallpapers: this.customWallpapers // Save custom wallpapers too!
+                // Note: We don't save assetWallpapers as they're loaded dynamically from the file system
             };
             
             localStorage.setItem('elxaOS-theme-settings', JSON.stringify(settingsToSave));
@@ -1080,14 +1343,31 @@ class ThemeService {
     }
 
     getCurrentWallpaper() {
-        const allWallpapers = { ...this.wallpapers, ...this.customWallpapers };
+        const allWallpapers = { 
+            ...this.wallpapers, 
+            ...this.assetWallpapers,  // 🎨 UPDATED: Include asset wallpapers
+            ...this.customWallpapers 
+        };
         const wallpaper = allWallpapers[this.currentWallpaper];
         return {
             name: wallpaper.name,
             key: this.currentWallpaper,
             value: wallpaper.value,
             type: wallpaper.type,
-            custom: wallpaper.custom || false
+            custom: wallpaper.custom || false,
+            source: wallpaper.source || 'builtin'  // 🎨 NEW: Include source info
+        };
+    }
+
+    // 🎨 NEW: Get wallpaper counts by source
+    getWallpaperStats() {
+        return {
+            builtin: Object.keys(this.wallpapers).length,
+            assets: Object.keys(this.assetWallpapers).length,
+            custom: Object.keys(this.customWallpapers).length,
+            total: Object.keys(this.wallpapers).length + 
+                   Object.keys(this.assetWallpapers).length + 
+                   Object.keys(this.customWallpapers).length
         };
     }
 
@@ -1097,6 +1377,16 @@ class ThemeService {
     }
 
     listWallpapers() {
-        return Object.keys(this.wallpapers);
+        const allWallpapers = { 
+            ...this.wallpapers, 
+            ...this.assetWallpapers,  // 🎨 UPDATED: Include asset wallpapers
+            ...this.customWallpapers 
+        };
+        return Object.keys(allWallpapers);
+    }
+
+    // 🎨 NEW: List asset wallpapers specifically
+    listAssetWallpapers() {
+        return Object.keys(this.assetWallpapers);
     }
 }

@@ -1,5 +1,5 @@
 // =================================
-// SNAKE DELUXE - Mr. Snake-e's Epic Adventure in Snakesia! (FIXED)
+// SNAKE DELUXE - Mr. Snake-e's Epic Adventure in Snakesia! (CUTE & FIXED)
 // A magical journey through ElxaCorp's headquarters and beyond!
 // =================================
 
@@ -23,12 +23,13 @@ class SnakeDeluxe {
         this.baseSpeed = this.getDifficultySpeed();
         this.currentSpeed = this.baseSpeed;
         
-        // Game board
-        this.boardSize = 24; // Larger board for more adventure!
-        this.cellSize = 18;
+        // Game board - responsive sizing
+        this.boardSize = 20; // Smaller board for better fit
+        this.cellSize = 16; // Base cell size
+        this.actualCellSize = this.cellSize; // Will be updated based on responsive sizing
         
         // Snake state
-        this.snake = [{ x: 12, y: 12 }];
+        this.snake = [{ x: 10, y: 10 }];
         this.direction = { x: 1, y: 0 };
         this.nextDirection = { x: 1, y: 0 };
         
@@ -69,11 +70,11 @@ class SnakeDeluxe {
 
     getDifficultySpeed() {
         switch (this.difficulty) {
-            case 'easy': return 180;
-            case 'normal': return 140;
-            case 'hard': return 100;
-            case 'snakesia_master': return 80;
-            default: return 140;
+            case 'easy': return 200;
+            case 'normal': return 150;
+            case 'hard': return 110;
+            case 'snakesia_master': return 90;
+            default: return 150;
         }
     }
 
@@ -85,7 +86,7 @@ class SnakeDeluxe {
                 description: "Welcome to ElxaCorp HQ! Mr. Snake-e needs coffee to start his day.",
                 theme: "office",
                 bgColor: "#1a1a2e",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [{ type: "coffee", count: 5, points: 10 }],
                 obstacles: [], // No obstacles in tutorial level
                 powerUps: ["speed"],
@@ -98,7 +99,7 @@ class SnakeDeluxe {
                 description: "Time to check the ElxaOS servers! Watch out for the server racks.",
                 theme: "tech",
                 bgColor: "#0f1419",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "data", count: 3, points: 15 },
                     { type: "coffee", count: 2, points: 10 }
@@ -114,7 +115,7 @@ class SnakeDeluxe {
                 description: "Visit Mrs. Snake-e in her beautiful garden! She's 82 and still growing the best vegetables.",
                 theme: "garden",
                 bgColor: "#0f2027",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "apple", count: 4, points: 20 },
                     { type: "flower", count: 3, points: 25 }
@@ -130,7 +131,7 @@ class SnakeDeluxe {
                 description: "Mr. Snake-e's beloved Denali needs some maintenance. Navigate around the tools!",
                 theme: "garage",
                 bgColor: "#1a1a1a",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "oil", count: 2, points: 30 },
                     { type: "wrench", count: 4, points: 15 }
@@ -146,7 +147,7 @@ class SnakeDeluxe {
                 description: "Explore the bustling capital of Snakesia! Mr. Snake-e's kingdom awaits.",
                 theme: "city",
                 bgColor: "#2d1b69",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "coin", count: 6, points: 25 },
                     { type: "gem", count: 2, points: 50 }
@@ -162,7 +163,7 @@ class SnakeDeluxe {
                 description: "Mr. Snake-e's favorite place! Solve equations and collect numbers.",
                 theme: "math",
                 bgColor: "#1e3a8a",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "equation", count: 5, points: 40 },
                     { type: "calculator", count: 3, points: 35 }
@@ -178,7 +179,7 @@ class SnakeDeluxe {
                 description: "The secret underground hacking lab! Navigate through the maze of screens.",
                 theme: "hacker",
                 bgColor: "#0a0a0a",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "code", count: 4, points: 45 },
                     { type: "usb", count: 3, points: 40 }
@@ -194,7 +195,7 @@ class SnakeDeluxe {
                 description: "Mr. Snake-e's ultimate happy place! A sanctuary full of his favorite friends.",
                 theme: "cats",
                 bgColor: "#4a5568",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "fish", count: 6, points: 30 },
                     { type: "yarn", count: 4, points: 35 }
@@ -210,7 +211,7 @@ class SnakeDeluxe {
                 description: "The final challenge! Navigate the boardroom where Mr. Snake-e makes billion-dollar decisions.",
                 theme: "boardroom",
                 bgColor: "#1a202c",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "contract", count: 3, points: 60 },
                     { type: "money", count: 5, points: 50 }
@@ -226,7 +227,7 @@ class SnakeDeluxe {
                 description: "The ultimate level! Help Mr. Snake-e rule Snakesia from his golden throne!",
                 theme: "throne",
                 bgColor: "#2d1b69",
-                accentColor: "#4a9eff",
+                accentColor: "#ff69b4",
                 foods: [
                     { type: "crown", count: 2, points: 100 },
                     { type: "scepter", count: 3, points: 80 },
@@ -294,9 +295,9 @@ class SnakeDeluxe {
         
         const window = this.windowManager.createWindow(
             windowId,
-            `🐍👑 ${programInfo.name}`,
+            `🐍✨ ${programInfo.name}`,
             windowContent,
-            { width: '800px', height: '720px', x: '100px', y: '30px' }
+            { width: '700px', height: '600px', x: '100px', y: '30px' }
         );
         
         this.setupGameEvents(windowId);
@@ -304,126 +305,129 @@ class SnakeDeluxe {
     }
 
     createGameInterface() {
-        const boardPixelSize = this.boardSize * this.cellSize;
+        // Calculate responsive canvas size based on window size
+        const maxCanvasSize = Math.min(380, window.innerWidth - 100);
+        const actualCellSize = Math.floor(maxCanvasSize / this.boardSize);
+        const boardPixelSize = this.boardSize * actualCellSize;
         
         return `
-            <div class="snake-deluxe-container">
-                <div class="snake-deluxe-header">
-                    <div class="game-logo">
-                        <span class="logo-icon">🐍👑</span>
-                        <span class="logo-text">Snake Deluxe</span>
+            <div class="sd-game-container">
+                <div class="sd-game-header">
+                    <div class="sd-game-logo">
+                        <span class="sd-logo-icon">🐍✨</span>
+                        <span class="sd-logo-text">Snake Deluxe</span>
                     </div>
-                    <div class="game-stats">
-                        <div class="stat-group">
-                            <div class="stat-item primary">
-                                <span class="stat-icon">🏆</span>
-                                <span class="stat-value score-value">0</span>
+                    <div class="sd-game-stats">
+                        <div class="sd-stat-group">
+                            <div class="sd-stat-bubble sd-primary">
+                                <span class="sd-stat-icon">🏆</span>
+                                <span class="sd-stat-value sd-score-value">0</span>
                             </div>
-                            <div class="stat-item">
-                                <span class="stat-icon">🪙</span>
-                                <span class="stat-value coins-value">${this.coins}</span>
+                            <div class="sd-stat-bubble">
+                                <span class="sd-stat-icon">🪙</span>
+                                <span class="sd-stat-value sd-coins-value">${this.coins}</span>
                             </div>
-                            <div class="stat-item">
-                                <span class="stat-icon">📊</span>
-                                <span class="stat-value level-value">1</span>
+                            <div class="sd-stat-bubble">
+                                <span class="sd-stat-icon">🌟</span>
+                                <span class="sd-stat-value sd-level-value">1</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="story-banner">
-                    <div class="story-content">
-                        <div class="story-character">🐍</div>
-                        <div class="story-text">
-                            <div class="story-title">Mr. Snake-e's Adventure</div>
-                            <div class="story-description">Help the billionaire CEO of ElxaCorp navigate through Snakesia!</div>
+                <div class="sd-story-banner">
+                    <div class="sd-story-content">
+                        <div class="sd-story-character">🐍</div>
+                        <div class="sd-story-text">
+                            <div class="sd-story-title">Mr. Snake-e's Magical Adventure</div>
+                            <div class="sd-story-description">Help the sweet CEO of ElxaCorp explore the dreamy kingdom of Snakesia! 💖</div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="snake-deluxe-game-area">
-                    <div class="level-selector-screen">
-                        <div class="level-selector-content">
-                            <h2>🏰 Choose Your Adventure in Snakesia!</h2>
-                            <div class="character-intro">
-                                <div class="character-avatar">🐍</div>
-                                <div class="character-speech">
-                                    <p>Greetings! I'm Mr. Snake-e, 60-year-old CEO of ElxaCorp!</p>
-                                    <p>My wife Mrs. Snake-e (she's 82, what a cougar! 😉) and I need your help!</p>
-                                    <p>Join me on adventures through my kingdom of Snakesia!</p>
+                <div class="sd-game-area">
+                    <div class="sd-level-selector">
+                        <div class="sd-level-content">
+                            <h2>🌸 Choose Your Magical Adventure! 🌸</h2>
+                            <div class="sd-character-intro">
+                                <div class="sd-character-avatar">🐍</div>
+                                <div class="sd-character-speech">
+                                    <p>Hi there, sweet friend! I'm Mr. Snake-e, CEO of ElxaCorp! 💕</p>
+                                    <p>My lovely wife Mrs. Snake-e and I would love your help! 🌺</p>
+                                    <p>Come explore our magical kingdom of Snakesia with us! ✨</p>
                                 </div>
                             </div>
-                            <div class="difficulty-selector">
-                                <h3>🎮 Choose Difficulty:</h3>
-                                <div class="difficulty-buttons">
-                                    <button class="difficulty-btn ${this.difficulty === 'easy' ? 'selected' : ''}" data-difficulty="easy">
-                                        🟢 Young Explorer<br><small>Perfect for beginners!</small>
+                            <div class="sd-difficulty-selector">
+                                <h3>💫 Choose Your Adventure Level:</h3>
+                                <div class="sd-difficulty-buttons">
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'easy' ? 'sd-selected' : ''}" data-difficulty="easy">
+                                        🌸 Gentle Explorer<br><small>Perfect for beginners!</small>
                                     </button>
-                                    <button class="difficulty-btn ${this.difficulty === 'normal' ? 'selected' : ''}" data-difficulty="normal">
-                                        🟡 Snake Adventurer<br><small>Balanced challenge</small>
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'normal' ? 'sd-selected' : ''}" data-difficulty="normal">
+                                        🌺 Sweet Adventurer<br><small>Just right!</small>
                                     </button>
-                                    <button class="difficulty-btn ${this.difficulty === 'hard' ? 'selected' : ''}" data-difficulty="hard">
-                                        🟠 ElxaCorp Expert<br><small>For pros only!</small>
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'hard' ? 'sd-selected' : ''}" data-difficulty="hard">
+                                        🌟 Magical Expert<br><small>For brave hearts!</small>
                                     </button>
-                                    <button class="difficulty-btn ${this.difficulty === 'snakesia_master' ? 'selected' : ''}" data-difficulty="snakesia_master">
-                                        🔴 Snakesia Master<br><small>Ultimate challenge!</small>
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'snakesia_master' ? 'sd-selected' : ''}" data-difficulty="snakesia_master">
+                                        ✨ Snakesia Princess<br><small>Ultimate magic!</small>
                                     </button>
                                 </div>
                             </div>
-                            <div class="level-grid">
+                            <div class="sd-level-grid">
                                 ${this.createLevelButtons()}
                             </div>
-                            <div class="achievements-preview">
-                                <h3>🏅 Your Achievements: ${this.achievements.length}/20</h3>
-                                <div class="achievement-icons">
-                                    ${this.achievements.slice(0, 5).map(achievement => `<span class="achievement-icon" title="${achievement.name}">${achievement.icon}</span>`).join('')}
-                                    ${this.achievements.length > 5 ? '<span class="more-achievements">+' + (this.achievements.length - 5) + '</span>' : ''}
+                            <div class="sd-achievements-preview">
+                                <h3>🏅 Your Magical Achievements: ${this.achievements.length}/20</h3>
+                                <div class="sd-achievement-icons">
+                                    ${this.achievements.slice(0, 5).map(achievement => `<span class="sd-achievement-icon" title="${achievement.name}">${achievement.icon}</span>`).join('')}
+                                    ${this.achievements.length > 5 ? '<span class="sd-more-achievements">+' + (this.achievements.length - 5) + '</span>' : ''}
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="game-play-screen" style="display: none;">
-                        <div class="level-info-bar">
-                            <div class="level-details">
-                                <span class="level-name"></span>
-                                <span class="level-description"></span>
+                    <div class="sd-game-play" style="display: none;">
+                        <div class="sd-level-info">
+                            <div class="sd-level-details">
+                                <span class="sd-level-name"></span>
+                                <span class="sd-level-description"></span>
                             </div>
-                            <div class="level-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill"></div>
+                            <div class="sd-level-progress">
+                                <div class="sd-progress-bar">
+                                    <div class="sd-progress-fill"></div>
                                 </div>
-                                <span class="progress-text">0 / 0</span>
-                            </div>
-                        </div>
-                        
-                        <div class="canvas-container">
-                            <canvas class="snake-deluxe-canvas" width="${boardPixelSize}" height="${boardPixelSize}"></canvas>
-                            <div class="power-up-effects">
-                                <div class="effect-indicator speed-effect" style="display: none;">
-                                    <span class="effect-icon">⚡</span>
-                                    <span class="effect-text">SPEED BOOST!</span>
-                                </div>
-                                <div class="effect-indicator invincible-effect" style="display: none;">
-                                    <span class="effect-icon">🛡️</span>
-                                    <span class="effect-text">INVINCIBLE!</span>
-                                </div>
-                                <div class="effect-indicator magnetism-effect" style="display: none;">
-                                    <span class="effect-icon">🧲</span>
-                                    <span class="effect-text">MAGNET POWER!</span>
-                                </div>
-                                <div class="effect-indicator double-score-effect" style="display: none;">
-                                    <span class="effect-icon">💰</span>
-                                    <span class="effect-text">DOUBLE SCORE!</span>
-                                </div>
+                                <span class="sd-progress-text">0 / 0</span>
                             </div>
                         </div>
                         
-                        <div class="game-controls">
-                            <button class="game-control-btn pause-btn">⏸️ Pause</button>
-                            <button class="game-control-btn resume-btn" style="display: none;">▶️ Resume</button>
-                            <button class="game-control-btn back-to-levels-btn">🏰 Levels</button>
-                            <div class="controls-hint">
+                        <div class="sd-canvas-container">
+                            <canvas class="sd-game-canvas" width="${boardPixelSize}" height="${boardPixelSize}"></canvas>
+                            <div class="sd-power-effects">
+                                <div class="sd-effect-bubble sd-speed-effect" style="display: none;">
+                                    <span class="sd-effect-icon">⚡</span>
+                                    <span class="sd-effect-text">SPEED MAGIC!</span>
+                                </div>
+                                <div class="sd-effect-bubble sd-invincible-effect" style="display: none;">
+                                    <span class="sd-effect-icon">🛡️</span>
+                                    <span class="sd-effect-text">PROTECTED!</span>
+                                </div>
+                                <div class="sd-effect-bubble sd-magnetism-effect" style="display: none;">
+                                    <span class="sd-effect-icon">🧲</span>
+                                    <span class="sd-effect-text">MAGNET POWER!</span>
+                                </div>
+                                <div class="sd-effect-bubble sd-double-score-effect" style="display: none;">
+                                    <span class="sd-effect-icon">💰</span>
+                                    <span class="sd-effect-text">BONUS MAGIC!</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sd-game-controls">
+                            <button class="sd-control-btn sd-pause-btn">⏸️ Pause</button>
+                            <button class="sd-control-btn sd-resume-btn" style="display: none;">▶️ Resume</button>
+                            <button class="sd-control-btn sd-back-to-levels-btn">🌸 Levels</button>
+                            <div class="sd-controls-hint">
                                 <span>Arrow Keys: Move</span>
                                 <span>Space: Pause</span>
                                 <span>R: Restart</span>
@@ -431,66 +435,64 @@ class SnakeDeluxe {
                         </div>
                     </div>
                     
-                    <div class="level-complete-screen" style="display: none;">
-                        <div class="level-complete-content">
-                            <div class="completion-celebration">
-                                <div class="celebration-icon">🎉</div>
-                                <h2>Level Complete!</h2>
-                                <div class="mr-snake-celebration">
-                                    <div class="character-avatar">🐍</div>
-                                    <div class="celebration-speech">Excellent work! ElxaCorp is proud of you!</div>
+                    <div class="sd-level-complete" style="display: none;">
+                        <div class="sd-modal-content">
+                            <div class="sd-modal-icon">🎉</div>
+                            <h2>Level Complete! 🌟</h2>
+                            <div class="sd-character-message">
+                                <div class="sd-character-avatar">🐍</div>
+                                <div class="sd-message-speech">Wonderful work, dear friend! You're absolutely magical! 💖</div>
+                            </div>
+                            <div class="sd-results-grid">
+                                <div class="sd-result-item">
+                                    <span class="sd-result-icon">🏆</span>
+                                    <span class="sd-result-label">Score:</span>
+                                    <span class="sd-result-value sd-level-score">0</span>
+                                </div>
+                                <div class="sd-result-item">
+                                    <span class="sd-result-icon">🪙</span>
+                                    <span class="sd-result-label">Coins Earned:</span>
+                                    <span class="sd-result-value sd-coins-earned">0</span>
+                                </div>
+                                <div class="sd-result-item">
+                                    <span class="sd-result-icon">🐱</span>
+                                    <span class="sd-result-label">Cats Petted:</span>
+                                    <span class="sd-result-value sd-cats-petted">0</span>
                                 </div>
                             </div>
-                            <div class="level-results">
-                                <div class="result-item">
-                                    <span class="result-icon">🏆</span>
-                                    <span class="result-label">Score:</span>
-                                    <span class="result-value level-score">0</span>
-                                </div>
-                                <div class="result-item">
-                                    <span class="result-icon">🪙</span>
-                                    <span class="result-label">Coins Earned:</span>
-                                    <span class="result-value coins-earned">0</span>
-                                </div>
-                                <div class="result-item">
-                                    <span class="result-icon">🐱</span>
-                                    <span class="result-label">Cats Petted:</span>
-                                    <span class="result-value cats-petted">0</span>
-                                </div>
+                            <div class="sd-new-achievements" style="display: none;">
+                                <h3>🏅 New Magical Achievements!</h3>
+                                <div class="sd-new-achievement-list"></div>
                             </div>
-                            <div class="new-achievements" style="display: none;">
-                                <h3>🏅 New Achievements!</h3>
-                                <div class="new-achievement-list"></div>
-                            </div>
-                            <div class="level-complete-actions">
-                                <button class="action-btn next-level-btn">➡️ Next Adventure</button>
-                                <button class="action-btn replay-level-btn">🔄 Replay Level</button>
-                                <button class="action-btn back-to-levels-btn">🏰 Level Select</button>
+                            <div class="sd-modal-actions">
+                                <button class="sd-action-btn sd-next-level-btn">➡️ Next Adventure</button>
+                                <button class="sd-action-btn sd-replay-level-btn">🔄 Play Again</button>
+                                <button class="sd-action-btn sd-back-to-levels-btn">🌸 Level Select</button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="game-over-screen" style="display: none;">
-                        <div class="game-over-content">
-                            <div class="game-over-character">🐍</div>
-                            <h2>Oops! Mr. Snake-e got into trouble!</h2>
-                            <div class="mrs-snake-comfort">
-                                <div class="character-avatar">🐍</div>
-                                <div class="comfort-speech">Don't worry dear, Mrs. Snake-e believes in you! Try again!</div>
+                    <div class="sd-game-over" style="display: none;">
+                        <div class="sd-modal-content">
+                            <div class="sd-modal-icon">🐍</div>
+                            <h2>Oops! Let's try again! 💕</h2>
+                            <div class="sd-character-message">
+                                <div class="sd-character-avatar">🐍</div>
+                                <div class="sd-message-speech">Don't worry, sweetie! Mrs. Snake-e and I believe in you! 🌺</div>
                             </div>
-                            <div class="game-over-stats">
-                                <div class="stat-item">
-                                    <span class="stat-icon">🏆</span>
-                                    <span class="stat-value final-score">0</span>
+                            <div class="sd-results-grid">
+                                <div class="sd-result-item">
+                                    <span class="sd-result-icon">🏆</span>
+                                    <span class="sd-result-value sd-final-score">0</span>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-icon">🪙</span>
-                                    <span class="stat-value coins-collected">0</span>
+                                <div class="sd-result-item">
+                                    <span class="sd-result-icon">🪙</span>
+                                    <span class="sd-result-value sd-coins-collected">0</span>
                                 </div>
                             </div>
-                            <div class="game-over-actions">
-                                <button class="action-btn try-again-btn">🔄 Try Again</button>
-                                <button class="action-btn back-to-levels-btn">🏰 Level Select</button>
+                            <div class="sd-modal-actions">
+                                <button class="sd-action-btn sd-try-again-btn">🔄 Try Again</button>
+                                <button class="sd-action-btn sd-back-to-levels-btn">🌸 Level Select</button>
                             </div>
                         </div>
                     </div>
@@ -505,14 +507,14 @@ class SnakeDeluxe {
             const isCompleted = this.unlockedLevels.includes(level.id + 1) || level.id === this.levels.length;
             
             return `
-                <div class="level-button ${isUnlocked ? 'unlocked' : 'locked'} ${isCompleted ? 'completed' : ''}" 
+                <div class="sd-level-bubble ${isUnlocked ? 'sd-unlocked' : 'sd-locked'} ${isCompleted ? 'sd-completed' : ''}" 
                      data-level="${level.id}" 
                      ${isUnlocked ? '' : 'disabled'}>
-                    <div class="level-number">${level.id}</div>
-                    <div class="level-name">${level.name}</div>
-                    <div class="level-theme-icon">${this.getLevelThemeIcon(level.theme)}</div>
-                    ${isCompleted ? '<div class="completion-star">⭐</div>' : ''}
-                    ${!isUnlocked ? '<div class="lock-icon">🔒</div>' : ''}
+                    <div class="sd-level-number">${level.id}</div>
+                    <div class="sd-level-name">${level.name}</div>
+                    <div class="sd-level-theme-icon">${this.getLevelThemeIcon(level.theme)}</div>
+                    ${isCompleted ? '<div class="sd-completion-star">⭐</div>' : ''}
+                    ${!isUnlocked ? '<div class="sd-lock-icon">🔒</div>' : ''}
                 </div>
             `;
         }).join('');
@@ -536,17 +538,21 @@ class SnakeDeluxe {
 
     setupGameEvents(windowId) {
         const window = document.getElementById(`window-${windowId}`);
-        const container = window.querySelector('.snake-deluxe-container');
+        const container = window.querySelector('.sd-game-container');
         
-        this.canvas = container.querySelector('.snake-deluxe-canvas');
+        this.canvas = container.querySelector('.sd-game-canvas');
         this.ctx = this.canvas.getContext('2d');
         
+        // Calculate and store the actual cell size used
+        const canvasWidth = this.canvas.width;
+        this.actualCellSize = canvasWidth / this.boardSize;
+        
         // Difficulty selection
-        const difficultyButtons = container.querySelectorAll('.difficulty-btn');
+        const difficultyButtons = container.querySelectorAll('.sd-difficulty-btn');
         difficultyButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                difficultyButtons.forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
+                difficultyButtons.forEach(b => b.classList.remove('sd-selected'));
+                btn.classList.add('sd-selected');
                 this.difficulty = btn.dataset.difficulty;
                 this.baseSpeed = this.getDifficultySpeed();
                 this.currentSpeed = this.baseSpeed;
@@ -554,7 +560,7 @@ class SnakeDeluxe {
         });
         
         // Level selection
-        const levelButtons = container.querySelectorAll('.level-button.unlocked');
+        const levelButtons = container.querySelectorAll('.sd-level-bubble.sd-unlocked');
         levelButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const levelId = parseInt(btn.dataset.level);
@@ -563,9 +569,9 @@ class SnakeDeluxe {
         });
         
         // Game controls
-        const pauseBtn = container.querySelector('.pause-btn');
-        const resumeBtn = container.querySelector('.resume-btn');
-        const backToLevelsButtons = container.querySelectorAll('.back-to-levels-btn');
+        const pauseBtn = container.querySelector('.sd-pause-btn');
+        const resumeBtn = container.querySelector('.sd-resume-btn');
+        const backToLevelsButtons = container.querySelectorAll('.sd-back-to-levels-btn');
         
         pauseBtn?.addEventListener('click', () => this.pauseGame(container));
         resumeBtn?.addEventListener('click', () => this.resumeGame(container));
@@ -574,9 +580,9 @@ class SnakeDeluxe {
         });
         
         // Level complete actions
-        const nextLevelBtn = container.querySelector('.next-level-btn');
-        const replayLevelBtn = container.querySelector('.replay-level-btn');
-        const tryAgainBtn = container.querySelector('.try-again-btn');
+        const nextLevelBtn = container.querySelector('.sd-next-level-btn');
+        const replayLevelBtn = container.querySelector('.sd-replay-level-btn');
+        const tryAgainBtn = container.querySelector('.sd-try-again-btn');
         
         nextLevelBtn?.addEventListener('click', () => this.nextLevel(container));
         replayLevelBtn?.addEventListener('click', () => this.replayLevel(container));
@@ -595,7 +601,7 @@ class SnakeDeluxe {
         this.initializeLevel();
         
         // Reset game state
-        this.snake = [{ x: 12, y: 12 }];
+        this.snake = [{ x: Math.floor(this.boardSize/2), y: Math.floor(this.boardSize/2) }];
         this.direction = { x: 1, y: 0 };
         this.nextDirection = { x: 1, y: 0 };
         this.score = 0;
@@ -616,10 +622,10 @@ class SnakeDeluxe {
         this.updateStats(container);
         
         // Show game screen
-        container.querySelector('.level-selector-screen').style.display = 'none';
-        container.querySelector('.level-complete-screen').style.display = 'none';
-        container.querySelector('.game-over-screen').style.display = 'none';
-        container.querySelector('.game-play-screen').style.display = 'block';
+        container.querySelector('.sd-level-selector').style.display = 'none';
+        container.querySelector('.sd-level-complete').style.display = 'none';
+        container.querySelector('.sd-game-over').style.display = 'none';
+        container.querySelector('.sd-game-play').style.display = 'block';
         
         // Start game loop
         this.startGameLoop();
@@ -631,9 +637,9 @@ class SnakeDeluxe {
 
     updateLevelInfo(container) {
         const levelData = this.currentLevelData;
-        const levelNameEl = container.querySelector('.level-name');
-        const levelDescEl = container.querySelector('.level-description');
-        const progressText = container.querySelector('.progress-text');
+        const levelNameEl = container.querySelector('.sd-level-name');
+        const levelDescEl = container.querySelector('.sd-level-description');
+        const progressText = container.querySelector('.sd-progress-text');
         
         if (levelNameEl) levelNameEl.textContent = levelData.name;
         if (levelDescEl) levelDescEl.textContent = levelData.description;
@@ -643,8 +649,8 @@ class SnakeDeluxe {
     }
 
     updateProgressBar(container) {
-        const progressFill = container.querySelector('.progress-fill');
-        const progressText = container.querySelector('.progress-text');
+        const progressFill = container.querySelector('.sd-progress-fill');
+        const progressText = container.querySelector('.sd-progress-text');
         
         if (progressFill && progressText) {
             const progress = Math.min(this.score / this.currentLevelData.targetScore, 1);
@@ -1033,16 +1039,16 @@ class SnakeDeluxe {
     }
 
     showEffectIndicator(effect) {
-        const container = document.querySelector('.snake-deluxe-container');
-        const indicator = container.querySelector(`.${effect}-effect`);
+        const container = document.querySelector('.sd-game-container');
+        const indicator = container.querySelector(`.sd-${effect}-effect`);
         if (indicator) {
             indicator.style.display = 'block';
         }
     }
 
     hideEffectIndicator(effect) {
-        const container = document.querySelector('.snake-deluxe-container');
-        const indicator = container.querySelector(`.${effect}-effect`);
+        const container = document.querySelector('.sd-game-container');
+        const indicator = container.querySelector(`.sd-${effect}-effect`);
         if (indicator) {
             indicator.style.display = 'none';
         }
@@ -1050,16 +1056,16 @@ class SnakeDeluxe {
 
     createParticles(x, y, emoji, type) {
         const colors = {
-            food: ['#4a9eff', '#74b9ff', '#0093e6'],
-            powerup: ['#4a9eff', '#74b9ff', '#0093e6'],
+            food: ['#ff69b4', '#ffb3e6', '#ff9ecd'],
+            powerup: ['#ff69b4', '#ffb3e6', '#ff9ecd'],
             heart: ['#ff69b4', '#ff1493', '#ff6b9d'],
             coin: ['#ffd700', '#ffed4e', '#ffa500']
         };
         
         for (let i = 0; i < 8; i++) {
             this.particles.push({
-                x: x * this.cellSize + this.cellSize / 2,
-                y: y * this.cellSize + this.cellSize / 2,
+                x: x * this.actualCellSize + this.actualCellSize / 2,
+                y: y * this.actualCellSize + this.actualCellSize / 2,
                 vx: (Math.random() - 0.5) * 8,
                 vy: (Math.random() - 0.5) * 8,
                 life: 30,
@@ -1106,7 +1112,7 @@ class SnakeDeluxe {
     }
 
     updateProgress() {
-        const container = document.querySelector('.snake-deluxe-container');
+        const container = document.querySelector('.sd-game-container');
         this.updateProgressBar(container);
         this.updateStats(container);
         
@@ -1118,11 +1124,15 @@ class SnakeDeluxe {
 
     updateStats(container) {
         if (container) {
-            const scoreEl = container.querySelector('.score-value');
-            const coinsEl = container.querySelector('.coins-value');
-            const levelEl = container.querySelector('.level-value');
+            const scoreEl = container.querySelector('.sd-score-value');
+            const coinsEl = container.querySelector('.sd-coins-value');
+            const levelEl = container.querySelector('.sd-level-value');
             
-            if (scoreEl) scoreEl.textContent = this.score;
+            if (scoreEl) {
+                scoreEl.textContent = this.score;
+                scoreEl.classList.add('sd-updated');
+                setTimeout(() => scoreEl.classList.remove('sd-updated'), 800);
+            }
             if (coinsEl) coinsEl.textContent = this.coins;
             if (levelEl) levelEl.textContent = this.currentLevel;
         }
@@ -1158,7 +1168,7 @@ class SnakeDeluxe {
         this.ctx.lineWidth = 1;
         
         for (let i = 0; i <= this.boardSize; i++) {
-            const pos = i * this.cellSize;
+            const pos = i * this.actualCellSize;
             this.ctx.beginPath();
             this.ctx.moveTo(pos, 0);
             this.ctx.lineTo(pos, this.canvas.height);
@@ -1170,54 +1180,56 @@ class SnakeDeluxe {
 
     drawSnake() {
         this.snake.forEach((segment, index) => {
-            const x = segment.x * this.cellSize;
-            const y = segment.y * this.cellSize;
+            const x = segment.x * this.actualCellSize;
+            const y = segment.y * this.actualCellSize;
             
             if (index === 0) {
-                // Snake head (Mr. Snake-e!)
-                this.ctx.fillStyle = this.powerUpEffects.invincible > 0 ? '#ffd700' : '#4a9eff';
-                this.ctx.fillRect(x + 1, y + 1, this.cellSize - 2, this.cellSize - 2);
+                // Snake head (Mr. Snake-e!) - prettier colors
+                this.ctx.fillStyle = this.powerUpEffects.invincible > 0 ? '#ffd700' : '#ff69b4';
+                this.ctx.fillRect(x + 1, y + 1, this.actualCellSize - 2, this.actualCellSize - 2);
                 
                 // Draw eyes
                 this.ctx.fillStyle = '#ffffff';
-                const eyeSize = 3;
+                const eyeSize = Math.max(2, Math.floor(this.actualCellSize / 6));
+                const eyeOffset = Math.floor(this.actualCellSize / 3);
+                
                 if (this.direction.x === 1) { // Moving right
-                    this.ctx.fillRect(x + this.cellSize - 8, y + 6, eyeSize, eyeSize);
-                    this.ctx.fillRect(x + this.cellSize - 8, y + 10, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + this.actualCellSize - eyeOffset, y + eyeOffset, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + this.actualCellSize - eyeOffset, y + eyeOffset + 4, eyeSize, eyeSize);
                 } else if (this.direction.x === -1) { // Moving left
-                    this.ctx.fillRect(x + 5, y + 6, eyeSize, eyeSize);
-                    this.ctx.fillRect(x + 5, y + 10, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + eyeOffset/2, y + eyeOffset, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + eyeOffset/2, y + eyeOffset + 4, eyeSize, eyeSize);
                 } else if (this.direction.y === -1) { // Moving up
-                    this.ctx.fillRect(x + 6, y + 5, eyeSize, eyeSize);
-                    this.ctx.fillRect(x + 10, y + 5, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + eyeOffset, y + eyeOffset/2, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + eyeOffset + 4, y + eyeOffset/2, eyeSize, eyeSize);
                 } else if (this.direction.y === 1) { // Moving down
-                    this.ctx.fillRect(x + 6, y + this.cellSize - 8, eyeSize, eyeSize);
-                    this.ctx.fillRect(x + 10, y + this.cellSize - 8, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + eyeOffset, y + this.actualCellSize - eyeOffset, eyeSize, eyeSize);
+                    this.ctx.fillRect(x + eyeOffset + 4, y + this.actualCellSize - eyeOffset, eyeSize, eyeSize);
                 }
             } else {
-                // Snake body
+                // Snake body - gradient pink
                 const alpha = Math.max(0.3, 1 - (index * 0.03));
-                const color = this.powerUpEffects.invincible > 0 ? `rgba(255, 215, 0, ${alpha})` : `rgba(74, 158, 255, ${alpha})`;
+                const color = this.powerUpEffects.invincible > 0 ? `rgba(255, 215, 0, ${alpha})` : `rgba(255, 179, 230, ${alpha})`;
                 this.ctx.fillStyle = color;
-                this.ctx.fillRect(x + 2, y + 2, this.cellSize - 4, this.cellSize - 4);
+                this.ctx.fillRect(x + 2, y + 2, this.actualCellSize - 4, this.actualCellSize - 4);
                 
                 // Body pattern
-                this.ctx.fillStyle = `rgba(116, 185, 255, ${alpha * 0.5})`;
-                this.ctx.fillRect(x + 4, y + 4, this.cellSize - 8, this.cellSize - 8);
+                this.ctx.fillStyle = `rgba(255, 158, 205, ${alpha * 0.5})`;
+                this.ctx.fillRect(x + 4, y + 4, this.actualCellSize - 8, this.actualCellSize - 8);
             }
         });
     }
 
     drawFoods() {
         this.foods.forEach(food => {
-            const x = food.x * this.cellSize;
-            const y = food.y * this.cellSize;
+            const x = food.x * this.actualCellSize;
+            const y = food.y * this.actualCellSize;
             const pulse = 1 + Math.sin(food.animation) * 0.1;
             
             this.ctx.save();
-            this.ctx.translate(x + this.cellSize/2, y + this.cellSize/2);
+            this.ctx.translate(x + this.actualCellSize/2, y + this.actualCellSize/2);
             this.ctx.scale(pulse, pulse);
-            this.ctx.font = `${this.cellSize - 4}px Arial`;
+            this.ctx.font = `${Math.max(12, this.actualCellSize - 4)}px Arial`;
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             this.ctx.fillText(food.emoji, 0, 0);
@@ -1227,23 +1239,23 @@ class SnakeDeluxe {
 
     drawObstacles() {
         this.obstacles.forEach(obstacle => {
-            const x = obstacle.x * this.cellSize;
-            const y = obstacle.y * this.cellSize;
+            const x = obstacle.x * this.actualCellSize;
+            const y = obstacle.y * this.actualCellSize;
             
-            this.ctx.fillStyle = '#666666';
-            this.ctx.fillRect(x + 1, y + 1, this.cellSize - 2, this.cellSize - 2);
+            this.ctx.fillStyle = '#8b5a9f';
+            this.ctx.fillRect(x + 1, y + 1, this.actualCellSize - 2, this.actualCellSize - 2);
             
-            this.ctx.font = `${this.cellSize - 6}px Arial`;
+            this.ctx.font = `${Math.max(10, this.actualCellSize - 6)}px Arial`;
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
-            this.ctx.fillText(obstacle.emoji, x + this.cellSize/2, y + this.cellSize/2);
+            this.ctx.fillText(obstacle.emoji, x + this.actualCellSize/2, y + this.actualCellSize/2);
         });
     }
 
     drawPowerUps() {
         this.powerUps.forEach(powerUp => {
-            const x = powerUp.x * this.cellSize;
-            const y = powerUp.y * this.cellSize;
+            const x = powerUp.x * this.actualCellSize;
+            const y = powerUp.y * this.actualCellSize;
             const pulse = 1 + Math.sin(powerUp.animation) * 0.2;
             const glow = Math.sin(powerUp.animation * 2) * 0.5 + 0.5;
             
@@ -1252,9 +1264,9 @@ class SnakeDeluxe {
             this.ctx.shadowColor = this.currentLevelData.accentColor;
             this.ctx.shadowBlur = 10 * glow;
             
-            this.ctx.translate(x + this.cellSize/2, y + this.cellSize/2);
+            this.ctx.translate(x + this.actualCellSize/2, y + this.actualCellSize/2);
             this.ctx.scale(pulse, pulse);
-            this.ctx.font = `${this.cellSize - 2}px Arial`;
+            this.ctx.font = `${Math.max(12, this.actualCellSize - 2)}px Arial`;
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             this.ctx.fillText(powerUp.emoji, 0, 0);
@@ -1264,26 +1276,26 @@ class SnakeDeluxe {
 
     drawCats() {
         this.cats.forEach(cat => {
-            const x = cat.x * this.cellSize;
-            const y = cat.y * this.cellSize;
+            const x = cat.x * this.actualCellSize;
+            const y = cat.y * this.actualCellSize;
             const bounce = Math.sin(cat.animation) * 2;
             
             this.ctx.save();
-            this.ctx.translate(x + this.cellSize/2, y + this.cellSize/2 + bounce);
+            this.ctx.translate(x + this.actualCellSize/2, y + this.actualCellSize/2 + bounce);
             
             if (cat.petted) {
                 // Happy cat with hearts
-                this.ctx.font = `${this.cellSize - 4}px Arial`;
+                this.ctx.font = `${Math.max(12, this.actualCellSize - 4)}px Arial`;
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillText('😸', 0, 0);
                 
                 // Floating hearts
-                this.ctx.font = `${this.cellSize/3}px Arial`;
+                this.ctx.font = `${Math.max(8, this.actualCellSize/3)}px Arial`;
                 this.ctx.fillText('💖', -8, -8);
                 this.ctx.fillText('💖', 8, -8);
             } else {
-                this.ctx.font = `${this.cellSize - 4}px Arial`;
+                this.ctx.font = `${Math.max(12, this.actualCellSize - 4)}px Arial`;
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillText(cat.emoji, 0, 0);
@@ -1295,17 +1307,17 @@ class SnakeDeluxe {
 
     drawCoins() {
         this.coins_on_board.forEach(coin => {
-            const x = coin.x * this.cellSize;
-            const y = coin.y * this.cellSize;
+            const x = coin.x * this.actualCellSize;
+            const y = coin.y * this.actualCellSize;
             const spin = coin.animation;
             const scale = 1 + Math.sin(spin * 2) * 0.1;
             
             this.ctx.save();
-            this.ctx.translate(x + this.cellSize/2, y + this.cellSize/2);
+            this.ctx.translate(x + this.actualCellSize/2, y + this.actualCellSize/2);
             this.ctx.scale(scale, scale);
             this.ctx.rotate(spin * 0.1);
             
-            this.ctx.font = `${this.cellSize - 4}px Arial`;
+            this.ctx.font = `${Math.max(12, this.actualCellSize - 4)}px Arial`;
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             this.ctx.fillText('🪙', 0, 0);
@@ -1370,12 +1382,12 @@ class SnakeDeluxe {
     pauseGame(container) {
         this.gameActive = false;
         if (!container) {
-            container = document.querySelector('.snake-deluxe-container');
+            container = document.querySelector('.sd-game-container');
         }
         
         if (container) {
-            const pauseBtn = container.querySelector('.pause-btn');
-            const resumeBtn = container.querySelector('.resume-btn');
+            const pauseBtn = container.querySelector('.sd-pause-btn');
+            const resumeBtn = container.querySelector('.sd-resume-btn');
             
             if (pauseBtn) pauseBtn.style.display = 'none';
             if (resumeBtn) resumeBtn.style.display = 'inline-block';
@@ -1385,12 +1397,12 @@ class SnakeDeluxe {
     resumeGame(container) {
         this.gameActive = true;
         if (!container) {
-            container = document.querySelector('.snake-deluxe-container');
+            container = document.querySelector('.sd-game-container');
         }
         
         if (container) {
-            const pauseBtn = container.querySelector('.pause-btn');
-            const resumeBtn = container.querySelector('.resume-btn');
+            const pauseBtn = container.querySelector('.sd-pause-btn');
+            const resumeBtn = container.querySelector('.sd-resume-btn');
             
             if (pauseBtn) pauseBtn.style.display = 'inline-block';
             if (resumeBtn) resumeBtn.style.display = 'none';
@@ -1399,7 +1411,7 @@ class SnakeDeluxe {
 
     replayLevel(container) {
         if (!container) {
-            container = document.querySelector('.snake-deluxe-container');
+            container = document.querySelector('.sd-game-container');
         }
         this.startLevel(container, this.currentLevel);
     }
@@ -1417,12 +1429,12 @@ class SnakeDeluxe {
         this.gameStarted = false;
         
         // Refresh level buttons
-        const levelGrid = container.querySelector('.level-grid');
+        const levelGrid = container.querySelector('.sd-level-grid');
         if (levelGrid) {
             levelGrid.innerHTML = this.createLevelButtons();
             
             // Re-attach event listeners
-            const levelButtons = container.querySelectorAll('.level-button.unlocked');
+            const levelButtons = container.querySelectorAll('.sd-level-bubble.sd-unlocked');
             levelButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const levelId = parseInt(btn.dataset.level);
@@ -1435,10 +1447,10 @@ class SnakeDeluxe {
         this.updateStats(container);
         
         // Show level selector
-        container.querySelector('.level-selector-screen').style.display = 'block';
-        container.querySelector('.game-play-screen').style.display = 'none';
-        container.querySelector('.level-complete-screen').style.display = 'none';
-        container.querySelector('.game-over-screen').style.display = 'none';
+        container.querySelector('.sd-level-selector').style.display = 'block';
+        container.querySelector('.sd-game-play').style.display = 'none';
+        container.querySelector('.sd-level-complete').style.display = 'none';
+        container.querySelector('.sd-game-over').style.display = 'none';
     }
 
     levelComplete() {
@@ -1465,18 +1477,18 @@ class SnakeDeluxe {
         this.saveCoins();
         
         // Show completion screen
-        const container = document.querySelector('.snake-deluxe-container');
+        const container = document.querySelector('.sd-game-container');
         this.showLevelCompleteScreen(container, newAchievements);
     }
 
     showLevelCompleteScreen(container, newAchievements) {
-        const levelCompleteScreen = container.querySelector('.level-complete-screen');
-        const levelScoreEl = container.querySelector('.level-score');
-        const coinsEarnedEl = container.querySelector('.coins-earned');
-        const catsPettedEl = container.querySelector('.cats-petted');
-        const newAchievementsEl = container.querySelector('.new-achievements');
-        const newAchievementList = container.querySelector('.new-achievement-list');
-        const nextLevelBtn = container.querySelector('.next-level-btn');
+        const levelCompleteScreen = container.querySelector('.sd-level-complete');
+        const levelScoreEl = container.querySelector('.sd-level-score');
+        const coinsEarnedEl = container.querySelector('.sd-coins-earned');
+        const catsPettedEl = container.querySelector('.sd-cats-petted');
+        const newAchievementsEl = container.querySelector('.sd-new-achievements');
+        const newAchievementList = container.querySelector('.sd-new-achievement-list');
+        const nextLevelBtn = container.querySelector('.sd-next-level-btn');
         
         if (levelScoreEl) levelScoreEl.textContent = this.levelScore;
         if (coinsEarnedEl) coinsEarnedEl.textContent = this.levelCoins;
@@ -1486,9 +1498,9 @@ class SnakeDeluxe {
         if (newAchievements.length > 0 && newAchievementsEl && newAchievementList) {
             newAchievementsEl.style.display = 'block';
             newAchievementList.innerHTML = newAchievements.map(achievement => 
-                `<div class="new-achievement">
-                    <span class="achievement-icon">${achievement.icon}</span>
-                    <span class="achievement-name">${achievement.name}</span>
+                `<div class="sd-new-achievement">
+                    <span class="sd-achievement-icon">${achievement.icon}</span>
+                    <span class="sd-achievement-name">${achievement.name}</span>
                 </div>`
             ).join('');
         } else if (newAchievementsEl) {
@@ -1500,7 +1512,7 @@ class SnakeDeluxe {
             nextLevelBtn.style.display = this.currentLevel >= this.levels.length ? 'none' : 'inline-block';
         }
         
-        container.querySelector('.game-play-screen').style.display = 'none';
+        container.querySelector('.sd-game-play').style.display = 'none';
         levelCompleteScreen.style.display = 'block';
     }
 
@@ -1508,17 +1520,17 @@ class SnakeDeluxe {
         this.gameActive = false;
         this.gameStarted = false;
         
-        const container = document.querySelector('.snake-deluxe-container');
-        const gameOverScreen = container.querySelector('.game-over-screen');
-        const finalScoreEl = container.querySelector('.final-score');
-        const coinsCollectedEl = container.querySelector('.coins-collected');
+        const container = document.querySelector('.sd-game-container');
+        const gameOverScreen = container.querySelector('.sd-game-over');
+        const finalScoreEl = container.querySelector('.sd-final-score');
+        const coinsCollectedEl = container.querySelector('.sd-coins-collected');
         
         if (finalScoreEl) finalScoreEl.textContent = this.score;
         if (coinsCollectedEl) coinsCollectedEl.textContent = this.levelCoins;
         
         this.saveCoins();
         
-        container.querySelector('.game-play-screen').style.display = 'none';
+        container.querySelector('.sd-game-play').style.display = 'none';
         gameOverScreen.style.display = 'block';
         
         this.cleanup();
@@ -1541,7 +1553,7 @@ class SnakeDeluxe {
             { id: 'hacker_elite', name: 'Hacker Elite', icon: '💻', condition: () => this.currentLevel >= 7 },
             { id: 'cat_sanctuary_hero', name: 'Cat Sanctuary Hero', icon: '😸', condition: () => this.currentLevel >= 8 },
             { id: 'boardroom_boss', name: 'Boardroom Boss', icon: '💼', condition: () => this.currentLevel >= 9 },
-            { id: 'snakesia_king', name: 'King of Snakesia!', icon: '👑', condition: () => this.currentLevel >= 10 },
+            { id: 'snakesia_king', name: 'Princess of Snakesia!', icon: '👑', condition: () => this.currentLevel >= 10 },
             { id: 'high_scorer', name: 'High Scorer', icon: '🏆', condition: () => this.score >= 500 },
             { id: 'perfectionist', name: 'Perfectionist', icon: '⭐', condition: () => this.score >= this.currentLevelData.targetScore * 2 },
             { id: 'mrs_snake_proud', name: 'Mrs. Snake-e is Proud!', icon: '🐍', condition: () => this.levelCatsPetted >= 5 },

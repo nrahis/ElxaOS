@@ -1,0 +1,802 @@
+/* =================================
+   THEME DIALOG SPECIFIC
+================================= */
+.theme-dialog .dialog-body {
+    min-width: 580px;
+    max-width: 720px;
+    min-height: 380px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.theme-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--windowBorder);
+    margin-bottom: 12px;
+}
+
+.theme-tab {
+    padding: 6px 16px;
+    cursor: pointer;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    border-bottom: none;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--menuText);
+    transition: background 0.2s ease;
+}
+
+.theme-tab.active {
+    background: var(--windowBg);
+    border: 1px inset var(--windowBorder);
+    border-bottom: 1px solid var(--windowBg);
+    margin-bottom: -1px;
+}
+
+.theme-tab:hover:not(.active) {
+    background: var(--buttonHoverBg);
+}
+
+.theme-content {
+    min-height: 260px;
+    max-height: 360px; 
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: var(--windowBg);
+    padding: 12px;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* =================================
+   THEME GRID
+================================= */
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    padding: 8px;
+    justify-items: center;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    border-radius: 4px;
+    background: var(--buttonBg);
+    width: 85px;
+    min-height: 90px;
+    transition: all 0.2s ease;
+}
+
+.theme-option:hover {
+    background: var(--buttonHoverBg);
+    border-color: var(--windowBorder);
+    transform: translateY(-1px);
+}
+
+.theme-option.selected {
+    border-color: var(--menuHoverBg);
+    background: var(--menuBg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-preview {
+    width: 65px;
+    height: 45px;
+    border: 1px solid var(--windowBorder);
+    border-radius: 3px;
+    padding: 2px;
+    margin-bottom: 6px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.theme-preview-window {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--windowBorder);
+    position: relative;
+}
+
+.theme-preview-titlebar {
+    height: 12px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.theme-name {
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--menuText);
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* =================================
+   WALLPAPER GRID
+================================= */
+.wallpaper-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 8px;
+    justify-items: center;
+}
+
+.wallpaper-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    border-radius: 4px;
+    background: var(--buttonBg);
+    width: 70px;
+    min-height: 85px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.wallpaper-option:hover {
+    background: var(--buttonHoverBg);
+    border-color: var(--windowBorder);
+    transform: translateY(-1px);
+}
+
+.wallpaper-option.selected {
+    border-color: var(--menuHoverBg);
+    background: var(--menuBg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.wallpaper-preview {
+    width: 60px;
+    height: 40px;
+    border: 1px solid var(--windowBorder);
+    border-radius: 2px;
+    margin-bottom: 4px;
+}
+
+.wallpaper-name {
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--menuText);
+    max-width: 80px;
+    word-wrap: break-word;
+}
+
+/* =================================
+   THEME CONTROLS
+================================= */
+.theme-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--windowBorder);
+}
+
+.apply-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border: 1px outset #32cd32;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+}
+
+.apply-btn:hover {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.apply-btn:active {
+    border: 1px inset #32cd32;
+    background: linear-gradient(to bottom, #32cd32, #90ee90);
+}
+
+.reset-btn {
+    background: linear-gradient(to bottom, #ffdddd, #ffaaaa);
+    border: 1px outset #ffaaaa;
+    padding: 6px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    color: black;
+}
+
+.reset-btn:hover {
+    background: linear-gradient(to bottom, #ffeeee, #ffdddd);
+}
+
+.reset-btn:active {
+    border: 1px inset #ffaaaa;
+    background: linear-gradient(to bottom, #ffaaaa, #ffdddd);
+}
+
+/* Generic dialog button styling */
+.dialog-button {
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    padding: 6px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--menuText);
+}
+
+.dialog-button:hover {
+    background: var(--buttonHoverBg);
+}
+
+.dialog-button:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
+/* =================================
+   RESPONSIVE ADJUSTMENTS
+================================= */
+@media (max-width: 700px) {
+    .theme-dialog .dialog-body {
+        min-width: 400px;
+        max-width: 95vw;
+    }
+    
+    .theme-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 6px;
+    }
+    
+    .wallpaper-grid {
+        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+        gap: 6px;
+    }
+    
+    .theme-controls {
+        flex-wrap: wrap;
+    }
+}
+
+/* =================================
+   USER SETTINGS DIALOG
+================================= */
+.user-settings-dialog .dialog-body {
+    min-width: 350px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.user-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.avatar-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.avatar-input {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px inset var(--windowBorder);
+    font-size: 16px;
+    text-align: center;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.avatar-options {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+}
+
+.avatar-option {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    background: var(--buttonBg);
+}
+
+.avatar-option:hover {
+    border-color: var(--menuHoverBg);
+    background: var(--buttonHoverBg);
+}
+
+.user-stats {
+    background: var(--menuBg);
+    padding: 12px;
+    border: 1px inset var(--windowBorder);
+    border-radius: 4px;
+    color: var(--menuText);
+}
+
+.user-stats h4 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: var(--menuHoverBg);
+}
+
+.stat-item {
+    font-size: 10px;
+    color: var(--menuText);
+    margin-bottom: 4px;
+}
+
+.change-password-btn {
+    background: linear-gradient(to bottom, #ff8800, #ff6600);
+    border: 1px outset #ff6600;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: white;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.change-password-btn:hover {
+    background: linear-gradient(to bottom, #ff9900, #ff8800);
+}
+
+.change-password-btn:active {
+    border: 1px inset #ff6600;
+}
+
+/* =================================
+   WALLPAPER CONTROLS
+================================= */
+.wallpaper-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 8px;
+    background: var(--menuBg);
+    border-radius: 4px;
+    border: 1px solid var(--windowBorder);
+}
+
+.import-image-btn,
+.browse-paint-btn {
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    padding: 8px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--menuText);
+    border-radius: 3px;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.import-image-btn:hover,
+.browse-paint-btn:hover {
+    background: var(--buttonHoverBg);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.import-image-btn:active,
+.browse-paint-btn:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.custom-badge {
+    font-size: 7px;
+    background: #ff6600;
+    color: white;
+    padding: 1px 3px;
+    border-radius: 2px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-weight: bold;
+}
+
+/* =================================
+   IMAGE IMPORT DIALOG
+================================= */
+.import-dialog .dialog-body {
+    min-width: 400px;
+    max-width: 600px;
+    max-height: 500px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.import-instructions {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.import-instructions p {
+    margin: 4px 0;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.file-types {
+    font-size: 10px;
+    color: var(--menuText);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.image-input {
+    width: 100%;
+    padding: 8px;
+    border: 2px dashed var(--windowBorder);
+    background: var(--menuBg);
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.image-input:hover {
+    border-color: var(--menuHoverBg);
+    background: var(--buttonHoverBg);
+}
+
+.preview-area {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: var(--windowBg);
+    margin-bottom: 12px;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+    padding: 8px;
+}
+
+.import-preview-item {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 4px;
+    background: var(--buttonBg);
+    position: relative;
+}
+
+.import-preview-item:has(.import-checkbox:checked) {
+    border-color: var(--menuHoverBg);
+    background: var(--menuBg);
+}
+
+.import-preview-image {
+    width: 100%;
+    height: 80px;
+    border: 1px solid var(--windowBorder);
+    border-radius: 2px;
+    margin-bottom: 4px;
+}
+
+.import-preview-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.image-name {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--menuText);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.image-size {
+    font-size: 9px;
+    color: var(--menuText);
+    opacity: 0.7;
+}
+
+.import-checkbox {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.import-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.import-selected-btn {
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    border: 1px outset #32cd32;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    border-radius: 2px;
+}
+
+.import-selected-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.import-selected-btn:active:not(:disabled) {
+    border: 1px inset #32cd32;
+}
+
+.import-selected-btn:disabled {
+    background: var(--buttonBg);
+    border-color: var(--windowBorder);
+    cursor: not-allowed;
+    color: var(--menuText);
+    opacity: 0.5;
+}
+
+.cancel-btn {
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--menuText);
+    border-radius: 2px;
+}
+
+.cancel-btn:hover {
+    background: var(--buttonHoverBg);
+}
+
+.cancel-btn:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
+/* =================================
+   PAINT FILE BROWSER DIALOG
+================================= */
+.paint-browser-dialog .dialog-body {
+    min-width: 350px;
+    max-width: 500px;
+    max-height: 400px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.paint-instructions {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.paint-instructions p {
+    margin: 4px 0;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.paint-files-grid {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: var(--windowBg);
+    margin-bottom: 12px;
+}
+
+.paint-file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--windowBorder);
+}
+
+.paint-file-item:hover {
+    background: var(--buttonHoverBg);
+}
+
+.paint-file-item.selected {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.paint-file-icon {
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--buttonBg);
+    border: 1px solid var(--windowBorder);
+    border-radius: 2px;
+}
+
+.paint-file-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.paint-file-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: inherit;
+}
+
+.paint-file-location {
+    font-size: 10px;
+    color: inherit;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.paint-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.use-paint-btn {
+    background: linear-gradient(to bottom, #ff8800, #ff6600);
+    border: 1px outset #ff6600;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    border-radius: 2px;
+}
+
+.use-paint-btn:hover:not(:disabled) {
+    background: linear-gradient(to bottom, #ff9900, #ff8800);
+}
+
+.use-paint-btn:active:not(:disabled) {
+    border: 1px inset #ff6600;
+}
+
+.use-paint-btn:disabled {
+    background: var(--buttonBg);
+    border-color: var(--windowBorder);
+    cursor: not-allowed;
+    color: var(--menuText);
+    opacity: 0.5;
+}
+
+/* =================================
+   CONTEXT MENU THEMING
+================================= */
+.context-menu {
+    background: var(--menuBg);
+    border: 1px outset var(--windowBorder);
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-size: 11px;
+    min-width: 120px;
+    z-index: 3000;
+    position: fixed;
+}
+
+.context-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    color: var(--menuText);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.context-item:hover {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.context-separator {
+    height: 1px;
+    background: var(--windowBorder);
+    margin: 2px 0;
+}
+
+/* =================================
+   SYSTEM MESSAGE THEMING
+================================= */
+.system-message {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    padding: 8px 16px;
+    border: 2px outset var(--windowBorder);
+    z-index: 3000;
+    font-weight: bold;
+    font-size: 11px;
+    border-radius: 3px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.system-message.info {
+    background: var(--menuBg);
+    color: var(--menuText);
+}
+
+.system-message.success {
+    background: #90ee90;
+    color: black;
+}
+
+.system-message.warning {
+    background: #ffd700;
+    color: black;
+}
+
+.system-message.error {
+    background: #ff6b6b;
+    color: white;
+}
+
+/* =================================
+   DARK THEME SPECIFIC ADJUSTMENTS
+================================= */
+.dark-theme .theme-option,
+.dark-theme .wallpaper-option,
+.dark-theme .import-preview-item,
+.dark-theme .paint-file-item {
+    border-color: #555;
+}
+
+.dark-theme .theme-option:hover,
+.dark-theme .wallpaper-option:hover {
+    border-color: #777;
+}
+
+.dark-theme .theme-option.selected,
+.dark-theme .wallpaper-option.selected {
+    border-color: var(--menuHoverBg);
+}
+
+.dark-theme .custom-badge {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.dark-theme .file-types,
+.dark-theme .image-size,
+.dark-theme .paint-file-location {
+    opacity: 0.6;
+}

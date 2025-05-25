@@ -615,7 +615,7 @@ class LoginService {
         });
     }
 
-    // NEW METHOD: Show version edit dialog
+    // FIXED: Show version edit dialog with proper sizing
     showVersionEditDialog() {
         // Remove any existing dialog first
         const existingDialog = document.getElementById('versionEditDialog');
@@ -645,7 +645,11 @@ class LoginService {
             background: #c0c0c0;
             border: 3px outset #c0c0c0;
             width: 420px;
+            max-width: 90vw;
+            max-height: 85vh;
             box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
         `;
 
         dialog.innerHTML = `
@@ -659,6 +663,7 @@ class LoginService {
                 font-weight: bold;
                 font-size: 11px;
                 cursor: move;
+                flex-shrink: 0;
             ">
                 <div class="dialog-title">⚙️ Edit OS Version</div>
                 <div class="dialog-close" style="
@@ -671,7 +676,13 @@ class LoginService {
                     line-height: 1;
                 ">×</div>
             </div>
-            <div class="dialog-body" style="padding: 16px; font-size: 11px;">
+            <div class="dialog-body" style="
+                padding: 16px; 
+                font-size: 11px;
+                overflow-y: auto;
+                max-height: calc(85vh - 60px);
+                flex: 1;
+            ">
                 <div class="version-edit-form">
                     <div style="text-align: center; margin-bottom: 16px; color: #666; font-size: 10px;">
                         Customize your operating system version information
@@ -1021,7 +1032,7 @@ class LoginService {
         }, 3000);
     }
 
-    // NEW METHOD: Show create user dialog
+    // FIXED: Updated showCreateUserDialog method - replace your existing one
     showCreateUserDialog() {
         // Remove any existing dialog first
         const existingDialog = document.getElementById('createUserDialog');
@@ -1038,20 +1049,22 @@ class LoginService {
             height: 100vh;
             background: rgba(0, 0, 0, 0.6);
             z-index: 9999;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         `;
 
         // Create the actual dialog
         const dialog = document.createElement('div');
         dialog.style.cssText = `
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             background: #c0c0c0;
             border: 3px outset #c0c0c0;
             width: 380px;
+            max-height: 90vh;
+            max-width: 90vw;
             box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
         `;
 
         dialog.innerHTML = `
@@ -1065,6 +1078,7 @@ class LoginService {
                 font-weight: bold;
                 font-size: 11px;
                 cursor: move;
+                flex-shrink: 0;
             ">
                 <div class="dialog-title">➕ Create New User</div>
                 <div class="dialog-close" style="
@@ -1077,7 +1091,13 @@ class LoginService {
                     line-height: 1;
                 ">×</div>
             </div>
-            <div class="dialog-body" style="padding: 16px; font-size: 11px;">
+            <div class="dialog-body" style="
+                padding: 16px;
+                font-size: 11px;
+                overflow-y: auto;
+                flex: 1;
+                min-height: 0;
+            ">
                 <div class="create-user-form">
                     <div style="margin-bottom: 12px;">
                         <label style="display: block; margin-bottom: 4px; font-weight: bold;">Username:</label>
@@ -1135,43 +1155,56 @@ class LoginService {
                             margin-bottom: 6px;
                             display: block;
                         ">
-                        <div style="display: flex; flex-wrap: wrap; gap: 2px;">
+                        <div style="
+                            display: grid;
+                            grid-template-columns: repeat(6, 1fr);
+                            gap: 4px;
+                            max-height: 80px;
+                            overflow-y: auto;
+                            border: 1px inset #c0c0c0;
+                            padding: 4px;
+                            background: white;
+                        ">
                             ${['👤', '😸', '🐱', '🤖', '👦', '👧', '🚀', '⭐', '🔥', '🎮', '🦆', '🐧'].map(emoji => 
                                 `<div class="avatar-option" style="
                                     cursor: pointer;
-                                    padding: 2px 4px;
+                                    padding: 4px;
                                     border: 1px outset #c0c0c0;
                                     background: #e0e0e0;
                                     font-size: 12px;
                                     line-height: 1;
+                                    text-align: center;
+                                    transition: all 0.1s;
                                 " data-emoji="${emoji}">${emoji}</div>`
                             ).join('')}
                         </div>
                     </div>
-                    
-                    <div style="
-                        display: flex;
-                        gap: 8px;
-                        justify-content: flex-end;
-                        margin-top: 16px;
-                    ">
-                        <button class="create-user-btn" style="
-                            padding: 4px 12px;
-                            border: 2px outset #c0c0c0;
-                            background: #c0c0c0;
-                            cursor: pointer;
-                            font-weight: bold;
-                            font-size: 11px;
-                        ">Create User</button>
-                        <button class="cancel-btn" style="
-                            padding: 4px 12px;
-                            border: 2px outset #c0c0c0;
-                            background: #c0c0c0;
-                            cursor: pointer;
-                            font-size: 11px;
-                        ">Cancel</button>
-                    </div>
                 </div>
+            </div>
+            <div style="
+                padding: 12px 16px;
+                border-top: 1px solid #808080;
+                display: flex;
+                gap: 8px;
+                justify-content: flex-end;
+                flex-shrink: 0;
+                background: #c0c0c0;
+            ">
+                <button class="create-user-btn" style="
+                    padding: 4px 12px;
+                    border: 2px outset #c0c0c0;
+                    background: #c0c0c0;
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-size: 11px;
+                ">Create User</button>
+                <button class="cancel-btn" style="
+                    padding: 4px 12px;
+                    border: 2px outset #c0c0c0;
+                    background: #c0c0c0;
+                    cursor: pointer;
+                    font-size: 11px;
+                ">Cancel</button>
             </div>
         `;
 
@@ -1192,10 +1225,41 @@ class LoginService {
             this.createNewUser();
         });
 
-        // Avatar selection
+        // Avatar selection with hover effects
         dialog.querySelectorAll('.avatar-option').forEach(option => {
             option.addEventListener('click', () => {
                 document.getElementById('newUserAvatar').value = option.dataset.emoji;
+                
+                // Visual feedback
+                dialog.querySelectorAll('.avatar-option').forEach(opt => {
+                    opt.style.background = '#e0e0e0';
+                    opt.style.border = '1px outset #c0c0c0';
+                });
+                option.style.background = '#b0d0ff';
+                option.style.border = '1px inset #c0c0c0';
+            });
+
+            // Hover effects
+            option.addEventListener('mouseenter', () => {
+                if (option.style.background !== 'rgb(176, 208, 255)') {
+                    option.style.background = '#f0f0f0';
+                }
+            });
+
+            option.addEventListener('mouseleave', () => {
+                if (option.style.background !== 'rgb(176, 208, 255)') {
+                    option.style.background = '#e0e0e0';
+                }
+            });
+        });
+
+        // Handle Enter key in form fields
+        const formInputs = dialog.querySelectorAll('input[type="text"], input[type="password"]');
+        formInputs.forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.createNewUser();
+                }
             });
         });
 

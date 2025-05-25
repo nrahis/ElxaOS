@@ -78,9 +78,11 @@
 }
 
 .logo-icon {
-    font-size: 120px;
+    width: 120px;
+    height: 120px;
     margin-bottom: 20px;
     animation: logoGlow 3s ease-in-out infinite alternate;
+    object-fit: contain;
 }
 
 .logo-text {
@@ -130,10 +132,10 @@
 
 @keyframes logoGlow {
     from {
-        text-shadow: 0 0 20px rgba(0, 170, 255, 0.5);
+        filter: drop-shadow(0 0 20px rgba(0, 170, 255, 0.5));
     }
     to {
-        text-shadow: 0 0 30px rgba(0, 170, 255, 0.8), 0 0 40px rgba(0, 170, 255, 0.3);
+        filter: drop-shadow(0 0 30px rgba(0, 170, 255, 0.8)) drop-shadow(0 0 40px rgba(0, 170, 255, 0.3));
     }
 }
 
@@ -618,7 +620,8 @@
     }
     
     .elxaos-logo-container .logo-icon {
-        font-size: 80px;
+        width: 80px;
+        height: 80px;
     }
     
     .loading-bar {
@@ -659,7 +662,8 @@
     }
     
     .elxaos-logo-container .logo-icon {
-        font-size: 60px;
+        width: 60px;
+        height: 60px;
     }
     
     .loading-bar {

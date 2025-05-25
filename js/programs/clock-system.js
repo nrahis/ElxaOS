@@ -17,6 +17,7 @@ class ClockSystem {
         this.activeAlarms = new Map();
         this.clockWindow = null;
         this.tickInterval = null;
+        this.calendarEvents = {}; // Store events by date key (YYYY-MM-DD)
         
         this.loadSettings();
         this.setupEventHandlers();
@@ -187,6 +188,10 @@ class ClockSystem {
 
                     <!-- Calendar Tab -->
                     <div class="clock-panel" data-panel="calendar">
+                        <div class="calendar-events-info">
+                            📅 Click on any date to add events! Events will appear as colored dots.
+                        </div>
+                        
                         <div class="calendar-header">
                             <button class="calendar-nav" id="prevMonth">◀</button>
                             <div class="calendar-title" id="calendarTitle">January 2024</div>
@@ -221,6 +226,7 @@ class ClockSystem {
                                 <option value="Asia/Shanghai">🏯 Shanghai</option>
                                 <option value="Australia/Sydney">🦘 Sydney</option>
                                 <option value="America/Sao_Paulo">🌎 São Paulo</option>
+                                <option value="SNAKESIA">🐍 Snakesia</option>
                             </select>
                             <button class="add-timezone-btn" id="addTimezoneBtn">🌍 Add City</button>
                         </div>
@@ -611,6 +617,150 @@ class ClockSystem {
         });
     }
 
+    // Handle calendar date click for event management
+    handleDateClick(year, month, day) {
+        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dateObj = new Date(year, month, day);
+        const dateString = dateObj.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        this.showEventModal(dateKey, dateString);
+    }
+
+    showEventModal(dateKey, dateString) {
+        // Remove existing modal if any
+        const existingModal = document.querySelector('.event-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        const modal = document.createElement('div');
+        modal.className = 'event-modal';
+        modal.innerHTML = `
+            <div class="event-modal-content">
+                <div class="event-modal-header">
+                    <span>📅 Events for ${dateString}</span>
+                    <button class="notification-close" onclick="this.closest('.event-modal').remove()">✕</button>
+                </div>
+                <div class="event-modal-body">
+                    <div class="event-list" id="eventList"></div>
+                    <div class="event-form">
+                        <input type="text" id="eventTitle" placeholder="Event title" maxlength="50">
+                        <input type="time" id="eventTime" value="12:00">
+                        <textarea id="eventDescription" placeholder="Event description (optional)" maxlength="200"></textarea>
+                        <div class="event-form-buttons">
+                            <button class="event-btn" onclick="this.closest('.event-modal').remove()">Cancel</button>
+                            <button class="event-btn primary" onclick="elxaOS.clockSystem.addEvent('${dateKey}')">Add Event</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        this.updateEventList(dateKey);
+        
+        // Focus on title input
+        modal.querySelector('#eventTitle').focus();
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+
+    addEvent(dateKey) {
+        const title = document.getElementById('eventTitle').value.trim();
+        const time = document.getElementById('eventTime').value;
+        const description = document.getElementById('eventDescription').value.trim();
+
+        if (!title) {
+            alert('⚠️ Please enter an event title!');
+            return;
+        }
+
+        if (!this.calendarEvents[dateKey]) {
+            this.calendarEvents[dateKey] = [];
+        }
+
+        const event = {
+            id: Date.now(),
+            title: title,
+            time: time,
+            description: description
+        };
+
+        this.calendarEvents[dateKey].push(event);
+        this.saveSettings();
+        this.updateEventList(dateKey);
+        this.updateCalendarDisplay();
+
+        // Clear form
+        document.getElementById('eventTitle').value = '';
+        document.getElementById('eventTime').value = '12:00';
+        document.getElementById('eventDescription').value = '';
+    }
+
+    updateEventList(dateKey) {
+        const eventList = document.getElementById('eventList');
+        if (!eventList) return;
+
+        const events = this.calendarEvents[dateKey] || [];
+        
+        if (events.length === 0) {
+            eventList.innerHTML = '<div style="text-align: center; color: #666; font-style: italic; padding: 12px;">No events for this date</div>';
+            return;
+        }
+
+        eventList.innerHTML = events.map(event => `
+            <div class="event-item">
+                <div class="event-info">
+                    <div class="event-title">${event.title}</div>
+                    <div class="event-time">⏰ ${event.time}</div>
+                    ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
+                </div>
+                <div class="event-controls">
+                    <button class="event-control-btn" onclick="elxaOS.clockSystem.editEvent('${dateKey}', ${event.id})" title="Edit">✏️</button>
+                    <button class="event-control-btn" onclick="elxaOS.clockSystem.deleteEvent('${dateKey}', ${event.id})" title="Delete">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    editEvent(dateKey, eventId) {
+        const events = this.calendarEvents[dateKey] || [];
+        const event = events.find(e => e.id === eventId);
+        if (!event) return;
+
+        // Fill form with event data
+        document.getElementById('eventTitle').value = event.title;
+        document.getElementById('eventTime').value = event.time;
+        document.getElementById('eventDescription').value = event.description || '';
+
+        // Remove the event temporarily
+        this.deleteEvent(dateKey, eventId);
+    }
+
+    deleteEvent(dateKey, eventId) {
+        if (!this.calendarEvents[dateKey]) return;
+
+        this.calendarEvents[dateKey] = this.calendarEvents[dateKey].filter(e => e.id !== eventId);
+        
+        if (this.calendarEvents[dateKey].length === 0) {
+            delete this.calendarEvents[dateKey];
+        }
+
+        this.saveSettings();
+        this.updateEventList(dateKey);
+        this.updateCalendarDisplay();
+    }
+
     updateCalendarDisplay() {
         const calendarTitle = this.clockWindow.querySelector('#calendarTitle');
         const calendarGrid = this.clockWindow.querySelector('#calendarGrid');
@@ -648,7 +798,57 @@ class ClockSystem {
                           today.getMonth() === month && 
                           today.getDate() === day;
             
-            calendarHTML += `<div class="calendar-day ${isToday ? 'today' : ''}">${day}</div>`;
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const hasEvents = this.calendarEvents[dateKey] && this.calendarEvents[dateKey].length > 0;
+            const eventCount = hasEvents ? this.calendarEvents[dateKey].length : 0;
+            
+            let eventIndicators = '';
+            let eventTooltip = '';
+            
+            if (hasEvents) {
+                // Show up to 3 event indicators
+                const indicatorCount = Math.min(eventCount, 3);
+                for (let i = 0; i < indicatorCount; i++) {
+                    eventIndicators += '<div class="event-indicator"></div>';
+                }
+                if (eventCount > 3) {
+                    eventIndicators += '<div style="font-size: 8px; color: #ff6b35;">+</div>';
+                }
+                
+                // Generate tooltip content
+                eventTooltip = '<div class="event-tooltip">';
+                eventTooltip += `<div class="event-tooltip-title">${eventCount} Event${eventCount > 1 ? 's' : ''}</div>`;
+                
+                const eventsToShow = this.calendarEvents[dateKey].slice(0, 3);
+                eventsToShow.forEach(event => {
+                    eventTooltip += `
+                        <div class="event-tooltip-item">
+                            <span class="event-tooltip-time">${event.time}</span>
+                            <span class="event-tooltip-name">${event.title}</span>
+                        </div>
+                    `;
+                });
+                
+                if (eventCount > 3) {
+                    eventTooltip += `<div class="event-tooltip-more">...and ${eventCount - 3} more</div>`;
+                }
+                
+                eventTooltip += '</div>';
+            }
+            
+            const dayClasses = [
+                'calendar-day',
+                isToday ? 'today' : '',
+                hasEvents ? 'has-events' : ''
+            ].filter(Boolean).join(' ');
+            
+            calendarHTML += `
+                <div class="${dayClasses}" onclick="elxaOS.clockSystem.handleDateClick(${year}, ${month}, ${day})">
+                    <div class="day-number">${day}</div>
+                    ${eventIndicators}
+                    ${eventTooltip}
+                </div>
+            `;
         }
         
         calendarHTML += '</div>';
@@ -708,6 +908,13 @@ class ClockSystem {
             
             if (clock.timezone === 'local') {
                 timeString = this.formatTime(now, this.settings.format24, false);
+            } else if (clock.timezone === 'SNAKESIA') {
+                // Snakesia is exactly 2 hours and 1 minute ahead of EST
+                // First get EST time
+                const estTime = new Date(now.toLocaleString("en-US", {timeZone: "America/New_York"}));
+                // Add 2 hours and 1 minute
+                const snakesiaTime = new Date(estTime.getTime() + (2 * 60 * 60 * 1000) + (1 * 60 * 1000));
+                timeString = this.formatTime(snakesiaTime, this.settings.format24, false);
             } else {
                 timeString = now.toLocaleTimeString('en-US', {
                     timeZone: clock.timezone,
@@ -887,20 +1094,70 @@ class ClockSystem {
     }
 
     saveSettings() {
-        const settingsData = {
-            settings: this.settings,
-            alarms: this.alarms,
-            worldClocks: this.worldClocks
-        };
-        // In a real implementation, this would use localStorage
-        // For now, we'll keep settings in memory
-        console.log('Clock settings saved:', settingsData);
+        try {
+            const settingsData = {
+                settings: this.settings,
+                alarms: this.alarms,
+                worldClocks: this.worldClocks,
+                calendarEvents: this.calendarEvents
+            };
+            localStorage.setItem('elxaOS-clock-system', JSON.stringify(settingsData));
+            console.log('💾 Clock system settings saved to localStorage');
+        } catch (error) {
+            console.error('❌ Failed to save clock settings:', error);
+        }
     }
 
     loadSettings() {
-        // In a real implementation, this would load from localStorage
-        // For now, we'll use defaults
-        console.log('Clock settings loaded');
+        try {
+            const saved = localStorage.getItem('elxaOS-clock-system');
+            if (saved) {
+                const settingsData = JSON.parse(saved);
+                
+                // Load settings
+                if (settingsData.settings) {
+                    this.settings = { ...this.settings, ...settingsData.settings };
+                }
+                
+                // Load alarms
+                if (settingsData.alarms) {
+                    this.alarms = settingsData.alarms;
+                }
+                
+                // Load world clocks
+                if (settingsData.worldClocks) {
+                    this.worldClocks = settingsData.worldClocks;
+                } else {
+                    // Default world clocks if none saved
+                    this.worldClocks = [
+                        { name: '🏠 Local Time', timezone: 'local' }
+                    ];
+                }
+                
+                // Load calendar events
+                if (settingsData.calendarEvents) {
+                    this.calendarEvents = settingsData.calendarEvents;
+                } else {
+                    this.calendarEvents = {};
+                }
+                
+                console.log('📅 Clock system settings loaded from localStorage');
+            } else {
+                // Initialize defaults
+                this.calendarEvents = {};
+                this.worldClocks = [
+                    { name: '🏠 Local Time', timezone: 'local' }
+                ];
+                console.log('📅 Using default clock settings');
+            }
+        } catch (error) {
+            console.error('❌ Failed to load clock settings:', error);
+            // Fallback to defaults
+            this.calendarEvents = {};
+            this.worldClocks = [
+                { name: '🏠 Local Time', timezone: 'local' }
+            ];
+        }
     }
 
     destroy() {

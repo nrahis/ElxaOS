@@ -788,10 +788,10 @@ class ElxaOS {
         if (!programsContents.some(file => file.name === 'Snake Deluxe.abby')) {
             const snakeDeluxeInstaller = {
                 id: 'snake_deluxe',
-                name: 'Snake Deluxe: Mr. Snake-e\'s Adventure',
+                name: 'Snake Deluxe',
                 description: 'Join Mr. Snake-e, the 60-year-old billionaire CEO of ElxaCorp, on his epic adventures through Snakesia! Navigate through 10 magical levels with his 82-year-old wife Mrs. Snake-e!',
                 icon: '🐍',
-                version: '1.0',
+                version: '2.0',
                 author: 'ElxaCorp Game Studios',
                 gameData: {
                     type: 'snake_deluxe',

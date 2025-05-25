@@ -1,5 +1,5 @@
 /* =================================
-   VIRUS LAB - HACKER THEME CSS
+   VIRUS LAB - HACKER THEME CSS (CONFLICT-FREE)
 ================================= */
 
 /* Container */
@@ -29,7 +29,7 @@
 }
 
 /* Header */
-.hacker-header {
+.vlab-hacker-header {
     background: linear-gradient(90deg, #0f0f23, #1a1a2e);
     border-bottom: 2px solid #00ff00;
     padding: 12px 16px;
@@ -41,23 +41,23 @@
     z-index: 10;
 }
 
-.hacker-logo {
+.vlab-logo {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.skull-icon {
+.vlab-skull-icon {
     font-size: 32px;
-    animation: pulse 2s infinite;
+    animation: vlab-pulse 2s infinite;
 }
 
-@keyframes pulse {
+@keyframes vlab-pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
 }
 
-.lab-info h2 {
+.vlab-info h2 {
     margin: 0;
     color: #00ff00;
     font-size: 20px;
@@ -65,32 +65,32 @@
     letter-spacing: 2px;
 }
 
-.hacker-tag {
+.vlab-tag {
     color: #ff0080;
     font-size: 10px;
     text-shadow: 0 0 5px #ff0080;
 }
 
-.hacker-status {
+.vlab-status {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 4px;
 }
 
-.status-text {
+.vlab-status-text {
     color: #ff0000;
     font-weight: bold;
     text-shadow: 0 0 8px #ff0000;
-    animation: blink 1s infinite;
+    animation: vlab-blink 1s infinite;
 }
 
-@keyframes blink {
+@keyframes vlab-blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0.5; }
 }
 
-.matrix-effect {
+.vlab-matrix-effect {
     font-size: 8px;
     color: #00ff00;
     opacity: 0.7;
@@ -98,7 +98,7 @@
 }
 
 /* Navigation */
-.lab-nav {
+.vlab-nav {
     background: #0a0a0a;
     border-bottom: 1px solid #333;
     display: flex;
@@ -107,7 +107,7 @@
     z-index: 10;
 }
 
-.lab-tab {
+.vlab-tab {
     background: none;
     border: none;
     color: #00ffff;
@@ -120,12 +120,12 @@
     font-weight: bold;
 }
 
-.lab-tab:hover {
+.vlab-tab:hover {
     background: rgba(0, 255, 255, 0.1);
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
-.lab-tab.active {
+.vlab-tab.active {
     color: #00ff00;
     border-bottom-color: #00ff00;
     background: rgba(0, 255, 0, 0.1);
@@ -133,32 +133,32 @@
 }
 
 /* Content Area */
-.lab-content {
+.vlab-content {
     flex: 1;
     overflow-y: auto;
     position: relative;
     z-index: 10;
 }
 
-.tab-content {
+.vlab-tab-content {
     display: none;
     padding: 16px;
     height: 100%;
 }
 
-.tab-content.active {
+.vlab-tab-content.active {
     display: block;
 }
 
 /* Create Interface */
-.create-interface {
+.vlab-create-interface {
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 16px;
     height: 100%;
 }
 
-.create-form {
+.vlab-create-form {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid #00ff00;
     border-radius: 8px;
@@ -167,7 +167,7 @@
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
 }
 
-.create-form h3 {
+.vlab-create-form h3 {
     margin: 0 0 16px 0;
     color: #00ff00;
     text-align: center;
@@ -175,30 +175,30 @@
     font-size: 16px;
 }
 
-.form-row {
+.vlab-form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 12px;
 }
 
-.form-group {
+.vlab-form-group {
     display: flex;
     flex-direction: column;
     gap: 4px;
     margin-bottom: 12px;
 }
 
-.form-group label {
+.vlab-form-group label {
     color: #00ffff;
     font-size: 11px;
     font-weight: bold;
     text-shadow: 0 0 5px #00ffff;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.vlab-form-group input,
+.vlab-form-group textarea,
+.vlab-form-group select {
     background: #1a1a1a;
     border: 1px solid #00ff00;
     border-radius: 4px;
@@ -208,15 +208,15 @@
     font-size: 11px;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.vlab-form-group input:focus,
+.vlab-form-group textarea:focus,
+.vlab-form-group select:focus {
     outline: none;
     border-color: #00ffff;
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
-.form-group textarea {
+.vlab-form-group textarea {
     resize: vertical;
     min-height: 60px;
 }
@@ -226,14 +226,14 @@
 }
 
 /* Virus Types */
-.virus-types {
+.vlab-virus-types {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     margin-top: 8px;
 }
 
-.type-option {
+.vlab-type-option {
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 4px;
@@ -243,47 +243,47 @@
     transition: all 0.3s ease;
 }
 
-.type-option:hover {
+.vlab-type-option:hover {
     border-color: #00ff00;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
 }
 
-.type-option.selected {
+.vlab-type-option.selected {
     border-color: #00ff00;
     background: rgba(0, 255, 0, 0.1);
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
 }
 
-.type-icon {
+.vlab-type-icon {
     font-size: 24px;
     margin-bottom: 4px;
 }
 
-.type-name {
+.vlab-type-name {
     color: #00ff00;
     font-size: 10px;
     font-weight: bold;
     margin-bottom: 2px;
 }
 
-.type-desc {
+.vlab-type-desc {
     color: #888;
     font-size: 9px;
 }
 
 /* Image Selection */
-.image-selection {
+.vlab-image-selection {
     margin-top: 12px;
 }
 
-.image-grid {
+.vlab-image-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     margin-top: 8px;
 }
 
-.image-option {
+.vlab-image-option {
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 4px;
@@ -293,16 +293,16 @@
     transition: all 0.3s ease;
 }
 
-.image-option:hover {
+.vlab-image-option:hover {
     border-color: #00ff00;
 }
 
-.image-option.selected {
+.vlab-image-option.selected {
     border-color: #00ff00;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
 
-.image-preview {
+.vlab-image-preview {
     width: 50px;
     height: 50px;
     margin: 0 auto 4px;
@@ -311,13 +311,13 @@
     position: relative;
 }
 
-.image-preview img {
+.vlab-image-preview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.image-fallback {
+.vlab-image-fallback {
     width: 100%;
     height: 100%;
     background: #333;
@@ -328,22 +328,22 @@
     gap: 2px;
 }
 
-.fallback-icon {
+.vlab-fallback-icon {
     font-size: 16px;
 }
 
-.fallback-name {
+.vlab-fallback-name {
     font-size: 8px;
     color: #888;
 }
 
-.image-name {
+.vlab-image-name {
     font-size: 8px;
     color: #00ff00;
 }
 
 /* Color Picker - FIXED LAYOUT */
-.color-picker-grid {
+.vlab-color-picker-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
@@ -351,7 +351,7 @@
     max-width: 200px;
 }
 
-.color-option {
+.vlab-color-option {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -361,30 +361,30 @@
     justify-self: center;
 }
 
-.color-option:hover {
+.vlab-color-option:hover {
     transform: scale(1.2);
     border-color: #fff;
 }
 
-.color-option.selected {
+.vlab-color-option.selected {
     transform: scale(1.3);
     border-color: #00ff00;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 }
 
 /* Custom Messages - ENHANCED */
-.custom-messages {
+.vlab-custom-messages {
     margin-top: 12px;
 }
 
-.message-inputs {
+.vlab-message-inputs {
     display: flex;
     flex-direction: column;
     gap: 6px;
     margin-top: 8px;
 }
 
-.message-inputs input {
+.vlab-message-inputs input {
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 4px;
@@ -394,7 +394,7 @@
     font-size: 10px;
 }
 
-.add-message-btn {
+.vlab-add-message-btn {
     background: linear-gradient(45deg, #00ff00, #44ff44);
     border: none;
     border-radius: 4px;
@@ -409,23 +409,23 @@
     box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
 }
 
-.add-message-btn:hover {
+.vlab-add-message-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 3px 15px rgba(0, 255, 0, 0.5);
 }
 
-.message-input-container {
+.vlab-message-input-container {
     display: flex;
     gap: 6px;
     align-items: center;
     margin-bottom: 6px;
 }
 
-.message-input-container input {
+.vlab-message-input-container input {
     flex: 1;
 }
 
-.remove-message-btn {
+.vlab-remove-message-btn {
     background: linear-gradient(45deg, #ff0000, #ff4444);
     border: none;
     border-radius: 3px;
@@ -441,21 +441,21 @@
     justify-content: center;
 }
 
-.remove-message-btn:hover {
+.vlab-remove-message-btn:hover {
     transform: scale(1.1);
     box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
 }
 
 /* Create Actions */
-.create-actions {
+.vlab-create-actions {
     display: flex;
     gap: 8px;
     margin-top: 16px;
     justify-content: center;
 }
 
-.create-virus-btn,
-.preview-virus-btn {
+.vlab-create-virus-btn,
+.vlab-preview-virus-btn {
     background: linear-gradient(45deg, #ff0000, #ff4444);
     border: none;
     border-radius: 4px;
@@ -470,23 +470,23 @@
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
-.create-virus-btn:hover,
-.preview-virus-btn:hover {
+.vlab-create-virus-btn:hover,
+.vlab-preview-virus-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(255, 0, 0, 0.5);
 }
 
-.preview-virus-btn {
+.vlab-preview-virus-btn {
     background: linear-gradient(45deg, #0080ff, #0044ff);
     box-shadow: 0 0 10px rgba(0, 128, 255, 0.3);
 }
 
-.preview-virus-btn:hover {
+.vlab-preview-virus-btn:hover {
     box-shadow: 0 5px 20px rgba(0, 128, 255, 0.5);
 }
 
 /* Virus Preview */
-.virus-preview {
+.vlab-virus-preview {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid #00ffff;
     border-radius: 8px;
@@ -494,7 +494,7 @@
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
 }
 
-.virus-preview h3 {
+.vlab-virus-preview h3 {
     margin: 0 0 16px 0;
     color: #00ffff;
     text-align: center;
@@ -502,29 +502,32 @@
     font-size: 14px;
 }
 
-.preview-placeholder {
+.vlab-preview-content {
+}
+
+.vlab-preview-placeholder {
     text-align: center;
     padding: 40px 20px;
     color: #666;
 }
 
-.placeholder-icon {
+.vlab-placeholder-icon {
     font-size: 48px;
     margin-bottom: 12px;
 }
 
-.placeholder-text {
+.vlab-placeholder-text {
     font-size: 12px;
 }
 
-.virus-card {
+.vlab-virus-card {
     border: 2px solid;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
 }
 
-.virus-header {
+.vlab-virus-header {
     padding: 8px 12px;
     display: flex;
     align-items: center;
@@ -533,36 +536,36 @@
     font-weight: bold;
 }
 
-.virus-icon {
+.vlab-virus-icon {
     font-size: 20px;
 }
 
-.virus-title {
+.vlab-virus-title {
     font-size: 14px;
 }
 
-.virus-info {
+.vlab-virus-info {
     padding: 12px;
     background: rgba(0, 0, 0, 0.8);
 }
 
-.info-row {
+.vlab-info-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 6px;
     font-size: 10px;
 }
 
-.info-row .label {
+.vlab-info-row .label {
     color: #00ffff;
     font-weight: bold;
 }
 
-.info-row .value {
+.vlab-info-row .value {
     color: #00ff00;
 }
 
-.virus-description {
+.vlab-virus-description {
     margin-top: 8px;
     padding: 8px;
     background: rgba(0, 255, 0, 0.1);
@@ -573,7 +576,7 @@
 }
 
 /* Test Interface */
-.test-interface {
+.vlab-test-interface {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid #00ff00;
     border-radius: 8px;
@@ -583,14 +586,14 @@
     margin: 0 auto;
 }
 
-.test-interface h3 {
+.vlab-test-interface h3 {
     margin: 0 0 20px 0;
     color: #00ff00;
     text-shadow: 0 0 10px #00ff00;
     font-size: 18px;
 }
 
-.test-chamber {
+.vlab-test-chamber {
     background: #1a1a1a;
     border: 2px solid #00ff00;
     border-radius: 8px;
@@ -598,7 +601,7 @@
     margin-bottom: 20px;
 }
 
-.chamber-display {
+.vlab-chamber-display {
     min-height: 120px;
     display: flex;
     flex-direction: column;
@@ -608,17 +611,17 @@
     margin-bottom: 20px;
 }
 
-.chamber-icon {
+.vlab-chamber-icon {
     font-size: 48px;
-    animation: pulse 2s infinite;
+    animation: vlab-pulse 2s infinite;
 }
 
-.chamber-text {
+.vlab-chamber-text {
     font-size: 14px;
     color: #00ffff;
 }
 
-.test-controls {
+.vlab-test-controls {
     display: flex;
     gap: 12px;
     justify-content: center;
@@ -626,7 +629,7 @@
     flex-wrap: wrap;
 }
 
-.test-controls select {
+.vlab-test-controls select {
     background: #1a1a1a;
     border: 1px solid #00ff00;
     border-radius: 4px;
@@ -637,8 +640,8 @@
     min-width: 200px;
 }
 
-.test-btn,
-.stop-test-btn {
+.vlab-test-btn,
+.vlab-stop-test-btn {
     background: linear-gradient(45deg, #00ff00, #44ff44);
     border: none;
     border-radius: 4px;
@@ -652,24 +655,24 @@
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
 }
 
-.stop-test-btn {
+.vlab-stop-test-btn {
     background: linear-gradient(45deg, #ff0000, #ff4444);
     color: #fff;
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
-.test-btn:hover,
-.stop-test-btn:hover {
+.vlab-test-btn:hover,
+.vlab-stop-test-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(0, 255, 0, 0.5);
 }
 
-.stop-test-btn:hover {
+.vlab-stop-test-btn:hover {
     box-shadow: 0 5px 20px rgba(255, 0, 0, 0.5);
 }
 
 /* Send Interface */
-.send-interface {
+.vlab-send-interface {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid #ff0000;
     border-radius: 8px;
@@ -677,7 +680,7 @@
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
 }
 
-.send-interface h3 {
+.vlab-send-interface h3 {
     margin: 0 0 20px 0;
     color: #ff0000;
     text-shadow: 0 0 10px #ff0000;
@@ -685,28 +688,28 @@
     text-align: center;
 }
 
-.attack-center {
+.vlab-attack-center {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.target-selection h4,
-.virus-selection h4 {
+.vlab-target-selection h4,
+.vlab-virus-selection h4 {
     margin: 0 0 12px 0;
     color: #00ffff;
     text-shadow: 0 0 5px #00ffff;
     font-size: 14px;
 }
 
-.target-grid {
+.vlab-target-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 12px;
     margin-bottom: 20px;
 }
 
-.target-card {
+.vlab-target-card {
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 8px;
@@ -716,35 +719,35 @@
     transition: all 0.3s ease;
 }
 
-.target-card:hover {
+.vlab-target-card:hover {
     border-color: #ff0000;
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
-.target-card.selected {
+.vlab-target-card.selected {
     border-color: #ff0000;
     background: rgba(255, 0, 0, 0.1);
     box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
 }
 
-.target-avatar {
+.vlab-target-avatar {
     font-size: 24px;
     margin-bottom: 6px;
 }
 
-.target-name {
+.vlab-target-name {
     color: #00ff00;
     font-size: 11px;
     font-weight: bold;
     margin-bottom: 4px;
 }
 
-.target-status {
+.vlab-target-status {
     color: #00ff00;
     font-size: 9px;
 }
 
-.virus-selection select {
+.vlab-virus-selection select {
     width: 100%;
     background: #1a1a1a;
     border: 1px solid #ff0000;
@@ -755,7 +758,7 @@
     font-size: 11px;
 }
 
-.attack-preview {
+.vlab-attack-preview {
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 8px;
@@ -766,11 +769,11 @@
     justify-content: center;
 }
 
-.attack-preview-card {
+.vlab-attack-preview-card {
     width: 100%;
 }
 
-.preview-header {
+.vlab-preview-header {
     color: #ff0000;
     font-size: 12px;
     font-weight: bold;
@@ -779,11 +782,11 @@
     text-shadow: 0 0 5px #ff0000;
 }
 
-.preview-simulation {
+.vlab-preview-simulation {
     margin-bottom: 12px;
 }
 
-.fake-desktop {
+.vlab-fake-desktop {
     background: #2a2a2a;
     border: 2px solid #555;
     border-radius: 6px;
@@ -791,7 +794,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.desktop-header {
+.vlab-desktop-header {
     background: linear-gradient(90deg, #4a4a4a, #3a3a3a);
     padding: 4px 8px;
     display: flex;
@@ -802,19 +805,19 @@
     border-bottom: 1px solid #555;
 }
 
-.desktop-status {
+.vlab-desktop-status {
     color: #00ff00;
     font-size: 9px;
 }
 
-.desktop-screen {
+.vlab-desktop-screen {
     background: linear-gradient(135deg, #1e3c72, #2a5298);
     height: 120px;
     position: relative;
     overflow: hidden;
 }
 
-.fake-desktop .desktop-icons {
+.vlab-fake-desktop .vlab-desktop-icons {
     position: absolute;
     top: 8px;
     left: 8px;
@@ -823,13 +826,13 @@
     gap: 8px;
 }
 
-.fake-desktop .desktop-icon {
+.vlab-fake-desktop .vlab-desktop-icon {
     font-size: 16px;
     text-align: center;
     opacity: 0.8;
 }
 
-.attack-preview-effect {
+.vlab-attack-preview-effect {
     position: absolute;
     top: 0;
     left: 0;
@@ -841,7 +844,7 @@
 }
 
 /* Mini virus effects */
-.mini-image-popup {
+.vlab-mini-image-popup {
     background: rgba(0, 0, 0, 0.9);
     border: 2px solid;
     border-radius: 4px;
@@ -851,28 +854,28 @@
     transition: transform 0.3s ease;
 }
 
-.mini-image-popup.preview-bounce {
-    animation: previewBounce 0.5s ease-out;
+.vlab-mini-image-popup.vlab-preview-bounce {
+    animation: vlab-previewBounce 0.5s ease-out;
 }
 
-@keyframes previewBounce {
+@keyframes vlab-previewBounce {
     0% { transform: scale(0); }
     50% { transform: scale(0.9); }
     100% { transform: scale(0.8); }
 }
 
-.mini-image-popup img {
+.vlab-mini-image-popup img {
     max-width: 60px;
     max-height: 60px;
     border-radius: 2px;
 }
 
-.mini-fallback {
+.vlab-mini-fallback {
     font-size: 24px;
     padding: 8px;
 }
 
-.mini-label {
+.vlab-mini-label {
     margin-top: 4px;
     padding: 2px 4px;
     border-radius: 2px;
@@ -881,23 +884,23 @@
     font-weight: bold;
 }
 
-.mini-popup-preview {
+.vlab-mini-popup-preview {
     background: #1a1a1a;
     border: 1px solid;
     border-radius: 4px;
     min-width: 80px;
     font-size: 8px;
     position: absolute;
-    animation: miniPopupSlide 0.5s ease-out;
+    animation: vlab-miniPopupSlide 0.5s ease-out;
 }
 
-.mini-popup-2 {
+.vlab-mini-popup-2 {
     top: 20px;
     left: 20px;
     animation-delay: 0.8s;
 }
 
-@keyframes miniPopupSlide {
+@keyframes vlab-miniPopupSlide {
     from {
         transform: translateY(-20px);
         opacity: 0;
@@ -908,7 +911,7 @@
     }
 }
 
-.mini-popup-header {
+.vlab-mini-popup-header {
     padding: 2px 4px;
     color: #fff;
     display: flex;
@@ -917,22 +920,22 @@
     font-weight: bold;
 }
 
-.mini-popup-body {
+.vlab-mini-popup-body {
     padding: 4px;
     text-align: center;
 }
 
-.mini-popup-icon {
+.vlab-mini-popup-icon {
     font-size: 12px;
     margin-bottom: 2px;
 }
 
-.mini-popup-text {
+.vlab-mini-popup-text {
     color: #00ff00;
     font-size: 7px;
 }
 
-.mini-message-banner {
+.vlab-mini-message-banner {
     position: absolute;
     top: 10px;
     left: 0;
@@ -942,10 +945,10 @@
     text-align: center;
     font-size: 8px;
     font-weight: bold;
-    animation: miniMessageSlide 0.5s ease-out;
+    animation: vlab-miniMessageSlide 0.5s ease-out;
 }
 
-@keyframes miniMessageSlide {
+@keyframes vlab-miniMessageSlide {
     from {
         transform: translateY(-20px);
         opacity: 0;
@@ -956,86 +959,86 @@
     }
 }
 
-.mini-message-content {
+.vlab-mini-message-content {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
 }
 
-.mini-screen-effect {
+.vlab-mini-screen-effect {
     text-align: center;
     font-weight: bold;
 }
 
-.mini-glitch-text {
+.vlab-mini-glitch-text {
     font-size: 16px;
     margin-bottom: 8px;
-    animation: miniGlitch 1s infinite;
+    animation: vlab-miniGlitch 1s infinite;
 }
 
-.mini-glitch {
-    animation: miniGlitch 0.5s infinite;
+.vlab-mini-glitch {
+    animation: vlab-miniGlitch 0.5s infinite;
 }
 
-@keyframes miniGlitch {
+@keyframes vlab-miniGlitch {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-1px); }
     75% { transform: translateX(1px); }
 }
 
-.mini-effect-lines {
+.vlab-mini-effect-lines {
     display: flex;
     flex-direction: column;
     gap: 2px;
     align-items: center;
 }
 
-.effect-line {
+.vlab-effect-line {
     width: 40px;
     height: 2px;
     background: currentColor;
     opacity: 0.7;
-    animation: effectPulse 1s infinite;
+    animation: vlab-effectPulse 1s infinite;
 }
 
-.effect-line:nth-child(2) {
+.vlab-effect-line:nth-child(2) {
     animation-delay: 0.2s;
     width: 30px;
 }
 
-.effect-line:nth-child(3) {
+.vlab-effect-line:nth-child(3) {
     animation-delay: 0.4s;
     width: 35px;
 }
 
-@keyframes effectPulse {
+@keyframes vlab-effectPulse {
     0%, 100% { opacity: 0.3; }
     50% { opacity: 0.8; }
 }
 
-.preview-details {
+.vlab-preview-details {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.detail-row {
+.vlab-detail-row {
     display: flex;
     justify-content: space-between;
     font-size: 10px;
 }
 
-.detail-row span:first-child {
+.vlab-detail-row span:first-child {
     color: #00ffff;
     font-weight: bold;
 }
 
-.detail-row span:last-child {
+.vlab-detail-row span:last-child {
     color: #00ff00;
 }
 
-.preview-message {
+.vlab-preview-message {
     margin-top: 12px;
     padding: 8px;
     background: rgba(255, 0, 0, 0.1);
@@ -1046,11 +1049,11 @@
     text-align: center;
 }
 
-.attack-controls {
+.vlab-attack-controls {
     text-align: center;
 }
 
-.launch-attack-btn {
+.vlab-launch-attack-btn {
     background: linear-gradient(45deg, #ff0000, #ff4444);
     border: none;
     border-radius: 8px;
@@ -1063,21 +1066,21 @@
     transition: all 0.3s ease;
     text-shadow: 0 0 5px #000;
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-    animation: attackPulse 2s infinite;
+    animation: vlab-attackPulse 2s infinite;
 }
 
-@keyframes attackPulse {
+@keyframes vlab-attackPulse {
     0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
     50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.8); }
 }
 
-.launch-attack-btn:hover {
+.vlab-launch-attack-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 30px rgba(255, 0, 0, 0.7);
 }
 
 /* Gallery Interface */
-.gallery-interface {
+.vlab-gallery-interface {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid #00ffff;
     border-radius: 8px;
@@ -1085,7 +1088,7 @@
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
 }
 
-.gallery-interface h3 {
+.vlab-gallery-interface h3 {
     margin: 0 0 20px 0;
     color: #00ffff;
     text-shadow: 0 0 10px #00ffff;
@@ -1093,35 +1096,35 @@
     text-align: center;
 }
 
-.virus-gallery {
+.vlab-virus-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 16px;
 }
 
-.empty-gallery {
+.vlab-empty-gallery {
     text-align: center;
     padding: 60px 20px;
     color: #666;
     grid-column: 1 / -1;
 }
 
-.empty-icon {
+.vlab-empty-icon {
     font-size: 64px;
     margin-bottom: 16px;
 }
 
-.empty-text {
+.vlab-empty-text {
     font-size: 16px;
     margin-bottom: 8px;
     color: #888;
 }
 
-.empty-desc {
+.vlab-empty-desc {
     font-size: 12px;
 }
 
-.virus-gallery-card {
+.vlab-virus-gallery-card {
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 8px;
@@ -1129,12 +1132,12 @@
     transition: all 0.3s ease;
 }
 
-.virus-gallery-card:hover {
+.vlab-virus-gallery-card:hover {
     border-color: #00ffff;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
 }
 
-.card-header {
+.vlab-card-header {
     padding: 12px;
     display: flex;
     align-items: center;
@@ -1143,39 +1146,39 @@
     font-weight: bold;
 }
 
-.card-icon {
+.vlab-card-icon {
     font-size: 20px;
 }
 
-.card-title {
+.vlab-card-title {
     font-size: 14px;
 }
 
-.card-body {
+.vlab-card-body {
     padding: 12px;
 }
 
-.card-info {
+.vlab-card-info {
     margin-bottom: 12px;
 }
 
-.info-item {
+.vlab-info-item {
     display: flex;
     justify-content: space-between;
     margin-bottom: 4px;
     font-size: 10px;
 }
 
-.info-item .label {
+.vlab-info-item .label {
     color: #00ffff;
     font-weight: bold;
 }
 
-.info-item .value {
+.vlab-info-item .value {
     color: #00ff00;
 }
 
-.card-description {
+.vlab-card-description {
     margin-top: 8px;
     padding: 6px;
     background: rgba(0, 255, 255, 0.1);
@@ -1185,14 +1188,14 @@
     font-style: italic;
 }
 
-.card-actions {
+.vlab-card-actions {
     display: flex;
     gap: 6px;
     justify-content: center;
 }
 
-.test-card-btn,
-.delete-card-btn {
+.vlab-test-card-btn,
+.vlab-delete-card-btn {
     background: linear-gradient(45deg, #00ff00, #44ff44);
     border: none;
     border-radius: 4px;
@@ -1205,19 +1208,19 @@
     transition: all 0.3s ease;
 }
 
-.delete-card-btn {
+.vlab-delete-card-btn {
     background: linear-gradient(45deg, #ff0000, #ff4444);
     color: #fff;
 }
 
-.test-card-btn:hover,
-.delete-card-btn:hover {
+.vlab-test-card-btn:hover,
+.vlab-delete-card-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Footer */
-.lab-footer {
+.vlab-footer {
     background: #0a0a0a;
     border-top: 1px solid #333;
     padding: 8px 16px;
@@ -1225,7 +1228,7 @@
     z-index: 10;
 }
 
-.footer-text {
+.vlab-footer-text {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1235,24 +1238,24 @@
     gap: 8px;
 }
 
-.footer-text span {
+.vlab-footer-text span {
     color: #00ff00;
 }
 
 /* Test Effects - ENHANCED */
-.test-virus-effect {
+.vlab-test-virus-effect {
     position: fixed;
     z-index: 5000;
     pointer-events: none;
 }
 
-.test-image-popup {
+.vlab-test-image-popup {
     position: fixed;
     z-index: 5000;
     pointer-events: auto;
 }
 
-.test-image-overlay {
+.vlab-test-image-overlay {
     border: 3px solid;
     border-radius: 8px;
     background: rgba(0, 0, 0, 0.9);
@@ -1261,13 +1264,13 @@
     position: relative;
 }
 
-.test-image-content img {
+.vlab-test-image-content img {
     max-width: 200px;
     max-height: 200px;
     border-radius: 4px;
 }
 
-.image-close-btn {
+.vlab-image-close-btn {
     position: absolute;
     top: -5px;
     right: -5px;
@@ -1286,11 +1289,11 @@
     transition: all 0.3s ease;
 }
 
-.image-close-btn:hover {
+.vlab-image-close-btn:hover {
     transform: scale(1.1);
 }
 
-.test-label {
+.vlab-test-label {
     margin-top: 8px;
     padding: 4px 8px;
     border-radius: 4px;
@@ -1300,12 +1303,12 @@
     text-align: center;
 }
 
-.test-popup {
+.vlab-test-popup {
     position: fixed;
     z-index: 5000;
 }
 
-.popup-content {
+.vlab-popup-content {
     background: #1a1a1a;
     border: 2px solid;
     border-radius: 8px;
@@ -1313,7 +1316,7 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
-.popup-header {
+.vlab-popup-header {
     padding: 8px 12px;
     color: #fff;
     display: flex;
@@ -1323,7 +1326,7 @@
     font-weight: bold;
 }
 
-.popup-close {
+.vlab-popup-close {
     background: none;
     border: none;
     color: #fff;
@@ -1337,29 +1340,29 @@
     justify-content: center;
 }
 
-.popup-body {
+.vlab-popup-body {
     padding: 16px;
     text-align: center;
 }
 
-.popup-icon {
+.vlab-popup-icon {
     font-size: 32px;
     margin-bottom: 8px;
 }
 
-.popup-message {
+.vlab-popup-message {
     color: #00ff00;
     font-size: 12px;
     margin-bottom: 8px;
 }
 
-.popup-test-label {
+.vlab-popup-test-label {
     color: #ffff00;
     font-size: 10px;
     font-weight: bold;
 }
 
-.test-message-banner {
+.vlab-test-message-banner {
     position: fixed;
     top: 100px;
     left: 0;
@@ -1371,7 +1374,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.message-content {
+.vlab-message-content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1379,15 +1382,15 @@
     font-weight: bold;
 }
 
-.message-icon {
+.vlab-message-icon {
     font-size: 24px;
 }
 
-.message-text {
+.vlab-message-text {
     font-size: 14px;
 }
 
-.test-indicator {
+.vlab-test-indicator {
     background: rgba(0, 0, 0, 0.8);
     color: #ffff00;
     padding: 2px 6px;
@@ -1395,7 +1398,7 @@
     font-size: 10px;
 }
 
-.test-screen-effect {
+.vlab-test-screen-effect {
     position: fixed;
     top: 0;
     left: 0;
@@ -1408,22 +1411,22 @@
     pointer-events: none;
 }
 
-.effect-content {
+.vlab-effect-content {
     text-align: center;
 }
 
-.glitch-text {
+.vlab-glitch-text {
     font-size: 48px;
     font-weight: bold;
     text-shadow: 0 0 20px;
     margin-bottom: 12px;
 }
 
-.glitch-animation {
-    animation: glitch 1s infinite;
+.vlab-glitch-animation {
+    animation: vlab-glitch 1s infinite;
 }
 
-@keyframes glitch {
+@keyframes vlab-glitch {
     0%, 100% { transform: translateX(0); }
     20% { transform: translateX(-2px); }
     40% { transform: translateX(2px); }
@@ -1431,24 +1434,24 @@
     80% { transform: translateX(1px); }
 }
 
-.effect-subtitle {
+.vlab-effect-subtitle {
     color: #00ff00;
     font-size: 18px;
     margin-bottom: 20px;
 }
 
-.test-watermark {
+.vlab-test-watermark {
     background: rgba(0, 0, 0, 0.8);
     color: #ffff00;
     padding: 8px 16px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: bold;
-    animation: blink 1s infinite;
+    animation: vlab-blink 1s infinite;
 }
 
 /* Attack Sequence */
-.attack-sequence {
+.vlab-attack-sequence {
     position: fixed;
     top: 0;
     left: 0;
@@ -1461,11 +1464,11 @@
     justify-content: center;
 }
 
-.attack-overlay {
+.vlab-attack-overlay {
     background: linear-gradient(135deg, #000000, #1a0000);
 }
 
-.attack-terminal {
+.vlab-attack-terminal {
     background: #000;
     border: 2px solid #00ff00;
     border-radius: 8px;
@@ -1475,7 +1478,7 @@
     font-family: 'Courier New', monospace;
 }
 
-.terminal-header {
+.vlab-terminal-header {
     background: linear-gradient(90deg, #ff0000, #ff4444);
     color: #fff;
     padding: 8px 12px;
@@ -1486,7 +1489,7 @@
     font-size: 12px;
 }
 
-.terminal-close {
+.vlab-terminal-close {
     background: none;
     border: none;
     color: #fff;
@@ -1500,7 +1503,7 @@
     justify-content: center;
 }
 
-.terminal-content {
+.vlab-terminal-content {
     background: #000;
     color: #00ff00;
     padding: 16px;
@@ -1509,24 +1512,24 @@
     min-height: 200px;
 }
 
-.terminal-line {
+.vlab-terminal-line {
     margin-bottom: 6px;
     font-size: 11px;
     font-family: 'Courier New', monospace;
 }
 
-.terminal-line.success {
+.vlab-terminal-line.success {
     color: #00ff00;
     font-weight: bold;
-    animation: blink 1s infinite;
+    animation: vlab-blink 1s infinite;
 }
 
-.status-text {
+.vlab-status-text {
     color: #ffff00;
     font-weight: bold;
 }
 
-.progress-bar {
+.vlab-progress-bar {
     width: 100%;
     height: 12px;
     background: #333;
@@ -1536,7 +1539,7 @@
     margin: 8px 0;
 }
 
-.progress-fill {
+.vlab-progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #00ff00, #44ff44);
     width: 0%;
@@ -1544,7 +1547,7 @@
 }
 
 /* Hacker Messages */
-.hacker-message {
+.vlab-hacker-message {
     position: fixed;
     top: 70px;
     right: 20px;
@@ -1553,26 +1556,26 @@
     font-size: 11px;
     border: 2px solid #000;
     border-radius: 4px;
-    animation: slideIn 0.3s ease-out;
+    animation: vlab-slideIn 0.3s ease-out;
     font-family: 'Courier New', monospace;
 }
 
-.message-content {
+.vlab-message-content {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
 }
 
-.message-icon {
+.vlab-message-icon {
     font-size: 14px;
 }
 
-.message-text {
+.vlab-message-text {
     font-size: 11px;
 }
 
-@keyframes slideIn {
+@keyframes vlab-slideIn {
     from {
         transform: translateX(100%);
         opacity: 0;

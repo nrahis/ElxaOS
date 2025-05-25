@@ -1,18 +1,19 @@
-🚀 **Welcome to ElxaOS v1.0.0!**
+🚀 **Welcome to ElxaOS v4.0.0!**
 
 **What's New:**
 
-• **Enhanced Boot System** - Complete BIOS setup with fun features!
-• **Desktop Icon Management** - Drag and drop your icons anywhere
+• **Proper ElxaOS Logo** - Isn't it cute?
+• **ElxaOS Wallpapers** - Official wallpapers for ElxaOS!
+• **Snakesia Time** - Now available in the clock app
 
 **New Programs:**
-• ElxaGuard Antivirus - Keep your system safe; try turning off protection
-• Virus Lab - Create your own viruses
-• ElxaBooks - Accounting softward (WIP!!)
+• ElxaBooks - Accounting software (functional)
 
 **System Improvements:**
-• Better login system with user settings
-• Improved Notepad
+• Paint - reimagined! Should be more fun to use
+• Numerous bug fixes
+• Fixed issue with dialogs being cut off
+• Theme colors applied more consistently
 
 *Enjoy exploring your new operating system!*
 

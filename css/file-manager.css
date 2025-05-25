@@ -1,11 +1,13 @@
 /* =================================
-   FILE MANAGER STYLES
+   FILE MANAGER STYLES (THEMED)
 ================================= */
 .file-manager-container {
     display: flex;
     flex-direction: column;
     height: 100%;
     font-size: 11px;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #333333);
 }
 
 /* =================================
@@ -16,8 +18,8 @@
     align-items: center;
     gap: 8px;
     padding: 4px 8px;
-    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
-    border-bottom: 1px solid #808080;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    border-bottom: 1px solid var(--windowBorder, #808080);
     flex-shrink: 0;
 }
 
@@ -29,26 +31,27 @@
 .nav-btn {
     width: 24px;
     height: 20px;
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
     cursor: pointer;
     font-size: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--menuText, #333333);
 }
 
 .nav-btn:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .nav-btn:active:not(:disabled) {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
 .nav-btn:disabled {
-    background: #f0f0f0;
+    background: var(--windowBg, #f0f0f0);
     color: #808080;
     cursor: not-allowed;
 }
@@ -59,17 +62,18 @@
 }
 
 .breadcrumb-path {
-    background: white;
-    border: 1px inset #c0c0c0;
+    background: var(--windowBg, white);
+    border: 1px inset var(--windowBorder, #c0c0c0);
     padding: 2px 6px;
     font-size: 10px;
     min-height: 16px;
     display: flex;
     align-items: center;
+    color: var(--menuText, #333333);
 }
 
 .breadcrumb-item {
-    color: #000080;
+    color: var(--menuHoverBg, #000080);
 }
 
 .breadcrumb-item.clickable {
@@ -78,7 +82,7 @@
 }
 
 .breadcrumb-item.clickable:hover {
-    color: #0000ff;
+    color: var(--titlebarBg, #0000ff);
 }
 
 .breadcrumb-separator {
@@ -93,22 +97,23 @@
 .view-btn {
     width: 24px;
     height: 20px;
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
     cursor: pointer;
     font-size: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--menuText, #333333);
 }
 
 .view-btn:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .view-btn.active {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
 /* =================================
@@ -118,32 +123,33 @@
     display: flex;
     gap: 4px;
     padding: 4px 8px;
-    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
-    border-bottom: 1px solid #808080;
+    background: var(--menuBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
+    border-bottom: 1px solid var(--windowBorder, #808080);
     flex-shrink: 0;
     flex-wrap: wrap;
 }
 
 .op-btn {
     padding: 3px 8px;
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
     cursor: pointer;
     font-size: 10px;
     white-space: nowrap;
+    color: var(--menuText, #333333);
 }
 
 .op-btn:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .op-btn:active:not(:disabled) {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
 .op-btn:disabled {
-    background: #f0f0f0;
+    background: var(--windowBg, #f0f0f0);
     color: #808080;
     cursor: not-allowed;
 }
@@ -154,8 +160,8 @@
 .file-manager-content {
     flex: 1;
     overflow: auto;
-    background: white;
-    border: 1px inset #c0c0c0;
+    background: var(--windowBg, white);
+    border: 1px inset var(--windowBorder, #c0c0c0);
     margin: 4px;
 }
 
@@ -170,9 +176,9 @@
 .file-grid.icons-view {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    grid-auto-rows: min-content; /* This is the key fix */
+    grid-auto-rows: min-content;
     grid-gap: 8px;
-    align-items: start; /* This prevents stretching */
+    align-items: start;
 }
 
 .icons-view .file-item {
@@ -184,18 +190,18 @@
     border: 1px solid transparent;
     border-radius: 2px;
     text-align: center;
-    height: auto; /* Allow natural height */
-    max-height: 90px; /* Limit maximum height */
+    height: auto;
+    max-height: 90px;
 }
 
 .icons-view .file-item:hover {
-    background: rgba(0, 100, 200, 0.1);
-    border-color: rgba(0, 100, 200, 0.3);
+    background: var(--menuHoverBg, rgba(0, 100, 200, 0.1));
+    border-color: var(--titlebarBg, rgba(0, 100, 200, 0.3));
 }
 
 .icons-view .file-item.selected {
-    background: rgba(0, 100, 200, 0.3);
-    border-color: #0064c8;
+    background: var(--menuHoverBg, rgba(0, 100, 200, 0.3));
+    border-color: var(--titlebarBg, #0064c8);
 }
 
 .icons-view .file-icon {
@@ -208,7 +214,15 @@
     word-wrap: break-word;
     max-width: 70px;
     line-height: 1.2;
-    color:#000080;
+    color: var(--menuText, #000080);
+}
+
+.icons-view .file-item:hover .file-name {
+    color: var(--menuHoverText, white);
+}
+
+.icons-view .file-item.selected .file-name {
+    color: var(--menuHoverText, white);
 }
 
 /* =================================
@@ -219,22 +233,22 @@
     flex-direction: column;
 }
 
-/* List view header (optional - you can add this for column labels) */
+/* List view header */
 .list-view-header {
     display: grid;
     grid-template-columns: 40px 1fr 80px 100px;
     padding: 4px 8px;
-    background: #f0f0f0;
-    border-bottom: 1px solid #ccc;
+    background: var(--menuBg, #f0f0f0);
+    border-bottom: 1px solid var(--windowBorder, #ccc);
     font-weight: bold;
     font-size: 10px;
-    color: #333;
+    color: var(--menuText, #333);
 }
 
 /* List view items with proper grid layout */
 .list-view .file-item {
     display: grid;
-    grid-template-columns: 40px 1fr 80px 100px; /* Icon | Name | Size | Date */
+    grid-template-columns: 40px 1fr 80px 100px;
     grid-template-areas: "icon name size date";
     align-items: center;
     padding: 4px 8px;
@@ -245,17 +259,17 @@
 }
 
 .list-view .file-item:nth-child(even) {
-    background: #f8f8f8;
+    background: var(--menuBg, #f8f8f8);
 }
 
 .list-view .file-item:hover {
-    background: rgba(0, 100, 200, 0.1);
-    border-color: rgba(0, 100, 200, 0.3);
+    background: var(--menuHoverBg, rgba(0, 100, 200, 0.1));
+    border-color: var(--titlebarBg, rgba(0, 100, 200, 0.3));
 }
 
 .list-view .file-item.selected {
-    background: rgba(0, 100, 200, 0.3);
-    border-color: #0064c8;
+    background: var(--menuHoverBg, rgba(0, 100, 200, 0.3));
+    border-color: var(--titlebarBg, #0064c8);
 }
 
 /* Individual elements in list view */
@@ -276,10 +290,15 @@
 .list-view .file-name {
     grid-area: name;
     font-weight: bold;
-    color: #000080;
+    color: var(--menuText, #000080);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.list-view .file-item.selected .file-name,
+.list-view .file-item:hover .file-name {
+    color: var(--menuHoverText, white);
 }
 
 .list-view .file-info {
@@ -303,6 +322,16 @@
     text-align: right;
 }
 
+.list-view .file-item.selected .file-size,
+.list-view .file-item.selected .file-date {
+    color: var(--menuHoverText, white);
+}
+
+.list-view .file-item:hover .file-size,
+.list-view .file-item:hover .file-date {
+    color: var(--menuHoverText, white);
+}
+
 .list-view .file-details,
 .list-view .file-info {
     /* These are no longer used with the new structure */
@@ -317,11 +346,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 2px 8px;
-    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
-    border-top: 1px solid #808080;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    border-top: 1px solid var(--windowBorder, #808080);
     font-size: 10px;
     flex-shrink: 0;
     min-height: 20px;
+    color: var(--menuText, #333333);
 }
 
 .item-count {
@@ -329,7 +359,7 @@
 }
 
 .selected-count {
-    color: #000080;
+    color: var(--menuHoverBg, #000080);
     font-weight: bold;
 }
 
@@ -355,15 +385,15 @@
 }
 
 .input-dialog .dialog-content {
-    background: #c0c0c0;
-    border: 2px outset #c0c0c0;
+    background: var(--windowBg, #c0c0c0);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
     min-width: 300px;
 }
 
 .input-dialog .dialog-header {
-    background: linear-gradient(to right, #0000ff, #4080ff);
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to right, #0000ff, #4080ff));
+    color: var(--menuHoverText, white);
     padding: 4px 8px;
     display: flex;
     justify-content: space-between;
@@ -375,23 +405,23 @@
 .input-dialog .dialog-close {
     width: 16px;
     height: 14px;
-    background: #c0c0c0;
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 8px;
     font-weight: bold;
-    color: black;
+    color: var(--menuText, black);
 }
 
 .input-dialog .dialog-close:hover {
-    background: #d0d0d0;
+    background: var(--buttonHoverBg, #d0d0d0);
 }
 
 .input-dialog .dialog-close:active {
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .input-dialog .dialog-body {
@@ -399,26 +429,30 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #333);
 }
 
 .input-dialog label {
     font-size: 11px;
     font-weight: bold;
-    color: #333;
+    color: var(--menuText, #333);
 }
 
 .folder-name-input,
 .rename-input {
     padding: 4px 6px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
     font-size: 11px;
     margin-bottom: 8px;
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
 }
 
 .folder-name-input:focus,
 .rename-input:focus {
     outline: none;
-    border-color: #0066cc;
+    border-color: var(--titlebarBg, #0066cc);
 }
 
 .dialog-buttons {
@@ -431,23 +465,24 @@
 .rename-btn,
 .cancel-btn {
     padding: 4px 16px;
-    border: 1px outset #c0c0c0;
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
     cursor: pointer;
     font-size: 11px;
+    color: var(--menuText, #333);
 }
 
 .create-btn:hover,
 .rename-btn:hover,
 .cancel-btn:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .create-btn:active,
 .rename-btn:active,
 .cancel-btn:active {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
 .create-btn,
@@ -467,6 +502,31 @@
 .rename-btn:active {
     border: 1px inset #32cd32;
     background: linear-gradient(to bottom, #32cd32, #90ee90);
+}
+
+/* =================================
+   DARK THEME ADJUSTMENTS
+================================= */
+.dark-theme .file-manager-container {
+    /* Dark themes get special treatment for better visibility */
+}
+
+.dark-theme .breadcrumb-path {
+    background: var(--menuBg, #2d2d2d);
+}
+
+.dark-theme .file-manager-content {
+    background: var(--menuBg, #2d2d2d);
+}
+
+.dark-theme .folder-name-input,
+.dark-theme .rename-input {
+    background: var(--menuBg, #2d2d2d);
+    color: var(--menuText, #ffffff);
+}
+
+.dark-theme .list-view .file-item:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 /* =================================

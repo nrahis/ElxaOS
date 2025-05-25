@@ -497,6 +497,18 @@
     border-radius: 4px;
 }
 
+.calendar-events-info {
+    background: #e8f4ff;
+    border: 2px inset #c0c0c0;
+    padding: 8px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 11px;
+    color: #0066cc;
+    font-style: italic;
+}
+
 .calendar-nav {
     background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
     border: 1px outset #c0c0c0;
@@ -559,21 +571,24 @@
 }
 
 .calendar-day {
-    padding: 8px;
+    padding: 4px;
     text-align: center;
     font-size: 11px;
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
-    min-height: 32px;
+    min-height: 40px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     cursor: pointer;
     color:#333;
+    position: relative;
 }
 
 .calendar-day:hover:not(.empty) {
     background: #f0f8ff;
+    color: #333;
 }
 
 .calendar-day.today {
@@ -582,10 +597,114 @@
     font-weight: bold;
 }
 
+.calendar-day.today:hover {
+    background: #4169e1;
+    color: white;
+}
+
 .calendar-day.empty {
     background: #f8f8f8;
     cursor: default;
     color:#333;
+}
+
+.calendar-day.has-events {
+    background: #fff8dc;
+    border: 1px solid #ffd700;
+}
+
+.calendar-day.has-events:hover {
+    background: #ffffe0;
+    color: #333;
+}
+
+.calendar-day.today.has-events {
+    background: #4169e1;
+    border: 1px solid #ffd700;
+}
+
+.calendar-day.today.has-events:hover {
+    background: #5a7fd8;
+    color: white;
+}
+
+.day-number {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.event-indicator {
+    width: 6px;
+    height: 6px;
+    background: #ff6b35;
+    border-radius: 50%;
+    margin: 1px;
+}
+
+.calendar-day.today .event-indicator {
+    background: #ffd700;
+}
+
+/* =================================
+   EVENT HOVER TOOLTIP
+================================= */
+.event-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 2px outset #c0c0c0;
+    border-radius: 4px;
+    padding: 8px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    min-width: 150px;
+    max-width: 250px;
+    font-size: 10px;
+    line-height: 1.3;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.calendar-day:hover .event-tooltip {
+    opacity: 1;
+}
+
+.event-tooltip-title {
+    font-weight: bold;
+    color: #0066cc;
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+
+.event-tooltip-item {
+    margin-bottom: 3px;
+    padding: 2px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.event-tooltip-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.event-tooltip-time {
+    color: #666;
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.event-tooltip-name {
+    color: #333;
+}
+
+.event-tooltip-more {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin-top: 4px;
 }
 
 .special-dates {
@@ -611,6 +730,167 @@
     border-radius: 2px;
     font-size: 11px;
     color:#333;
+}
+
+/* =================================
+   EVENT MODAL
+================================= */
+.event-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.event-modal-content {
+    background: white;
+    border: 2px outset #c0c0c0;
+    border-radius: 4px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.event-modal-header {
+    background: linear-gradient(to bottom, #4080ff, #0040ff);
+    color: white;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-modal-body {
+    padding: 16px;
+}
+
+.event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.event-form input,
+.event-form textarea,
+.event-form select {
+    padding: 6px 8px;
+    border: 1px inset #c0c0c0;
+    font-size: 11px;
+    font-family: inherit;
+}
+
+.event-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.event-form-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.event-btn {
+    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 2px outset #c0c0c0;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.event-btn:hover {
+    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+}
+
+.event-btn:active {
+    border: 2px inset #c0c0c0;
+}
+
+.event-btn.primary {
+    background: linear-gradient(to bottom, #4080ff, #0040ff);
+    border-color: #0040ff;
+    color: white;
+}
+
+.event-btn.primary:hover {
+    background: linear-gradient(to bottom, #5090ff, #1050ff);
+}
+
+.event-btn.danger {
+    background: linear-gradient(to bottom, #ff8080, #ff4040);
+    border-color: #ff4040;
+    color: white;
+}
+
+.event-btn.danger:hover {
+    background: linear-gradient(to bottom, #ff9999, #ff6666);
+}
+
+.event-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+.event-item {
+    background: #f8f8f8;
+    border: 1px outset #c0c0c0;
+    padding: 8px;
+    margin-bottom: 4px;
+    border-radius: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.event-info {
+    flex: 1;
+}
+
+.event-title {
+    font-weight: bold;
+    color: #0066cc;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.event-time {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.event-description {
+    font-size: 10px;
+    color: #333;
+}
+
+.event-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.event-control-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px;
+}
+
+.event-control-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
 }
 
 /* =================================

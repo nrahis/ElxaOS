@@ -1,0 +1,458 @@
+/* =================================
+   ELXABOOKS - PROFESSIONAL ACCOUNTING
+   QuickBooks-Inspired Design for Future CEOs
+   (All classes prefixed with elxa-books-)
+   FIXED: Window manager compatibility
+================================= */
+
+/* Ensure we don't interfere with window manager controls */
+* {
+    box-sizing: border-box;
+}
+
+.elxa-books-app {
+    height: calc(100% - 10px); /* Leave space for window controls */
+    width: calc(100% - 10px);  /* Leave space for window controls */
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f9fa;
+    padding: 5px; /* Small padding to avoid window edges */
+    margin: 5px;  /* Small margin to avoid window edges */
+    gap: 0;
+    overflow: hidden;
+    /* FIXED: Don't capture pointer events by default */
+    position: static;
+    z-index: 1; /* Low z-index */
+    pointer-events: none; /* Let window manager handle events by default */
+}
+
+/* =================================
+   MAIN CONTENT LAYOUT
+================================= */
+.elxa-books-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 16px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    height: 100%;
+    box-sizing: border-box;
+    /* FIXED: Enable pointer events only on content */
+    pointer-events: auto;
+}
+
+/* =================================
+   PROFESSIONAL BALANCE CARD
+================================= */
+.elxa-books-balance-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-top: 4px solid #1e40af;
+    pointer-events: auto; /* Ensure this can be clicked */
+}
+
+.elxa-books-balance-label {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.elxa-books-balance-amount {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-family: 'Segoe UI', monospace;
+}
+
+.elxa-books-balance-amount.elxa-books-positive {
+    color: #059669;
+}
+
+.elxa-books-balance-amount.elxa-books-negative {
+    color: #dc2626;
+}
+
+/* =================================
+   CORPORATE ACTION BUTTONS
+================================= */
+.elxa-books-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    pointer-events: auto; /* Ensure buttons can be clicked */
+}
+
+.elxa-books-btn {
+    padding: 14px 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    pointer-events: auto; /* FIXED: Explicitly enable pointer events */
+}
+
+.elxa-books-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.elxa-books-btn:active {
+    transform: translateY(0);
+}
+
+.elxa-books-btn-income {
+    background: #059669;
+    color: white;
+    border-color: #047857;
+}
+
+.elxa-books-btn-income:hover {
+    background: #047857;
+}
+
+.elxa-books-btn-expense {
+    background: #dc2626;
+    color: white;
+    border-color: #b91c1c;
+}
+
+.elxa-books-btn-expense:hover {
+    background: #b91c1c;
+}
+
+.elxa-books-btn-success {
+    background: #1e40af;
+    color: white;
+    border-color: #1d4ed8;
+    font-size: 12px;
+    padding: 10px 16px;
+}
+
+.elxa-books-btn-success:hover {
+    background: #1d4ed8;
+}
+
+.elxa-books-btn-cancel {
+    background: #6b7280;
+    color: white;
+    border-color: #4b5563;
+    font-size: 12px;
+    padding: 10px 16px;
+}
+
+.elxa-books-btn-cancel:hover {
+    background: #4b5563;
+}
+
+.elxa-books-btn-delete {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    pointer-events: auto; /* FIXED: Enable pointer events */
+}
+
+.elxa-books-btn-delete:hover {
+    background: #b91c1c;
+    transform: scale(1.05);
+}
+
+/* =================================
+   PROFESSIONAL FORMS
+================================= */
+.elxa-books-form {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-left: 4px solid #1e40af;
+    position: relative;
+    z-index: 1; /* FIXED: Lower z-index */
+    pointer-events: auto; /* FIXED: Enable pointer events on forms */
+}
+
+.elxa-books-form-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 20px;
+    text-align: left;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 12px;
+}
+
+.elxa-books-form-row {
+    margin-bottom: 20px;
+}
+
+.elxa-books-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.elxa-books-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    pointer-events: auto; /* FIXED: Enable pointer events on inputs */
+}
+
+.elxa-books-input:focus {
+    outline: none;
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    background: #fefefe;
+}
+
+.elxa-books-form-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 16px;
+    pointer-events: auto; /* FIXED: Enable pointer events on button container */
+}
+
+/* =================================
+   CORPORATE TRANSACTION HISTORY
+================================= */
+.elxa-books-history {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-top: 4px solid #1e40af;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    pointer-events: auto; /* FIXED: Enable pointer events on history */
+}
+
+.elxa-books-history-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    padding: 20px 24px 16px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #f3f4f6;
+    background: #f9fafb;
+}
+
+.elxa-books-transaction-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    min-height: 200px;
+    pointer-events: auto; /* FIXED: Enable pointer events on transaction list */
+}
+
+/* Table-style transaction headers */
+.elxa-books-transaction-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px 40px 40px;
+    padding: 12px 24px;
+    background: #f9fafb;
+    border-bottom: 2px solid #e5e7eb;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.elxa-books-transaction {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px 40px 40px;
+    padding: 16px 24px;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+    align-items: center;
+    pointer-events: auto; /* FIXED: Enable pointer events on transactions */
+}
+
+.elxa-books-transaction:hover {
+    background: #f8fafc;
+    border-left: 4px solid #1e40af;
+}
+
+.elxa-books-transaction:last-child {
+    border-bottom: none;
+}
+
+.elxa-books-transaction.income {
+    border-left: 3px solid #059669;
+}
+
+.elxa-books-transaction.expense {
+    border-left: 3px solid #dc2626;
+}
+
+.elxa-books-transaction-date {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    font-family: monospace;
+}
+
+.elxa-books-transaction-desc {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 500;
+    padding-right: 12px;
+}
+
+.elxa-books-transaction-amount {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    font-family: monospace;
+}
+
+.elxa-books-transaction-amount.elxa-books-positive {
+    color: #059669;
+}
+
+.elxa-books-transaction-amount.elxa-books-negative {
+    color: #dc2626;
+}
+
+.elxa-books-transaction-type {
+    font-size: 16px;
+    text-align: center;
+}
+
+.elxa-books-transaction-delete {
+    text-align: center;
+}
+
+.elxa-books-no-transactions {
+    text-align: center;
+    color: #9ca3af;
+    font-style: italic;
+    padding: 60px 20px;
+    font-size: 14px;
+    border: 2px dashed #e5e7eb;
+    margin: 24px;
+    border-radius: 8px;
+    background: #fefefe;
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
+@media (max-width: 600px) {
+    .elxa-books-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .elxa-books-balance-amount {
+        font-size: 28px;
+    }
+    
+    .elxa-books-transaction-header,
+    .elxa-books-transaction {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 8px;
+        padding: 12px 16px;
+    }
+    
+    .elxa-books-transaction-amount {
+        text-align: center;
+    }
+    
+    .elxa-books-form-buttons {
+        justify-content: center;
+    }
+}
+
+/* =================================
+   SCROLL BARS (WEBKIT)
+================================= */
+.elxa-books-transaction-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.elxa-books-transaction-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.elxa-books-transaction-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.elxa-books-transaction-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* =================================
+   PROFESSIONAL ANIMATIONS
+================================= */
+@keyframes elxa-books-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.elxa-books-form {
+    animation: elxa-books-slide-in 0.3s ease;
+}
+
+/* Professional loading state */
+.elxa-books-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.elxa-books-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: inherit;
+    z-index: 5; /* FIXED: Lower z-index to not interfere with window controls */
+}

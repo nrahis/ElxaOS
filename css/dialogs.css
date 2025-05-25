@@ -11,11 +11,14 @@
     border: 2px outset var(--windowBorder);
     box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
     min-width: 300px;
+    max-height: 90vh; /* Prevent dialog from exceeding viewport height */
+    overflow: hidden; /* Ensure proper clipping */
 }
 
 .dialog-content {
     display: flex;
     flex-direction: column;
+    max-height: 90vh; /* Match parent max-height */
 }
 
 .dialog-content.warning {
@@ -34,17 +37,19 @@
 
 .dialog-header {
     background: var(--titlebarBg);
-    color: white;
+    color: var(--menuHoverText); /* Use theme text color instead of hard-coded white */
     padding: 4px 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
     font-size: 11px;
+    flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .dialog-title {
     flex: 1;
+    color: var(--menuHoverText); /* Ensure title uses theme color */
 }
 
 .dialog-close {
@@ -76,6 +81,90 @@
     flex-direction: column;
     gap: 12px;
     align-items: center;
+    background: var(--windowBg);
+    color: var(--menuText);
+    overflow-y: auto; /* Allow scrolling if content is too tall */
+    flex: 1; /* Take remaining space */
+}
+
+/* =================================
+   THEME DIALOG SPECIFIC
+================================= */
+.theme-dialog {
+    min-width: 580px;
+    max-width: 680px; /* Reduced max width */
+    max-height: 85vh; /* Better height management */
+}
+
+.theme-dialog .dialog-content {
+    height: auto;
+    max-height: 85vh;
+}
+
+.theme-dialog .dialog-body {
+    min-height: 420px; /* Increased to prevent cut-off */
+    max-height: calc(85vh - 60px); /* Account for header and controls */
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.theme-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--windowBorder);
+    margin-bottom: 12px;
+    flex-shrink: 0; /* Prevent tabs from shrinking */
+}
+
+.theme-tab {
+    padding: 6px 16px;
+    cursor: pointer;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    border-bottom: none;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--menuText);
+    transition: background 0.2s ease;
+}
+
+.theme-tab.active {
+    background: var(--windowBg);
+    border: 1px inset var(--windowBorder);
+    border-bottom: 1px solid var(--windowBg);
+    margin-bottom: -1px;
+}
+
+.theme-tab:hover:not(.active) {
+    background: var(--buttonHoverBg);
+}
+
+.theme-content {
+    min-height: 280px;
+    max-height: 320px; 
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: var(--windowBg);
+    padding: 12px;
+    flex: 1; /* Take available space */
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.theme-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+    padding: 8px;
+    border-top: 1px solid var(--windowBorder);
+    background: var(--menuBg);
+    flex-shrink: 0; /* Prevent controls from shrinking */
 }
 
 /* =================================
@@ -83,6 +172,8 @@
 ================================= */
 .battery-dialog .dialog-body {
     min-width: 250px;
+    background: var(--windowBg);
+    color: var(--menuText);
 }
 
 .battery-display {
@@ -99,7 +190,7 @@
 .battery-percentage {
     font-size: 24px;
     font-weight: bold;
-    color: #000080;
+    color: var(--menuHoverBg); /* Use theme accent color instead of hard-coded blue */
 }
 
 .battery-message {
@@ -165,6 +256,8 @@
     font-weight: bold;
     font-size: 11px;
     animation: slideIn 0.3s ease-out;
+    border-radius: 3px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 @keyframes slideIn {
@@ -176,6 +269,11 @@
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+.system-message.info {
+    background: var(--menuBg);
+    color: var(--menuText);
 }
 
 .system-message.success {
@@ -199,12 +297,14 @@
 .wifi-dialog .dialog-body {
     min-width: 350px;
     max-height: 400px;
+    background: var(--windowBg);
+    color: var(--menuText);
 }
 
 .wifi-status {
     font-weight: bold;
     padding: 8px;
-    background: #f0f0f0;
+    background: var(--menuBg);
     border: 1px inset var(--windowBorder);
     margin-bottom: 8px;
     font-size: 10px;
@@ -215,7 +315,7 @@
     max-height: 200px;
     overflow-y: auto;
     border: 1px inset var(--windowBorder);
-    background: white;
+    background: var(--windowBg);
     margin-bottom: 8px;
 }
 
@@ -224,18 +324,19 @@
     justify-content: space-between;
     align-items: center;
     padding: 6px 8px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--windowBorder);
     cursor: pointer;
     font-size: 10px;
     color: var(--menuText);
 }
 
 .network-item:hover {
-    background: #f0f0f0;
+    background: var(--buttonHoverBg);
 }
 
 .network-item.connected {
-    background: #e6ffe6;
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
     font-weight: bold;
 }
 
@@ -248,13 +349,14 @@
 
 .network-name {
     font-weight: bold;
-    color: #000080;
+    color: var(--menuHoverBg);
 }
 
 .network-signal {
     font-family: monospace;
     font-size: 8px;
-    color: #666;
+    color: var(--menuText);
+    opacity: 0.7;
 }
 
 .network-actions {
@@ -305,22 +407,23 @@
 
 .create-network-btn,
 .refresh-btn {
-    background: linear-gradient(to bottom, #add8e6, #87ceeb);
-    border: 1px outset #87ceeb;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
     padding: 4px 8px;
     font-size: 9px;
     cursor: pointer;
-    color: black;
+    color: var(--menuText);
 }
 
 .create-network-btn:hover,
 .refresh-btn:hover {
-    background: linear-gradient(to bottom, #b8e0f0, #add8e6);
+    background: var(--buttonHoverBg);
 }
 
 .create-network-btn:active,
 .refresh-btn:active {
-    border: 1px inset #87ceeb;
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
 }
 
 /* =================================
@@ -328,6 +431,8 @@
 ================================= */
 .password-dialog .dialog-body {
     min-width: 250px;
+    background: var(--windowBg);
+    color: var(--menuText);
 }
 
 .password-prompt {
@@ -342,6 +447,13 @@
     border: 1px inset var(--windowBorder);
     font-size: 11px;
     margin-bottom: 8px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.password-input:focus {
+    outline: 2px solid var(--menuHoverBg);
+    outline-offset: -2px;
 }
 
 .password-controls {
@@ -352,7 +464,8 @@
 
 .password-hint {
     font-size: 9px;
-    color: #666;
+    color: var(--menuText);
+    opacity: 0.7;
     font-style: italic;
     text-align: center;
     margin-top: 8px;
@@ -363,6 +476,8 @@
 ================================= */
 .create-network-dialog .dialog-body {
     min-width: 280px;
+    background: var(--windowBg);
+    color: var(--menuText);
 }
 
 .create-network-form {
@@ -382,6 +497,13 @@
     padding: 4px;
     border: 1px inset var(--windowBorder);
     font-size: 11px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.network-input:focus {
+    outline: 2px solid var(--menuHoverBg);
+    outline-offset: -2px;
 }
 
 .create-controls {
@@ -412,11 +534,12 @@
 /* Checkbox styling */
 input[type="checkbox"] {
     margin-right: 6px;
+    accent-color: var(--menuHoverBg); /* Theme the checkbox */
 }
 
 #passwordSection {
     padding-left: 20px;
-    border-left: 2px solid #ccc;
+    border-left: 2px solid var(--windowBorder);
 }
 
 #passwordSection label {
@@ -443,6 +566,7 @@ input[type="checkbox"] {
     display: flex;
     align-items: center;
     gap: 6px;
+    color: var(--menuText);
 }
 
 .context-item:hover {
@@ -452,276 +576,8 @@ input[type="checkbox"] {
 
 .context-separator {
     height: 1px;
-    background: #808080;
+    background: var(--windowBorder);
     margin: 2px 0;
-}
-
-/* =================================
-   THEME DIALOG SPECIFIC
-================================= */
-.theme-dialog .dialog-body {
-    min-width: 580px;  /* Increased to provide more space */
-    max-width: 720px;  /* Increased max width */
-    min-height: 380px; /* Slightly taller */
-}
-
-.theme-tabs {
-    display: flex;
-    border-bottom: 1px solid #808080;
-    margin-bottom: 12px;
-}
-
-.theme-tab {
-    padding: 6px 16px;
-    cursor: pointer;
-    background: #e0e0e0;
-    border: 1px outset var(--windowBorder);
-    border-bottom: none;
-    font-size: 11px;
-    font-weight: bold;
-    color: var(--menuText);
-}
-
-.theme-tab.active {
-    background: #f0f0f0;
-    border: 1px inset var(--windowBorder);
-    border-bottom: 1px solid #f0f0f0;
-    margin-bottom: -1px;
-}
-
-.theme-tab:hover:not(.active) {
-    background: #e8e8e8;
-}
-
-.theme-content {
-    min-height: 260px; /* Increased content area */
-    max-height: 360px; 
-    overflow-y: auto;
-    border: 1px inset var(--windowBorder);
-    background: white;
-    padding: 12px; /* Increased padding for better spacing */
-}
-
-.tab-panel {
-    display: none;
-}
-
-.tab-panel.active {
-    display: block;
-}
-
-/* =================================
-   THEME GRID
-================================= */
-.theme-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr); /* Fixed 6 columns instead of auto-fit */
-    gap: 12px; /* Consistent gap */
-    padding: 8px; /* Better padding */
-    justify-items: center; /* Center items in their grid cells */
-}
-
-/* Adjust theme option sizing */
-.theme-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 8px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    border-radius: 4px;
-    background: #f8f8f8;
-    width: 85px; /* Fixed width for consistency */
-    min-height: 90px; /* Consistent height */
-    transition: all 0.2s ease; /* Smooth hover effect */
-}
-
-.theme-option:hover {
-    background: #f0f0f0;
-    border-color: #cccccc;
-    transform: translateY(-1px); /* Subtle lift effect */
-}
-
-.theme-option.selected {
-    border-color: #316AC5;
-    background: #e6f0ff;
-    box-shadow: 0 2px 8px rgba(49, 106, 197, 0.3);
-}
-
-.theme-preview {
-    width: 65px;  /* Optimized size */
-    height: 45px; /* Optimized height */
-    border: 1px solid #666;
-    border-radius: 3px;
-    padding: 2px;
-    margin-bottom: 6px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-.theme-preview-window {
-    width: 100%;
-    height: 100%;
-    border: 1px solid;
-    position: relative;
-}
-
-.theme-preview-titlebar {
-    height: 12px;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.theme-name {
-    font-size: 10px;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-    line-height: 1.2;
-    word-break: break-word;
-}
-
-/* =================================
-   WALLPAPER GRID
-================================= */
-.wallpaper-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* Fixed 7 columns for wallpapers */
-    gap: 10px;
-    padding: 8px;
-    justify-items: center;
-}
-
-/* Adjust wallpaper option sizing */
-.wallpaper-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 6px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    border-radius: 4px;
-    background: #f8f8f8;
-    width: 70px; /* Fixed width */
-    min-height: 85px; /* Consistent height */
-    position: relative;
-    transition: all 0.2s ease;
-}
-
-.wallpaper-option:hover {
-    background: #f0f0f0;
-    border-color: #cccccc;
-    transform: translateY(-1px);
-}
-
-.wallpaper-option.selected {
-    border-color: #316AC5;
-    background: #e6f0ff;
-    box-shadow: 0 2px 8px rgba(49, 106, 197, 0.3);
-}
-
-.wallpaper-preview {
-    width: 60px;  /* Reduced from 70px */
-    height: 40px; /* Reduced from 50px */
-    border: 1px solid #666;
-    border-radius: 2px;
-    margin-bottom: 4px;
-}
-
-.wallpaper-name {
-    font-size: 10px;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-    max-width: 80px;
-    word-wrap: break-word;
-}
-
-/* =================================
-   THEME CONTROLS
-================================= */
-.theme-controls {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 12px;
-    padding-top: 8px;
-    border-top: 1px solid #cccccc;
-}
-
-.apply-btn {
-    background: linear-gradient(to bottom, #90ee90, #32cd32);
-    border: 1px outset #32cd32;
-    padding: 6px 16px;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: pointer;
-    color: black;
-}
-
-.apply-btn:hover {
-    background: linear-gradient(to bottom, #98fb98, #90ee90);
-}
-
-.apply-btn:active {
-    border: 1px inset #32cd32;
-    background: linear-gradient(to bottom, #32cd32, #90ee90);
-}
-
-.reset-btn {
-    background: linear-gradient(to bottom, #ffdddd, #ffaaaa);
-    border: 1px outset #ffaaaa;
-    padding: 6px 16px;
-    font-size: 11px;
-    cursor: pointer;
-    color: black;
-}
-
-.reset-btn:hover {
-    background: linear-gradient(to bottom, #ffeeee, #ffdddd);
-}
-
-.reset-btn:active {
-    border: 1px inset #ffaaaa;
-    background: linear-gradient(to bottom, #ffaaaa, #ffdddd);
-}
-
-.theme-name,
-.wallpaper-name {
-    font-size: 9px; /* Slightly smaller */
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-    max-width: 100%;
-    word-wrap: break-word;
-    line-height: 1.1;
-}
-
-/* =================================
-   RESPONSIVE ADJUSTMENTS
-================================= */
-@media (max-width: 700px) {
-    .theme-dialog .dialog-body {
-        min-width: 400px;
-        max-width: 95vw;
-    }
-    
-    .theme-grid {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        gap: 6px;
-    }
-    
-    .wallpaper-grid {
-        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
-        gap: 6px;
-    }
-    
-    .theme-controls {
-        flex-wrap: wrap;
-    }
 }
 
 /* =================================
@@ -760,7 +616,7 @@ input[type="checkbox"] {
 .login-container {
     position: relative;
     background: rgba(255, 255, 255, 0.95);
-    border: 2px outset var(--windowBorder);
+    border: 2px outset #c0c0c0;
     border-radius: 8px;
     padding: 24px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -853,7 +709,7 @@ input[type="checkbox"] {
     gap: 12px;
     padding: 8px 12px;
     background: #f0f8ff;
-    border: 1px inset var(--windowBorder);
+    border: 1px inset #c0c0c0;
     border-radius: 4px;
 }
 
@@ -876,9 +732,11 @@ input[type="checkbox"] {
 .login-password {
     flex: 1;
     padding: 8px 12px;
-    border: 1px inset var(--windowBorder);
+    border: 1px inset #c0c0c0;
     font-size: 12px;
     border-radius: 2px;
+    background: white;
+    color: #333;
 }
 
 .login-password:focus {
@@ -917,6 +775,7 @@ input[type="checkbox"] {
     background: #cccccc;
     border-color: #cccccc;
     cursor: not-allowed;
+    color: #666;
 }
 
 .password-hint {
@@ -973,13 +832,13 @@ input[type="checkbox"] {
 .version-text {
     font-size: 11px;
     font-weight: bold;
-    color: rgba(67 64 64 / 0.9);
+    color: rgba(67, 64, 64, 0.9);
     margin-bottom: 2px;
 }
 
 .build-text {
     font-size: 9px;
-    color: rgba(96 94 94 / 0.7);
+    color: rgba(96, 94, 94, 0.7);
     font-style: italic;
 }
 
@@ -987,22 +846,22 @@ input[type="checkbox"] {
 .guest-button {
     padding: 4px 8px;
     font-size: 10px;
-    border: 1px outset var(--windowBorder);
-    background: var(--buttonBg);
+    border: 1px outset #c0c0c0;
+    background: #f0f0f0;
     cursor: pointer;
     border-radius: 2px;
-    color: var(--menuText);
+    color: #333;
 }
 
 .hint-button:hover,
 .guest-button:hover {
-    background: var(--buttonHoverBg);
+    background: #e0e0e0;
 }
 
 .hint-button:active,
 .guest-button:active {
-    border: 1px inset var(--windowBorder);
-    background: var(--buttonActiveBg);
+    border: 1px inset #c0c0c0;
+    background: #d0d0d0;
 }
 
 /* =================================
@@ -1010,6 +869,8 @@ input[type="checkbox"] {
 ================================= */
 .change-password-dialog .dialog-body {
     min-width: 300px;
+    background: var(--windowBg);
+    color: var(--menuText);
 }
 
 .change-password-form {
@@ -1036,12 +897,14 @@ input[type="checkbox"] {
     border: 1px inset var(--windowBorder);
     font-size: 11px;
     border-radius: 2px;
+    background: var(--windowBg);
+    color: var(--menuText);
 }
 
 .password-input:focus,
 .text-input:focus {
     outline: none;
-    border-color: #0066cc;
+    border-color: var(--menuHoverBg);
 }
 
 .password-strength {
@@ -1051,7 +914,7 @@ input[type="checkbox"] {
 .strength-meter {
     width: 100%;
     height: 6px;
-    background: #f0f0f0;
+    background: var(--buttonBg);
     border: 1px inset var(--windowBorder);
     border-radius: 3px;
     overflow: hidden;
@@ -1061,7 +924,7 @@ input[type="checkbox"] {
     height: 100%;
     width: 0%;
     transition: all 0.3s ease;
-    background: #ccc;
+    background: var(--windowBorder);
 }
 
 .strength-bar.weak { background: #ff4444; }
@@ -1071,7 +934,8 @@ input[type="checkbox"] {
 
 .strength-text {
     font-size: 10px;
-    color: #666;
+    color: var(--menuText);
+    opacity: 0.7;
     margin-top: 2px;
 }
 
@@ -1105,411 +969,19 @@ input[type="checkbox"] {
 }
 
 /* =================================
-   USER SETTINGS DIALOG
-================================= */
-.user-settings-dialog .dialog-body {
-    min-width: 350px;
-}
-
-.user-settings-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.avatar-selection {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.avatar-input {
-    width: 60px;
-    padding: 6px 8px;
-    border: 1px inset var(--windowBorder);
-    font-size: 16px;
-    text-align: center;
-}
-
-.avatar-options {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 4px;
-}
-
-.avatar-option {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    cursor: pointer;
-    background: #f8f8f8;
-}
-
-.avatar-option:hover {
-    border-color: #0066cc;
-    background: #e8f4ff;
-}
-
-.user-stats {
-    background: #f8f8f8;
-    padding: 12px;
-    border: 1px inset var(--windowBorder);
-    border-radius: 4px;
-}
-
-.user-stats h4 {
-    margin: 0 0 8px 0;
-    font-size: 12px;
-    color: #0066cc;
-}
-
-.stat-item {
-    font-size: 10px;
-    color: var(--menuText);
-    margin-bottom: 4px;
-}
-
-.change-password-btn {
-    background: linear-gradient(to bottom, #ff8800, #ff6600);
-    border: 1px outset #ff6600;
-    padding: 6px 12px;
-    font-size: 11px;
-    color: white;
-    cursor: pointer;
-    border-radius: 2px;
-}
-
-.change-password-btn:hover {
-    background: linear-gradient(to bottom, #ff9900, #ff8800);
-}
-
-.change-password-btn:active {
-    border: 1px inset #ff6600;
-}
-
-/* =================================
-   WALLPAPER CONTROLS
-================================= */
-.wallpaper-controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 8px;
-    background: #f5f5f5;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-}
-
-.import-image-btn,
-.browse-paint-btn {
-    background: linear-gradient(to bottom, #add8e6, #87ceeb);
-    border: 1px outset #87ceeb;
-    padding: 8px 16px;
-    font-size: 11px;
-    cursor: pointer;
-    color: black;
-    border-radius: 3px;
-    font-weight: bold;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    transition: all 0.2s ease;
-}
-
-.import-image-btn:hover,
-.browse-paint-btn:hover {
-    background: linear-gradient(to bottom, #b8e0f0, #add8e6);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-
-.import-image-btn:active,
-.browse-paint-btn:active {
-    border: 1px inset #87ceeb;
-    transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-.custom-badge {
-    font-size: 7px; /* Slightly smaller */
-    background: #ff6600;
-    color: white;
-    padding: 1px 3px;
-    border-radius: 2px;
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    font-weight: bold;
-}
-
-.wallpaper-option {
-    position: relative;
-}
-
-/* =================================
-   IMAGE IMPORT DIALOG
-================================= */
-.import-dialog .dialog-body {
-    min-width: 400px;
-    max-width: 600px;
-    max-height: 500px;
-}
-
-.import-instructions {
-    text-align: center;
-    margin-bottom: 12px;
-}
-
-.import-instructions p {
-    margin: 4px 0;
-    font-size: 11px;
-    color: var(--menuText);
-}
-
-.file-types {
-    font-size: 10px;
-    color: #666;
-    font-style: italic;
-}
-
-.image-input {
-    width: 100%;
-    padding: 8px;
-    border: 2px dashed #ccc;
-    background: #f9f9f9;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 11px;
-}
-
-.image-input:hover {
-    border-color: #999;
-    background: #f0f0f0;
-}
-
-.preview-area {
-    max-height: 250px;
-    overflow-y: auto;
-    border: 1px inset var(--windowBorder);
-    background: white;
-    margin-bottom: 12px;
-}
-
-.preview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 8px;
-    padding: 8px;
-}
-
-.import-preview-item {
-    display: flex;
-    flex-direction: column;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    padding: 4px;
-    background: #f8f8f8;
-    position: relative;
-}
-
-.import-preview-item:has(.import-checkbox:checked) {
-    border-color: #0066cc;
-    background: #e6f0ff;
-}
-
-.import-preview-image {
-    width: 100%;
-    height: 80px;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    margin-bottom: 4px;
-}
-
-.import-preview-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.image-name {
-    font-size: 10px;
-    font-weight: bold;
-    color: var(--menuText);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.image-size {
-    font-size: 9px;
-    color: #666;
-}
-
-.import-checkbox {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 16px;
-    height: 16px;
-}
-
-.import-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.import-selected-btn {
-    background: linear-gradient(to bottom, #90ee90, #32cd32);
-    border: 1px outset #32cd32;
-    padding: 6px 12px;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: pointer;
-    color: black;
-    border-radius: 2px;
-}
-
-.import-selected-btn:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #98fb98, #90ee90);
-}
-
-.import-selected-btn:active:not(:disabled) {
-    border: 1px inset #32cd32;
-}
-
-.import-selected-btn:disabled {
-    background: #cccccc;
-    border-color: #cccccc;
-    cursor: not-allowed;
-    color: #666;
-}
-
-/* =================================
-   PAINT FILE BROWSER DIALOG
-================================= */
-.paint-browser-dialog .dialog-body {
-    min-width: 350px;
-    max-width: 500px;
-    max-height: 400px;
-}
-
-.paint-instructions {
-    text-align: center;
-    margin-bottom: 12px;
-}
-
-.paint-instructions p {
-    margin: 4px 0;
-    font-size: 11px;
-    color: var(--menuText);
-}
-
-.paint-files-grid {
-    max-height: 250px;
-    overflow-y: auto;
-    border: 1px inset var(--windowBorder);
-    background: white;
-    margin-bottom: 12px;
-}
-
-.paint-file-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.paint-file-item:hover {
-    background: #f0f8ff;
-}
-
-.paint-file-item.selected {
-    background: #cce7ff;
-    border-color: #0066cc;
-}
-
-.paint-file-icon {
-    font-size: 24px;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-}
-
-.paint-file-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.paint-file-name {
-    font-size: 11px;
-    font-weight: bold;
-    color: var(--menuText);
-}
-
-.paint-file-location {
-    font-size: 10px;
-    color: #666;
-    font-style: italic;
-}
-
-.paint-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.use-paint-btn {
-    background: linear-gradient(to bottom, #ff8800, #ff6600);
-    border: 1px outset #ff6600;
-    padding: 6px 12px;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-    border-radius: 2px;
-}
-
-.use-paint-btn:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #ff9900, #ff8800);
-}
-
-.use-paint-btn:active:not(:disabled) {
-    border: 1px inset #ff6600;
-}
-
-.use-paint-btn:disabled {
-    background: #cccccc;
-    border-color: #cccccc;
-    cursor: not-allowed;
-    color: #666;
-}
-
-/* =================================
    INSTALLER DIALOG
 ================================= */
 .installer-dialog {
     min-width: 450px;
     max-width: 600px;
+    background: var(--windowBg);
 }
 
 .installer-dialog .dialog-body {
     padding: 16px;
     min-height: 200px;
+    background: var(--windowBg);
+    color: var(--menuText);
 }
 
 .install-header {
@@ -1517,8 +989,8 @@ input[type="checkbox"] {
     gap: 16px;
     margin-bottom: 20px;
     padding: 16px;
-    background: linear-gradient(135deg, #e6f3ff, #f0f8ff);
-    border: 1px solid #b3d9ff;
+    background: var(--menuBg);
+    border: 1px solid var(--windowBorder);
     border-radius: 8px;
 }
 
@@ -1529,9 +1001,9 @@ input[type="checkbox"] {
     justify-content: center;
     width: 64px;
     height: 64px;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--buttonBg);
     border-radius: 8px;
-    border: 2px solid #cce7ff;
+    border: 2px solid var(--windowBorder);
 }
 
 .install-info {
@@ -1540,14 +1012,14 @@ input[type="checkbox"] {
 
 .program-name {
     margin: 0 0 8px 0;
-    color: #0066cc;
+    color: var(--menuHoverBg);
     font-size: 18px;
     font-weight: bold;
 }
 
 .program-description {
     margin: 0 0 12px 0;
-    color: #333;
+    color: var(--menuText);
     font-size: 12px;
     line-height: 1.4;
 }
@@ -1560,11 +1032,12 @@ input[type="checkbox"] {
 
 .detail-item {
     font-size: 11px;
-    color: #666;
+    color: var(--menuText);
+    opacity: 0.8;
 }
 
 .detail-item strong {
-    color: #333;
+    color: var(--menuText);
     min-width: 60px;
     display: inline-block;
 }
@@ -1577,14 +1050,14 @@ input[type="checkbox"] {
 .install-status {
     font-size: 14px;
     font-weight: bold;
-    color: #0066cc;
+    color: var(--menuHoverBg);
     margin-bottom: 16px;
 }
 
 .progress-bar {
     width: 100%;
     height: 20px;
-    background: #f0f0f0;
+    background: var(--buttonBg);
     border: 1px inset var(--windowBorder);
     border-radius: 4px;
     overflow: hidden;
@@ -1601,7 +1074,8 @@ input[type="checkbox"] {
 
 .install-step {
     font-size: 11px;
-    color: #666;
+    color: var(--menuText);
+    opacity: 0.7;
     font-style: italic;
 }
 
@@ -1685,7 +1159,7 @@ input[type="checkbox"] {
 }
 
 .success-message p {
-    color: #333;
+    color: var(--menuText);
     margin: 4px 0;
     font-size: 12px;
 }
@@ -1710,3 +1184,57 @@ input[type="checkbox"] {
     border: 2px inset #4CAF50;
     transform: translateY(0);
 }
+
+/* =================================
+   RESPONSIVE SIZING FIXES
+================================= */
+@media (max-height: 700px) {
+    .theme-dialog {
+        max-height: 95vh;
+    }
+    
+    .theme-dialog .dialog-body {
+        min-height: 300px;
+        max-height: calc(95vh - 100px);
+    }
+    
+    .theme-content {
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 700px) {
+    .theme-dialog {
+        min-width: 300px;
+        width: 95vw; /* Only use viewport width on mobile */
+        max-width: 95vw;
+    }
+    
+    .theme-dialog .dialog-body {
+        padding: 8px;
+    }
+    
+    .theme-content {
+        padding: 8px;
+    }
+    
+    .theme-controls {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .theme-grid {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 6px;
+    }
+    
+    .wallpaper-grid {
+        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+        gap: 6px;
+    }
+}
+
+/* =================================
+   DARK THEME ADJUSTMENTS
+================================= */
+/* Login screen maintains original colors regardless of theme */

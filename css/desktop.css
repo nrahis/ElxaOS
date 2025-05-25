@@ -1,17 +1,19 @@
 @import url('dialogs.css');
 @import url('programs.css');
-@import url('notepad.css');
 @import url('file-manager.css');
-@import url('duck-console.css');
+@import url('personalize.css');
 @import url('clock-system.css');
-@import url('calculator.css');
-@import url('elxacode.css');
-@import url('elxabooks.css');
-@import url('antivirus.css');
-@import url('virus-lab.css');
 @import url('boot-system.css');
-@import url('browser.css');
 @import url('update-popup.css');
+@import url('programs/notepad.css');
+@import url('programs/paint.css');
+@import url('programs/duck-console.css');
+@import url('programs/calculator.css');
+@import url('programs/elxacode.css');
+@import url('programs/elxabooks.css');
+@import url('programs/antivirus.css');
+@import url('programs/virus-lab.css');
+@import url('programs/browser.css');
 @import url('games/snake.css');
 @import url('games/snake-deluxe.css');
 
@@ -182,7 +184,7 @@ body {
 }
 
 /* =================================
-    WINDOW STYLES
+    WINDOW STYLES - FIXED THEME COLORS
 ================================= */
 .window {
     position: absolute;
@@ -202,7 +204,7 @@ body {
 .window-titlebar {
     height: 18px;
     background: var(--titlebarBg);
-    color: white;
+    color: var(--menuHoverText); /* FIXED: Was hard-coded white */
     display: flex;
     align-items: center;
     padding: 0 4px;
@@ -213,6 +215,7 @@ body {
 
 .window-titlebar.inactive {
     background: var(--titlebarInactive);
+    color: var(--menuText); /* FIXED: Use appropriate text color for inactive */
 }
 
 .window-title {
@@ -253,7 +256,7 @@ body {
     flex: 1;
     padding: 4px;
     overflow: auto;
-    background: white;
+    background: white; /* Keep window content white for readability */
 }
 
 /* =================================
@@ -274,7 +277,7 @@ body {
 
 .start-menu-header {
     background: var(--titlebarBg);
-    color: white;
+    color: var(--menuHoverText); /* FIXED: Was hard-coded white */
     padding: 8px;
     font-weight: bold;
 }
@@ -296,122 +299,8 @@ body {
 
 .start-menu-separator {
     height: 1px;
-    background: #808080;
+    background: var(--windowBorder); /* FIXED: Use theme border color */
     margin: 2px 0;
-}
-
-/* =================================
-    DESKTOP ICONS STYLES
-================================= */
-.desktop-icons {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    z-index: 10;
-}
-
-.desktop-icon {
-    width: 64px;
-    height: 64px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-bottom: 8px;
-    padding: 4px;
-    border-radius: 2px;
-}
-
-.desktop-icon:hover {
-    background: rgba(255,255,255,0.2);
-}
-
-.desktop-icon.selected {
-    background: rgba(61 61 86 / 0.3);
-    border: 1px dotted white;
-}
-
-.desktop-icon-image {
-    width: 32px;
-    height: 32px;
-    background: var(--buttonBg);
-    border: 1px outset var(--windowBorder);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    margin-bottom: 2px;
-}
-
-.desktop-icon-label {
-    font-size: 10px;
-    color: var(--iconText);
-    text-shadow: 1px 1px 1px var(--iconTextShadow);
-    text-align: center;
-    max-width: 60px;
-    word-wrap: break-word;
-}
-
-/* =================================
-   DESKTOP CONTEXT MENU
-================================= */
-.context-menu {
-    position: fixed;
-    background: var(--menuBg);
-    border: 2px outset var(--windowBorder);
-    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    z-index: 2500;
-    min-width: 120px;
-    font-size: 11px;
-    color: var(--menuText);
-}
-
-.context-item {
-    padding: 4px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.context-item:hover {
-    background: var(--menuHoverBg);
-    color: var(--menuHoverText);
-}
-
-.context-separator {
-    height: 1px;
-    background: #808080;
-    margin: 2px 0;
-}
-
-/* =================================
-    UTILITY STYLES
-================================= */
-.hidden {
-    display: none !important;
-}
-
-.dragging {
-    opacity: 0.8;
-}
-
-/* =================================
-    DARK THEME OVERRIDES
-================================= */
-body.dark-theme {
-    color: #ffffff;
-}
-
-body.dark-theme .window-content {
-    background: #2d2d2d;
-    color: #ffffff;
-}
-
-body.dark-theme .desktop-icon-label {
-    color: #ffffff;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
 }
 
 /* =================================
@@ -448,7 +337,7 @@ body.dark-theme .desktop-icon-label {
 
 .desktop-icon.selected {
     background: rgba(61 61 86 / 0.3);
-    border: 1px dotted white;
+    border: 1px dotted var(--iconText); /* Use theme icon text color */
 }
 
 .desktop-icon.dragging {
@@ -515,8 +404,177 @@ body.dragging-icons {
 
 .context-separator {
     height: 1px;
-    background: #808080;
+    background: var(--windowBorder); /* FIXED: Use theme border color */
     margin: 2px 0;
+}
+
+/* =================================
+    UTILITY STYLES
+================================= */
+.hidden {
+    display: none !important;
+}
+
+.dragging {
+    opacity: 0.8;
+}
+
+/* =================================
+    DARK THEME OVERRIDES
+================================= */
+body.dark-theme {
+    color: #ffffff;
+}
+
+body.dark-theme .window-content {
+    background: #2d2d2d;
+    color: #ffffff;
+}
+
+body.dark-theme .desktop-icon-label {
+    color: var(--iconText); /* Use theme color instead of hard-coded */
+    text-shadow: 1px 1px 1px var(--iconTextShadow);
+}
+
+/* =================================
+    SYSTEM DIALOG OVERRIDES - SIZING FIXES
+================================= */
+/* Fix dialog positioning and sizing issues */
+.system-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    background: var(--windowBg);
+    border: 2px outset var(--windowBorder);
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    min-width: 300px;
+    max-height: 85vh; /* FIXED: Prevent dialogs from being cut off */
+    max-width: 90vw; /* FIXED: Prevent dialogs from being too wide */
+    overflow: hidden;
+}
+
+/* Ensure dialog content can scroll if needed */
+.system-dialog .dialog-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    overflow: hidden;
+}
+
+.system-dialog .dialog-body {
+    overflow-y: auto; /* FIXED: Allow scrolling in dialog body */
+    flex: 1;
+    padding: 16px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+/* Specific fixes for problematic dialogs */
+.user-settings-dialog {
+    max-height: 80vh !important; /* FIXED: User settings dialog height */
+}
+
+.user-settings-dialog .dialog-body {
+    max-height: calc(80vh - 60px) !important; /* Account for header */
+    overflow-y: auto !important;
+}
+
+/* Version info dialog in login screen */
+.version-dialog,
+.about-dialog {
+    max-height: 70vh !important; /* FIXED: Version dialog height */
+    max-width: 500px !important;
+}
+
+.version-dialog .dialog-body,
+.about-dialog .dialog-body {
+    max-height: calc(70vh - 40px) !important;
+    overflow-y: auto !important;
+}
+
+/* Password dialog sizing */
+.password-dialog {
+    min-width: 280px;
+    max-width: 400px;
+}
+
+/* Create network dialog sizing */
+.create-network-dialog {
+    min-width: 300px;
+    max-width: 450px;
+}
+
+/* WiFi dialog sizing */
+.wifi-dialog {
+    min-width: 350px;
+    max-width: 500px;
+    max-height: 75vh;
+}
+
+.wifi-dialog .dialog-body {
+    max-height: calc(75vh - 50px);
+}
+
+/* Battery dialog sizing */
+.battery-dialog {
+    min-width: 280px;
+    max-width: 350px;
+}
+
+/* Import dialog sizing fixes */
+.import-dialog {
+    max-width: 600px;
+    max-height: 80vh;
+}
+
+.import-dialog .dialog-body {
+    max-height: calc(80vh - 50px);
+}
+
+.paint-browser-dialog {
+    max-width: 550px;
+    max-height: 75vh;
+}
+
+.paint-browser-dialog .dialog-body {
+    max-height: calc(75vh - 50px);
+}
+
+/* =================================
+    RESPONSIVE DIALOG IMPROVEMENTS
+================================= */
+@media (max-height: 600px) {
+    .system-dialog {
+        max-height: 95vh;
+        top: 2.5vh;
+        transform: translateX(-50%);
+    }
+    
+    .system-dialog .dialog-body {
+        max-height: calc(95vh - 80px);
+    }
+    
+    .theme-dialog {
+        max-height: 95vh;
+    }
+    
+    .theme-dialog .dialog-body {
+        max-height: calc(95vh - 80px);
+    }
+}
+
+@media (max-width: 600px) {
+    .system-dialog {
+        max-width: 95vw;
+        min-width: 280px;
+    }
+    
+    .theme-dialog {
+        min-width: 280px;
+        max-width: 95vw;
+    }
 }
 
 /* Fix for virus lab preview - make styles more specific */
@@ -539,3 +597,46 @@ body.dragging-icons {
     padding: 0;
 }
 
+/* =================================
+    THEME-SPECIFIC WINDOW TITLEBAR FIXES
+================================= */
+/* Ensure all dialog titlebars use proper theme colors */
+.system-dialog .dialog-header {
+    background: var(--titlebarBg) !important;
+    color: var(--menuHoverText) !important;
+}
+
+/* Theme dialog specific titlebar */
+.theme-dialog .dialog-header {
+    background: var(--titlebarBg) !important;
+    color: var(--menuHoverText) !important;
+}
+
+/* All other dialog headers */
+.user-settings-dialog .dialog-header,
+.wifi-dialog .dialog-header,
+.battery-dialog .dialog-header,
+.password-dialog .dialog-header,
+.create-network-dialog .dialog-header,
+.import-dialog .dialog-header,
+.paint-browser-dialog .dialog-header,
+.installer-dialog .dialog-header {
+    background: var(--titlebarBg) !important;
+    color: var(--menuHoverText) !important;
+}
+
+/* Make sure dialog close buttons use theme colors */
+.system-dialog .dialog-close {
+    background: var(--buttonBg) !important;
+    border: 1px outset var(--windowBorder) !important;
+    color: var(--menuText) !important;
+}
+
+.system-dialog .dialog-close:hover {
+    background: var(--buttonHoverBg) !important;
+}
+
+.system-dialog .dialog-close:active {
+    border: 1px inset var(--windowBorder) !important;
+    background: var(--buttonActiveBg) !important;
+}

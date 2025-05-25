@@ -190,7 +190,7 @@ class BootSystem {
         bootScreen.innerHTML = `
             <div class="elxaos-logo-container">
                 <div class="elxaos-logo">
-                    <div class="logo-icon">🖥️</div>
+                    <img src="assets/logo.png" alt="ElxaOS Logo" class="logo-icon">
                     <div class="logo-text">ElxaOS</div>
                     <div class="logo-subtitle">Starting your computer...</div>
                 </div>

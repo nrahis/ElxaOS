@@ -1,0 +1,647 @@
+/* =================================
+   ENHANCED PAINT PROGRAM STYLES
+================================= */
+.paint-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =================================
+   PAINT MENU BAR
+================================= */
+.paint-menubar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border-bottom: 1px solid #c0c0c0;
+    font-size: 11px;
+    color: #333;
+}
+
+.paint-menubar .menu-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 2px;
+    border: 1px solid transparent;
+}
+
+.paint-menubar .menu-item:hover {
+    background: #e8f4ff;
+    border-color: #b3d9ff;
+}
+
+.paint-menubar .menu-item:active {
+    background: #cce7ff;
+    border-color: #66b3ff;
+}
+
+.paint-menubar .menu-separator {
+    color: #999;
+    margin: 0 4px;
+}
+
+/* =================================
+   COMPACT TOOLBAR
+================================= */
+.paint-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+    border-bottom: 1px solid #c0c0c0;
+    font-size: 10px;
+    flex-wrap: wrap;
+}
+
+.toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: #f5f5f5;
+}
+
+.toolbar-section label {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+}
+
+.tool-buttons {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.tool-btn {
+    width: 32px;
+    height: 32px;
+    border: 2px outset #c0c0c0;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s ease;
+}
+
+.tool-btn:hover {
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+}
+
+.tool-btn:active,
+.tool-btn.active {
+    border: 2px inset #c0c0c0;
+    background: linear-gradient(to bottom, #e0e0e0, #f0f0f0);
+    color: #0066cc;
+    transform: translateY(1px);
+}
+
+.size-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.size-slider {
+    width: 80px;
+}
+
+.size-display {
+    min-width: 35px;
+    font-weight: bold;
+    color: #0066cc;
+    font-size: 10px;
+}
+
+/* Shape mode toggle */
+.shape-mode {
+    display: none;
+    gap: 2px;
+}
+
+.shape-mode.visible {
+    display: flex;
+}
+
+.mode-btn {
+    padding: 3px 6px;
+    border: 1px outset #c0c0c0;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    cursor: pointer;
+    font-size: 9px;
+    border-radius: 2px;
+}
+
+.mode-btn.active {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #e0e0e0, #f0f0f0);
+    color: #0066cc;
+}
+
+/* Text options */
+.text-options {
+    display: none;
+    gap: 4px;
+    align-items: center;
+}
+
+.text-options.visible {
+    display: flex;
+}
+
+.font-size-input {
+    width: 40px;
+    padding: 2px;
+    border: 1px inset #c0c0c0;
+    font-size: 10px;
+}
+
+/* =================================
+   ENHANCED COLOR PANEL
+================================= */
+.paint-palette {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: linear-gradient(to bottom, #fff0f5, #ffe8ed);
+    border-bottom: 1px solid #c0c0c0;
+    flex-wrap: wrap;
+}
+
+.color-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.current-colors {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-display {
+    position: relative;
+    display: flex;
+}
+
+.primary-color,
+.secondary-color {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #333;
+    cursor: pointer;
+    position: relative;
+}
+
+.primary-color {
+    z-index: 2;
+}
+
+.secondary-color {
+    margin-left: -10px;
+    margin-top: 10px;
+    z-index: 1;
+}
+
+.swap-colors {
+    padding: 4px 6px;
+    border: 1px outset #c0c0c0;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    cursor: pointer;
+    font-size: 10px;
+    border-radius: 2px;
+}
+
+.swap-colors:hover {
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+}
+
+.swap-colors:active {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #e0e0e0, #f0f0f0);
+}
+
+/* Advanced Color Picker */
+.advanced-picker {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.hsv-area {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    border: 1px solid #999;
+    cursor: crosshair;
+    background: linear-gradient(to right, #fff, transparent),
+                linear-gradient(to top, #000, transparent),
+                linear-gradient(to right, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+}
+
+.hs-cursor {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 2px rgba(0,0,0,0.7);
+}
+
+.brightness-strip {
+    width: 16px;
+    height: 120px;
+    background: linear-gradient(to top, #000, #fff);
+    border: 1px solid #999;
+    position: relative;
+    cursor: pointer;
+}
+
+.brightness-cursor {
+    position: absolute;
+    left: -2px;
+    width: 20px;
+    height: 3px;
+    background: #fff;
+    border: 1px solid #000;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.rgb-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rgb-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rgb-row label {
+    width: 12px;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.rgb-input {
+    width: 35px;
+    padding: 1px 2px;
+    border: 1px inset #c0c0c0;
+    font-size: 9px;
+    text-align: center;
+}
+
+/* Quick Colors */
+.quick-colors {
+    display: grid;
+    grid-template-columns: repeat(8, 18px);
+    gap: 1px;
+    padding: 4px;
+    border: 1px inset #c0c0c0;
+    background: white;
+}
+
+.quick-color {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #666;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.quick-color:hover {
+    border-color: #000;
+    transform: scale(1.1);
+}
+
+.quick-color:active {
+    transform: scale(0.95);
+}
+
+/* =================================
+   CANVAS AREA
+================================= */
+.canvas-area {
+    flex: 1;
+    padding: 8px;
+    background: #c0c0c0;
+    overflow: auto;
+    position: relative;
+}
+
+.canvas-container {
+    position: relative;
+    background: white;
+    border: 2px inset #c0c0c0;
+    margin: auto;
+    transform-origin: top left;
+    transition: transform 0.2s ease;
+    display: block;
+}
+
+.paint-canvas {
+    display: block;
+    cursor: crosshair;
+    background: white;
+    position: relative;
+    z-index: 1;
+}
+
+.temp-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: transparent;
+}
+
+.text-input {
+    position: absolute;
+    border: 1px dashed #0066cc;
+    background: transparent;
+    font-family: Arial, sans-serif;
+    resize: none;
+    overflow: hidden;
+    z-index: 3;
+    outline: none;
+    padding: 2px;
+    min-width: 50px;
+    min-height: 16px;
+}
+
+/* =================================
+   STATUS BAR
+================================= */
+.paint-statusbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border-top: 1px solid #c0c0c0;
+    font-size: 10px;
+    color: #333;
+}
+
+.paint-statusbar .status-info {
+    display: flex;
+    gap: 16px;
+}
+
+.paint-statusbar .status-info span {
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px inset #c0c0c0;
+    border-radius: 2px;
+}
+
+.paint-statusbar .save-status.saved {
+    color: #006600;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.paint-statusbar .save-status.unsaved {
+    color: #cc6600;
+    background: rgba(255, 165, 0, 0.1);
+}
+
+.paint-statusbar .current-tool {
+    color: #0066cc;
+    font-weight: bold;
+}
+
+.paint-statusbar .zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.paint-statusbar .zoom-btn {
+    width: 28px;
+    height: 20px;
+    border: 1px outset #c0c0c0;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    cursor: pointer;
+    font-size: 9px;
+    border-radius: 2px;
+}
+
+.paint-statusbar .zoom-btn:hover {
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+}
+
+.paint-statusbar .zoom-btn:active {
+    border: 1px inset #c0c0c0;
+    background: linear-gradient(to bottom, #e0e0e0, #f0f0f0);
+}
+
+.paint-statusbar .zoom-level {
+    font-weight: bold;
+    color: #0066cc;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* =================================
+   DIALOGS
+================================= */
+.canvas-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2500;
+    background: #f0f0f0;
+    border: 2px outset #c0c0c0;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    min-width: 300px;
+}
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: linear-gradient(to bottom, #0066cc, #004499);
+    color: white;
+    font-weight: bold;
+}
+
+.dialog-close {
+    cursor: pointer;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.dialog-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dialog-body {
+    padding: 16px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 11px;
+    min-width: 60px;
+}
+
+.dialog-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.dialog-button,
+.create-btn,
+.apply-btn,
+.save-btn,
+.open-btn {
+    padding: 6px 16px;
+    border: 1px outset #c0c0c0;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 2px;
+}
+
+.create-btn,
+.apply-btn,
+.save-btn,
+.open-btn {
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    color: white;
+    font-weight: bold;
+}
+
+.dialog-button:hover,
+.create-btn:hover,
+.apply-btn:hover,
+.save-btn:hover,
+.open-btn:hover {
+    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+}
+
+.create-btn:hover,
+.apply-btn:hover,
+.save-btn:hover,
+.open-btn:hover {
+    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
+@media (max-width: 1000px) {
+    .paint-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .paint-palette {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .advanced-picker {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hsv-area {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .brightness-strip {
+        width: 100px;
+        height: 16px;
+        background: linear-gradient(to right, #000, #fff);
+    }
+    
+    .quick-colors {
+        grid-template-columns: repeat(6, 18px);
+    }
+}
+
+/* =================================
+   ANIMATIONS
+================================= */
+.paint-container {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =================================
+   ACCESSIBILITY
+================================= */
+.tool-btn:focus,
+.quick-color:focus,
+.mode-btn:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* =================================
+   TOOL CURSORS
+================================= */
+.paint-container[data-tool="brush"] .paint-canvas {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3" fill="none" stroke="black" stroke-width="1"/><circle cx="8" cy="8" r="1" fill="black"/></svg>') 8 8, crosshair;
+}
+
+.paint-container[data-tool="pencil"] .paint-canvas {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect x="6" y="6" width="4" height="4" fill="none" stroke="black"/><rect x="7" y="7" width="2" height="2" fill="black"/></svg>') 8 8, crosshair;
+}
+
+.paint-container[data-tool="eraser"] .paint-canvas {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" fill="white" stroke="black"/></svg>') 8 8, crosshair;
+}
+
+.paint-container[data-tool="text"] .paint-canvas {
+    cursor: text;
+}
