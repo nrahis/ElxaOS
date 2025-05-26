@@ -472,7 +472,18 @@ class SimpleGame {
                     alert('Snake Game not available. Please check if the game files are loaded.');
                     return null;
                 }
-                
+            
+            case 'sussy_cat_game':
+                // Launch Sussy Cat Adventure game
+                if (typeof SussyCatGame !== 'undefined') {
+                    const sussyCatGame = new SussyCatGame(this.windowManager, this.gameData);
+                    return sussyCatGame.launch(programInfo);
+                } else {
+                    console.error('SussyCatGame class not found! Make sure sussy-cat-game.js is loaded.');
+                    alert('Sussy Cat Adventure not available. Please check if the game files are loaded.');
+                    return null;
+                }
+
             case 'target_game':
             default:
                 // Launch Target game (existing implementation)

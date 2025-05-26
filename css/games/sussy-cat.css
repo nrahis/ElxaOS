@@ -1,0 +1,790 @@
+/* =================================
+   SUSSY CAT ADVENTURE - Game Styles
+   All classes use 'sussy-' prefix to avoid conflicts
+================================= */
+
+.sussy-cat-container {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sussy-cat-header {
+    background: linear-gradient(45deg, #8B4A9C, #E73C7E);
+    color: white;
+    padding: 8px 12px;
+    border-bottom: 2px solid #5A2D5A;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.sussy-cat-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 6px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.sussy-cat-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.sussy-score, .sussy-timer, .sussy-level {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.sussy-detection {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sussy-detection-label {
+    font-size: 10px;
+}
+
+.sussy-detection-bar {
+    width: 60px;
+    height: 8px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.5);
+    overflow: hidden;
+}
+
+.sussy-detection-fill {
+    height: 100%;
+    background: #44ff44;
+    transition: width 0.3s ease, background 0.3s ease;
+    border-radius: 3px;
+}
+
+.sussy-cat-game-area {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+/* =================================
+   INITIAL SCREEN STYLES - NEW
+================================= */
+.sussy-cat-initial-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sussy-initial-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    border: 2px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
+}
+
+.sussy-initial-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../../assets/games/sussycat/ui/initial-screen-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 13px; /* Slightly smaller than parent to account for border */
+    opacity: 0.8;
+    z-index: 1;
+}
+
+.sussy-click-to-continue {
+    position: relative;
+    z-index: 2;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.5);
+    padding: 15px 25px;
+    border-radius: 25px;
+    border: 2px solid rgba(255,255,255,0.3);
+    animation: sussyPulse 2s infinite ease-in-out;
+    margin-top: auto;
+    margin-bottom: 100px;
+}
+
+@keyframes sussyPulse {
+    0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+    50% { 
+        transform: scale(1.05); 
+        box-shadow: 0 0 20px rgba(255,255,255,0.6);
+    }
+}
+
+.sussy-initial-content:hover .sussy-click-to-continue {
+    background: rgba(0,0,0,0.7);
+    border-color: rgba(255,255,255,0.5);
+    transform: scale(1.1);
+}
+
+/* =================================
+   START SCREEN STYLES - UPDATED (NO LOGO)
+================================= */
+.sussy-cat-start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sussy-start-content {
+    text-align: center;
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sussy-start-content h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.sussy-level-select {
+    margin-bottom: 15px;
+}
+
+.sussy-level-select h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #FFD700;
+}
+
+.sussy-level-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.sussy-level-btn {
+    background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    text-align: left;
+}
+
+.sussy-level-btn:hover {
+    background: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2));
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-1px);
+}
+
+.sussy-level-btn .level-title {
+    font-weight: bold;
+    font-size: 11px;
+    color: #FFD700;
+}
+
+.sussy-level-btn .level-desc {
+    font-size: 9px;
+    margin: 2px 0;
+    opacity: 0.9;
+}
+
+.sussy-level-btn .level-rooms {
+    font-size: 8px;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.sussy-story {
+    font-size: 11px;
+    text-align: left;
+    background: rgba(255,255,255,0.1);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.sussy-story ul {
+    margin: 8px 0 0 16px;
+    padding: 0;
+}
+
+.sussy-story li {
+    margin: 3px 0;
+}
+
+.sussy-start-btn {
+    background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.sussy-start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, #FF5252, #FF7979);
+}
+
+.sussy-start-btn:active {
+    transform: translateY(0px);
+}
+
+/* =================================
+   PLAY AREA STYLES
+================================= */
+.sussy-cat-play-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 350px;
+}
+
+.sussy-room-info {
+    background: rgba(255,255,255,0.9);
+    padding: 6px 12px;
+    border-bottom: 2px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sussy-current-room {
+    color: #8B4A9C;
+    font-size: 12px;
+}
+
+.sussy-room-hint {
+    color: #666;
+    font-style: italic;
+}
+
+.sussy-game-world {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #f0f8ff;
+    min-height: 300px;
+    height: 100%;
+}
+
+.sussy-room {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+}
+
+.sussy-room.active {
+    display: block;
+}
+
+.sussy-room-living {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    background-image: url('../../assets/games/sussycat/rooms/living-room-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+}
+
+.sussy-room-kitchen {
+    background: linear-gradient(135deg, #55a3ff 0%, #003d82 100%);
+    background-image: url('../../assets/games/sussycat/rooms/kitchen-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+}
+
+.sussy-room-bedroom {
+    background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+    background-image: url('../../assets/games/sussycat/rooms/bedroom-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+}
+
+.sussy-room-bathroom {
+    background: linear-gradient(135deg, #81ecec 0%, #00b894 100%);
+    background-image: url('../../assets/games/sussycat/rooms/bathroom-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+}
+
+.sussy-room-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 120px;
+    opacity: 0.2; /* Shows when no background image */
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Hide room emoji when background images are present */
+.sussy-room-living .sussy-room-bg,
+.sussy-room-kitchen .sussy-room-bg,
+.sussy-room-bedroom .sussy-room-bg,
+.sussy-room-bathroom .sussy-room-bg {
+    opacity: 0; /* Hide emoji when background image is present */
+}
+
+/* =================================
+   CAT SPRITE STYLES - UPDATED
+================================= */
+.sussy-cat-sprite {
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    width: 32px;
+    height: 32px;
+    transition: all 0.1s ease;
+    z-index: 100;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+    cursor: pointer;
+    
+    /* Default emoji styling - shows when no image is loaded */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #333;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    border: 2px solid #666;
+    
+    /* Image properties - will be set by JavaScript when image loads */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* When cat image is successfully loaded */
+.sussy-cat-sprite.has-cat-image {
+    background-color: transparent;
+    border: none;
+    color: transparent; /* Hide emoji text */
+    border-radius: 0; /* Remove circular border for image */
+}
+
+/* Hover effect for cat sprite */
+.sussy-cat-sprite:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
+}
+
+.sussy-lair-entrance {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 5;
+}
+
+.sussy-lair-icon {
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    border: 2px solid #fff;
+    animation: sussyGlow 2s infinite ease-in-out;
+    position: relative;
+}
+
+@keyframes sussyGlow {
+    0%, 100% { box-shadow: 0 0 8px rgba(255,255,255,0.5); }
+    50% { box-shadow: 0 0 16px rgba(255,255,255,0.8); }
+}
+
+/* =================================
+   ITEM SPRITE STYLES - UPDATED
+================================= */
+.sussy-item {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 50;
+    transition: all 0.2s ease;
+    animation: sussyFloat 3s infinite ease-in-out;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+    
+    /* Default emoji styling - shows when no image is loaded */
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    border: 1px solid #999;
+    
+    /* Image properties - will be set by JavaScript when image loads */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* When item image is successfully loaded */
+.sussy-item.has-image {
+    background-color: transparent;
+    border: none;
+    color: transparent; /* Hide emoji text */
+    border-radius: 0; /* Remove circular border for image */
+}
+
+@keyframes sussyFloat {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-5px) scale(1.05); }
+}
+
+.sussy-item:hover {
+    transform: scale(1.2) rotate(10deg);
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+}
+
+.sussy-messages {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 8px 12px;
+    border-top: 2px solid #333;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.sussy-message {
+    font-size: 11px;
+    font-weight: bold;
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+/* =================================
+   END SCREEN STYLES - FIXED CENTERING
+================================= */
+.sussy-cat-end-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sussy-end-content {
+    text-align: center;
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sussy-result-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 10px auto;
+    background-image: url('../../assets/games/sussycat/ui/cat-logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: sussyResult 2s infinite ease-in-out;
+    /* Hide text by default (image should load) */
+    color: transparent;
+    font-size: 0;
+    /* Fallback styling for when image doesn't load */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Show emoji fallback only when image fails to load */
+.sussy-result-icon.image-failed {
+    color: white;
+    font-size: 48px;
+    background-image: none;
+}
+
+@keyframes sussyResult {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.sussy-result-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.sussy-result-message {
+    font-size: 12px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.sussy-final-score {
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.sussy-time-bonus {
+    color: #90EE90;
+    font-weight: bold;
+}
+
+.sussy-level-progress {
+    background: rgba(255,255,255,0.1);
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 10px;
+    display: flex;
+    justify-content: space-around;
+    gap: 5px;
+}
+
+.progress-item {
+    text-align: center;
+    padding: 4px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    flex: 1;
+}
+
+.sussy-end-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.sussy-next-level-btn {
+    background: linear-gradient(45deg, #32CD32, #228B22);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.sussy-next-level-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, #228B22, #006400);
+}
+
+.sussy-fun-facts {
+    background: rgba(255,255,255,0.1);
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 11px;
+}
+
+.sussy-achievement {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+.sussy-play-again-btn {
+    background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.sussy-play-again-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, #FF5252, #FF7979);
+}
+
+.sussy-play-again-btn:active {
+    transform: translateY(0px);
+}
+
+/* =================================
+   RESPONSIVE ADJUSTMENTS
+================================= */
+@media (max-height: 400px) {
+    .sussy-cat-title {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .sussy-cat-stats {
+        font-size: 10px;
+    }
+    
+    .sussy-start-content, .sussy-end-content {
+        padding: 15px;
+        max-height: 95%;
+    }
+    
+    .sussy-story {
+        font-size: 10px;
+        padding: 8px;
+    }
+    
+    .sussy-cat-start-screen, .sussy-cat-end-screen, .sussy-cat-initial-screen {
+        padding: 10px;
+    }
+    
+    .sussy-click-to-continue {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    .sussy-cat-stats {
+        flex-direction: column;
+        gap: 4px;
+        align-items: stretch;
+    }
+    
+    .sussy-detection {
+        justify-content: center;
+    }
+    
+    .sussy-room-info {
+        flex-direction: column;
+        gap: 2px;
+        text-align: center;
+    }
+    
+    .sussy-start-content, .sussy-end-content {
+        padding: 15px;
+        max-width: 95%;
+    }
+    
+    .sussy-cat-start-screen, .sussy-cat-end-screen, .sussy-cat-initial-screen {
+        padding: 15px;
+    }
+    
+    .sussy-level-buttons {
+        flex-direction: column;
+    }
+    
+    .sussy-level-progress {
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .sussy-end-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .sussy-click-to-continue {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+}

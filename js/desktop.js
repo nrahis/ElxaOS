@@ -803,6 +803,26 @@ class ElxaOS {
             this.fileSystem.createFile(['root', 'Programs'], 'Snake Deluxe.abby', JSON.stringify(snakeDeluxeInstaller));
         }
 
+        // Sussy Cat Adventure installer - The silly stealth game!
+        if (!programsContents.some(file => file.name === 'Sussy Cat Adventure.abby')) {
+            const sussyCatInstaller = {
+                id: 'sussy_cat_adventure',
+                name: 'Sussy Cat Adventure',
+                description: 'Help Pushing Cat collect all the sussy items around the house before the family comes home! A silly stealth-adventure game where you sneak through different rooms, avoid detection, and hide in the Sussy Lair when things get too suspicious. Perfect for young adventurers who love being a little bit naughty! 😼',
+                icon: '😼',
+                version: '1.0',
+                author: 'ElxaOS Family Games',
+                gameData: {
+                    type: 'sussy_cat_game',
+                    difficulty: 'kid_friendly',
+                    rooms: 4,
+                    timeLimit: 120
+                }
+            };
+            
+            this.fileSystem.createFile(['root', 'Programs'], 'Sussy Cat Adventure.abby', JSON.stringify(sussyCatInstaller));
+        }
+
         if (!documentsContents.some(file => file.name === 'My First Code.elxa')) {
             this.fileSystem.createFile(['root', 'Documents'], 'My First Code.elxa', `// My First ElxaCode Program! 🚀
     // Double-click this file or open it with ElxaCode!
