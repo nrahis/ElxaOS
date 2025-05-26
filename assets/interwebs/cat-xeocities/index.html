@@ -2,212 +2,311 @@
 <html>
 <head>
     <style>
-        .whiskersworld-body {
-            background: #000080;
-            color: #ff69b4;
-            font-family: "Comic Sans MS", cursive;
-            padding: 20px;
-            margin: 0;
-            background-image: repeating-linear-gradient(45deg, #000080 0%, #000090 10%, #000080 20%);
+        /* Reset and isolate styles */
+        .whiskers-world-homepage-body {
+            background: #000080 !important;
+            color: #ff69b4 !important;
+            font-family: "Comic Sans MS", cursive !important;
+            padding: 20px !important;
+            margin: 0 !important;
+            background-image: repeating-linear-gradient(45deg, #000080 0%, #000090 10%, #000080 20%) !important;
+            box-sizing: border-box !important;
+            min-height: 100vh !important;
+            line-height: 1.2 !important;
+            font-size: 14px !important;
+        }
+        
+        .whiskers-world-homepage-body * {
+            box-sizing: border-box !important;
         }
 
-        .whiskersworld-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
-            border: 5px groove #ff00ff;
-            padding: 20px;
+        .whiskers-world-homepage-container {
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 5px groove #ff00ff !important;
+            padding: 20px !important;
+            position: relative !important;
+            display: block !important;
+            font-family: "Comic Sans MS", cursive !important;
         }
 
-        .whiskersworld-header {
-            text-align: center;
-            animation: rainbowText 3s infinite;
+        .whiskers-world-homepage-header {
+            text-align: center !important;
+            animation: whiskers-world-rainbowText 3s infinite !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
-        @keyframes rainbowText {
-            0% { color: #ff0000; }
-            33% { color: #00ff00; }
-            66% { color: #0000ff; }
-            100% { color: #ff0000; }
+        @keyframes whiskers-world-rainbowText {
+            0% { color: #ff0000 !important; }
+            33% { color: #00ff00 !important; }
+            66% { color: #0000ff !important; }
+            100% { color: #ff0000 !important; }
         }
 
-        .whiskersworld-title {
-            font-size: 48px;
-            text-shadow: 3px 3px #000;
-            margin-bottom: 10px;
+        .whiskers-world-homepage-title {
+            font-size: 48px !important;
+            text-shadow: 3px 3px #000 !important;
+            margin: 0 0 10px 0 !important;
+            color: #ff0000 !important;
+            font-family: "Comic Sans MS", cursive !important;
+            font-weight: bold !important;
+            line-height: 1.1 !important;
+            padding: 0 !important;
         }
 
-        .whiskersworld-subtitle {
-            color: #ff1493;
-            font-style: italic;
-            border-top: 2px dashed #ff69b4;
-            border-bottom: 2px dashed #ff69b4;
-            padding: 10px;
-            margin: 10px 0;
+        .whiskers-world-homepage-subtitle {
+            color: #ff1493 !important;
+            font-style: italic !important;
+            border-top: 2px dashed #ff69b4 !important;
+            border-bottom: 2px dashed #ff69b4 !important;
+            border-left: none !important;
+            border-right: none !important;
+            padding: 10px !important;
+            margin: 10px 0 !important;
+            font-family: "Comic Sans MS", cursive !important;
+            background: transparent !important;
         }
 
-        .whiskersworld-section {
-            background: #fff;
-            border: 3px double #ff69b4;
-            margin: 20px 0;
-            padding: 15px;
+        .whiskers-world-homepage-section {
+            background: #fff !important;
+            border: 3px double #ff69b4 !important;
+            margin: 20px 0 !important;
+            padding: 15px !important;
+            font-family: "Comic Sans MS", cursive !important;
+            color: #000080 !important;
         }
 
-        .whiskersworld-marquee {
-            background: #000;
-            color: #0f0;
-            padding: 10px;
-            margin: 10px 0;
-            text-align: center;
-            font-family: "Courier New", monospace;
+        .whiskers-world-homepage-section h2 {
+            font-family: "Comic Sans MS", cursive !important;
+            color: #000080 !important;
+            margin: 0 0 10px 0 !important;
+            padding: 0 !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
         }
 
-        .whiskersworld-kitties {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+        .whiskers-world-homepage-section p {
+            font-family: "Comic Sans MS", cursive !important;
+            color: #000080 !important;
+            margin: 10px 0 !important;
+            padding: 0 !important;
+            line-height: 1.4 !important;
+            font-size: 14px !important;
         }
 
-        .whiskersworld-kitty {
-            text-align: center;
-            border: 2px solid #ff69b4;
-            padding: 10px;
-            background: #ffe1f4;
+        .whiskers-world-homepage-marquee {
+            background: #000 !important;
+            color: #0f0 !important;
+            padding: 10px !important;
+            margin: 10px 0 !important;
+            text-align: center !important;
+            font-family: "Courier New", monospace !important;
+            border: none !important;
+            font-size: 14px !important;
         }
 
-        .whiskersworld-guestbook {
-            background: #eee;
-            border: 2px solid #000;
-            padding: 10px;
-            margin: 20px 0;
-            font-family: "Courier New", monospace;
+        .whiskers-world-homepage-kitties {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+            gap: 15px !important;
+            margin: 20px 0 !important;
+            padding: 0 !important;
         }
 
-        .whiskersworld-guestbook-entry {
-            border-bottom: 1px dotted #666;
-            padding: 5px 0;
+        .whiskers-world-homepage-kitty {
+            text-align: center !important;
+            border: 2px solid #ff69b4 !important;
+            padding: 10px !important;
+            background: #ffe1f4 !important;
+            font-family: "Comic Sans MS", cursive !important;
+            color: #000080 !important;
         }
 
-        .whiskersworld-counter {
-            text-align: right;
-            font-family: "Digital", monospace;
-            color: #00f;
-            background: #000;
-            display: inline-block;
-            padding: 3px 8px;
-            border: 2px inset #666;
+        .whiskers-world-homepage-kitty img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            margin: 0 auto 5px auto !important;
         }
 
-        .whiskersworld-banner {
-            text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            background: #ff69b4;
-            color: white;
-            border: 2px dashed yellow;
+        .whiskers-world-homepage-kitty p {
+            font-family: "Comic Sans MS", cursive !important;
+            color: #000080 !important;
+            margin: 5px 0 0 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
         }
 
-        .whiskersworld-footer {
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-            font-family: Arial, sans-serif;
+        .whiskers-world-homepage-guestbook {
+            background: #eee !important;
+            border: 2px solid #000 !important;
+            padding: 10px !important;
+            margin: 20px 0 !important;
+            font-family: "Courier New", monospace !important;
+            color: #000080 !important;
         }
 
-        .whiskersworld-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
+        .whiskers-world-homepage-guestbook h3 {
+            font-family: "Comic Sans MS", cursive !important;
+            color: #000080 !important;
+            margin: 0 0 10px 0 !important;
+            padding: 0 !important;
+            font-size: 16px !important;
         }
 
-        .whiskersworld-link {
-            background: #ff69b4;
-            color: white;
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 2px outset #ff1493;
+        .whiskers-world-homepage-guestbook-entry {
+            border-bottom: 1px dotted #666 !important;
+            border-top: none !important;
+            border-left: none !important;
+            border-right: none !important;
+            padding: 5px 0 !important;
+            margin: 0 !important;
+            font-family: "Courier New", monospace !important;
+            color: #000080 !important;
+            font-size: 12px !important;
         }
 
-        .whiskersworld-webring {
-            border: 2px solid #000;
-            padding: 10px;
-            margin: 20px 0;
-            text-align: center;
-            background: #f0f0f0;
+        .whiskers-world-homepage-counter {
+            text-align: right !important;
+            font-family: "Digital", monospace !important;
+            color: #00f !important;
+            background: #000 !important;
+            display: inline-block !important;
+            padding: 3px 8px !important;
+            border: 2px inset #666 !important;
+            margin: 0 !important;
+            font-size: 12px !important;
+        }
+
+        .whiskers-world-homepage-banner {
+            text-align: center !important;
+            margin: 20px 0 !important;
+            padding: 10px !important;
+            background: #ff69b4 !important;
+            color: white !important;
+            border: 2px dashed yellow !important;
+            font-family: "Comic Sans MS", cursive !important;
+            font-size: 14px !important;
+        }
+
+        .whiskers-world-homepage-webring {
+            border: 2px solid #000 !important;
+            padding: 10px !important;
+            margin: 20px 0 !important;
+            text-align: center !important;
+            background: #f0f0f0 !important;
+            font-family: "Comic Sans MS", cursive !important;
+            color: #000080 !important;
+        }
+
+        .whiskers-world-homepage-links {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 10px !important;
+            justify-content: center !important;
+            margin: 20px 0 !important;
+            padding: 0 !important;
+        }
+
+        .whiskers-world-homepage-link {
+            background: #ff69b4 !important;
+            color: white !important;
+            padding: 5px 10px !important;
+            text-decoration: none !important;
+            border: 2px outset #ff1493 !important;
+            margin: 0 !important;
+            display: inline-block !important;
+            font-family: "Comic Sans MS", cursive !important;
+            font-size: 12px !important;
+        }
+
+        .whiskers-world-homepage-footer {
+            text-align: center !important;
+            font-size: 12px !important;
+            color: #666 !important;
+            margin-top: 20px !important;
+            font-family: "Comic Sans MS", cursive !important;
+            padding: 0 !important;
+        }
+
+        .whiskers-world-homepage-footer p {
+            font-family: "Comic Sans MS", cursive !important;
+            color: #666 !important;
+            margin: 5px 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
         }
     </style>
 </head>
-<body class="whiskersworld-body">
-    <div class="whiskersworld-container">
-        <div class="whiskersworld-header">
-            <h1 class="whiskersworld-title">🐱 Whiskers' World 🐱</h1>
-            <div class="whiskersworld-subtitle">~*~*~ The Purrfect Snakesian Cat Page ~*~*~</div>
+<body class="whiskers-world-homepage-body">
+    <div class="whiskers-world-homepage-container">
+        <div class="whiskers-world-homepage-header">
+            <h1 class="whiskers-world-homepage-title">🐱 Whiskers' World 🐱</h1>
+            <div class="whiskers-world-homepage-subtitle">~*~*~ The Purrfect Snakesian Cat Page ~*~*~</div>
         </div>
 
-        <div class="whiskersworld-marquee">
+        <div class="whiskers-world-homepage-marquee">
             ⭐ Welcome to my homepage! I'm KittyLuver427 from Snakesia! ⭐
         </div>
 
-        <div class="whiskersworld-banner">
+        <div class="whiskers-world-homepage-banner">
             💖 Proud employee of Snake-E Corp's Cat Division! 💖
         </div>
 
-        <div class="whiskersworld-section">
+        <div class="whiskers-world-homepage-section">
             <h2>🌟 About Me 🌟</h2>
             <p>Hiii! I'm Marina Scales (yes, like snake scales XD). I work at Snake-E Corp as a Professional Cat Integration Specialist! 
             That means I help make sure all the office cats are happy and well-fed. Mr. Snake-E is actually a huge cat lover 
             (bet you didn't know that!).</p>
         </div>
 
-        <div class="whiskersworld-section">
+        <div class="whiskers-world-homepage-section">
             <h2>👑 Meet My Kitties! 👑</h2>
-            <div class="whiskersworld-kitties">
-                <div class="whiskersworld-kitty">
-                    <img src="/api/placeholder/100/100" alt="ASCII cat">
+            <div class="whiskers-world-homepage-kitties">
+                <div class="whiskers-world-homepage-kitty">
+                    <img src="./assets/interwebs/cat-xeocities/images/denali.png" alt="Denali Jr. the cat" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='Denali Jr.<br>(Image not found)'">
                     <p>Denali Jr.<br>(Named after Mr. Snake-E's car!)</p>
                 </div>
-                <div class="whiskersworld-kitty">
-                    <img src="/api/placeholder/100/100" alt="ASCII cat">
+                <div class="whiskers-world-homepage-kitty">
+                    <img src="./assets/interwebs/cat-xeocities/images/binary.png" alt="Binary the cat" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='Binary<br>(Image not found)'">
                     <p>Binary<br>(She's a computer cat!)</p>
                 </div>
-                <div class="whiskersworld-kitty">
-                    <img src="/api/placeholder/100/100" alt="ASCII cat">
+                <div class="whiskers-world-homepage-kitty">
+                    <img src="./assets/interwebs/cat-xeocities/images/pixel.png" alt="Pixel the cat" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='Pixel<br>(Image not found)'">
                     <p>Pixel<br>(Remy's favorite!)</p>
                 </div>
             </div>
         </div>
 
-        <div class="whiskersworld-guestbook">
+        <div class="whiskers-world-homepage-guestbook">
             <h3>📝 Recent Guestbook Entries 📝</h3>
-            <div class="whiskersworld-guestbook-entry">
+            <div class="whiskers-world-homepage-guestbook-entry">
                 "Cute cats! Love the Snakesian Fold breed!" - Mrs_Snake_E
             </div>
-            <div class="whiskersworld-guestbook-entry">
+            <div class="whiskers-world-homepage-guestbook-entry">
                 "Binary looks just like my cat from ElxaOS 95!" - RemyVexin
             </div>
-            <div class="whiskersworld-guestbook-entry">
+            <div class="whiskers-world-homepage-guestbook-entry">
                 "Great job with the office cats!" - Snake_E_CEO
             </div>
         </div>
 
-        <div class="whiskersworld-webring">
+        <div class="whiskers-world-homepage-webring">
             🌐 Proud member of the Snakesian Xeocities Webring! 🌐
-            <div class="whiskersworld-links">
-                <a href="ms-xeocities.ex" class="whiskersworld-link">← Previous</a>
-                <a href="javascript:void(0)" class="whiskersworld-link">Random</a>
-                <a href="nr-xeocities.ex" class="whiskersworld-link">Next →</a>
+            <div class="whiskers-world-homepage-links">
+                <a href="ms-xeocities.ex" class="whiskers-world-homepage-link">← Previous</a>
+                <a href="javascript:void(0)" class="whiskers-world-homepage-link">Random</a>
+                <a href="nr-xeocities.ex" class="whiskers-world-homepage-link">Next →</a>
             </div>
         </div>
 
         <div style="text-align: center;">
-            <span class="whiskersworld-counter">Visitors: 13,337</span>
+            <span class="whiskers-world-homepage-counter">Visitors: 13,337</span>
         </div>
 
-        <div class="whiskersworld-footer">
+        <div class="whiskers-world-homepage-footer">
             <p>Made with 💖 using ElxaOS Notepad</p>
             <p>Last updated: Snakesian Date 13/13/2025</p>
             <p>Best viewed in Snoogle Browser at 800x600</p>

@@ -103,14 +103,14 @@ class PaintProgram {
         return `
             <div class="paint-container" data-document-id="${documentId}" data-tool="${paintDoc.settings.tool}">
                 <style>
-                    .quick-colors-grid {
+                    .paint-quick-colors-grid {
                         display: grid;
                         grid-template-columns: repeat(16, 14px);
                         gap: 2px;
                         margin: 4px 0;
                     }
                     
-                    .quick-color {
+                    .paint-quick-color-item {
                         width: 14px;
                         height: 14px;
                         border: 1px solid #666;
@@ -118,30 +118,30 @@ class PaintProgram {
                         border-radius: 2px;
                     }
                     
-                    .quick-color:hover {
+                    .paint-quick-color-item:hover {
                         border: 2px solid #000;
                         box-shadow: 0 0 4px rgba(0,0,0,0.5);
                     }
                     
-                    .clickable-color {
+                    .paint-clickable-color {
                         cursor: pointer;
                         border: 2px outset #c0c0c0;
                         position: relative;
                     }
                     
-                    .clickable-color:hover {
+                    .paint-clickable-color:hover {
                         border: 2px inset #c0c0c0;
                     }
                     
-                    .clickable-color:active {
+                    .paint-clickable-color:active {
                         border: 2px inset #999;
                     }
                     
-                    .color-section {
+                    .paint-color-section-item {
                         margin: 2px 0;
                     }
                     
-                    .paint-palette {
+                    .paint-color-palette-container {
                         background: #f0f0f0;
                         border: 2px inset #c0c0c0;
                         padding: 6px;
@@ -385,29 +385,29 @@ class PaintProgram {
                 </div>
                 
                 <!-- Compact Color Panel -->
-                <div class="paint-palette">
-                    <div class="color-section">
+                <div class="paint-color-palette-container">
+                    <div class="paint-color-section-wrapper">
                         <label style="font-weight: bold; font-size: 10px;">Colors:</label>
-                        <div class="current-colors">
-                            <div class="color-display">
-                                <div class="primary-color clickable-color" 
+                        <div class="paint-current-colors-display">
+                            <div class="paint-color-display-wrapper">
+                                <div class="paint-primary-color paint-clickable-color" 
                                      style="background-color: ${paintDoc.settings.color}" 
                                      title="Click to choose primary color"
                                      data-color-type="primary"></div>
-                                <div class="secondary-color clickable-color" 
+                                <div class="paint-secondary-color paint-clickable-color" 
                                      style="background-color: ${paintDoc.settings.backgroundColor}" 
                                      title="Click to choose background color"
                                      data-color-type="background"></div>
                             </div>
-                            <button class="swap-colors" title="Swap Colors">⇄</button>
+                            <button class="paint-swap-colors-btn" title="Swap Colors">⇄</button>
                         </div>
                     </div>
                     
-                    <div class="color-section">
+                    <div class="paint-color-section-wrapper">
                         <label style="font-weight: bold; font-size: 10px;">Quick Colors:</label>
-                        <div class="quick-colors-grid">
+                        <div class="paint-quick-colors-grid">
                             ${this.quickColors.map(color => 
-                                `<div class="quick-color" 
+                                `<div class="paint-quick-color-item" 
                                       style="background-color: ${color}" 
                                       data-color="${color}" 
                                       title="${color}"></div>`
@@ -502,7 +502,7 @@ class PaintProgram {
         });
         
         // Quick colors
-        container.querySelectorAll('.quick-color').forEach(colorBtn => {
+        container.querySelectorAll('.paint-quick-color-item').forEach(colorBtn => {
             colorBtn.addEventListener('click', (e) => {
                 this.setPrimaryColor(colorBtn.dataset.color, documentId);
             });
@@ -514,14 +514,14 @@ class PaintProgram {
         });
         
         // Clickable color swatches
-        container.querySelectorAll('.clickable-color').forEach(colorSwatch => {
+        container.querySelectorAll('.paint-clickable-color').forEach(colorSwatch => {
             colorSwatch.addEventListener('click', (e) => {
                 this.openColorPicker(colorSwatch.dataset.colorType, documentId);
             });
         });
         
         // Swap colors button
-        container.querySelector('.swap-colors').addEventListener('click', () => {
+        container.querySelector('.paint-swap-colors-btn').addEventListener('click', () => {
             this.swapColors(documentId);
         });
         
@@ -1146,7 +1146,7 @@ class PaintProgram {
         
         paintDoc.settings.color = color;
         
-        const primaryColorEl = container.querySelector('.primary-color');
+        const primaryColorEl = container.querySelector('.paint-primary-color');
         if (primaryColorEl) {
             primaryColorEl.style.backgroundColor = color;
         }
@@ -1158,7 +1158,7 @@ class PaintProgram {
         
         paintDoc.settings.backgroundColor = color;
         
-        const secondaryColorEl = container.querySelector('.secondary-color');
+        const secondaryColorEl = container.querySelector('.paint-secondary-color');
         if (secondaryColorEl) {
             secondaryColorEl.style.backgroundColor = color;
         }

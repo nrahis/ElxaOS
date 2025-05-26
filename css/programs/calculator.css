@@ -1,11 +1,11 @@
 /* =================================
-   CALCULATOR PROGRAM STYLES
+   CALCULATOR PROGRAM STYLES - THEME INTEGRATED
 ================================= */
 .calculator-container {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: #f0f0f0;
+    background: var(--windowBg, #f0f0f0);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
 }
@@ -18,15 +18,15 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px;
-    background: linear-gradient(to bottom, #e8f4fd, #d4e8fc);
-    border-bottom: 1px solid #c0c0c0;
+    background: var(--menuBg, linear-gradient(to bottom, #e8f4fd, #d4e8fc));
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
     gap: 8px;
 }
 
 .mode-toggle {
     display: flex;
     gap: 2px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -36,19 +36,19 @@
     font-size: 10px;
     font-weight: bold;
     border: none;
-    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
     cursor: pointer;
-    color: #333;
+    color: var(--menuText, #333);
     transition: all 0.2s ease;
 }
 
 .mode-btn:hover {
-    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
 }
 
 .mode-btn.active {
-    background: linear-gradient(to bottom, #4a90e2, #357abd);
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4a90e2, #357abd));
+    color: var(--menuHoverText, white);
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
@@ -60,8 +60,8 @@
 .calc-control {
     width: 24px;
     height: 24px;
-    border: 1px outset #c0c0c0;
-    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
     cursor: pointer;
     font-size: 12px;
     border-radius: 2px;
@@ -69,15 +69,16 @@
     align-items: center;
     justify-content: center;
     transition: all 0.1s ease;
+    color: var(--menuText, #333);
 }
 
 .calc-control:hover {
-    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
 }
 
 .calc-control:active {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #e0e0e0, #f0f0f0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #e0e0e0, #f0f0f0));
 }
 
 /* =================================
@@ -85,8 +86,8 @@
 ================================= */
 .calculator-display-section {
     padding: 12px;
-    background: linear-gradient(to bottom, #f8f8f8, #f0f0f0);
-    border-bottom: 1px solid #c0c0c0;
+    background: var(--menuBg, linear-gradient(to bottom, #f8f8f8, #f0f0f0));
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
 }
 
 .calculator-display {
@@ -97,7 +98,7 @@
     font-family: 'Courier New', 'Monaco', monospace;
     font-size: 24px;
     font-weight: bold;
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder, #c0c0c0);
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -127,8 +128,8 @@
 }
 
 .memory-indicator {
-    color: #666;
-    background: #f0f0f0;
+    color: var(--menuText, #666);
+    background: var(--windowBg, #f0f0f0);
     padding: 2px 6px;
     border-radius: 2px;
     border: 1px solid transparent;
@@ -148,7 +149,7 @@
 }
 
 .operation-indicator {
-    color: #0066cc;
+    color: var(--titlebarBg, #0066cc);
     font-size: 12px;
     font-weight: bold;
     min-width: 20px;
@@ -161,7 +162,7 @@
 .calculator-keypad {
     flex: 1;
     padding: 8px;
-    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+    background: var(--menuBg, linear-gradient(to bottom, #f5f5f5, #e8e8e8));
     overflow-y: auto;
 }
 
@@ -199,7 +200,7 @@
 ================================= */
 .calc-btn {
     height: 40px;
-    border: 2px outset #c0c0c0;
+    border: 2px outset var(--windowBorder, #c0c0c0);
     font-size: 12px;
     font-weight: bold;
     cursor: pointer;
@@ -219,38 +220,43 @@
 
 .calc-btn:active,
 .calc-btn.clicked {
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder, #c0c0c0);
     transform: translateY(1px);
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Number buttons - Blue gradient */
+/* Number buttons - Theme colored with subtle distinction */
 .number-btn {
-    background: linear-gradient(to bottom, #e6f3ff, #b3d9ff);
-    color: #0066cc;
-    border-color: #99ccff;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    color: var(--menuText, #333);
+    border-color: var(--windowBorder, #c0c0c0);
+    filter: brightness(1.05);
 }
 
 .number-btn:hover {
-    background: linear-gradient(to bottom, #f0f8ff, #ccddff);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
+    filter: brightness(1.1);
 }
 
 .zero-btn {
     grid-area: n0;
 }
 
-/* Operator buttons - Orange gradient */
+/* Operator buttons - Slightly darker theme variant */
 .operator-btn {
-    background: linear-gradient(to bottom, #fff3e0, #ffcc99);
-    color: #cc6600;
-    border-color: #ffb366;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    color: var(--titlebarBg, #0066cc);
+    border-color: var(--windowBorder, #c0c0c0);
+    filter: brightness(0.95);
+    font-weight: bold;
 }
 
 .operator-btn:hover {
-    background: linear-gradient(to bottom, #fff8f0, #ffdd99);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
+    filter: brightness(1.0);
 }
 
-/* Clear button - RED as requested! */
+/* Clear button - Keep red for visibility/safety */
 .clear-btn {
     background: linear-gradient(to bottom, #ff6b6b, #e74c3c);
     color: white;
@@ -264,65 +270,77 @@
     box-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
 }
 
-/* Function buttons - Purple gradient */
+/* Function buttons - Theme colored with slight brightness variation */
 .function-btn {
-    background: linear-gradient(to bottom, #f0e6ff, #d9b3ff);
-    color: #663399;
-    border-color: #b366ff;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    color: var(--menuText, #333);
+    border-color: var(--windowBorder, #c0c0c0);
+    filter: brightness(0.98);
 }
 
 .function-btn:hover {
-    background: linear-gradient(to bottom, #f5f0ff, #e6ccff);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
+    filter: brightness(1.03);
 }
 
-/* Equals button - Green gradient */
+/* Equals button - Uses titlebar color for emphasis */
 .equals-btn {
-    background: linear-gradient(to bottom, #e8f5e8, #b3ffb3);
-    color: #006600;
-    border-color: #66cc66;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4a90e2, #357abd));
+    color: var(--menuHoverText, white);
+    border-color: var(--titlebarBg, #357abd);
     font-size: 16px;
     grid-area: equals;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .equals-btn:hover {
-    background: linear-gradient(to bottom, #f0fff0, #ccffcc);
-    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+    background: var(--titlebarBg, linear-gradient(to bottom, #5ba0f2, #4680cd));
+    filter: brightness(1.1);
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
 }
 
-/* Memory buttons - Yellow gradient */
+/* Memory buttons - Theme colored with warm tint */
 .memory-btn {
-    background: linear-gradient(to bottom, #fff9e6, #ffeb99);
-    color: #cc9900;
-    border-color: #ffcc33;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    color: var(--menuText, #333);
+    border-color: var(--windowBorder, #c0c0c0);
     font-size: 10px;
+    filter: sepia(0.1) brightness(1.02);
 }
 
 .memory-btn:hover {
-    background: linear-gradient(to bottom, #fffbf0, #fff2b3);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
+    filter: sepia(0.15) brightness(1.05);
 }
 
-/* Scientific buttons - Teal gradient */
+/* Scientific buttons - Theme colored with cool tint */
 .sci-btn {
-    background: linear-gradient(to bottom, #e6ffff, #99f0f0);
-    color: #006666;
-    border-color: #66cccc;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    color: var(--menuText, #333);
+    border-color: var(--windowBorder, #c0c0c0);
     font-size: 10px;
+    filter: hue-rotate(10deg) brightness(1.01);
 }
 
 .sci-btn:hover {
-    background: linear-gradient(to bottom, #f0ffff, #b3f5f5);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
+    filter: hue-rotate(10deg) brightness(1.04);
 }
 
-/* Fun buttons - Pink gradient */
+/* Fun buttons - Theme colored with subtle saturation boost */
 .fun-btn {
-    background: linear-gradient(to bottom, #ffe6f0, #ffb3d9);
-    color: #cc0066;
-    border-color: #ff66b3;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    color: var(--titlebarBg, #0066cc);
+    border-color: var(--windowBorder, #c0c0c0);
     font-size: 11px;
+    filter: saturate(1.1) brightness(1.02);
+    font-weight: bold;
 }
 
 .fun-btn:hover {
-    background: linear-gradient(to bottom, #fff0f8, #ffccdd);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
+    filter: saturate(1.2) brightness(1.05);
 }
 
 /* =================================
@@ -335,7 +353,7 @@
     right: 0;
     bottom: 0;
     background: rgba(255, 255, 255, 0.98);
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder, #c0c0c0);
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -358,14 +376,14 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 12px;
-    background: linear-gradient(to bottom, #f0f8ff, #e0f0ff);
-    border-bottom: 1px solid #c0c0c0;
+    background: var(--titlebarBg, linear-gradient(to bottom, #f0f8ff, #e0f0ff));
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
 }
 
 .history-header h4 {
     margin: 0;
     font-size: 12px;
-    color: #0066cc;
+    color: var(--menuHoverText, #0066cc);
 }
 
 .history-controls {
@@ -378,7 +396,7 @@
 .history-close {
     padding: 4px 8px;
     font-size: 10px;
-    border: 1px outset #c0c0c0;
+    border: 1px outset var(--windowBorder, #c0c0c0);
     cursor: pointer;
     border-radius: 2px;
 }
@@ -397,8 +415,8 @@
 }
 
 .history-close {
-    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
-    color: #333;
+    background: var(--buttonBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    color: var(--menuText, #333);
     font-weight: bold;
     width: 20px;
     height: 20px;
@@ -409,41 +427,42 @@
 }
 
 .history-close:hover {
-    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
 }
 
 .history-close:active {
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .history-list {
     flex: 1;
     padding: 8px;
     overflow-y: auto;
-    background: white;
+    background: var(--windowBg, white);
 }
 
 .history-item {
     padding: 6px 8px;
     margin-bottom: 2px;
-    background: #f8f8f8;
-    border: 1px solid #e0e0e0;
+    background: var(--buttonBg, #f8f8f8);
+    border: 1px solid var(--windowBorder, #e0e0e0);
     border-radius: 3px;
     font-family: 'Courier New', monospace;
     font-size: 11px;
-    color: #333;
+    color: var(--menuText, #333);
     transition: all 0.2s ease;
 }
 
 .history-item:hover {
-    background: #e8f4ff;
-    border-color: #b3d9ff;
+    background: var(--menuHoverBg, #e8f4ff);
+    border-color: var(--titlebarBg, #b3d9ff);
     cursor: pointer;
+    color: var(--menuHoverText, white);
 }
 
 .history-empty {
     text-align: center;
-    color: #999;
+    color: var(--menuText, #999);
     font-style: italic;
     padding: 20px;
     font-size: 12px;
@@ -499,7 +518,7 @@
    ACCESSIBILITY FEATURES
 ================================= */
 .calc-btn:focus {
-    outline: 2px solid #0066cc;
+    outline: 2px solid var(--titlebarBg, #0066cc);
     outline-offset: 2px;
 }
 
@@ -511,20 +530,7 @@
 /* =================================
    SPECIAL ANIMATIONS
 ================================= */
-.calculator-container {
-    animation: calculatorStart 0.4s ease-out;
-}
-
-@keyframes calculatorStart {
-    from {
-        opacity: 0;
-        transform: scale(0.9) rotateY(-10deg);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) rotateY(0deg);
-    }
-}
+/* Opening animation removed per user request */
 
 /* Button press effects */
 .calc-btn {
@@ -574,6 +580,22 @@
 @keyframes rainbow {
     0% { filter: hue-rotate(0deg); }
     100% { filter: hue-rotate(360deg); }
+}
+
+/* =================================
+   DARK THEME SUPPORT
+================================= */
+.dark-theme .calculator-container {
+    color: var(--menuText, #ffffff);
+}
+
+.dark-theme .history-item:hover {
+    color: var(--menuHoverText, #000000);
+}
+
+.dark-theme .font-select,
+.dark-theme .size-select {
+    color: var(--menuText, #ffffff);
 }
 
 /* =================================

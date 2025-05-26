@@ -48,54 +48,54 @@ class VirusLabProgram {
         return `
             <div class="virus-lab-container" data-window-id="${windowId}">
                 <!-- Cool Hacker Header -->
-                <div class="hacker-header">
-                    <div class="hacker-logo">
-                        <div class="skull-icon">💀</div>
-                        <div class="lab-info">
+                <div class="vlab-hacker-header">
+                    <div class="vlab-logo">
+                        <div class="vlab-skull-icon">💀</div>
+                        <div class="vlab-info">
                             <h2>VIRUS LAB</h2>
-                            <span class="hacker-tag">Elite Hacker Edition v3.37</span>
+                            <span class="vlab-tag">Elite Hacker Edition v3.37</span>
                         </div>
                     </div>
-                    <div class="hacker-status">
-                        <div class="status-text">🔥 READY TO HACK 🔥</div>
-                        <div class="matrix-effect" id="matrix-${windowId}"></div>
+                    <div class="vlab-status">
+                        <div class="vlab-status-text">🔥 READY TO HACK 🔥</div>
+                        <div class="vlab-matrix-effect" id="matrix-${windowId}"></div>
                     </div>
                 </div>
 
                 <!-- Navigation Tabs -->
-                <div class="lab-nav">
-                    <button class="lab-tab active" data-tab="create" data-window="${windowId}">🧪 Create Virus</button>
-                    <button class="lab-tab" data-tab="test" data-window="${windowId}">🔬 Test Lab</button>
-                    <button class="lab-tab" data-tab="send" data-window="${windowId}">📡 Send Attack</button>
-                    <button class="lab-tab" data-tab="gallery" data-window="${windowId}">💾 My Viruses</button>
+                <div class="vlab-nav">
+                    <button class="vlab-tab active" data-tab="create" data-window="${windowId}">🧪 Create Virus</button>
+                    <button class="vlab-tab" data-tab="test" data-window="${windowId}">🔬 Test Lab</button>
+                    <button class="vlab-tab" data-tab="send" data-window="${windowId}">📡 Send Attack</button>
+                    <button class="vlab-tab" data-tab="gallery" data-window="${windowId}">💾 My Viruses</button>
                 </div>
 
                 <!-- Content Area -->
-                <div class="lab-content">
+                <div class="vlab-content">
                     <!-- Create Tab -->
-                    <div class="tab-content active" id="create-tab-${windowId}">
-                        <div class="create-interface">
-                            <div class="create-form">
+                    <div class="vlab-tab-content active" id="create-tab-${windowId}">
+                        <div class="vlab-create-interface">
+                            <div class="vlab-create-form">
                                 <h3>🧪 Design Your Virus</h3>
                                 
-                                <div class="form-row">
-                                    <div class="form-group">
+                                <div class="vlab-form-row">
+                                    <div class="vlab-form-group">
                                         <label>💀 Virus Name:</label>
                                         <input type="text" id="virus-name-${windowId}" placeholder="SuperCoolVirus" maxlength="20">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="vlab-form-group">
                                         <label>👤 Created By:</label>
                                         <input type="text" id="virus-author-${windowId}" placeholder="Elite Hacker" maxlength="15">
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="vlab-form-group">
                                     <label>📝 Evil Description:</label>
                                     <textarea id="virus-description-${windowId}" placeholder="This virus will totally prank everyone!" maxlength="100"></textarea>
                                 </div>
 
-                                <div class="form-row">
-                                    <div class="form-group">
+                                <div class="vlab-form-row">
+                                    <div class="vlab-form-group">
                                         <label>🎯 Target Victim:</label>
                                         <select id="virus-target-${windowId}">
                                             <option value="">Choose your target...</option>
@@ -104,7 +104,7 @@ class VirusLabProgram {
                                         </select>
                                         <input type="text" id="custom-target-${windowId}" placeholder="Enter custom target" style="display:none;" maxlength="15">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="vlab-form-group">
                                         <label>⚡ Danger Level:</label>
                                         <select id="virus-severity-${windowId}">
                                             <option value="low">🟢 Harmless Prank</option>
@@ -114,84 +114,84 @@ class VirusLabProgram {
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="vlab-form-group">
                                     <label>🎨 Virus Type:</label>
-                                    <div class="virus-types">
-                                        <div class="type-option" data-type="image">
-                                            <div class="type-icon">🖼️</div>
-                                            <div class="type-name">Image Bomber</div>
-                                            <div class="type-desc">Shows funny pictures</div>
+                                    <div class="vlab-virus-types">
+                                        <div class="vlab-type-option" data-type="image">
+                                            <div class="vlab-type-icon">🖼️</div>
+                                            <div class="vlab-type-name">Image Bomber</div>
+                                            <div class="vlab-type-desc">Shows funny pictures</div>
                                         </div>
-                                        <div class="type-option" data-type="popup">
-                                            <div class="type-icon">💥</div>
-                                            <div class="type-name">Popup Storm</div>
-                                            <div class="type-desc">Lots of silly popups</div>
+                                        <div class="vlab-type-option" data-type="popup">
+                                            <div class="vlab-type-icon">💥</div>
+                                            <div class="vlab-type-name">Popup Storm</div>
+                                            <div class="vlab-type-desc">Lots of silly popups</div>
                                         </div>
-                                        <div class="type-option" data-type="message">
-                                            <div class="type-icon">💬</div>
-                                            <div class="type-name">Message Spammer</div>
-                                            <div class="type-desc">Sends funny messages</div>
+                                        <div class="vlab-type-option" data-type="message">
+                                            <div class="vlab-type-icon">💬</div>
+                                            <div class="vlab-type-name">Message Spammer</div>
+                                            <div class="vlab-type-desc">Sends funny messages</div>
                                         </div>
-                                        <div class="type-option" data-type="screen">
-                                            <div class="type-icon">📺</div>
-                                            <div class="type-name">Screen Effect</div>
-                                            <div class="type-desc">Cool screen effects</div>
+                                        <div class="vlab-type-option" data-type="screen">
+                                            <div class="vlab-type-icon">📺</div>
+                                            <div class="vlab-type-name">Screen Effect</div>
+                                            <div class="vlab-type-desc">Cool screen effects</div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Image Selection (for image type) -->
-                                <div class="image-selection" id="image-selection-${windowId}" style="display:none;">
+                                <div class="vlab-image-selection" id="image-selection-${windowId}" style="display:none;">
                                     <label>🖼️ Choose Images: <small>(Select multiple for variety!)</small></label>
-                                    <div class="image-grid" id="image-grid-${windowId}">
+                                    <div class="vlab-image-grid" id="image-grid-${windowId}">
                                         <!-- Images will be populated here -->
                                     </div>
                                 </div>
 
                                 <!-- Color Selection -->
-                                <div class="form-group">
+                                <div class="vlab-form-group">
                                     <label>🌈 Virus Colors:</label>
-                                    <div class="color-picker-grid">
-                                        <div class="color-option" data-color="#ff0000" style="background:#ff0000"></div>
-                                        <div class="color-option" data-color="#00ff00" style="background:#00ff00"></div>
-                                        <div class="color-option" data-color="#0000ff" style="background:#0000ff"></div>
-                                        <div class="color-option" data-color="#ffff00" style="background:#ffff00"></div>
-                                        <div class="color-option" data-color="#ff00ff" style="background:#ff00ff"></div>
-                                        <div class="color-option" data-color="#00ffff" style="background:#00ffff"></div>
-                                        <div class="color-option" data-color="#ff8800" style="background:#ff8800"></div>
-                                        <div class="color-option" data-color="#8800ff" style="background:#8800ff"></div>
+                                    <div class="vlab-color-picker-grid">
+                                        <div class="vlab-color-option" data-color="#ff0000" style="background:#ff0000"></div>
+                                        <div class="vlab-color-option" data-color="#00ff00" style="background:#00ff00"></div>
+                                        <div class="vlab-color-option" data-color="#0000ff" style="background:#0000ff"></div>
+                                        <div class="vlab-color-option" data-color="#ffff00" style="background:#ffff00"></div>
+                                        <div class="vlab-color-option" data-color="#ff00ff" style="background:#ff00ff"></div>
+                                        <div class="vlab-color-option" data-color="#00ffff" style="background:#00ffff"></div>
+                                        <div class="vlab-color-option" data-color="#ff8800" style="background:#ff8800"></div>
+                                        <div class="vlab-color-option" data-color="#8800ff" style="background:#8800ff"></div>
                                     </div>
                                 </div>
 
                                 <!-- Custom Messages (for popup/message types) -->
-                                <div class="custom-messages" id="custom-messages-${windowId}" style="display:none;">
+                                <div class="vlab-custom-messages" id="custom-messages-${windowId}" style="display:none;">
                                     <label>💬 Custom Messages:</label>
-                                    <div class="message-inputs" id="message-inputs-${windowId}">
+                                    <div class="vlab-message-inputs" id="message-inputs-${windowId}">
                                         <input type="text" placeholder="Message 1" maxlength="50">
                                         <input type="text" placeholder="Message 2" maxlength="50">
                                         <input type="text" placeholder="Message 3" maxlength="50">
                                     </div>
-                                    <button type="button" class="add-message-btn" id="add-message-${windowId}">
+                                    <button type="button" class="vlab-add-message-btn" id="add-message-${windowId}">
                                         ➕ Add Another Message
                                     </button>
                                 </div>
 
-                                <div class="create-actions">
-                                    <button class="create-virus-btn" id="create-virus-${windowId}">
+                                <div class="vlab-create-actions">
+                                    <button class="vlab-create-virus-btn" id="create-virus-${windowId}">
                                         🧪 CREATE VIRUS
                                     </button>
-                                    <button class="preview-virus-btn" id="preview-virus-${windowId}">
+                                    <button class="vlab-preview-virus-btn" id="preview-virus-${windowId}">
                                         👁️ Preview
                                     </button>
                                 </div>
                             </div>
 
-                            <div class="virus-preview" id="virus-preview-${windowId}">
+                            <div class="vlab-virus-preview" id="virus-preview-${windowId}">
                                 <h3>🔍 Virus Preview</h3>
-                                <div class="preview-content">
-                                    <div class="preview-placeholder">
-                                        <div class="placeholder-icon">🦠</div>
-                                        <div class="placeholder-text">Create a virus to see preview!</div>
+                                <div class="vlab-preview-content">
+                                    <div class="vlab-preview-placeholder">
+                                        <div class="vlab-placeholder-icon">🦠</div>
+                                        <div class="vlab-placeholder-text">Create a virus to see preview!</div>
                                     </div>
                                 </div>
                             </div>
@@ -199,22 +199,22 @@ class VirusLabProgram {
                     </div>
 
                     <!-- Test Tab -->
-                    <div class="tab-content" id="test-tab-${windowId}">
-                        <div class="test-interface">
+                    <div class="vlab-tab-content" id="test-tab-${windowId}">
+                        <div class="vlab-test-interface">
                             <h3>🔬 Virus Testing Chamber</h3>
-                            <div class="test-chamber">
-                                <div class="chamber-display" id="test-display-${windowId}">
-                                    <div class="chamber-icon">🧪</div>
-                                    <div class="chamber-text">Select a virus to test!</div>
+                            <div class="vlab-test-chamber">
+                                <div class="vlab-chamber-display" id="test-display-${windowId}">
+                                    <div class="vlab-chamber-icon">🧪</div>
+                                    <div class="vlab-chamber-text">Select a virus to test!</div>
                                 </div>
-                                <div class="test-controls">
+                                <div class="vlab-test-controls">
                                     <select id="test-virus-select-${windowId}">
                                         <option value="">Choose virus to test...</option>
                                     </select>
-                                    <button class="test-btn" id="test-virus-${windowId}">
+                                    <button class="vlab-test-btn" id="test-virus-${windowId}">
                                         🚀 TEST VIRUS
                                     </button>
-                                    <button class="stop-test-btn" id="stop-test-${windowId}">
+                                    <button class="vlab-stop-test-btn" id="stop-test-${windowId}">
                                         🛑 STOP TEST
                                     </button>
                                 </div>
@@ -223,38 +223,38 @@ class VirusLabProgram {
                     </div>
 
                     <!-- Send Tab -->
-                    <div class="tab-content" id="send-tab-${windowId}">
-                        <div class="send-interface">
+                    <div class="vlab-tab-content" id="send-tab-${windowId}">
+                        <div class="vlab-send-interface">
                             <h3>📡 Hacker Attack Center</h3>
-                            <div class="attack-center">
-                                <div class="target-selection">
+                            <div class="vlab-attack-center">
+                                <div class="vlab-target-selection">
                                     <h4>🎯 Select Target</h4>
-                                    <div class="target-grid">
+                                    <div class="vlab-target-grid">
                                         ${this.targetList.map(target => `
-                                            <div class="target-card" data-target="${target}">
-                                                <div class="target-avatar">${this.getTargetAvatar(target)}</div>
-                                                <div class="target-name">${target}</div>
-                                                <div class="target-status">🟢 Online</div>
+                                            <div class="vlab-target-card" data-target="${target}">
+                                                <div class="vlab-target-avatar">${this.getTargetAvatar(target)}</div>
+                                                <div class="vlab-target-name">${target}</div>
+                                                <div class="vlab-target-status">🟢 Online</div>
                                             </div>
                                         `).join('')}
                                     </div>
                                 </div>
                                 
-                                <div class="virus-selection">
+                                <div class="vlab-virus-selection">
                                     <h4>💀 Choose Your Weapon</h4>
                                     <select id="attack-virus-select-${windowId}">
                                         <option value="">Select virus...</option>
                                     </select>
                                 </div>
 
-                                <div class="attack-preview" id="attack-preview-${windowId}">
-                                    <div class="preview-placeholder">
+                                <div class="vlab-attack-preview" id="attack-preview-${windowId}">
+                                    <div class="vlab-preview-placeholder">
                                         Select target and virus to preview attack!
                                     </div>
                                 </div>
 
-                                <div class="attack-controls">
-                                    <button class="launch-attack-btn" id="launch-attack-${windowId}">
+                                <div class="vlab-attack-controls">
+                                    <button class="vlab-launch-attack-btn" id="launch-attack-${windowId}">
                                         🚀 LAUNCH ATTACK!
                                     </button>
                                 </div>
@@ -263,10 +263,10 @@ class VirusLabProgram {
                     </div>
 
                     <!-- Gallery Tab -->
-                    <div class="tab-content" id="gallery-tab-${windowId}">
-                        <div class="gallery-interface">
+                    <div class="vlab-tab-content" id="gallery-tab-${windowId}">
+                        <div class="vlab-gallery-interface">
                             <h3>💾 My Virus Collection</h3>
-                            <div class="virus-gallery" id="virus-gallery-${windowId}">
+                            <div class="vlab-virus-gallery" id="virus-gallery-${windowId}">
                                 <!-- Saved viruses will be populated here -->
                             </div>
                         </div>
@@ -274,8 +274,8 @@ class VirusLabProgram {
                 </div>
 
                 <!-- Footer -->
-                <div class="lab-footer">
-                    <div class="footer-text">
+                <div class="vlab-footer">
+                    <div class="vlab-footer-text">
                         <span>🔥 Elite Hacker Status: ACTIVE</span>
                         <span>💀 Viruses Created: <span id="virus-count-${windowId}">0</span></span>
                         <span>🎯 Successful Attacks: <span id="attack-count-${windowId}">0</span></span>
@@ -295,7 +295,7 @@ class VirusLabProgram {
             if (!target) return;
 
             // Handle tab navigation
-            if (target.classList.contains('lab-tab')) {
+            if (target.classList.contains('vlab-tab')) {
                 this.switchTab(target.dataset.tab, windowId);
                 return;
             }
@@ -320,9 +320,9 @@ class VirusLabProgram {
 
         // Handle virus type selection
         container.addEventListener('click', (e) => {
-            if (e.target.closest('.type-option')) {
-                const typeOption = e.target.closest('.type-option');
-                container.querySelectorAll('.type-option').forEach(opt => opt.classList.remove('selected'));
+            if (e.target.closest('.vlab-type-option')) {
+                const typeOption = e.target.closest('.vlab-type-option');
+                container.querySelectorAll('.vlab-type-option').forEach(opt => opt.classList.remove('selected'));
                 typeOption.classList.add('selected');
                 
                 const virusType = typeOption.dataset.type;
@@ -332,17 +332,17 @@ class VirusLabProgram {
 
         // Handle color selection
         container.addEventListener('click', (e) => {
-            if (e.target.classList.contains('color-option')) {
-                container.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+            if (e.target.classList.contains('vlab-color-option')) {
+                container.querySelectorAll('.vlab-color-option').forEach(opt => opt.classList.remove('selected'));
                 e.target.classList.add('selected');
             }
         });
 
         // Handle target selection in attack tab
         container.addEventListener('click', (e) => {
-            if (e.target.closest('.target-card')) {
-                const targetCard = e.target.closest('.target-card');
-                container.querySelectorAll('.target-card').forEach(card => card.classList.remove('selected'));
+            if (e.target.closest('.vlab-target-card')) {
+                const targetCard = e.target.closest('.vlab-target-card');
+                container.querySelectorAll('.vlab-target-card').forEach(card => card.classList.remove('selected'));
                 targetCard.classList.add('selected');
                 this.updateAttackPreview(windowId);
             }
@@ -350,8 +350,8 @@ class VirusLabProgram {
 
         // Handle remove message button clicks
         container.addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-message-btn')) {
-                const messageContainer = e.target.closest('.message-input-container');
+            if (e.target.classList.contains('vlab-remove-message-btn')) {
+                const messageContainer = e.target.closest('.vlab-message-input-container');
                 if (messageContainer) {
                     messageContainer.remove();
                 }
@@ -390,12 +390,12 @@ class VirusLabProgram {
         if (!container) return;
 
         // Update nav tabs
-        container.querySelectorAll('.lab-tab').forEach(tab => {
+        container.querySelectorAll('.vlab-tab').forEach(tab => {
             tab.classList.toggle('active', tab.dataset.tab === tabName);
         });
 
         // Update content tabs
-        container.querySelectorAll('.tab-content').forEach(content => {
+        container.querySelectorAll('.vlab-tab-content').forEach(content => {
             content.classList.remove('active');
         });
 
@@ -451,27 +451,27 @@ class VirusLabProgram {
         ];
 
         imageGrid.innerHTML = images.map(img => `
-            <div class="image-option" data-image="${img.name}">
-                <div class="image-preview">
+            <div class="vlab-image-option" data-image="${img.name}">
+                <div class="vlab-image-preview">
                     <img src="assets/hack/${img.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <div class="image-fallback" style="display:none;">
-                        <div class="fallback-icon">${img.icon}</div>
-                        <div class="fallback-name">${img.name}</div>
+                    <div class="vlab-image-fallback" style="display:none;">
+                        <div class="vlab-fallback-icon">${img.icon}</div>
+                        <div class="vlab-fallback-name">${img.name}</div>
                     </div>
                 </div>
-                <div class="image-name">${img.name}</div>
+                <div class="vlab-image-name">${img.name}</div>
             </div>
         `).join('');
 
         // Handle image selection
         imageGrid.addEventListener('click', (e) => {
-            const imageOption = e.target.closest('.image-option');
+            const imageOption = e.target.closest('.vlab-image-option');
             if (imageOption) {
                 // Allow multiple selection for image type
                 imageOption.classList.toggle('selected');
                 
                 // Update selection count
-                const selectedCount = imageGrid.querySelectorAll('.image-option.selected').length;
+                const selectedCount = imageGrid.querySelectorAll('.vlab-image-option.selected').length;
                 const label = container.querySelector('#image-selection-' + windowId + ' label');
                 if (label) {
                     const baseText = '🖼️ Choose Images: <small>(Select multiple for variety!)</small>';
@@ -490,7 +490,7 @@ class VirusLabProgram {
         const messageInputs = container?.querySelector(`#message-inputs-${windowId}`);
         if (!messageInputs) return;
 
-        const currentInputs = messageInputs.querySelectorAll('input, .message-input-container').length;
+        const currentInputs = messageInputs.querySelectorAll('input, .vlab-message-input-container').length;
         if (currentInputs >= 10) {
             this.showHackerMessage('⚠️ Maximum 10 messages allowed!', 'warning');
             return;
@@ -505,12 +505,12 @@ class VirusLabProgram {
         if (currentInputs >= 3) {
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
-            removeBtn.className = 'remove-message-btn';
+            removeBtn.className = 'vlab-remove-message-btn';
             removeBtn.innerHTML = '❌';
             removeBtn.title = 'Remove this message';
             
             const inputContainer = document.createElement('div');
-            inputContainer.className = 'message-input-container';
+            inputContainer.className = 'vlab-message-input-container';
             inputContainer.appendChild(newInput);
             inputContainer.appendChild(removeBtn);
             
@@ -561,12 +561,12 @@ class VirusLabProgram {
             target = customTarget?.value || 'Unknown Target';
         }
 
-        const selectedType = getSelected('.type-option');
-        const selectedColor = getSelected('.color-option');
-        const selectedImages = Array.from(container.querySelectorAll('.image-option.selected')).map(img => img.dataset.image);
+        const selectedType = getSelected('.vlab-type-option');
+        const selectedColor = getSelected('.vlab-color-option');
+        const selectedImages = Array.from(container.querySelectorAll('.vlab-image-option.selected')).map(img => img.dataset.image);
 
         // Collect custom messages from both regular inputs and container inputs
-        const messageInputs = container.querySelectorAll('#custom-messages-' + windowId + ' input, #custom-messages-' + windowId + ' .message-input-container input');
+        const messageInputs = container.querySelectorAll('#custom-messages-' + windowId + ' input, #custom-messages-' + windowId + ' .vlab-message-input-container input');
         const customMessages = Array.from(messageInputs).map(input => input.value).filter(msg => msg.trim());
 
         return {
@@ -591,44 +591,44 @@ class VirusLabProgram {
         if (!container) return;
 
         const virusData = this.collectVirusData(container, windowId);
-        const previewContent = container.querySelector(`#virus-preview-${windowId} .preview-content`);
+        const previewContent = container.querySelector(`#virus-preview-${windowId} .vlab-preview-content`);
         
         if (!previewContent) return;
 
         previewContent.innerHTML = `
-            <div class="virus-card" style="border-color: ${virusData.color};">
-                <div class="virus-header" style="background: ${virusData.color};">
-                    <div class="virus-icon">${this.getVirusIcon(virusData.type)}</div>
-                    <div class="virus-title">${virusData.name}</div>
+            <div class="vlab-virus-card" style="border-color: ${virusData.color};">
+                <div class="vlab-virus-header" style="background: ${virusData.color};">
+                    <div class="vlab-virus-icon">${this.getVirusIcon(virusData.type)}</div>
+                    <div class="vlab-virus-title">${virusData.name}</div>
                 </div>
-                <div class="virus-info">
-                    <div class="info-row">
+                <div class="vlab-virus-info">
+                    <div class="vlab-info-row">
                         <span class="label">Author:</span>
                         <span class="value">${virusData.author}</span>
                     </div>
-                    <div class="info-row">
+                    <div class="vlab-info-row">
                         <span class="label">Target:</span>
                         <span class="value">${virusData.target || 'No target selected'}</span>
                     </div>
-                    <div class="info-row">
+                    <div class="vlab-info-row">
                         <span class="label">Danger:</span>
                         <span class="value">${this.getSeverityText(virusData.severity)}</span>
                     </div>
-                    <div class="info-row">
+                    <div class="vlab-info-row">
                         <span class="label">Type:</span>
                         <span class="value">${this.getTypeText(virusData.type)}</span>
                     </div>
                     ${virusData.type === 'image' && virusData.images.length > 0 ? `
-                    <div class="info-row">
+                    <div class="vlab-info-row">
                         <span class="label">Images:</span>
                         <span class="value">${virusData.images.length} selected</span>
                     </div>` : ''}
                     ${(virusData.type === 'popup' || virusData.type === 'message') && virusData.customMessages.length > 0 ? `
-                    <div class="info-row">
+                    <div class="vlab-info-row">
                         <span class="label">Messages:</span>
                         <span class="value">${virusData.customMessages.length} custom</span>
                     </div>` : ''}
-                    <div class="virus-description">${virusData.description}</div>
+                    <div class="vlab-virus-description">${virusData.description}</div>
                 </div>
             </div>
         `;
@@ -654,10 +654,10 @@ class VirusLabProgram {
 
     createTestEffect(virusData) {
         // Remove any existing test effects
-        document.querySelectorAll('.test-virus-effect').forEach(el => el.remove());
+        document.querySelectorAll('.vlab-test-virus-effect').forEach(el => el.remove());
 
         const effect = document.createElement('div');
-        effect.className = 'test-virus-effect';
+        effect.className = 'vlab-test-virus-effect';
         
         switch (virusData.type) {
             case 'image':
@@ -695,19 +695,19 @@ class VirusLabProgram {
 
             const randomImage = virusData.images[Math.floor(Math.random() * virusData.images.length)];
             const imageElement = document.createElement('div');
-            imageElement.className = 'test-image-popup';
+            imageElement.className = 'vlab-test-image-popup';
             imageElement.innerHTML = `
-                <div class="test-image-overlay" style="border-color: ${virusData.color};">
-                    <div class="test-image-content">
+                <div class="vlab-test-image-overlay" style="border-color: ${virusData.color};">
+                    <div class="vlab-test-image-content">
                         <img src="assets/hack/${randomImage}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                        <div class="image-fallback" style="display:none;">
-                            <div class="fallback-icon">${this.getVirusIcon(virusData.type)}</div>
-                            <div class="fallback-text">${virusData.name}</div>
+                        <div class="vlab-image-fallback" style="display:none;">
+                            <div class="vlab-fallback-icon">${this.getVirusIcon(virusData.type)}</div>
+                            <div class="vlab-fallback-text">${virusData.name}</div>
                         </div>
-                        <div class="test-label" style="background: ${virusData.color};">
+                        <div class="vlab-test-label" style="background: ${virusData.color};">
                             TEST: ${virusData.name} (${imageCount + 1}/${maxImages})
                         </div>
-                        <button class="image-close-btn" style="background: ${virusData.color};">×</button>
+                        <button class="vlab-image-close-btn" style="background: ${virusData.color};">×</button>
                     </div>
                 </div>
             `;
@@ -723,7 +723,7 @@ class VirusLabProgram {
             effect.appendChild(imageElement);
 
             // Close button functionality
-            const closeBtn = imageElement.querySelector('.image-close-btn');
+            const closeBtn = imageElement.querySelector('.vlab-image-close-btn');
             closeBtn.addEventListener('click', () => {
                 imageElement.remove();
             });
@@ -760,17 +760,17 @@ class VirusLabProgram {
             if (popupCount >= maxPopups) return;
 
             const popup = document.createElement('div');
-            popup.className = 'test-popup';
+            popup.className = 'vlab-test-popup';
             popup.innerHTML = `
-                <div class="popup-content" style="border-color: ${virusData.color};">
-                    <div class="popup-header" style="background: ${virusData.color};">
+                <div class="vlab-popup-content" style="border-color: ${virusData.color};">
+                    <div class="vlab-popup-header" style="background: ${virusData.color};">
                         <span>💀 ${virusData.name}</span>
-                        <button class="popup-close">×</button>
+                        <button class="vlab-popup-close">×</button>
                     </div>
-                    <div class="popup-body">
-                        <div class="popup-icon">${this.getVirusIcon(virusData.type)}</div>
-                        <div class="popup-message">${messages[popupCount % messages.length]}</div>
-                        <div class="popup-test-label">🧪 TEST MODE (${popupCount + 1}/${maxPopups})</div>
+                    <div class="vlab-popup-body">
+                        <div class="vlab-popup-icon">${this.getVirusIcon(virusData.type)}</div>
+                        <div class="vlab-popup-message">${messages[popupCount % messages.length]}</div>
+                        <div class="vlab-popup-test-label">🧪 TEST MODE (${popupCount + 1}/${maxPopups})</div>
                     </div>
                 </div>
             `;
@@ -784,7 +784,7 @@ class VirusLabProgram {
             effect.appendChild(popup);
 
             // Close button
-            popup.querySelector('.popup-close').addEventListener('click', () => {
+            popup.querySelector('.vlab-popup-close').addEventListener('click', () => {
                 popup.remove();
             });
 
@@ -805,11 +805,11 @@ class VirusLabProgram {
         ];
 
         effect.innerHTML = `
-            <div class="test-message-banner" style="background: ${virusData.color};">
-                <div class="message-content">
-                    <div class="message-icon">${this.getVirusIcon(virusData.type)}</div>
-                    <div class="message-text" id="message-text"></div>
-                    <div class="test-indicator">🧪 TEST</div>
+            <div class="vlab-test-message-banner" style="background: ${virusData.color};">
+                <div class="vlab-message-content">
+                    <div class="vlab-message-icon">${this.getVirusIcon(virusData.type)}</div>
+                    <div class="vlab-message-text" id="message-text"></div>
+                    <div class="vlab-test-indicator">🧪 TEST</div>
                 </div>
             </div>
         `;
@@ -831,33 +831,33 @@ class VirusLabProgram {
 
     createScreenEffect(effect, virusData) {
         effect.innerHTML = `
-            <div class="test-screen-effect" style="background: linear-gradient(45deg, ${virusData.color}33, transparent);">
-                <div class="effect-content">
-                    <div class="glitch-text" style="color: ${virusData.color};">
+            <div class="vlab-test-screen-effect" style="background: linear-gradient(45deg, ${virusData.color}33, transparent);">
+                <div class="vlab-effect-content">
+                    <div class="vlab-glitch-text" style="color: ${virusData.color};">
                         ${virusData.name.toUpperCase()}
                     </div>
-                    <div class="effect-subtitle">
+                    <div class="vlab-effect-subtitle">
                         Created by ${virusData.author}
                     </div>
-                    <div class="test-watermark">🧪 TEST MODE 🧪</div>
+                    <div class="vlab-test-watermark">🧪 TEST MODE 🧪</div>
                 </div>
             </div>
         `;
 
         // Add glitch animation class
         setTimeout(() => {
-            effect.querySelector('.glitch-text')?.classList.add('glitch-animation');
+            effect.querySelector('.vlab-glitch-text')?.classList.add('vlab-glitch-animation');
         }, 500);
     }
 
     stopTest(windowId) {
-        document.querySelectorAll('.test-virus-effect').forEach(el => el.remove());
+        document.querySelectorAll('.vlab-test-virus-effect').forEach(el => el.remove());
         this.showHackerMessage('🛑 Test stopped!', 'info');
     }
 
     launchAttack(windowId) {
         const container = document.querySelector(`.virus-lab-container[data-window-id="${windowId}"]`);
-        const selectedTarget = container?.querySelector('.target-card.selected');
+        const selectedTarget = container?.querySelector('.vlab-target-card.selected');
         const virusSelect = container?.querySelector(`#attack-virus-select-${windowId}`);
         
         if (!selectedTarget || !virusSelect?.value) {
@@ -876,21 +876,21 @@ class VirusLabProgram {
 
     showAttackSequence(target, virusData, windowId) {
         const attack = document.createElement('div');
-        attack.className = 'attack-sequence';
+        attack.className = 'vlab-attack-sequence';
         attack.innerHTML = `
-            <div class="attack-overlay">
-                <div class="attack-terminal">
-                    <div class="terminal-header">
+            <div class="vlab-attack-overlay">
+                <div class="vlab-attack-terminal">
+                    <div class="vlab-terminal-header">
                         <span>🔥 HACKER TERMINAL 🔥</span>
-                        <button class="terminal-close">×</button>
+                        <button class="vlab-terminal-close">×</button>
                     </div>
-                    <div class="terminal-content">
-                        <div class="terminal-line">Initializing attack...</div>
-                        <div class="terminal-line">Target: ${target}</div>
-                        <div class="terminal-line">Weapon: ${virusData.name}</div>
-                        <div class="terminal-line">Status: <span class="status-text">CONNECTING...</span></div>
-                        <div class="progress-bar">
-                            <div class="progress-fill"></div>
+                    <div class="vlab-terminal-content">
+                        <div class="vlab-terminal-line">Initializing attack...</div>
+                        <div class="vlab-terminal-line">Target: ${target}</div>
+                        <div class="vlab-terminal-line">Weapon: ${virusData.name}</div>
+                        <div class="vlab-terminal-line">Status: <span class="vlab-status-text">CONNECTING...</span></div>
+                        <div class="vlab-progress-bar">
+                            <div class="vlab-progress-fill"></div>
                         </div>
                     </div>
                 </div>
@@ -900,14 +900,14 @@ class VirusLabProgram {
         document.body.appendChild(attack);
 
         // Close button
-        attack.querySelector('.terminal-close').addEventListener('click', () => {
+        attack.querySelector('.vlab-terminal-close').addEventListener('click', () => {
             attack.remove();
         });
 
         // Simulate attack progress
-        const statusText = attack.querySelector('.status-text');
-        const progressFill = attack.querySelector('.progress-fill');
-        const terminalContent = attack.querySelector('.terminal-content');
+        const statusText = attack.querySelector('.vlab-status-text');
+        const progressFill = attack.querySelector('.vlab-progress-fill');
+        const terminalContent = attack.querySelector('.vlab-terminal-content');
 
         const steps = [
             'CONNECTING...',
@@ -926,7 +926,7 @@ class VirusLabProgram {
 
             // Add terminal line
             const line = document.createElement('div');
-            line.className = 'terminal-line';
+            line.className = 'vlab-terminal-line';
             line.textContent = `> ${steps[step]}`;
             terminalContent.appendChild(line);
 
@@ -938,7 +938,7 @@ class VirusLabProgram {
                 // Attack complete
                 setTimeout(() => {
                     const successLine = document.createElement('div');
-                    successLine.className = 'terminal-line success';
+                    successLine.className = 'vlab-terminal-line success';
                     successLine.innerHTML = `🎉 ${target} has been successfully pranked with ${virusData.name}!`;
                     terminalContent.appendChild(successLine);
                     
@@ -986,7 +986,7 @@ class VirusLabProgram {
 
     updateAttackPreview(windowId) {
         const container = document.querySelector(`.virus-lab-container[data-window-id="${windowId}"]`);
-        const selectedTarget = container?.querySelector('.target-card.selected');
+        const selectedTarget = container?.querySelector('.vlab-target-card.selected');
         const virusSelect = container?.querySelector(`#attack-virus-select-${windowId}`);
         const preview = container?.querySelector(`#attack-preview-${windowId}`);
         
@@ -998,44 +998,44 @@ class VirusLabProgram {
             
             if (virusData) {
                 preview.innerHTML = `
-                    <div class="attack-preview-card">
-                        <div class="preview-header">🎯 Attack Simulation</div>
-                        <div class="preview-simulation">
-                            <div class="fake-desktop">
-                                <div class="desktop-header">
+                    <div class="vlab-attack-preview-card">
+                        <div class="vlab-preview-header">🎯 Attack Simulation</div>
+                        <div class="vlab-preview-simulation">
+                            <div class="vlab-fake-desktop">
+                                <div class="vlab-desktop-header">
                                     <span>💻 ${target}'s Computer</span>
-                                    <div class="desktop-status">🟢 Online</div>
+                                    <div class="vlab-desktop-status">🟢 Online</div>
                                 </div>
-                                <div class="desktop-screen" id="preview-screen-${windowId}">
-                                    <div class="desktop-icons">
-                                        <div class="desktop-icon">📁</div>
-                                        <div class="desktop-icon">🎮</div>
-                                        <div class="desktop-icon">💼</div>
+                                <div class="vlab-desktop-screen" id="preview-screen-${windowId}">
+                                    <div class="vlab-desktop-icons">
+                                        <div class="vlab-desktop-icon">📁</div>
+                                        <div class="vlab-desktop-icon">🎮</div>
+                                        <div class="vlab-desktop-icon">💼</div>
                                     </div>
-                                    <div class="attack-preview-effect" id="preview-effect-${windowId}">
+                                    <div class="vlab-attack-preview-effect" id="preview-effect-${windowId}">
                                         <!-- Virus effect will appear here -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="preview-details">
-                            <div class="detail-row">
+                        <div class="vlab-preview-details">
+                            <div class="vlab-detail-row">
                                 <span>Target Device:</span>
                                 <span>${target}'s Computer</span>
                             </div>
-                            <div class="detail-row">
+                            <div class="vlab-detail-row">
                                 <span>Attack Vector:</span>
                                 <span>${virusData.name}</span>
                             </div>
-                            <div class="detail-row">
+                            <div class="vlab-detail-row">
                                 <span>Predicted Damage:</span>
                                 <span>${this.getSeverityText(virusData.severity)}</span>
                             </div>
-                            <div class="detail-row">
+                            <div class="vlab-detail-row">
                                 <span>Success Rate:</span>
                                 <span style="color: #00ff00;">98.7%</span>
                             </div>
-                            <div class="preview-message">
+                            <div class="vlab-preview-message">
                                 📡 Ready to deploy "${virusData.description}"
                             </div>
                         </div>
@@ -1048,7 +1048,7 @@ class VirusLabProgram {
                 }, 500);
             }
         } else {
-            preview.innerHTML = '<div class="preview-placeholder">Select target and virus to preview attack!</div>';
+            preview.innerHTML = '<div class="vlab-preview-placeholder">Select target and virus to preview attack!</div>';
         }
     }
 
@@ -1075,10 +1075,10 @@ class VirusLabProgram {
     showPreviewImageEffect(container, virusData) {
         const image = virusData.images[0] || 'hack1.png';
         container.innerHTML = `
-            <div class="mini-image-popup" style="border-color: ${virusData.color};">
+            <div class="vlab-mini-image-popup" style="border-color: ${virusData.color};">
                 <img src="assets/hack/${image}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-                <div class="mini-fallback" style="display:none; color: ${virusData.color};">🖼️</div>
-                <div class="mini-label" style="background: ${virusData.color};">
+                <div class="vlab-mini-fallback" style="display:none; color: ${virusData.color};">🖼️</div>
+                <div class="vlab-mini-label" style="background: ${virusData.color};">
                     ${virusData.name}
                 </div>
             </div>
@@ -1086,20 +1086,20 @@ class VirusLabProgram {
         
         // Animate it appearing
         setTimeout(() => {
-            container.querySelector('.mini-image-popup').classList.add('preview-bounce');
+            container.querySelector('.vlab-mini-image-popup').classList.add('vlab-preview-bounce');
         }, 200);
     }
 
     showPreviewPopupEffect(container, virusData) {
         container.innerHTML = `
-            <div class="mini-popup-preview" style="border-color: ${virusData.color};">
-                <div class="mini-popup-header" style="background: ${virusData.color};">
+            <div class="vlab-mini-popup-preview" style="border-color: ${virusData.color};">
+                <div class="vlab-mini-popup-header" style="background: ${virusData.color};">
                     <span>💀 Alert!</span>
                     <span>×</span>
                 </div>
-                <div class="mini-popup-body">
-                    <div class="mini-popup-icon">${this.getVirusIcon(virusData.type)}</div>
-                    <div class="mini-popup-text">Popup Storm!</div>
+                <div class="vlab-mini-popup-body">
+                    <div class="vlab-mini-popup-icon">${this.getVirusIcon(virusData.type)}</div>
+                    <div class="vlab-mini-popup-text">Popup Storm!</div>
                 </div>
             </div>
         `;
@@ -1107,8 +1107,8 @@ class VirusLabProgram {
         // Show multiple mini popups
         setTimeout(() => {
             container.innerHTML += `
-                <div class="mini-popup-preview mini-popup-2" style="border-color: ${virusData.color};">
-                    <div class="mini-popup-header" style="background: ${virusData.color};">
+                <div class="vlab-mini-popup-preview vlab-mini-popup-2" style="border-color: ${virusData.color};">
+                    <div class="vlab-mini-popup-header" style="background: ${virusData.color};">
                         <span>⚠️ Warning!</span>
                         <span>×</span>
                     </div>
@@ -1119,8 +1119,8 @@ class VirusLabProgram {
 
     showPreviewMessageEffect(container, virusData) {
         container.innerHTML = `
-            <div class="mini-message-banner" style="background: ${virusData.color};">
-                <div class="mini-message-content">
+            <div class="vlab-mini-message-banner" style="background: ${virusData.color};">
+                <div class="vlab-mini-message-content">
                     <span>${this.getVirusIcon(virusData.type)}</span>
                     <span>Message Spam Active!</span>
                 </div>
@@ -1128,12 +1128,12 @@ class VirusLabProgram {
         `;
         
         // Animate the message
-        const banner = container.querySelector('.mini-message-banner');
+        const banner = container.querySelector('.vlab-mini-message-banner');
         let messageIndex = 0;
         const messages = ['Spam Mode ON!', 'Message Flood!', 'Prank Activated!'];
         
         setInterval(() => {
-            const textElement = banner.querySelector('.mini-message-content span:last-child');
+            const textElement = banner.querySelector('.vlab-mini-message-content span:last-child');
             if (textElement) {
                 textElement.textContent = messages[messageIndex % messages.length];
                 messageIndex++;
@@ -1143,19 +1143,19 @@ class VirusLabProgram {
 
     showPreviewScreenEffect(container, virusData) {
         container.innerHTML = `
-            <div class="mini-screen-effect" style="color: ${virusData.color};">
-                <div class="mini-glitch-text">${virusData.name.toUpperCase()}</div>
-                <div class="mini-effect-lines">
-                    <div class="effect-line"></div>
-                    <div class="effect-line"></div>
-                    <div class="effect-line"></div>
+            <div class="vlab-mini-screen-effect" style="color: ${virusData.color};">
+                <div class="vlab-mini-glitch-text">${virusData.name.toUpperCase()}</div>
+                <div class="vlab-mini-effect-lines">
+                    <div class="vlab-effect-line"></div>
+                    <div class="vlab-effect-line"></div>
+                    <div class="vlab-effect-line"></div>
                 </div>
             </div>
         `;
         
         // Add glitch animation
         setTimeout(() => {
-            container.querySelector('.mini-glitch-text').classList.add('mini-glitch');
+            container.querySelector('.vlab-mini-glitch-text').classList.add('vlab-mini-glitch');
         }, 300);
     }
 
@@ -1166,40 +1166,40 @@ class VirusLabProgram {
 
         if (this.savedViruses.size === 0) {
             gallery.innerHTML = `
-                <div class="empty-gallery">
-                    <div class="empty-icon">🧪</div>
-                    <div class="empty-text">No viruses created yet!</div>
-                    <div class="empty-desc">Go to the Create tab to make your first virus!</div>
+                <div class="vlab-empty-gallery">
+                    <div class="vlab-empty-icon">🧪</div>
+                    <div class="vlab-empty-text">No viruses created yet!</div>
+                    <div class="vlab-empty-desc">Go to the Create tab to make your first virus!</div>
                 </div>
             `;
             return;
         }
 
         const virusCards = Array.from(this.savedViruses.entries()).map(([id, virus]) => `
-            <div class="virus-gallery-card" data-virus-id="${id}">
-                <div class="card-header" style="background: ${virus.color};">
-                    <div class="card-icon">${this.getVirusIcon(virus.type)}</div>
-                    <div class="card-title">${virus.name}</div>
+            <div class="vlab-virus-gallery-card" data-virus-id="${id}">
+                <div class="vlab-card-header" style="background: ${virus.color};">
+                    <div class="vlab-card-icon">${this.getVirusIcon(virus.type)}</div>
+                    <div class="vlab-card-title">${virus.name}</div>
                 </div>
-                <div class="card-body">
-                    <div class="card-info">
-                        <div class="info-item">
+                <div class="vlab-card-body">
+                    <div class="vlab-card-info">
+                        <div class="vlab-info-item">
                             <span class="label">Author:</span>
                             <span class="value">${virus.author}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="vlab-info-item">
                             <span class="label">Target:</span>
                             <span class="value">${virus.target || 'Anyone'}</span>
                         </div>
-                        <div class="info-item">
+                        <div class="vlab-info-item">
                             <span class="label">Type:</span>
                             <span class="value">${this.getTypeText(virus.type)}</span>
                         </div>
-                        <div class="card-description">${virus.description}</div>
+                        <div class="vlab-card-description">${virus.description}</div>
                     </div>
-                    <div class="card-actions">
-                        <button class="test-card-btn" data-virus-id="${id}">🧪 Test</button>
-                        <button class="delete-card-btn" data-virus-id="${id}">🗑️ Delete</button>
+                    <div class="vlab-card-actions">
+                        <button class="vlab-test-card-btn" data-virus-id="${id}">🧪 Test</button>
+                        <button class="vlab-delete-card-btn" data-virus-id="${id}">🗑️ Delete</button>
                     </div>
                 </div>
             </div>
@@ -1212,12 +1212,12 @@ class VirusLabProgram {
             const virusId = e.target.dataset.virusId;
             if (!virusId) return;
 
-            if (e.target.classList.contains('test-card-btn')) {
+            if (e.target.classList.contains('vlab-test-card-btn')) {
                 const virusData = this.savedViruses.get(virusId);
                 if (virusData) {
                     this.createTestEffect(virusData);
                 }
-            } else if (e.target.classList.contains('delete-card-btn')) {
+            } else if (e.target.classList.contains('vlab-delete-card-btn')) {
                 this.savedViruses.delete(virusId);
                 this.saveVirusesToStorage();
                 this.populateSavedViruses(windowId);
@@ -1310,11 +1310,11 @@ class VirusLabProgram {
 
     showHackerMessage(message, type = 'info') {
         const messageEl = document.createElement('div');
-        messageEl.className = `hacker-message ${type}`;
+        messageEl.className = `vlab-hacker-message ${type}`;
         messageEl.innerHTML = `
-            <div class="message-content">
-                <div class="message-icon">🔥</div>
-                <div class="message-text">${message}</div>
+            <div class="vlab-message-content">
+                <div class="vlab-message-icon">🔥</div>
+                <div class="vlab-message-text">${message}</div>
             </div>
         `;
 

@@ -2,161 +2,273 @@
 <html>
 <head>
     <style>
-        .nilered-body {
-            background: #000;
-            color: #00ff00;
-            font-family: "Arial", sans-serif;
-            padding: 20px;
-            margin: 0;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAIklEQVQoU2NkYGD4z4AHMPKW/UfhM+JTgFUyugJsknglAAAkYwYB9ZT6YAAAAABJRU5ErkJggg==');
+        /* Reset and isolate styles */
+        .nilered-xeocities-body {
+            background: #000 !important;
+            color: #00ff00 !important;
+            font-family: "Arial", sans-serif !important;
+            padding: 20px !important;
+            margin: 0 !important;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAIklEQVQoU2NkYGD4z4AHMPKW/UfhM+JTgFUyugJsknglAAAkYwYB9ZT6YAAAAABJRU5ErkJggg==') !important;
+            box-sizing: border-box !important;
+            min-height: 100vh !important;
+            line-height: 1.2 !important;
+            font-size: 14px !important;
+        }
+        
+        .nilered-xeocities-body * {
+            box-sizing: border-box !important;
         }
 
-        .nilered-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px ridge #800;
-            padding: 20px;
+        .nilered-xeocities-container {
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 3px ridge #800 !important;
+            padding: 20px !important;
+            position: relative !important;
+            display: block !important;
+            font-family: "Arial", sans-serif !important;
         }
 
-        .nilered-header {
-            text-align: center;
-            border: 2px solid #f00;
-            padding: 20px;
-            background: linear-gradient(45deg, #200, #400);
-            margin-bottom: 20px;
+        .nilered-xeocities-header {
+            text-align: center !important;
+            border: 2px solid #f00 !important;
+            padding: 20px !important;
+            background: linear-gradient(45deg, #200, #400) !important;
+            margin-bottom: 20px !important;
         }
 
-        .nilered-title {
-            font-size: 36px;
-            color: #f00;
-            text-shadow: 2px 2px #000,
-                         3px 3px #600;
-            margin: 0;
-            font-family: "Times New Roman", serif;
+        .nilered-xeocities-title {
+            font-size: 36px !important;
+            color: #f00 !important;
+            text-shadow: 2px 2px #000, 3px 3px #600 !important;
+            margin: 0 !important;
+            font-family: "Times New Roman", serif !important;
+            font-weight: bold !important;
+            line-height: 1.1 !important;
+            padding: 0 !important;
         }
 
-        .nilered-subtitle {
-            color: #ff6666;
-            font-style: italic;
-            margin-top: 10px;
+        .nilered-xeocities-subtitle {
+            color: #ff6666 !important;
+            font-style: italic !important;
+            margin-top: 10px !important;
+            padding: 0 !important;
+            font-family: "Arial", sans-serif !important;
+            font-size: 16px !important;
         }
 
-        .nilered-section {
-            background: #111;
-            border: 1px solid #600;
-            margin: 20px 0;
-            padding: 15px;
+        .nilered-xeocities-section {
+            background: #111 !important;
+            border: 1px solid #600 !important;
+            margin: 20px 0 !important;
+            padding: 15px !important;
+            font-family: "Arial", sans-serif !important;
+            color: #00ff00 !important;
         }
 
-        .nilered-experiment {
-            background: #001;
-            border: 2px solid #400;
-            margin: 15px 0;
-            padding: 10px;
+        .nilered-xeocities-section h2 {
+            font-family: "Arial", sans-serif !important;
+            color: #f00 !important;
+            margin: 0 0 15px 0 !important;
+            padding: 0 !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
         }
 
-        .nilered-warning {
-            background: #400;
-            color: #ff0;
-            padding: 10px;
-            margin: 10px 0;
-            border: 2px dashed #ff0;
-            font-weight: bold;
+        .nilered-xeocities-section h3 {
+            font-family: "Arial", sans-serif !important;
+            color: #ff6666 !important;
+            margin: 0 0 10px 0 !important;
+            padding: 0 !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
         }
 
-        .nilered-molecule {
-            font-family: monospace;
-            background: #222;
-            padding: 5px;
-            margin: 5px 0;
-            display: inline-block;
+        .nilered-xeocities-section p {
+            font-family: "Arial", sans-serif !important;
+            color: #00ff00 !important;
+            margin: 10px 0 !important;
+            padding: 0 !important;
+            line-height: 1.4 !important;
+            font-size: 14px !important;
         }
 
-        .nilered-reactions {
-            font-family: monospace;
-            margin: 15px 0;
-            padding: 10px;
-            background: #111;
-            border-left: 3px solid #600;
+        .nilered-xeocities-section ul {
+            font-family: "Arial", sans-serif !important;
+            color: #00ff00 !important;
+            margin: 10px 0 !important;
+            padding: 0 0 0 20px !important;
+            line-height: 1.4 !important;
+            font-size: 14px !important;
         }
 
-        .nilered-webring {
-            text-align: center;
-            border: 2px solid #600;
-            padding: 10px;
-            margin: 20px 0;
-            background: #200;
+        .nilered-xeocities-section li {
+            font-family: "Arial", sans-serif !important;
+            color: #00ff00 !important;
+            margin: 5px 0 !important;
+            padding: 0 !important;
+            font-size: 14px !important;
         }
 
-        .nilered-nav {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
+        .nilered-xeocities-experiment {
+            background: #001 !important;
+            border: 2px solid #400 !important;
+            margin: 15px 0 !important;
+            padding: 10px !important;
+            font-family: "Arial", sans-serif !important;
+            color: #00ff00 !important;
         }
 
-        .nilered-nav a {
-            color: #f00;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #600;
-            background: #200;
+        .nilered-xeocities-experiment img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            margin: 0 auto 10px auto !important;
+            border: 1px solid #600 !important;
         }
 
-        .nilered-footer {
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-            border-top: 1px solid #600;
-            padding-top: 20px;
+        .nilered-xeocities-warning {
+            background: #400 !important;
+            color: #ff0 !important;
+            padding: 10px !important;
+            margin: 10px 0 !important;
+            border: 2px dashed #ff0 !important;
+            font-weight: bold !important;
+            font-family: "Arial", sans-serif !important;
+            font-size: 14px !important;
         }
 
-        .nilered-counter {
-            background: #000;
-            color: #f00;
-            font-family: "Courier New", monospace;
-            padding: 3px 8px;
-            border: 1px inset #600;
-            display: inline-block;
+        .nilered-xeocities-molecule {
+            font-family: "Courier New", monospace !important;
+            background: #222 !important;
+            color: #00ff00 !important;
+            padding: 5px !important;
+            margin: 5px 0 !important;
+            display: inline-block !important;
+            border: 1px solid #600 !important;
+            font-size: 12px !important;
         }
 
-        .nilered-update {
-            color: #666;
-            font-size: 12px;
-            text-align: right;
-            margin-top: 10px;
+        .nilered-xeocities-reactions {
+            font-family: "Courier New", monospace !important;
+            margin: 15px 0 !important;
+            padding: 10px !important;
+            background: #111 !important;
+            border-left: 3px solid #600 !important;
+            color: #00ff00 !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+        }
+
+        .nilered-xeocities-webring {
+            text-align: center !important;
+            border: 2px solid #600 !important;
+            padding: 10px !important;
+            margin: 20px 0 !important;
+            background: #200 !important;
+            font-family: "Arial", sans-serif !important;
+            color: #00ff00 !important;
+        }
+
+        .nilered-xeocities-nav {
+            display: flex !important;
+            justify-content: space-between !important;
+            margin: 10px 0 !important;
+            gap: 10px !important;
+        }
+
+        .nilered-xeocities-nav a {
+            color: #f00 !important;
+            text-decoration: none !important;
+            padding: 5px 10px !important;
+            border: 1px solid #600 !important;
+            background: #200 !important;
+            font-family: "Arial", sans-serif !important;
+            font-size: 12px !important;
+            display: inline-block !important;
+        }
+
+        .nilered-xeocities-nav a:hover {
+            background: #400 !important;
+            color: #ff6666 !important;
+        }
+
+        .nilered-xeocities-footer {
+            text-align: center !important;
+            font-size: 12px !important;
+            color: #666 !important;
+            margin-top: 20px !important;
+            border-top: 1px solid #600 !important;
+            padding-top: 20px !important;
+            font-family: "Arial", sans-serif !important;
+        }
+
+        .nilered-xeocities-footer p {
+            font-family: "Arial", sans-serif !important;
+            color: #666 !important;
+            margin: 5px 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
+        }
+
+        .nilered-xeocities-footer img {
+            max-width: 100px !important;
+            height: auto !important;
+            display: inline-block !important;
+            margin: 5px !important;
+        }
+
+        .nilered-xeocities-counter {
+            background: #000 !important;
+            color: #f00 !important;
+            font-family: "Courier New", monospace !important;
+            padding: 3px 8px !important;
+            border: 1px inset #600 !important;
+            display: inline-block !important;
+            font-size: 12px !important;
+            margin: 0 !important;
+        }
+
+        .nilered-xeocities-update {
+            color: #666 !important;
+            font-size: 12px !important;
+            text-align: right !important;
+            margin-top: 10px !important;
+            font-family: "Arial", sans-serif !important;
+            padding: 0 !important;
         }
     </style>
 </head>
-<body class="nilered-body">
-    <div class="nilered-container">
-        <div class="nilered-header">
-            <h1 class="nilered-title">NileRed's Chemistry Corner</h1>
-            <div class="nilered-subtitle">Where Science Meets Curiosity</div>
+<body class="nilered-xeocities-body">
+    <div class="nilered-xeocities-container">
+        <div class="nilered-xeocities-header">
+            <h1 class="nilered-xeocities-title">NileRed's Chemistry Corner</h1>
+            <div class="nilered-xeocities-subtitle">Where Science Meets Curiosity</div>
         </div>
 
-        <div class="nilered-warning">
+        <div class="nilered-xeocities-warning">
             ⚠️ SAFETY FIRST: All experiments shown here are performed in a proper lab setting with appropriate safety equipment. 
             Do not attempt to recreate these experiments without proper training and facilities! ⚠️
         </div>
 
-        <div class="nilered-section">
+        <div class="nilered-xeocities-section">
             <h2>Latest Experiment: Making Bismuth Crystals</h2>
-            <div class="nilered-experiment">
-                <img src="/api/placeholder/300/200" alt="Bismuth crystal formation">
+            <div class="nilered-xeocities-experiment">
+                <img src="./assets/interwebs/nr-xeocities/images/bismuth.png" alt="Bismuth crystal formation" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='Bismuth Crystal Formation<br>(Image not found)'">
                 <p>After melting down some Pepto-Bismol tablets and extracting the bismuth, 
                 I was able to create these beautiful iridescent crystals through careful temperature control 
                 and cooling. The geometric patterns are a natural result of the crystal structure!</p>
                 
-                <div class="nilered-reactions">
+                <div class="nilered-xeocities-reactions">
                     C₇H₅BiO₄ + 2NaOH → BiONO₃ + 2H₂O<br>
                     2BiONO₃ + 3H₂ → 2Bi + 2HNO₃ + 2H₂O
                 </div>
             </div>
         </div>
 
-        <div class="nilered-section">
+        <div class="nilered-xeocities-section">
             <h2>Current Projects</h2>
             <ul>
                 <li>Extracting caffeine from coffee beans</li>
@@ -166,21 +278,21 @@
             </ul>
         </div>
 
-        <div class="nilered-section">
+        <div class="nilered-xeocities-section">
             <h2>Featured Reactions</h2>
-            <div class="nilered-experiment">
+            <div class="nilered-xeocities-experiment">
                 <h3>The Briggs-Rauscher Oscillating Reaction</h3>
                 <p>Watch as the solution oscillates between clear, amber, and deep blue! 
                 This fascinating reaction demonstrates chemical oscillators and non-linear chemical dynamics.</p>
-                <div class="nilered-molecule">
+                <div class="nilered-xeocities-molecule">
                     Key reagents: H₂O₂, KIO₃, malonic acid, Mn²⁺
                 </div>
             </div>
         </div>
 
-        <div class="nilered-webring">
+        <div class="nilered-xeocities-webring">
             🧪 Proud member of the Xeocities Chemistry Webring! 🧪
-            <div class="nilered-nav">
+            <div class="nilered-xeocities-nav">
                 <a href="cat-xeocities.ex">← Previous</a>
                 <a href="javascript:void(0)">Random</a>
                 <a href="craftzone-xeocities.ex">Next →</a>
@@ -188,14 +300,13 @@
         </div>
 
         <div style="text-align: center;">
-            <div class="nilered-counter">Visitors: 51,337</div>
+            <div class="nilered-xeocities-counter">Visitors: 51,337</div>
         </div>
 
-        <div class="nilered-footer">
+        <div class="nilered-xeocities-footer">
             <p>Made with HTML, CSS, and lots of lab equipment</p>
             <p>Best viewed in Snoogle Browser at 800x600</p>
-            <img src="/api/placeholder/88/31" alt="Valid HTML 3.2">
-            <p class="nilered-update">Last updated: When the last reaction stopped bubbling</p>
+            <p class="nilered-xeocities-update">Last updated: When the last reaction stopped bubbling</p>
         </div>
     </div>
 </body>

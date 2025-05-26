@@ -1,5 +1,5 @@
 /* =================================
-   CLOCK SYSTEM STYLES
+   CLOCK SYSTEM STYLES - THEME INTEGRATED
 ================================= */
 
 .clock-system {
@@ -8,8 +8,8 @@
     display: flex;
     flex-direction: column;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f0f0f0;
-    color:#333;
+    background: var(--windowBg, #f0f0f0);
+    color: var(--menuText, #333);
 }
 
 /* =================================
@@ -17,33 +17,33 @@
 ================================= */
 .clock-tabs {
     display: flex;
-    background: #e0e0e0;
-    border-bottom: 1px solid #808080;
+    background: var(--systemTrayBg, #e0e0e0);
+    border-bottom: 1px solid var(--windowBorder, #808080);
     margin: 0;
     padding: 0;
 }
 
 .clock-tab {
     padding: 8px 16px;
-    background: #c0c0c0;
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
     border-bottom: none;
     cursor: pointer;
     font-size: 11px;
     font-weight: bold;
     user-select: none;
     transition: background 0.2s ease;
-    color:#333;
+    color: var(--menuText, #333);
 }
 
 .clock-tab:hover:not(.active) {
-    background: #d0d0d0;
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .clock-tab.active {
-    background: #f0f0f0;
-    border: 1px inset #c0c0c0;
-    border-bottom: 1px solid #f0f0f0;
+    background: var(--windowBg, #f0f0f0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    border-bottom: 1px solid var(--windowBg, #f0f0f0);
     margin-bottom: -1px;
 }
 
@@ -73,11 +73,18 @@
     text-align: center;
     margin-bottom: 24px;
     padding: 20px;
-    background: linear-gradient(135deg, #001133, #003366);
-    border: 2px inset #c0c0c0;
+    background: var(--clockBg, linear-gradient(135deg, #001133, #003366));
+    border: 2px inset var(--windowBorder, #c0c0c0);
     border-radius: 8px;
-    color: #00ff00;
+    color: var(--clockText, #00ff00);
     box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+/* Special styling for dark themes */
+.dark-theme .main-clock-display {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    color: #ff6600;
+    box-shadow: inset 0 0 20px rgba(255, 102, 0, 0.1);
 }
 
 .digital-clock {
@@ -105,31 +112,32 @@
 }
 
 .clock-btn {
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 2px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 2px outset var(--windowBorder, #c0c0c0);
     padding: 8px 16px;
     font-size: 11px;
     font-weight: bold;
     cursor: pointer;
     border-radius: 2px;
     transition: all 0.2s ease;
+    color: var(--menuText, #333);
 }
 
 .clock-btn:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .clock-btn:active {
-    border: 2px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+    border: 2px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
 /* =================================
    STOPWATCH SECTION
 ================================= */
 .stopwatch-section {
-    background: #f8f8f8;
-    border: 2px inset #c0c0c0;
+    background: var(--windowBg, #f8f8f8);
+    border: 2px inset var(--windowBorder, #c0c0c0);
     padding: 16px;
     border-radius: 4px;
     text-align: center;
@@ -143,12 +151,11 @@
     font-family: 'Courier New', monospace;
     font-size: 36px;
     font-weight: bold;
-    color: #0066cc;
     margin-bottom: 16px;
-    background: #000;
-    color: #00ff00;
+    background: var(--clockBg, #000);
+    color: var(--clockText, #00ff00);
     padding: 12px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
     border-radius: 4px;
     text-shadow: 0 0 8px currentColor;
 }
@@ -161,9 +168,9 @@
 }
 
 .stopwatch-btn {
-    background: linear-gradient(to bottom, #4CAF50, #45a049);
-    border: 2px outset #4CAF50;
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4CAF50, #45a049));
+    border: 2px outset var(--titlebarBg, #4CAF50);
+    color: var(--menuHoverText, white);
     padding: 6px 12px;
     font-size: 11px;
     font-weight: bold;
@@ -172,24 +179,25 @@
 }
 
 .stopwatch-btn:hover {
-    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+    filter: brightness(1.1);
 }
 
 .stopwatch-btn:active {
-    border: 2px inset #4CAF50;
+    border: 2px inset var(--titlebarBg, #4CAF50);
 }
 
 .stopwatch-btn:disabled {
-    background: #cccccc;
-    border-color: #cccccc;
+    background: var(--systemTrayBg, #cccccc);
+    border-color: var(--systemTrayBg, #cccccc);
     cursor: not-allowed;
+    color: var(--menuText, #666);
 }
 
 .lap-times {
     max-height: 120px;
     overflow-y: auto;
-    border: 1px inset #c0c0c0;
-    background: white;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
     padding: 8px;
 }
 
@@ -197,7 +205,8 @@
     padding: 4px;
     font-family: 'Courier New', monospace;
     font-size: 11px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--systemTrayBg, #e0e0e0);
+    color: var(--menuText, #333);
 }
 
 .lap-time:last-child {
@@ -208,8 +217,8 @@
    TIMER PANEL
 ================================= */
 .timer-creator {
-    background: #e8f4ff;
-    border: 2px outset #c0c0c0;
+    background: var(--systemTrayBg, #e8f4ff);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     padding: 16px;
     margin-bottom: 20px;
     border-radius: 4px;
@@ -217,7 +226,7 @@
 
 .timer-creator h3 {
     margin: 0 0 12px 0;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
     font-size: 14px;
     text-align: center;
 }
@@ -233,7 +242,9 @@
 .timer-inputs input[type="number"] {
     width: 50px;
     padding: 6px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
     text-align: center;
     font-size: 16px;
     font-weight: bold;
@@ -242,22 +253,24 @@
 .timer-inputs span {
     font-size: 20px;
     font-weight: bold;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
 }
 
 #timerName {
     width: 100%;
     padding: 8px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
     margin-bottom: 12px;
     font-size: 11px;
 }
 
 .create-timer-btn {
     width: 100%;
-    background: linear-gradient(to bottom, #ff6b35, #ff4500);
-    border: 2px outset #ff4500;
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to bottom, #ff6b35, #ff4500));
+    border: 2px outset var(--titlebarBg, #ff4500);
+    color: var(--menuHoverText, white);
     padding: 10px;
     font-size: 12px;
     font-weight: bold;
@@ -266,23 +279,23 @@
 }
 
 .create-timer-btn:hover {
-    background: linear-gradient(to bottom, #ff7f50, #ff6b35);
+    filter: brightness(1.1);
 }
 
 .create-timer-btn:active {
-    border: 2px inset #ff4500;
+    border: 2px inset var(--titlebarBg, #ff4500);
 }
 
 .active-timers {
-    background: #f8f8f8;
-    border: 2px inset #c0c0c0;
+    background: var(--windowBg, #f8f8f8);
+    border: 2px inset var(--windowBorder, #c0c0c0);
     padding: 16px;
     border-radius: 4px;
 }
 
 .active-timers h3 {
     margin: 0 0 12px 0;
-    color: #cc6600;
+    color: var(--clockText, #cc6600);
     font-size: 14px;
     text-align: center;
 }
@@ -297,8 +310,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: white;
-    border: 1px outset #c0c0c0;
+    background: var(--menuBg, white);
+    border: 1px outset var(--windowBorder, #c0c0c0);
     padding: 12px;
     border-radius: 4px;
 }
@@ -309,7 +322,7 @@
 
 .timer-name {
     font-weight: bold;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
     font-size: 12px;
     margin-bottom: 4px;
 }
@@ -318,7 +331,7 @@
     font-family: 'Courier New', monospace;
     font-size: 18px;
     font-weight: bold;
-    color: #ff4500;
+    color: var(--titlebarBg, #ff4500);
 }
 
 .cancel-timer-btn {
@@ -341,7 +354,7 @@
 
 .no-timers {
     text-align: center;
-    color: #666;
+    color: var(--menuText, #666);
     font-style: italic;
     padding: 20px;
 }
@@ -350,8 +363,8 @@
    ALARM PANEL
 ================================= */
 .alarm-creator {
-    background: #fff8e8;
-    border: 2px outset #c0c0c0;
+    background: var(--systemTrayBg, #fff8e8);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     padding: 16px;
     margin-bottom: 20px;
     border-radius: 4px;
@@ -359,7 +372,7 @@
 
 .alarm-creator h3 {
     margin: 0 0 12px 0;
-    color: #cc6600;
+    color: var(--clockText, #cc6600);
     font-size: 14px;
     text-align: center;
 }
@@ -374,15 +387,17 @@
 .alarm-inputs input,
 .alarm-inputs select {
     padding: 6px 8px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
     font-size: 11px;
 }
 
 .create-alarm-btn {
     width: 100%;
-    background: linear-gradient(to bottom, #ffa500, #ff8c00);
-    border: 2px outset #ff8c00;
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to bottom, #ffa500, #ff8c00));
+    border: 2px outset var(--titlebarBg, #ff8c00);
+    color: var(--menuHoverText, white);
     padding: 10px;
     font-size: 12px;
     font-weight: bold;
@@ -391,23 +406,23 @@
 }
 
 .create-alarm-btn:hover {
-    background: linear-gradient(to bottom, #ffb347, #ffa500);
+    filter: brightness(1.1);
 }
 
 .create-alarm-btn:active {
-    border: 2px inset #ff8c00;
+    border: 2px inset var(--titlebarBg, #ff8c00);
 }
 
 .alarm-list-container {
-    background: #f8f8f8;
-    border: 2px inset #c0c0c0;
+    background: var(--windowBg, #f8f8f8);
+    border: 2px inset var(--windowBorder, #c0c0c0);
     padding: 16px;
     border-radius: 4px;
 }
 
 .alarm-list-container h3 {
     margin: 0 0 12px 0;
-    color: #cc6600;
+    color: var(--clockText, #cc6600);
     font-size: 14px;
     text-align: center;
 }
@@ -422,14 +437,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: white;
-    border: 1px outset #c0c0c0;
+    background: var(--menuBg, white);
+    border: 1px outset var(--windowBorder, #c0c0c0);
     padding: 12px;
     border-radius: 4px;
 }
 
 .alarm-item.disabled {
-    background: #f0f0f0;
+    background: var(--systemTrayBg, #f0f0f0);
     opacity: 0.7;
 }
 
@@ -439,7 +454,7 @@
 
 .alarm-name {
     font-weight: bold;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
     font-size: 12px;
     margin-bottom: 4px;
 }
@@ -447,7 +462,7 @@
 .alarm-time {
     font-family: 'Courier New', monospace;
     font-size: 11px;
-    color: #666;
+    color: var(--menuText, #666);
 }
 
 .alarm-controls {
@@ -457,8 +472,9 @@
 
 .toggle-alarm-btn,
 .delete-alarm-btn {
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    color: var(--menuText, #333);
     padding: 4px 8px;
     font-size: 12px;
     cursor: pointer;
@@ -467,17 +483,17 @@
 
 .toggle-alarm-btn:hover,
 .delete-alarm-btn:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .toggle-alarm-btn:active,
 .delete-alarm-btn:active {
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .no-alarms {
     text-align: center;
-    color: #666;
+    color: var(--menuText, #666);
     font-style: italic;
     padding: 20px;
 }
@@ -491,28 +507,28 @@
     justify-content: space-between;
     margin-bottom: 16px;
     padding: 8px;
-    background: linear-gradient(to bottom, #4080ff, #0040ff);
-    color: white;
-    border: 2px outset #4080ff;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4080ff, #0040ff));
+    color: var(--menuHoverText, white);
+    border: 2px outset var(--titlebarBg, #4080ff);
     border-radius: 4px;
 }
 
 .calendar-events-info {
-    background: #e8f4ff;
-    border: 2px inset #c0c0c0;
+    background: var(--systemTrayBg, #e8f4ff);
+    border: 2px inset var(--windowBorder, #c0c0c0);
     padding: 8px;
     margin-bottom: 16px;
     border-radius: 4px;
     text-align: center;
     font-size: 11px;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
     font-style: italic;
 }
 
 .calendar-nav {
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
-    color: black;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    color: var(--menuText, black);
     padding: 4px 8px;
     font-size: 14px;
     font-weight: bold;
@@ -521,13 +537,11 @@
 }
 
 .calendar-nav:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
-    color:#333;
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .calendar-nav:active {
-    border: 1px inset #c0c0c0;
-    color:#333;
+    border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .calendar-title {
@@ -538,8 +552,8 @@
 }
 
 .calendar-grid {
-    background: white;
-    border: 2px inset #c0c0c0;
+    background: var(--menuBg, white);
+    border: 2px inset var(--windowBorder, #c0c0c0);
     margin-bottom: 16px;
     border-radius: 4px;
     overflow: hidden;
@@ -548,8 +562,8 @@
 .calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    background: #e0e0e0;
-    border-bottom: 1px solid #c0c0c0;
+    background: var(--systemTrayBg, #e0e0e0);
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
 }
 
 .weekday {
@@ -557,8 +571,8 @@
     text-align: center;
     font-weight: bold;
     font-size: 10px;
-    border-right: 1px solid #c0c0c0;
-    color:#333;
+    border-right: 1px solid var(--windowBorder, #c0c0c0);
+    color: var(--menuText, #333);
 }
 
 .weekday:last-child {
@@ -574,58 +588,55 @@
     padding: 4px;
     text-align: center;
     font-size: 11px;
-    border-right: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid var(--systemTrayBg, #e0e0e0);
+    border-bottom: 1px solid var(--systemTrayBg, #e0e0e0);
     min-height: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     cursor: pointer;
-    color:#333;
+    color: var(--menuText, #333);
     position: relative;
+    background: var(--menuBg, white);
 }
 
 .calendar-day:hover:not(.empty) {
-    background: #f0f8ff;
-    color: #333;
+    background: var(--menuHoverBg, #f0f8ff);
+    color: var(--menuHoverText, #333);
 }
 
 .calendar-day.today {
-    background: #316AC5;
-    color: white;
+    background: var(--titlebarBg, #316AC5);
+    color: var(--menuHoverText, white);
     font-weight: bold;
 }
 
 .calendar-day.today:hover {
-    background: #4169e1;
-    color: white;
+    filter: brightness(1.1);
 }
 
 .calendar-day.empty {
-    background: #f8f8f8;
+    background: var(--systemTrayBg, #f8f8f8);
     cursor: default;
-    color:#333;
 }
 
 .calendar-day.has-events {
-    background: #fff8dc;
-    border: 1px solid #ffd700;
+    background: var(--systemTrayBg, #fff8dc);
+    border: 1px solid var(--titlebarBg, #ffd700);
 }
 
 .calendar-day.has-events:hover {
-    background: #ffffe0;
-    color: #333;
+    background: var(--menuHoverBg, #ffffe0);
 }
 
 .calendar-day.today.has-events {
-    background: #4169e1;
-    border: 1px solid #ffd700;
+    background: var(--titlebarBg, #4169e1);
+    border: 1px solid var(--titlebarBg, #ffd700);
 }
 
 .calendar-day.today.has-events:hover {
-    background: #5a7fd8;
-    color: white;
+    filter: brightness(1.1);
 }
 
 .day-number {
@@ -636,13 +647,13 @@
 .event-indicator {
     width: 6px;
     height: 6px;
-    background: #ff6b35;
+    background: var(--titlebarBg, #ff6b35);
     border-radius: 50%;
     margin: 1px;
 }
 
 .calendar-day.today .event-indicator {
-    background: #ffd700;
+    background: var(--clockText, #ffd700);
 }
 
 /* =================================
@@ -653,8 +664,8 @@
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background: white;
-    border: 2px outset #c0c0c0;
+    background: var(--menuBg, white);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     border-radius: 4px;
     padding: 8px;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
@@ -674,7 +685,7 @@
 
 .event-tooltip-title {
     font-weight: bold;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
     margin-bottom: 4px;
     font-size: 11px;
 }
@@ -682,7 +693,7 @@
 .event-tooltip-item {
     margin-bottom: 3px;
     padding: 2px 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--systemTrayBg, #e0e0e0);
 }
 
 .event-tooltip-item:last-child {
@@ -691,45 +702,44 @@
 }
 
 .event-tooltip-time {
-    color: #666;
+    color: var(--menuText, #666);
     font-weight: bold;
     margin-right: 6px;
 }
 
 .event-tooltip-name {
-    color: #333;
+    color: var(--menuText, #333);
 }
 
 .event-tooltip-more {
     text-align: center;
-    color: #666;
+    color: var(--menuText, #666);
     font-style: italic;
     margin-top: 4px;
 }
 
 .special-dates {
-    background: #f0fff0;
-    border: 2px inset #c0c0c0;
+    background: var(--systemTrayBg, #f0fff0);
+    border: 2px inset var(--windowBorder, #c0c0c0);
     padding: 16px;
     border-radius: 4px;
-    color:#333;
 }
 
 .special-dates h3 {
     margin: 0 0 12px 0;
-    color: #228b22;
+    color: var(--clockText, #228b22);
     font-size: 14px;
     text-align: center;
 }
 
 .special-date {
     padding: 4px 8px;
-    background: white;
-    border: 1px outset #c0c0c0;
+    background: var(--menuBg, white);
+    border: 1px outset var(--windowBorder, #c0c0c0);
     margin-bottom: 4px;
     border-radius: 2px;
     font-size: 11px;
-    color:#333;
+    color: var(--menuText, #333);
 }
 
 /* =================================
@@ -749,8 +759,8 @@
 }
 
 .event-modal-content {
-    background: white;
-    border: 2px outset #c0c0c0;
+    background: var(--windowBg, white);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     border-radius: 4px;
     width: 400px;
     max-width: 90%;
@@ -758,8 +768,8 @@
 }
 
 .event-modal-header {
-    background: linear-gradient(to bottom, #4080ff, #0040ff);
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4080ff, #0040ff));
+    color: var(--menuHoverText, white);
     padding: 8px 12px;
     font-weight: bold;
     font-size: 14px;
@@ -782,7 +792,9 @@
 .event-form textarea,
 .event-form select {
     padding: 6px 8px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
     font-size: 11px;
     font-family: inherit;
 }
@@ -799,8 +811,9 @@
 }
 
 .event-btn {
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 2px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 2px outset var(--windowBorder, #c0c0c0);
+    color: var(--menuText, #333);
     padding: 6px 12px;
     font-size: 11px;
     font-weight: bold;
@@ -809,21 +822,21 @@
 }
 
 .event-btn:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
 .event-btn:active {
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder, #c0c0c0);
 }
 
 .event-btn.primary {
-    background: linear-gradient(to bottom, #4080ff, #0040ff);
-    border-color: #0040ff;
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4080ff, #0040ff));
+    border-color: var(--titlebarBg, #0040ff);
+    color: var(--menuHoverText, white);
 }
 
 .event-btn.primary:hover {
-    background: linear-gradient(to bottom, #5090ff, #1050ff);
+    filter: brightness(1.1);
 }
 
 .event-btn.danger {
@@ -843,8 +856,8 @@
 }
 
 .event-item {
-    background: #f8f8f8;
-    border: 1px outset #c0c0c0;
+    background: var(--systemTrayBg, #f8f8f8);
+    border: 1px outset var(--windowBorder, #c0c0c0);
     padding: 8px;
     margin-bottom: 4px;
     border-radius: 2px;
@@ -859,20 +872,20 @@
 
 .event-title {
     font-weight: bold;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
     font-size: 12px;
     margin-bottom: 2px;
 }
 
 .event-time {
     font-size: 10px;
-    color: #666;
+    color: var(--menuText, #666);
     margin-bottom: 2px;
 }
 
 .event-description {
     font-size: 10px;
-    color: #333;
+    color: var(--menuText, #333);
 }
 
 .event-controls {
@@ -886,10 +899,11 @@
     cursor: pointer;
     font-size: 14px;
     padding: 2px;
+    color: var(--menuText, #333);
 }
 
 .event-control-btn:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--menuHoverBg, rgba(0, 0, 0, 0.1));
     border-radius: 2px;
 }
 
@@ -904,8 +918,8 @@
 }
 
 .world-clock-item {
-    background: white;
-    border: 2px outset #c0c0c0;
+    background: var(--menuBg, white);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     padding: 16px;
     border-radius: 4px;
     display: flex;
@@ -919,7 +933,7 @@
 
 .world-clock-name {
     font-weight: bold;
-    color: #0066cc;
+    color: var(--clockText, #0066cc);
     font-size: 12px;
     margin-bottom: 4px;
 }
@@ -928,7 +942,7 @@
     font-family: 'Courier New', monospace;
     font-size: 18px;
     font-weight: bold;
-    color: #333;
+    color: var(--menuText, #333);
 }
 
 .remove-clock-btn {
@@ -950,8 +964,8 @@
 }
 
 .add-timezone {
-    background: #f0f8ff;
-    border: 2px outset #c0c0c0;
+    background: var(--systemTrayBg, #f0f8ff);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     padding: 16px;
     border-radius: 4px;
     display: flex;
@@ -962,14 +976,16 @@
 .add-timezone select {
     flex: 1;
     padding: 6px 8px;
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
     font-size: 11px;
 }
 
 .add-timezone-btn {
-    background: linear-gradient(to bottom, #90ee90, #32cd32);
-    border: 1px outset #32cd32;
-    color: black;
+    background: var(--titlebarBg, linear-gradient(to bottom, #90ee90, #32cd32));
+    border: 1px outset var(--titlebarBg, #32cd32);
+    color: var(--menuText, black);
     padding: 6px 12px;
     font-size: 11px;
     font-weight: bold;
@@ -978,11 +994,11 @@
 }
 
 .add-timezone-btn:hover {
-    background: linear-gradient(to bottom, #98fb98, #90ee90);
+    filter: brightness(1.1);
 }
 
 .add-timezone-btn:active {
-    border: 1px inset #32cd32;
+    border: 1px inset var(--titlebarBg, #32cd32);
 }
 
 /* =================================
@@ -992,8 +1008,8 @@
     position: fixed;
     top: 60px;
     right: 20px;
-    background: white;
-    border: 2px outset #c0c0c0;
+    background: var(--menuBg, white);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
     z-index: 9999;
     min-width: 250px;
@@ -1014,8 +1030,8 @@
 }
 
 .clock-notification.timer {
-    border-color: #ff4500;
-    background: linear-gradient(to bottom, #fff5ee, #ffeee6);
+    border-color: var(--titlebarBg, #ff4500);
+    background: var(--systemTrayBg, linear-gradient(to bottom, #fff5ee, #ffeee6));
 }
 
 .clock-notification.alarm {
@@ -1030,8 +1046,8 @@
 }
 
 .notification-title {
-    background: linear-gradient(to bottom, #4080ff, #0040ff);
-    color: white;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4080ff, #0040ff));
+    color: var(--menuHoverText, white);
     padding: 6px 12px;
     font-weight: bold;
     font-size: 12px;
@@ -1043,13 +1059,13 @@
 .notification-message {
     padding: 12px;
     font-size: 11px;
-    color: #333;
+    color: var(--menuText, #333);
 }
 
 .notification-close {
     background: transparent;
     border: none;
-    color: white;
+    color: var(--menuHoverText, white);
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
@@ -1144,17 +1160,79 @@
 
 .clock-content::-webkit-scrollbar-track,
 .lap-times::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border: 1px inset #c0c0c0;
+    background: var(--systemTrayBg, #f0f0f0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .clock-content::-webkit-scrollbar-thumb,
 .lap-times::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
 }
 
 .clock-content::-webkit-scrollbar-thumb:hover,
 .lap-times::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
+}
+
+/* =================================
+   THEME-SPECIFIC OVERRIDES
+================================= */
+
+/* Dark theme adjustments (like Zune theme) */
+.dark-theme .clock-system {
+    color: var(--clockText, #ffffff);
+}
+
+.dark-theme .timer-inputs input[type="number"],
+.dark-theme #timerName,
+.dark-theme .alarm-inputs input,
+.dark-theme .alarm-inputs select,
+.dark-theme .event-form input,
+.dark-theme .event-form textarea,
+.dark-theme .event-form select,
+.dark-theme .add-timezone select {
+    background: var(--windowBg, #2d2d2d);
+    color: var(--clockText, #ffffff);
+    border-color: var(--windowBorder, #1a1a1a);
+}
+
+/* Special handling for synthwave theme */
+.clock-system[data-theme="synthwave"] .main-clock-display {
+    background: linear-gradient(135deg, #1a0033, #330066);
+    color: #00FFFF;
+    box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.clock-system[data-theme="synthwave"] .stopwatch-display {
+    background: #1a0033;
+    color: #FF00FF;
+    border-color: #FF00FF;
+}
+
+.clock-system[data-theme="synthwave"] .timer-time {
+    color: #FF00FF;
+}
+
+/* Pastel theme soft adjustments */
+.clock-system[data-theme="pastels"] .main-clock-display,
+.clock-system[data-theme="bubblegum"] .main-clock-display,
+.clock-system[data-theme="mint"] .main-clock-display,
+.clock-system[data-theme="peach"] .main-clock-display,
+.clock-system[data-theme="lavender"] .main-clock-display,
+.clock-system[data-theme="oceanBreeze"] .main-clock-display {
+    background: var(--clockBg, linear-gradient(135deg, #f8f8ff, #e6e6fa));
+    color: var(--clockText, #4B0082);
+    box-shadow: inset 0 0 20px rgba(75, 0, 130, 0.1);
+}
+
+.clock-system[data-theme="pastels"] .stopwatch-display,
+.clock-system[data-theme="bubblegum"] .stopwatch-display,
+.clock-system[data-theme="mint"] .stopwatch-display,
+.clock-system[data-theme="peach"] .stopwatch-display,
+.clock-system[data-theme="lavender"] .stopwatch-display,
+.clock-system[data-theme="oceanBreeze"] .stopwatch-display {
+    background: var(--clockBg, #f8f8ff);
+    color: var(--clockText, #4B0082);
+    border-color: var(--windowBorder, #dda0dd);
 }

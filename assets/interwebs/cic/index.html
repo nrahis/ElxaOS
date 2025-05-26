@@ -2,131 +2,198 @@
 <html>
 <head>
     <style>
-        .chihuahua-body {
-            font-family: "Times New Roman", Times, serif;
-            margin: 0;
-            padding: 20px;
-            background: #F5F5F5;
-            color: #000080;
-            line-height: 1.6;
+        .cic-info-body {
+            font-family: "Times New Roman", Times, serif !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            background: #F5F5F5 !important;
+            color: #000080 !important;
+            line-height: 1.6 !important;
+            box-sizing: border-box !important;
+            min-height: 100vh !important;
         }
 
-        .chihuahua-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border: 1px solid #808080;
-            padding: 20px;
-            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+        .cic-info-body * {
+            box-sizing: border-box !important;
         }
 
-        .chihuahua-header {
-            text-align: center;
-            border-bottom: 2px solid #000080;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+        .cic-info-container {
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            background: white !important;
+            border: 1px solid #808080 !important;
+            padding: 20px !important;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1) !important;
+            display: block !important;
+            font-family: "Times New Roman", Times, serif !important;
         }
 
-        .chihuahua-title {
-            font-size: 24px;
-            color: #718000;
-            margin: 0;
+        .cic-info-header {
+            text-align: center !important;
+            border-bottom: 2px solid #000080 !important;
+            margin-bottom: 20px !important;
+            padding-bottom: 10px !important;
+            margin: 0 0 20px 0 !important;
         }
 
-        .chihuahua-subtitle {
-            font-style: italic;
-            color: #666;
-            margin: 5px 0;
+        .cic-info-title {
+            font-size: 24px !important;
+            color: #718000 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: "Times New Roman", Times, serif !important;
+            font-weight: bold !important;
         }
 
-        .chihuahua-section {
-            margin: 20px 0;
-            padding: 10px;
-            background: #FFFFFF;
-            border: 1px solid #CCCCCC;
+        .cic-info-subtitle {
+            font-style: italic !important;
+            color: #666 !important;
+            margin: 5px 0 !important;
+            padding: 0 !important;
+            font-family: "Times New Roman", Times, serif !important;
         }
 
-        .chihuahua-section h2 {
-            color: #433a3a;
-            border-bottom: 1px solid #CCCCCC;
-            padding-bottom: 5px;
+        .cic-info-section {
+            margin: 20px 0 !important;
+            padding: 10px !important;
+            background: #FFFFFF !important;
+            border: 1px solid #CCCCCC !important;
+            font-family: "Times New Roman", Times, serif !important;
+            color: #000080 !important;
         }
 
-        .chihuahua-section ul {
-            list-style-type: square;
-            color: #000080;
+        .cic-info-section h2 {
+            color: #433a3a !important;
+            border-bottom: 1px solid #CCCCCC !important;
+            padding-bottom: 5px !important;
+            margin: 0 0 10px 0 !important;
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 18px !important;
         }
 
-        .chihuahua-section li {
-            margin-bottom: 10px;
+        .cic-info-section p {
+            font-family: "Times New Roman", Times, serif !important;
+            color: #000080 !important;
+            margin: 10px 0 !important;
+            padding: 0 !important;
+            line-height: 1.6 !important;
         }
 
-        .chihuahua-fact-box {
-            background: #FFFAF0;
-            border: 1px solid #DEB887;
-            margin: 10px 0;
-            padding: 10px;
+        .cic-info-section ul {
+            list-style-type: square !important;
+            color: #000080 !important;
+            margin: 10px 0 !important;
+            padding-left: 20px !important;
+            font-family: "Times New Roman", Times, serif !important;
         }
 
-        .chihuahua-navigation {
-            background: #000080;
-            color: white;
-            padding: 10px;
-            margin-bottom: 20px;
+        .cic-info-section li {
+            margin-bottom: 10px !important;
+            font-family: "Times New Roman", Times, serif !important;
+            color: #000080 !important;
+            padding: 0 !important;
         }
 
-        .chihuahua-navigation a {
-            color: white;
-            text-decoration: none;
-            margin-right: 15px;
+        .cic-info-fact-box {
+            background: #FFFAF0 !important;
+            border: 1px solid #DEB887 !important;
+            margin: 10px 0 !important;
+            padding: 10px !important;
+            font-family: "Times New Roman", Times, serif !important;
+            color: #000080 !important;
         }
 
-        .chihuahua-footer {
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            margin-top: 20px;
-            border-top: 1px solid #CCCCCC;
-            padding-top: 10px;
+        .cic-info-fact-box strong {
+            font-family: "Times New Roman", Times, serif !important;
+            color: #000080 !important;
         }
 
-        .chihuahua-image-placeholder {
-            border: 1px solid #CCCCCC;
-            background: #F0F0F0;
-            text-align: center;
-            padding: 10px;
-            margin: 10px 0;
+        .cic-info-navigation {
+            background: #000080 !important;
+            color: white !important;
+            padding: 10px !important;
+            margin-bottom: 20px !important;
+            font-family: "Times New Roman", Times, serif !important;
+        }
+
+        .cic-info-navigation a {
+            color: white !important;
+            text-decoration: none !important;
+            margin-right: 15px !important;
+            font-family: "Times New Roman", Times, serif !important;
+        }
+
+        .cic-info-footer {
+            text-align: center !important;
+            font-size: 12px !important;
+            color: #666 !important;
+            margin-top: 20px !important;
+            border-top: 1px solid #CCCCCC !important;
+            padding-top: 10px !important;
+            font-family: "Times New Roman", Times, serif !important;
+        }
+
+        .cic-info-footer p {
+            font-family: "Times New Roman", Times, serif !important;
+            color: #666 !important;
+            margin: 5px 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
+        }
+
+        .cic-info-image-placeholder {
+            border: 1px solid #CCCCCC !important;
+            background: #F0F0F0 !important;
+            text-align: center !important;
+            padding: 10px !important;
+            margin: 10px 0 !important;
+            font-family: "Times New Roman", Times, serif !important;
+            color: #000080 !important;
+        }
+
+        .cic-info-image-placeholder img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            margin: 0 auto !important;
+        }
+
+        .cic-info-image-placeholder em {
+            color: #666 !important;
+            font-style: italic !important;
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 14px !important;
         }
     </style>
 </head>
-<body class="chihuahua-body">
-    <div class="chihuahua-container">
-        <div class="chihuahua-header">
-            <h1 class="chihuahua-title">Chihuahua Information Center</h1>
-            <div class="chihuahua-subtitle">A Scientific Resource for Chihuahua Research and Facts</div>
+<body class="cic-info-body">
+    <div class="cic-info-container">
+        <div class="cic-info-header">
+            <h1 class="cic-info-title">Chihuahua Information Center</h1>
+            <div class="cic-info-subtitle">A Scientific Resource for Chihuahua Research and Facts</div>
         </div>
 
-        <div class="chihuahua-navigation">
+        <div class="cic-info-navigation">
             <a href="#anatomy">Anatomy</a>
             <a href="#history">History</a>
             <a href="#behavior">Behavior</a>
             <a href="#care">Care</a>
         </div>
 
-        <div class="chihuahua-section">
+        <div class="cic-info-section">
             <h2>Introduction to Chihuahuas</h2>
             <p>The Chihuahua (Canis lupus familiaris var. chihuahuensis) represents one of the smallest breeds of domestic dog. Named after the Mexican state of Chihuahua, these diminutive canines have been the subject of extensive research in veterinary medicine and canine behavior studies.</p>
             
-            <div class="chihuahua-image-placeholder">
-                <img src="/api/placeholder/300/200" alt="Chihuahua Anatomical Diagram">
+            <div class="cic-info-image-placeholder">
+                <img src="./assets/interwebs/cic/images/anatomy.jpg" alt="Chihuahua Anatomical Diagram" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='Fig. 1: Anatomical Features of the Modern Chihuahua<br>(Image not found)'">
                 <br>
                 <em>Fig. 1: Anatomical Features of the Modern Chihuahua</em>
             </div>
         </div>
 
-        <div class="chihuahua-section" id="anatomy">
+        <div class="cic-info-section" id="anatomy">
             <h2>Anatomical Characteristics</h2>
-            <div class="chihuahua-fact-box">
+            <div class="cic-info-fact-box">
                 <strong>Key Measurements:</strong>
                 <ul>
                     <li>Height: 6-9 inches (15-23 cm)</li>
@@ -136,12 +203,12 @@
             </div>
         </div>
 
-        <div class="chihuahua-section" id="history">
+        <div class="cic-info-section" id="history">
             <h2>Historical Background</h2>
             <p>Archaeological evidence suggests that the Chihuahua's ancestors were present in ancient Mesoamerican civilizations, particularly among the Toltec civilization where small dogs known as "Techichi" were kept as companions and served ceremonial purposes.</p>
         </div>
 
-        <div class="chihuahua-footer">
+        <div class="cic-info-footer">
             <p>Last Updated: Snakesian Date 12/13/2025</p>
             <p>Department of Canine Studies - Snake-E University</p>
             <p>Contact: chihuahua.studies@snake-u.edu.ex</p>

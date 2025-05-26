@@ -3,119 +3,203 @@
 <head>
     <style>
         .craftzone-body {
-            background-color: #000;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjRGNTc2MTZDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjRGNTc2MTdDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyNEY1NzYxNEMxMDYxMUUwODBFRkZDQkIyODMzNTQxNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyNEY1NzYxNUMxMDYxMUUwODBFRkZDQkIyODMzNTQxNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/ubYMAAAGlSURBVHjaYmRAA/+B+D8SNf8H4o8AAQTlQ8FLIPZHo+cjQAAxIWnOBeL5QHwPLQBgoJEBsgJgwK4ACCAWqMJyIP4MxBX/sYPzQCwPxH+BuBikGahgPxC7EgmgKiD+DMSV/zEBdhRALwAB9DMCqC0LiLcC8WUg/gHEXmjs/EAsDcRngdgAiE8A8Q4gNgTiQiC+AsT3gdgWzYYdQLwXiBcC8Q8gXgfEMkDsCsTLgPgVEF/hQXLEeyCeDcSGUL4REE8D4ntA/AqIDYBYG4gvQgNYDIg9gfgsEF8H4n1AzA/EpkB8CRqYLECcCcQnoAH0FYgjoeL/gPgPEIci+aEBiOdCw+UXEE+CBvBPIH4OxApArAnEl5AM+g3E85BCHJQWbgBxH1SyCYg/APFLIJ4IDaBiIN4EjZ5vQJwOdW4WyEAgvgcNiB9QN/NANcEA3AXnkdIIKFXdgUpwQbUSQAMQhKWB+D40UfwE4kwgFoEG6g2oZA4Q34La8hKaVEE2vIBKgkKhC4jPAPFraEJUg6aMbCA+D8T3gFiVCxoYH6EuOA0QYACcXZ+xW3nCzQAAAABJRU5ErkJggg==');
-            color: #33ff33;
-            font-family: 'MS Sans Serif', Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
+            background-color: #000 !important;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjRGNTc2MTZDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjRGNTc2MTdDMTA2MTFFMDgwRUZGQ0JCMjgzMzU0MTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyNEY1NzYxNEMxMDYxMUUwODBFRkZDQkIyODMzNTQxNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyNEY1NzYxNUMxMDYxMUUwODBFRkZDQkIyODMzNTQxNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/ubYMAAAGlSURBVHjaYmRAA/+B+D8SNf8H4o8AAQTlQ8FLIPZHo+cjQAAxIWnOBeL5QHwPLQBgoJEBsgJgwK4ACCAWqMJyIP4MxBX/sYPzQCwPxH+BuBikGahgPxC7EgmgKiD+DMSV/zEBdhRALwAB9DMCqC0LiLcC8WUg/gHEXmjs/EAsDcRngdgAiE8A8Q4gNgTiQiC+AsT3gdgWzYYdQLwXiBcC8Q8gXgfEMkDsCsTLgPgVEF/hQXLEeyCeDcSGUL4REE8D4ntA/AqIDYBYG4gvQgNYDIg9gfgsEF8H4n1AzA/EpkB8CRqYLECcCcQnoAH0FYgjoeL/gPgPEIci+aEBiOdCw+UXEE+CBvBPIH4OxApArAnEl5AM+g3E85BCHJQWbgBxH1SyCYg/APFLIJ4IDaBiIN4EjZ5vQJwOdW4WyEAgvgcNiB9QN/NANcEA3AXnkdIIKFXdgUpwQbUSQAMQhKWB+D40UfwE4kwgFoEG6g2oZA4Q34La8hKaVEE2vIBKgkKhC4jPAPFraEJUg6aMbCA+D8T3gFiVCxoYH6EuOA0QYACcXZ+xW3nCzQAAAABJRU5ErkJggg==') !important;
+            color: #33ff33 !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            line-height: 1.6 !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            min-height: 100vh !important;
+            box-sizing: border-box !important;
+        }
+
+        .craftzone-body * {
+            box-sizing: border-box !important;
         }
 
         .craftzone-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #1a1a1a;
-            border: 3px solid #33ff33;
-            padding: 20px;
-            box-shadow: 0 0 10px #33ff33;
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            background: #1a1a1a !important;
+            border: 3px solid #33ff33 !important;
+            padding: 20px !important;
+            box-shadow: 0 0 10px #33ff33 !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
         }
 
         .craftzone-header {
-            text-align: center;
-            border-bottom: 2px solid #33ff33;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
+            text-align: center !important;
+            border-bottom: 2px solid #33ff33 !important;
+            padding-bottom: 20px !important;
+            margin-bottom: 20px !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
         }
 
         .craftzone-title {
-            font-size: 40px;
-            color: #33ff33;
+            font-size: 40px !important;
+            color: #33ff33 !important;
             text-shadow: 2px 2px #000,
-                         4px 4px #008800;
-            margin: 0;
-            font-family: 'Minecraft', cursive;
+                         4px 4px #008800 !important;
+            margin: 0 !important;
+            font-family: 'Minecraft', cursive !important;
+            padding: 0 !important;
+            line-height: 1.1 !important;
         }
 
         .craftzone-section {
-            background: #000;
-            border: 2px solid #33ff33;
-            margin: 20px 0;
-            padding: 15px;
+            background: #000 !important;
+            border: 2px solid #33ff33 !important;
+            margin: 20px 0 !important;
+            padding: 15px !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
+        }
+
+        .craftzone-section h2 {
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
+            margin: 0 0 10px 0 !important;
+            padding: 0 !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+        }
+
+        .craftzone-section p {
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
+            margin: 10px 0 !important;
+            padding: 0 !important;
+            line-height: 1.6 !important;
+            font-size: 14px !important;
+        }
+
+        .craftzone-section ul {
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
+            margin: 10px 0 !important;
+            padding: 0 0 0 20px !important;
+        }
+
+        .craftzone-section li {
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
+            margin: 5px 0 !important;
+            padding: 0 !important;
+            font-size: 14px !important;
         }
 
         .craftzone-pixelart {
-            font-family: monospace;
-            white-space: pre;
-            color: #33ff33;
-            text-align: center;
-            line-height: 1.2;
-            margin: 20px 0;
+            font-family: monospace !important;
+            white-space: pre !important;
+            color: #33ff33 !important;
+            text-align: center !important;
+            line-height: 1.2 !important;
+            margin: 20px 0 !important;
+            padding: 0 !important;
         }
 
         .craftzone-builds {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 15px !important;
+            margin: 20px 0 !important;
+            padding: 0 !important;
         }
 
         .craftzone-build {
-            border: 2px solid #33ff33;
-            padding: 10px;
-            text-align: center;
+            border: 2px solid #33ff33 !important;
+            padding: 10px !important;
+            text-align: center !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
+            background: #000 !important;
+        }
+
+        .craftzone-build img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            margin: 0 auto 5px auto !important;
+        }
+
+        .craftzone-build p {
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
+            margin: 5px 0 0 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
         }
 
         .craftzone-news {
-            background: #000;
-            border: 2px solid #ff0000;
-            padding: 10px;
-            margin: 20px 0;
-            color: #ff0000;
-            font-weight: bold;
-            animation: blink 1s infinite;
+            background: #000 !important;
+            border: 2px solid #ff0000 !important;
+            padding: 10px !important;
+            margin: 20px 0 !important;
+            color: #ff0000 !important;
+            font-weight: bold !important;
+            animation: craftzone-blink 1s infinite !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            text-align: center !important;
         }
 
-        @keyframes blink {
-            50% { opacity: 0.5; }
+        @keyframes craftzone-blink {
+            50% { opacity: 0.5 !important; }
         }
 
         .craftzone-webring {
-            text-align: center;
-            border: 2px solid #33ff33;
-            padding: 10px;
-            margin: 20px 0;
-            background: #000;
+            text-align: center !important;
+            border: 2px solid #33ff33 !important;
+            padding: 10px !important;
+            margin: 20px 0 !important;
+            background: #000 !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #33ff33 !important;
         }
 
         .craftzone-link {
-            color: #33ff33;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #33ff33;
-            margin: 0 5px;
-            display: inline-block;
+            color: #33ff33 !important;
+            text-decoration: none !important;
+            padding: 5px 10px !important;
+            border: 1px solid #33ff33 !important;
+            margin: 0 5px !important;
+            display: inline-block !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            font-size: 12px !important;
         }
 
         .craftzone-link:hover {
-            background: #33ff33;
-            color: #000;
+            background: #33ff33 !important;
+            color: #000 !important;
         }
 
         .craftzone-footer {
-            text-align: center;
-            font-size: 12px;
-            margin-top: 20px;
-            color: #666;
+            text-align: center !important;
+            font-size: 12px !important;
+            margin-top: 20px !important;
+            color: #666 !important;
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            padding: 0 !important;
+        }
+
+        .craftzone-footer p {
+            font-family: 'MS Sans Serif', Arial, sans-serif !important;
+            color: #666 !important;
+            margin: 5px 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
         }
 
         .craftzone-counter {
-            background: #000;
-            border: 2px inset #33ff33;
-            padding: 3px 8px;
-            font-family: 'Digital', monospace;
-            color: #33ff33;
-            display: inline-block;
+            background: #000 !important;
+            border: 2px inset #33ff33 !important;
+            padding: 3px 8px !important;
+            font-family: 'Digital', monospace !important;
+            color: #33ff33 !important;
+            display: inline-block !important;
+            margin: 0 !important;
+            font-size: 12px !important;
         }
     </style>
 </head>
@@ -151,12 +235,12 @@
             <h2>// My Best Builds \\</h2>
             <div class="craftzone-builds">
                 <div class="craftzone-build">
-                    <img src="/api/placeholder/200/150" alt="Castle">
+                    <img src="./assets/interwebs/craftzone-xeocities/images/medieval.png" alt="Medieval Castle" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='EPIC Medieval Castle<br>(Image not found)<br>(Took 3 months!!!)'" width="200" height="150">
                     <p>EPIC Medieval Castle<br>
                     (Took 3 months!!!)</p>
                 </div>
                 <div class="craftzone-build">
-                    <img src="/api/placeholder/200/150" alt="Redstone">
+                    <img src="./assets/interwebs/craftzone-xeocities/images/wheatfarm.png" alt="Auto Wheat Farm" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='Auto Wheat Farm v2<br>(Image not found)<br>(With Tutorial!)'" width="200" height="150">
                     <p>Auto Wheat Farm v2<br>
                     (With Tutorial!)</p>
                 </div>
