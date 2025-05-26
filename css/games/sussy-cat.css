@@ -1,47 +1,65 @@
 /* =================================
-   SUSSY CAT ADVENTURE - Game Styles
-   All classes use 'sussy-' prefix to avoid conflicts
+   SUSSY CAT ADVENTURE - Cozy 90s RPG Styles
+   Warm pixel art aesthetic with classic RPG vibes
 ================================= */
 
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+
 .sussy-cat-container {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Courier Prime', 'Courier New', monospace;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    background: linear-gradient(180deg, #3a2f5f 0%, #2a1f4f 100%);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
+/* Header initially hidden */
 .sussy-cat-header {
-    background: linear-gradient(45deg, #8B4A9C, #E73C7E);
-    color: white;
+    background: linear-gradient(180deg, #8B4A9C 0%, #5A2D5A 100%);
+    color: #ffffff;
     padding: 8px 12px;
-    border-bottom: 2px solid #5A2D5A;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border-bottom: 2px solid #3a1a3a;
+    box-shadow: inset 0 1px 0 #bb7acc, inset 0 -1px 0 #4a2a4a;
+    display: none; /* Hidden by default */
+    text-shadow: 1px 1px 0 #2a1a2a;
+}
+
+.sussy-cat-header.show {
+    display: block;
 }
 
 .sussy-cat-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 6px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    color: #FFD700;
+    letter-spacing: 1px;
 }
 
 .sussy-cat-stats {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: bold;
 }
 
 .sussy-score, .sussy-timer, .sussy-level {
-    background: rgba(255,255,255,0.2);
-    padding: 2px 6px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.3);
+    background: #2a1a2a;
+    color: #90EE90;
+    padding: 3px 6px;
+    border: 2px solid #5a4a5a;
+    border-top-color: #7a6a7a;
+    border-left-color: #7a6a7a;
+    border-right-color: #3a2a3a;
+    border-bottom-color: #3a2a3a;
+    border-radius: 3px;
 }
 
 .sussy-detection {
@@ -51,15 +69,20 @@
 }
 
 .sussy-detection-label {
-    font-size: 10px;
+    font-size: 9px;
+    color: #ffffff;
 }
 
 .sussy-detection-bar {
     width: 60px;
     height: 8px;
-    background: rgba(255,255,255,0.3);
+    background: #2a1a2a;
+    border: 2px solid #5a4a5a;
+    border-top-color: #3a2a3a;
+    border-left-color: #3a2a3a;
+    border-right-color: #7a6a7a;
+    border-bottom-color: #7a6a7a;
     border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.5);
     overflow: hidden;
 }
 
@@ -67,7 +90,7 @@
     height: 100%;
     background: #44ff44;
     transition: width 0.3s ease, background 0.3s ease;
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .sussy-cat-game-area {
@@ -77,7 +100,7 @@
 }
 
 /* =================================
-   INITIAL SCREEN STYLES - NEW
+   SPLASH SCREEN - FULLSCREEN NO FRAME
 ================================= */
 .sussy-cat-initial-screen {
     position: absolute;
@@ -89,9 +112,10 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 20px;
+    background: #000;
+    padding: 0;
     box-sizing: border-box;
+    z-index: 1000;
 }
 
 .sussy-initial-content {
@@ -102,10 +126,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background: rgba(255,255,255,0.1);
-    border-radius: 15px;
-    border: 2px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
+    background: #000;
     box-sizing: border-box;
 }
 
@@ -119,46 +140,53 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 13px; /* Slightly smaller than parent to account for border */
-    opacity: 0.8;
+    opacity: 1;
     z-index: 1;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
 .sussy-click-to-continue {
     position: relative;
     z-index: 2;
-    color: white;
-    font-size: 18px;
+    color: #FFD700;
+    font-size: 14px;
     font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    background: rgba(0,0,0,0.5);
-    padding: 15px 25px;
-    border-radius: 25px;
-    border: 2px solid rgba(255,255,255,0.3);
-    animation: sussyPulse 2s infinite ease-in-out;
+    text-shadow: 2px 2px 0 #000;
+    background: linear-gradient(180deg, #8B4A9C 0%, #5A2D5A 100%);
+    padding: 12px 20px;
+    border: 3px solid #5a4a5a;
+    border-top-color: #bb7acc;
+    border-left-color: #bb7acc;
+    border-right-color: #3a1a3a;
+    border-bottom-color: #3a1a3a;
+    border-radius: 0;
+    animation: sussyWarmGlow 2s infinite ease-in-out;
     margin-top: auto;
-    margin-bottom: 100px;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), 2px 2px 0 #000;
 }
 
-@keyframes sussyPulse {
+@keyframes sussyWarmGlow {
     0%, 100% { 
-        transform: scale(1); 
-        box-shadow: 0 0 10px rgba(255,255,255,0.3);
+        box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), 2px 2px 0 #000, 0 0 10px rgba(255, 215, 0, 0.5);
     }
     50% { 
-        transform: scale(1.05); 
-        box-shadow: 0 0 20px rgba(255,255,255,0.6);
+        box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), 2px 2px 0 #000, 0 0 20px rgba(255, 215, 0, 0.8);
     }
 }
 
 .sussy-initial-content:hover .sussy-click-to-continue {
-    background: rgba(0,0,0,0.7);
-    border-color: rgba(255,255,255,0.5);
-    transform: scale(1.1);
+    color: #ffffff;
+    background: linear-gradient(180deg, #9B5AAC 0%, #6A3D6A 100%);
+    border-top-color: #cb8acc;
+    border-left-color: #cb8acc;
 }
 
 /* =================================
-   START SCREEN STYLES - UPDATED (NO LOGO)
+   LEVEL SELECT SCREEN - RETRO RPG STYLE
 ================================= */
 .sussy-cat-start-screen {
     position: absolute;
@@ -169,8 +197,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(180deg, #2a1f4f 0%, #1a0f2f 100%);
+    color: #ffffff;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -181,11 +209,15 @@
     width: 100%;
     max-height: 100%;
     overflow-y: auto;
-    background: rgba(255,255,255,0.1);
+    background: linear-gradient(180deg, #4a3f6f 0%, #3a2f5f 100%);
     padding: 20px;
-    border-radius: 15px;
-    border: 2px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
+    border: 4px solid #5a4a5a;
+    border-top-color: #8a7a8a;
+    border-left-color: #8a7a8a;
+    border-right-color: #2a1a2a;
+    border-bottom-color: #2a1a2a;
+    border-radius: 0;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.1), inset -2px -2px 0 rgba(0,0,0,0.3), 4px 4px 0 #000;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -195,108 +227,214 @@
 
 .sussy-start-content h2 {
     font-size: 18px;
-    margin-bottom: 12px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    margin-bottom: 16px;
+    color: #FFD700;
+    text-shadow: 2px 2px 0 #000;
+    letter-spacing: 1px;
 }
 
 .sussy-level-select {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .sussy-level-select h3 {
     font-size: 14px;
-    margin-bottom: 10px;
-    color: #FFD700;
+    margin-bottom: 12px;
+    color: #90EE90;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 0 #000;
 }
 
-.sussy-level-buttons {
+.sussy-level-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.sussy-level-column {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 10px;
 }
 
 .sussy-level-btn {
-    background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-    color: white;
-    border: 1px solid rgba(255,255,255,0.3);
-    padding: 8px 12px;
-    border-radius: 8px;
+    background: linear-gradient(180deg, #6a5a7a 0%, #4a3a5a 100%);
+    color: #ffffff;
+    border: 3px solid #5a4a5a;
+    border-top-color: #8a7a8a;
+    border-left-color: #8a7a8a;
+    border-right-color: #2a1a2a;
+    border-bottom-color: #2a1a2a;
+    border-radius: 0;
+    padding: 10px 12px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     font-family: inherit;
     text-align: left;
+    font-size: 11px;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2), 2px 2px 0 #000;
+    text-shadow: 1px 1px 0 #000;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sussy-level-btn:hover {
-    background: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2));
-    border-color: rgba(255,255,255,0.5);
-    transform: translateY(-1px);
+    background: linear-gradient(180deg, #7a6a8a 0%, #5a4a6a 100%);
+    border-top-color: #9a8a9a;
+    border-left-color: #9a8a9a;
+    transform: translate(-1px, -1px);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), 3px 3px 0 #000;
+}
+
+.sussy-level-btn:active {
+    background: linear-gradient(180deg, #4a3a5a 0%, #3a2a4a 100%);
+    transform: translate(1px, 1px);
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3), 1px 1px 0 #000;
+    border-top-color: #3a2a3a;
+    border-left-color: #3a2a3a;
+    border-right-color: #6a5a6a;
+    border-bottom-color: #6a5a6a;
 }
 
 .sussy-level-btn .level-title {
     font-weight: bold;
     font-size: 11px;
     color: #FFD700;
+    margin-bottom: 2px;
 }
 
 .sussy-level-btn .level-desc {
     font-size: 9px;
     margin: 2px 0;
     opacity: 0.9;
+    color: #dddddd;
 }
 
 .sussy-level-btn .level-rooms {
     font-size: 8px;
-    opacity: 0.7;
+    opacity: 0.8;
     font-style: italic;
+    color: #90EE90;
 }
 
 .sussy-story {
     font-size: 11px;
     text-align: left;
-    background: rgba(255,255,255,0.1);
+    background: linear-gradient(180deg, #2a1a2a 0%, #1a0a1a 100%);
+    color: #ffffff;
     padding: 12px;
-    border-radius: 8px;
+    border: 3px solid #3a2a3a;
+    border-top-color: #1a0a1a;
+    border-left-color: #1a0a1a;
+    border-right-color: #5a4a5a;
+    border-bottom-color: #5a4a5a;
+    border-radius: 0;
     margin-bottom: 15px;
     line-height: 1.4;
+    letter-spacing: 0.5px;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.5), inset -1px -1px 0 rgba(255,255,255,0.1);
 }
 
 .sussy-story ul {
-    margin: 8px 0 0 16px;
+    margin: 8px 0 0 12px;
     padding: 0;
 }
 
 .sussy-story li {
-    margin: 3px 0;
+    margin: 4px 0;
+    color: #dddddd;
 }
 
-.sussy-start-btn {
-    background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.sussy-start-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    background: linear-gradient(45deg, #FF5252, #FF7979);
-}
-
-.sussy-start-btn:active {
-    transform: translateY(0px);
+.sussy-story strong {
+    color: #FFD700;
 }
 
 /* =================================
-   PLAY AREA STYLES
+   TUTORIAL POPUP - RETRO STYLE
+================================= */
+.sussy-tutorial-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1001;
+}
+
+.sussy-tutorial-content {
+    background: linear-gradient(180deg, #4a3f6f 0%, #3a2f5f 100%);
+    color: #ffffff;
+    padding: 20px;
+    border: 4px solid #5a4a5a;
+    border-top-color: #8a7a8a;
+    border-left-color: #8a7a8a;
+    border-right-color: #2a1a2a;
+    border-bottom-color: #2a1a2a;
+    border-radius: 0;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.1), inset -2px -2px 0 rgba(0,0,0,0.3), 4px 4px 0 #000;
+}
+
+.sussy-tutorial-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFD700;
+    margin-bottom: 12px;
+    text-shadow: 2px 2px 0 #000;
+    letter-spacing: 1px;
+}
+
+.sussy-tutorial-message {
+    font-size: 12px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    color: #dddddd;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.sussy-tutorial-ok {
+    background: linear-gradient(180deg, #6a5a7a 0%, #4a3a5a 100%);
+    color: #FFD700;
+    border: 3px solid #5a4a5a;
+    border-top-color: #8a7a8a;
+    border-left-color: #8a7a8a;
+    border-right-color: #2a1a2a;
+    border-bottom-color: #2a1a2a;
+    border-radius: 0;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 1px;
+    transition: all 0.1s ease;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2), 2px 2px 0 #000;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.sussy-tutorial-ok:hover {
+    background: linear-gradient(180deg, #7a6a8a 0%, #5a4a6a 100%);
+    transform: translate(-1px, -1px);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), 3px 3px 0 #000;
+}
+
+.sussy-tutorial-ok:active {
+    background: linear-gradient(180deg, #4a3a5a 0%, #3a2a4a 100%);
+    transform: translate(1px, 1px);
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3), 1px 1px 0 #000;
+}
+
+/* =================================
+   PLAY AREA STYLES - COZY RPG
 ================================= */
 .sussy-cat-play-area {
     position: absolute;
@@ -310,15 +448,17 @@
 }
 
 .sussy-room-info {
-    background: rgba(255,255,255,0.9);
-    padding: 6px 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(240,240,240,0.9));
+    color: #333;
+    padding: 8px 12px;
     border-bottom: 2px solid #ddd;
+    border-top: 1px solid #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 11px;
     font-weight: bold;
-    color: #333;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.1);
 }
 
 .sussy-current-room {
@@ -338,6 +478,11 @@
     background: #f0f8ff;
     min-height: 300px;
     height: 100%;
+    border: 2px solid #ccc;
+    border-top-color: #999;
+    border-left-color: #999;
+    border-right-color: #fff;
+    border-bottom-color: #fff;
 }
 
 .sussy-room {
@@ -350,6 +495,9 @@
     height: 100%;
     display: none;
     background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
 .sussy-room.active {
@@ -394,7 +542,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 120px;
-    opacity: 0.2; /* Shows when no background image */
+    opacity: 0.2;
     pointer-events: none;
     z-index: 1;
 }
@@ -404,11 +552,11 @@
 .sussy-room-kitchen .sussy-room-bg,
 .sussy-room-bedroom .sussy-room-bg,
 .sussy-room-bathroom .sussy-room-bg {
-    opacity: 0; /* Hide emoji when background image is present */
+    opacity: 0;
 }
 
 /* =================================
-   CAT SPRITE STYLES - UPDATED
+   CAT SPRITE - PIXEL PERFECT
 ================================= */
 .sussy-cat-sprite {
     position: absolute;
@@ -421,7 +569,7 @@
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
     cursor: pointer;
     
-    /* Default emoji styling - shows when no image is loaded */
+    /* Default emoji styling */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -431,21 +579,22 @@
     border-radius: 50%;
     border: 2px solid #666;
     
-    /* Image properties - will be set by JavaScript when image loads */
+    /* Image properties */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
-/* When cat image is successfully loaded */
 .sussy-cat-sprite.has-cat-image {
     background-color: transparent;
     border: none;
-    color: transparent; /* Hide emoji text */
-    border-radius: 0; /* Remove circular border for image */
+    color: transparent;
+    border-radius: 0;
 }
 
-/* Hover effect for cat sprite */
 .sussy-cat-sprite:hover {
     transform: scale(1.1);
     filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
@@ -476,7 +625,48 @@
 }
 
 /* =================================
-   ITEM SPRITE STYLES - UPDATED
+   PLOT POINTS - NEW MECHANIC
+================================= */
+.sussy-plot-point {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    z-index: 60;
+    transition: all 0.2s ease;
+    animation: sussyPlotGlow 2s infinite ease-in-out;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.4));
+    
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFD700;
+    background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,215,0,0.2) 70%, transparent 100%);
+    border-radius: 50%;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 8px rgba(255,215,0,0.6);
+}
+
+@keyframes sussyPlotGlow {
+    0%, 100% { 
+        transform: translateY(0px) scale(1);
+        box-shadow: 0 0 8px rgba(255,215,0,0.6);
+    }
+    50% { 
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: 0 0 16px rgba(255,215,0,0.9);
+    }
+}
+
+.sussy-plot-point:hover {
+    transform: scale(1.3) rotate(15deg);
+    filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.6));
+    box-shadow: 0 0 20px rgba(255,215,0,1);
+}
+
+/* =================================
+   ITEM SPRITES - BACK TO ORIGINAL STYLE
 ================================= */
 .sussy-item {
     position: absolute;
@@ -502,6 +692,9 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
 /* When item image is successfully loaded */
@@ -540,7 +733,145 @@
 }
 
 /* =================================
-   END SCREEN STYLES - FIXED CENTERING
+   RETRO BUTTON STYLE - CONSISTENT ACROSS ALL SCREENS
+================================= */
+.sussy-retro-btn {
+    background: linear-gradient(180deg, #6a5a7a 0%, #4a3a5a 100%);
+    color: #FFD700;
+    border: 3px solid #5a4a5a;
+    border-top-color: #8a7a8a;
+    border-left-color: #8a7a8a;
+    border-right-color: #2a1a2a;
+    border-bottom-color: #2a1a2a;
+    border-radius: 0;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 1px;
+    transition: all 0.1s ease;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2), 2px 2px 0 #000;
+    text-shadow: 1px 1px 0 #000;
+    margin: 2px;
+}
+
+.sussy-retro-btn:hover {
+    background: linear-gradient(180deg, #7a6a8a 0%, #5a4a6a 100%);
+    border-top-color: #9a8a9a;
+    border-left-color: #9a8a9a;
+    transform: translate(-1px, -1px);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), 3px 3px 0 #000;
+}
+
+.sussy-retro-btn:active {
+    background: linear-gradient(180deg, #4a3a5a 0%, #3a2a4a 100%);
+    transform: translate(1px, 1px);
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3), 1px 1px 0 #000;
+    border-top-color: #3a2a3a;
+    border-left-color: #3a2a3a;
+    border-right-color: #6a5a6a;
+    border-bottom-color: #6a5a6a;
+}
+
+/* =================================
+   TIME OUT SCREEN - RETRO STYLE
+================================= */
+.sussy-cat-timeout-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4a2a2a 0%, #2a1a1a 100%);
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sussy-timeout-content {
+    text-align: center;
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #5a3a3a 0%, #4a2a2a 100%);
+    padding: 20px;
+    border: 4px solid #6a4a4a;
+    border-top-color: #8a6a6a;
+    border-left-color: #8a6a6a;
+    border-right-color: #2a1a1a;
+    border-bottom-color: #2a1a1a;
+    border-radius: 0;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.1), inset -2px -2px 0 rgba(0,0,0,0.3), 4px 4px 0 #000;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sussy-timeout-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 12px auto;
+    background-image: url('../../assets/games/sussycat/cat/pushing-cat-timeout.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: sussyPout 3s infinite ease-in-out;
+    color: transparent;
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+.sussy-timeout-icon.image-failed {
+    color: #888888;
+    font-size: 48px;
+    background-image: none;
+}
+
+@keyframes sussyPout {
+    0%, 100% { transform: scale(1) rotate(-2deg); }
+    50% { transform: scale(1.1) rotate(2deg); }
+}
+
+.sussy-timeout-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #ff9999;
+    text-shadow: 2px 2px 0 #000;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.sussy-timeout-message {
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    color: #dddddd;
+    max-width: 400px;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.sussy-timeout-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+/* =================================
+   END SCREEN - RETRO STYLE
 ================================= */
 .sussy-cat-end-screen {
     position: absolute;
@@ -551,7 +882,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #2a4a2a 0%, #1a2a1a 100%);
     color: white;
     padding: 20px;
     box-sizing: border-box;
@@ -563,11 +894,15 @@
     width: 100%;
     max-height: 100%;
     overflow-y: auto;
-    background: rgba(255,255,255,0.1);
+    background: linear-gradient(180deg, #4a6a4a 0%, #3a5a3a 100%);
     padding: 20px;
-    border-radius: 15px;
-    border: 2px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
+    border: 4px solid #5a7a5a;
+    border-top-color: #7a9a7a;
+    border-left-color: #7a9a7a;
+    border-right-color: #2a3a2a;
+    border-bottom-color: #2a3a2a;
+    border-radius: 0;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.1), inset -2px -2px 0 rgba(0,0,0,0.3), 4px 4px 0 #000;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -578,22 +913,22 @@
 .sussy-result-icon {
     width: 64px;
     height: 64px;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 12px auto;
     background-image: url('../../assets/games/sussycat/ui/cat-logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     animation: sussyResult 2s infinite ease-in-out;
-    /* Hide text by default (image should load) */
     color: transparent;
     font-size: 0;
-    /* Fallback styling for when image doesn't load */
     display: flex;
     align-items: center;
     justify-content: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
-/* Show emoji fallback only when image fails to load */
 .sussy-result-icon.image-failed {
     color: white;
     font-size: 48px;
@@ -608,13 +943,18 @@
 .sussy-result-title {
     font-size: 18px;
     margin-bottom: 12px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 0 #000;
+    color: #90EE90;
+    letter-spacing: 1px;
+    font-weight: bold;
 }
 
 .sussy-result-message {
     font-size: 12px;
     margin-bottom: 15px;
     line-height: 1.4;
+    color: #dddddd;
+    text-shadow: 1px 1px 0 #000;
 }
 
 .sussy-final-score {
@@ -629,101 +969,80 @@
 }
 
 .sussy-level-progress {
-    background: rgba(255,255,255,0.1);
+    background: linear-gradient(180deg, #2a3a2a 0%, #1a2a1a 100%);
     padding: 8px;
-    border-radius: 8px;
+    border: 2px solid #4a5a4a;
+    border-top-color: #1a2a1a;
+    border-left-color: #1a2a1a;
+    border-right-color: #6a7a6a;
+    border-bottom-color: #6a7a6a;
+    border-radius: 0;
     margin-bottom: 15px;
     font-size: 10px;
     display: flex;
     justify-content: space-around;
     gap: 5px;
+    flex-wrap: wrap;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3), inset -1px -1px 0 rgba(255,255,255,0.1);
 }
 
 .progress-item {
     text-align: center;
     padding: 4px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.1);
+    border-radius: 0;
+    background: linear-gradient(180deg, #3a4a3a 0%, #2a3a2a 100%);
     flex: 1;
+    min-width: 80px;
+    border: 1px solid #4a5a4a;
+    border-top-color: #5a6a5a;
+    border-left-color: #5a6a5a;
+    border-right-color: #1a2a1a;
+    border-bottom-color: #1a2a1a;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.1);
 }
 
 .sussy-end-buttons {
     display: flex;
     gap: 10px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
-.sussy-next-level-btn {
-    background: linear-gradient(45deg, #32CD32, #228B22);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.sussy-next-level-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    background: linear-gradient(45deg, #228B22, #006400);
-}
-
-.sussy-fun-facts {
-    background: rgba(255,255,255,0.1);
-    padding: 8px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 11px;
-}
-
-.sussy-achievement {
-    color: #FFD700;
-    font-weight: bold;
-}
-
-.sussy-play-again-btn {
-    background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.sussy-play-again-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    background: linear-gradient(45deg, #FF5252, #FF7979);
-}
-
-.sussy-play-again-btn:active {
-    transform: translateY(0px);
+/* =================================
+   SUBTLE RETRO EFFECTS
+================================= */
+.sussy-cat-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.02) 2px,
+        rgba(255, 255, 255, 0.02) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
 }
 
 /* =================================
    RESPONSIVE ADJUSTMENTS
 ================================= */
-@media (max-height: 400px) {
+@media (max-height: 450px) {
     .sussy-cat-title {
-        font-size: 14px;
+        font-size: 12px;
         margin-bottom: 4px;
     }
     
     .sussy-cat-stats {
-        font-size: 10px;
+        font-size: 9px;
     }
     
-    .sussy-start-content, .sussy-end-content {
+    .sussy-start-content, .sussy-end-content, .sussy-timeout-content {
         padding: 15px;
         max-height: 95%;
     }
@@ -733,17 +1052,22 @@
         padding: 8px;
     }
     
-    .sussy-cat-start-screen, .sussy-cat-end-screen, .sussy-cat-initial-screen {
-        padding: 10px;
+    .sussy-click-to-continue {
+        font-size: 12px;
+        padding: 10px 15px;
     }
     
-    .sussy-click-to-continue {
-        font-size: 14px;
-        padding: 10px 20px;
+    .sussy-level-grid {
+        gap: 8px;
+    }
+    
+    .sussy-level-btn {
+        padding: 8px 10px;
+        min-height: 65px;
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     .sussy-cat-stats {
         flex-direction: column;
         gap: 4px;
@@ -760,17 +1084,14 @@
         text-align: center;
     }
     
-    .sussy-start-content, .sussy-end-content {
+    .sussy-start-content, .sussy-end-content, .sussy-timeout-content {
         padding: 15px;
         max-width: 95%;
     }
     
-    .sussy-cat-start-screen, .sussy-cat-end-screen, .sussy-cat-initial-screen {
-        padding: 15px;
-    }
-    
-    .sussy-level-buttons {
-        flex-direction: column;
+    .sussy-level-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
     
     .sussy-level-progress {
@@ -778,13 +1099,12 @@
         gap: 3px;
     }
     
-    .sussy-end-buttons {
+    .sussy-end-buttons, .sussy-timeout-buttons {
         flex-direction: column;
         align-items: center;
     }
     
-    .sussy-click-to-continue {
-        font-size: 16px;
-        padding: 12px 20px;
+    .sussy-retro-btn {
+        min-width: 150px;
     }
 }

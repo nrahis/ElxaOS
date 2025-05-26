@@ -543,6 +543,7 @@ class ElxaOS {
             elxacode: new ElxaCodeProgram(this.windowManager, this.fileSystem, this.eventBus),
             elxabooks: new ElxaBooksProgram(this.windowManager, this.fileSystem, this.eventBus),
             browser: new BrowserProgram(this.windowManager, this.fileSystem, this.eventBus),
+            messenger: new MessengerProgram(this.windowManager, this.fileSystem, this.eventBus),
             // NEW: Add the antivirus program
             antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus),
             viruslab: new VirusLabProgram(this.windowManager, this.fileSystem, this.eventBus)
@@ -617,6 +618,10 @@ class ElxaOS {
 
             case 'browser':
                 this.programs.browser.launch();
+                break;
+
+            case 'messenger':
+                this.programs.messenger.launch();
                 break;
 
             case 'antivirus':
@@ -724,6 +729,20 @@ class ElxaOS {
                 }
             };
             this.fileSystem.createFile(['root', 'Desktop'], 'Snoogle Browser.lnk', JSON.stringify(browserShortcut));
+        }
+
+        // Messenger shortcut
+        if (!currentDesktopContents.some(file => file.name === 'Snakesia Messenger.lnk')) {
+            const messengerShortcut = {
+                type: 'program_shortcut',
+                programId: 'messenger',
+                programInfo: {
+                    name: 'Snakesia Messenger',
+                    icon: '💬',
+                    description: 'Chat with your friends in Snakesia!'
+                }
+            };
+            this.fileSystem.createFile(['root', 'Desktop'], 'Snakesia Messenger.lnk', JSON.stringify(messengerShortcut));
         }
 
         // Antivirus shortcut

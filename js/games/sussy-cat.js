@@ -1,6 +1,6 @@
 // =================================
-// SUSSY CAT ADVENTURE - A silly stealth game for kids!
-// Three levels of increasing sus-ness!
+// SUSSY CAT ADVENTURE - Cozy 90s RPG Style
+// A cute stealth adventure for kids with retro vibes!
 // =================================
 class SussyCatGame {
     constructor(windowManager, gameData = {}) {
@@ -13,7 +13,7 @@ class SussyCatGame {
         this.maxDetection = 100;
         this.currentRoom = 'living';
         this.currentLevel = 1;
-        this.maxLevel = 3;
+        this.maxLevel = 6;
         
         // Level configurations
         this.levelConfig = {
@@ -21,28 +21,66 @@ class SussyCatGame {
                 name: "Quick Sus Mission",
                 description: "Family going to the store",
                 timeLimit: 120, // 2 minutes
-                availableRooms: ['living', 'kitchen', 'bedroom'], // Added bedroom so hiding is available!
-                detectionSpeed: 0.3, // Reduced so hiding isn't as necessary
+                availableRooms: ['living', 'kitchen', 'bedroom'],
+                detectionSpeed: 0.3,
                 hideSpeed: 0.2,
-                story: "The family just left for the store! Pushing Cat has a few minutes to be sus..."
+                hasPlotPoints: false,
+                story: "The family just left for the store! Pushing Cat has a few minutes to be sus...",
+                tutorial: "Hide Mechanic Tutorial: When you're being too sus (detection bar gets red), go to the bedroom and press H to hide in the Sussy Lair! This will reduce your sus level safely. 🕳️"
             },
             2: {
                 name: "Big Sus Adventure", 
                 description: "Family going out to dinner",
                 timeLimit: 100, // 1:40
-                availableRooms: ['living', 'kitchen', 'bedroom'], // Same rooms but harder
+                availableRooms: ['living', 'kitchen', 'bedroom'],
                 detectionSpeed: 0.7,
                 hideSpeed: 0.25,
+                hasPlotPoints: false,
                 story: "The family is going out to dinner! More time to be VERY sus, but they might check in..."
             },
             3: {
                 name: "Ultimate Sus Challenge",
                 description: "Family going on a day trip", 
                 timeLimit: 90, // 1:30
-                availableRooms: ['living', 'kitchen', 'bedroom', 'bathroom'], // All rooms
+                availableRooms: ['living', 'kitchen', 'bedroom', 'bathroom'],
                 detectionSpeed: 1.0,
                 hideSpeed: 0.3,
+                hasPlotPoints: false,
                 story: "The family is gone for the whole day! Time for Pushing Cat's ULTIMATE sus adventure!"
+            },
+            4: {
+                name: "Plotting Apprentice",
+                description: "Weekend getaway begins",
+                timeLimit: 110, // 1:50
+                availableRooms: ['living', 'kitchen', 'bedroom', 'bathroom'],
+                detectionSpeed: 0.8,
+                hideSpeed: 0.3,
+                hasPlotPoints: true,
+                plotPointCount: 2,
+                story: "The family is gone for the weekend! Pushing Cat discovers mysterious plot points around the house... time to scheme! 🤔",
+                tutorial: "Sussy Plotting Mechanic: Look for glowing 🌟 plot points! Walk into them to activate Pushing Cat's plotting powers - speed boosts, stealth mode, and bonus points! Each plot point can only be used once per level. 😈"
+            },
+            5: {
+                name: "Master Plotter",
+                description: "Extended vacation time",
+                timeLimit: 95, // 1:35
+                availableRooms: ['living', 'kitchen', 'bedroom', 'bathroom'],
+                detectionSpeed: 1.2,
+                hideSpeed: 0.35,
+                hasPlotPoints: true,
+                plotPointCount: 3,
+                story: "The family is on vacation for a week! Pushing Cat has discovered even MORE plot points... maximum scheming time! 😈"
+            },
+            6: {
+                name: "Sus Mastermind",
+                description: "Ultimate plotting challenge",
+                timeLimit: 85, // 1:25
+                availableRooms: ['living', 'kitchen', 'bedroom', 'bathroom'],
+                detectionSpeed: 1.5,
+                hideSpeed: 0.4,
+                hasPlotPoints: true,
+                plotPointCount: 4,
+                story: "The family moved out for a month! Pushing Cat has become the ultimate plotting mastermind with secret plot points EVERYWHERE! 🧠👑"
             }
         };
         
@@ -60,8 +98,19 @@ class SussyCatGame {
         this.levelProgress = {
             1: { completed: false, score: 0, timeBonus: 0 },
             2: { completed: false, score: 0, timeBonus: 0 },
-            3: { completed: false, score: 0, timeBonus: 0 }
+            3: { completed: false, score: 0, timeBonus: 0 },
+            4: { completed: false, score: 0, timeBonus: 0 },
+            5: { completed: false, score: 0, timeBonus: 0 },
+            6: { completed: false, score: 0, timeBonus: 0 }
         };
+        
+        // Plotting mechanic variables
+        this.plotPoints = [];
+        this.activeEffects = [];
+        this.speedBoost = 1.0;
+        
+        // Hiding restriction - once per room visit
+        this.hasHiddenInCurrentRoom = false;
         
         // Movement and controls
         this.keys = {};
@@ -71,6 +120,17 @@ class SussyCatGame {
         this.catImageLoaded = false;
         this.catImagePath = '../../assets/games/sussycat/pushing-cat.gif';
         this.logoImagePath = '../../assets/games/sussycat/ui/cat-logo.png';
+        this.timeoutImagePath = '../../assets/games/sussycat/cat/pushing-cat-timeout.png';
+        
+        // Funny timeout messages
+        this.timeoutMessages = [
+            "Oh no! Pushing Cat got REAL cocky and was way too sus!! His family came home and caught him red pawed, and now you know what time it is... TIME OUT! 😾",
+            "Busted! Pushing Cat was being so sus that he knocked over a plant! Now he's in the timeout corner thinking about his life choices... 🪴💥",
+            "Uh oh! Pushing Cat got too confident and started doing the zoomies! The neighbors called and now it's timeout time! 🏃‍♂️💨",
+            "Caught! Pushing Cat was being so sus he forgot to cover his tracks! The family found paw prints EVERYWHERE! Timeout corner, here we come! 🐾",
+            "Oops! Pushing Cat got so excited about being sus that he knocked his food bowl off the counter! Guess who's in timeout now? 🥣💥",
+            "Yikes! Pushing Cat was being TOO sus and accidentally activated the robot vacuum! The chaos was too much - timeout it is! 🤖"
+        ];
     }
 
     launch(programInfo) {
@@ -79,9 +139,9 @@ class SussyCatGame {
         
         const window = this.windowManager.createWindow(
             windowId,
-            `${programInfo.name}`, // Removed emoji from title
+            `${programInfo.name}`,
             windowContent,
-            { width: '600px', height: '500px', x: '150px', y: '100px' }
+            { width: '700px', height: '550px', x: '150px', y: '100px' }
         );
         
         this.setupGameEvents(windowId);
@@ -119,22 +179,41 @@ class SussyCatGame {
                             <h2>Pushing Cat's Sus Adventures!</h2>
                             <div class="sussy-level-select">
                                 <h3>Choose Your Sus Level:</h3>
-                                <div class="sussy-level-buttons">
-                                    <button class="sussy-level-btn" data-level="1">
-                                        <div class="level-title">Level 1: Quick Sus Mission</div>
-                                        <div class="level-desc">Family going to store (2 min)</div>
-                                        <div class="level-rooms">Living + Kitchen + Bedroom</div>
-                                    </button>
-                                    <button class="sussy-level-btn" data-level="2">
-                                        <div class="level-title">Level 2: Big Sus Adventure</div>
-                                        <div class="level-desc">Family going to dinner (1:40)</div>
-                                        <div class="level-rooms">Same rooms, more sus!</div>
-                                    </button>
-                                    <button class="sussy-level-btn" data-level="3">
-                                        <div class="level-title">Level 3: Ultimate Sus Challenge</div>
-                                        <div class="level-desc">Family gone all day! (1:30)</div>
-                                        <div class="level-rooms">All rooms + Max Sus!</div>
-                                    </button>
+                                <div class="sussy-level-grid">
+                                    <div class="sussy-level-column">
+                                        <button class="sussy-level-btn" data-level="1">
+                                            <div class="level-title">Level 1: Quick Sus Mission</div>
+                                            <div class="level-desc">Family going to store (2 min)</div>
+                                            <div class="level-rooms">Living + Kitchen + Bedroom</div>
+                                        </button>
+                                        <button class="sussy-level-btn" data-level="2">
+                                            <div class="level-title">Level 2: Big Sus Adventure</div>
+                                            <div class="level-desc">Family going to dinner (1:40)</div>
+                                            <div class="level-rooms">Same rooms, more sus!</div>
+                                        </button>
+                                        <button class="sussy-level-btn" data-level="3">
+                                            <div class="level-title">Level 3: Ultimate Sus Challenge</div>
+                                            <div class="level-desc">Family gone all day! (1:30)</div>
+                                            <div class="level-rooms">All rooms + Max Sus!</div>
+                                        </button>
+                                    </div>
+                                    <div class="sussy-level-column">
+                                        <button class="sussy-level-btn" data-level="4">
+                                            <div class="level-title">Level 4: Plotting Apprentice</div>
+                                            <div class="level-desc">Weekend getaway (1:50)</div>
+                                            <div class="level-rooms">Plotting Powers! 🌟</div>
+                                        </button>
+                                        <button class="sussy-level-btn" data-level="5">
+                                            <div class="level-title">Level 5: Master Plotter</div>
+                                            <div class="level-desc">Extended vacation (1:35)</div>
+                                            <div class="level-rooms">More Plot Points! 🌟🌟</div>
+                                        </button>
+                                        <button class="sussy-level-btn" data-level="6">
+                                            <div class="level-title">Level 6: Sus Mastermind</div>
+                                            <div class="level-desc">Ultimate challenge (1:25)</div>
+                                            <div class="level-rooms">Max Plotting! 🧠👑</div>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="sussy-story">
@@ -146,9 +225,18 @@ class SussyCatGame {
                                     <li>🏠 Use SPACE to change rooms</li>
                                     <li>🕳️ Press H to hide in the Sussy Lair (bedroom only)!</li>
                                     <li>⚡ Collect items quickly but stay sneaky!</li>
+                                    <li>🌟 NEW: Walk into plot points for special powers! (Levels 4+)</li>
                                     <li>👀 Higher levels = less time, more rooms, more sus!</li>
                                 </ul>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sussy-tutorial-popup" style="display: none;">
+                        <div class="sussy-tutorial-content">
+                            <div class="sussy-tutorial-title">Tutorial</div>
+                            <div class="sussy-tutorial-message"></div>
+                            <button class="sussy-tutorial-ok">Got it! Let's be sus! 😈</button>
                         </div>
                     </div>
                     
@@ -188,9 +276,23 @@ class SussyCatGame {
                         </div>
                     </div>
                     
+                    <div class="sussy-cat-timeout-screen" style="display: none;">
+                        <div class="sussy-timeout-content">
+                            <div class="sussy-timeout-icon">😿</div>
+                            <h2 class="sussy-timeout-title">TIME OUT!</h2>
+                            <div class="sussy-timeout-message">
+                                <p>Oh no! Pushing Cat got caught being way too sus!</p>
+                            </div>
+                            <div class="sussy-timeout-buttons">
+                                <button class="sussy-retro-btn sussy-try-again-btn">😼 Try Again</button>
+                                <button class="sussy-retro-btn sussy-main-menu-btn">🏠 Main Menu</button>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="sussy-cat-end-screen" style="display: none;">
                         <div class="sussy-end-content">
-                            <div class="sussy-result-icon"></div>
+                            <div class="sussy-result-icon">😼</div>
                             <h2 class="sussy-result-title">Level Complete!</h2>
                             <div class="sussy-result-message">
                                 <p>Pushing Cat completed <span class="sussy-level-name">Level 1</span>!</p>
@@ -202,10 +304,13 @@ class SussyCatGame {
                                 <div class="progress-item" data-level="1">Level 1: ⭐</div>
                                 <div class="progress-item" data-level="2">Level 2: ⭐</div>
                                 <div class="progress-item" data-level="3">Level 3: ⭐</div>
+                                <div class="progress-item" data-level="4">Level 4: ⭐</div>
+                                <div class="progress-item" data-level="5">Level 5: ⭐</div>
+                                <div class="progress-item" data-level="6">Level 6: ⭐</div>
                             </div>
                             <div class="sussy-end-buttons">
-                                <button class="sussy-next-level-btn" style="display: none;">😈 Next Sus Level!</button>
-                                <button class="sussy-play-again-btn">🔄 Choose Level</button>
+                                <button class="sussy-retro-btn sussy-next-level-btn" style="display: none;">😈 Next Sus Level!</button>
+                                <button class="sussy-retro-btn sussy-play-again-btn">🔄 Choose Level</button>
                             </div>
                         </div>
                     </div>
@@ -222,19 +327,38 @@ class SussyCatGame {
         const levelButtons = container.querySelectorAll('.sussy-level-btn');
         const playAgainBtn = container.querySelector('.sussy-play-again-btn');
         const nextLevelBtn = container.querySelector('.sussy-next-level-btn');
+        const tryAgainBtn = container.querySelector('.sussy-try-again-btn');
+        const mainMenuBtn = container.querySelector('.sussy-main-menu-btn');
+        const tutorialOkBtn = container.querySelector('.sussy-tutorial-ok');
 
-        // Initial screen click to continue
-        initialScreen.addEventListener('click', () => {
+        // Initial screen click/key to continue
+        const continueToLevelSelect = () => {
             this.showStartScreen(container);
-        });
+        };
+        
+        initialScreen.addEventListener('click', continueToLevelSelect);
+        
+        // Keyboard support for splash screen
+        const splashKeyHandler = (e) => {
+            if (initialScreen.style.display !== 'none') {
+                continueToLevelSelect();
+                document.removeEventListener('keydown', splashKeyHandler);
+            }
+        };
+        document.addEventListener('keydown', splashKeyHandler);
 
         // Level selection
         levelButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const level = parseInt(btn.dataset.level);
                 this.currentLevel = level;
-                this.startGame(container);
+                this.showTutorial(container);
             });
+        });
+
+        // Tutorial popup
+        tutorialOkBtn.addEventListener('click', () => {
+            this.startGame(container);
         });
 
         playAgainBtn.addEventListener('click', () => {
@@ -244,10 +368,18 @@ class SussyCatGame {
         nextLevelBtn.addEventListener('click', () => {
             if (this.currentLevel < this.maxLevel) {
                 this.currentLevel++;
-                this.startGame(container);
+                this.showTutorial(container);
             } else {
                 this.resetGame(container);
             }
+        });
+
+        tryAgainBtn.addEventListener('click', () => {
+            this.startGame(container);
+        });
+
+        mainMenuBtn.addEventListener('click', () => {
+            this.resetGame(container);
         });
 
         // Store window reference for cleanup
@@ -255,13 +387,43 @@ class SussyCatGame {
         this.container = container;
     }
 
-    // NEW METHOD: Show start screen (level selection)
+    // Show tutorial popup
+    showTutorial(container) {
+        const levelConfig = this.levelConfig[this.currentLevel];
+        
+        if (levelConfig.tutorial) {
+            const startScreen = container.querySelector('.sussy-cat-start-screen');
+            const tutorialPopup = container.querySelector('.sussy-tutorial-popup');
+            const tutorialMessage = container.querySelector('.sussy-tutorial-message');
+            
+            startScreen.style.display = 'none';
+            tutorialPopup.style.display = 'flex';
+            tutorialMessage.textContent = levelConfig.tutorial;
+        } else {
+            this.startGame(container);
+        }
+    }
+
+    // Show/hide header helper
+    toggleHeader(show) {
+        const header = this.container.querySelector('.sussy-cat-header');
+        if (show) {
+            header.classList.add('show');
+        } else {
+            header.classList.remove('show');
+        }
+    }
+
+    // Show start screen (level selection) - NO HEADER
     showStartScreen(container) {
         const initialScreen = container.querySelector('.sussy-cat-initial-screen');
         const startScreen = container.querySelector('.sussy-cat-start-screen');
         
         initialScreen.style.display = 'none';
         startScreen.style.display = 'block';
+        
+        // Keep header hidden during level selection
+        this.toggleHeader(false);
     }
 
     setupKeyboardControls() {
@@ -288,6 +450,33 @@ class SussyCatGame {
         });
     }
 
+    // Setup timeout icon image with fallback to emoji
+    setupTimeoutIcon(iconElement) {
+        if (!iconElement) return;
+        
+        // Try to load the timeout image
+        const img = new Image();
+        
+        img.onload = () => {
+            // Image loaded successfully
+            iconElement.style.backgroundImage = `url('${this.timeoutImagePath}')`;
+            iconElement.classList.remove('image-failed');
+            iconElement.textContent = ''; // Hide emoji text when image loads
+            console.log('😿 Timeout icon loaded successfully!');
+        };
+        
+        img.onerror = () => {
+            // Image failed to load - show emoji
+            iconElement.style.backgroundImage = 'none';
+            iconElement.classList.add('image-failed');
+            iconElement.textContent = '😿'; // Show sad cat emoji
+            console.log('😿 Timeout icon failed to load, using emoji fallback');
+        };
+        
+        // Start loading the image
+        img.src = this.timeoutImagePath;
+    }
+
     // Setup cat image with fallback to emoji
     setupCatImage(catElement) {
         if (!catElement) return;
@@ -304,7 +493,7 @@ class SussyCatGame {
             catElement.classList.add('has-cat-image');
             catElement.textContent = ''; // Hide emoji text when image loads
             this.catImageLoaded = true;
-            console.log('🐱 Cat image loaded successfully!');
+            console.log('🐱 Cat sprite loaded successfully!');
         };
         
         img.onerror = () => {
@@ -313,7 +502,7 @@ class SussyCatGame {
             catElement.classList.remove('has-cat-image');
             catElement.textContent = '😼'; // Ensure emoji is shown
             this.catImageLoaded = false;
-            console.log('😿 Cat image failed to load, using emoji fallback');
+            console.log('😿 Cat sprite failed to load, using emoji fallback');
         };
         
         // Start loading the image
@@ -330,12 +519,19 @@ class SussyCatGame {
 
     startGame(container) {
         const startScreen = container.querySelector('.sussy-cat-start-screen');
+        const tutorialPopup = container.querySelector('.sussy-tutorial-popup');
         const playArea = container.querySelector('.sussy-cat-play-area');
         const endScreen = container.querySelector('.sussy-cat-end-screen');
+        const timeoutScreen = container.querySelector('.sussy-cat-timeout-screen');
         
         startScreen.style.display = 'none';
+        tutorialPopup.style.display = 'none';
         endScreen.style.display = 'none';
+        timeoutScreen.style.display = 'none';
         playArea.style.display = 'flex';
+        
+        // NOW SHOW THE HEADER - Game has started!
+        this.toggleHeader(true);
         
         // Get current level config
         const levelConfig = this.levelConfig[this.currentLevel];
@@ -349,16 +545,19 @@ class SussyCatGame {
         this.isHiding = false;
         this.currentRoom = 'living';
         this.catPosition = { x: 50, y: 50 };
+        this.speedBoost = 1.0;
+        this.activeEffects = [];
+        this.hasHiddenInCurrentRoom = false;
         
         // Calculate total items for available rooms
         this.totalItems = levelConfig.availableRooms.reduce((sum, roomId) => {
             return sum + this.rooms[roomId].items.length;
         }, 0);
         
-        // FIXED: Setup rooms visibility without inline styles
+        // Setup rooms visibility
         this.setupRoomsForLevel(container, levelConfig);
         
-        // FIXED: Ensure proper room initialization
+        // Initialize room display
         this.initializeRoomDisplay(container);
         
         // Setup cat images for all sprites
@@ -366,6 +565,11 @@ class SussyCatGame {
         
         // Generate items for available rooms only
         this.generateItems();
+        
+        // Generate plot points if level has them
+        if (levelConfig.hasPlotPoints) {
+            this.generatePlotPoints(levelConfig);
+        }
         
         // Update UI with level info
         this.updateUI();
@@ -389,9 +593,129 @@ class SussyCatGame {
         this.showMessage(`${levelConfig.story} Time to be sus! 😈`);
     }
 
-    // FIXED: Room setup without conflicting inline styles
+    // Generate plot points for plotting levels
+    generatePlotPoints(levelConfig) {
+        this.plotPoints = [];
+        
+        const plotTypes = [
+            { name: 'Speed Boost', emoji: '⚡', effect: 'speed' },
+            { name: 'Stealth Mode', emoji: '👻', effect: 'stealth' },
+            { name: 'Bonus Points', emoji: '💰', effect: 'bonus' },
+            { name: 'Time Freeze', emoji: '⏰', effect: 'time' }
+        ];
+        
+        for (let i = 0; i < levelConfig.plotPointCount; i++) {
+            const plotType = plotTypes[i % plotTypes.length];
+            const roomId = levelConfig.availableRooms[Math.floor(Math.random() * levelConfig.availableRooms.length)];
+            
+            this.plotPoints.push({
+                id: `plot-${i}`,
+                room: roomId,
+                emoji: '🌟',
+                displayEmoji: plotType.emoji,
+                name: plotType.name,
+                effect: plotType.effect,
+                x: 100 + (i * 60) + Math.random() * 100,
+                y: 60 + Math.random() * 100,
+                used: false
+            });
+        }
+        
+        this.renderPlotPoints();
+    }
+
+    // Render plot points for current room
+    renderPlotPoints() {
+        // Clear existing plot points
+        document.querySelectorAll('.sussy-plot-point').forEach(point => point.remove());
+        
+        const currentRoomEl = this.container.querySelector(`.sussy-room-${this.currentRoom}`);
+        const roomPlotPoints = this.plotPoints.filter(point => point.room === this.currentRoom && !point.used);
+        
+        roomPlotPoints.forEach(point => {
+            const plotEl = document.createElement('div');
+            plotEl.className = 'sussy-plot-point';
+            plotEl.textContent = point.emoji;
+            plotEl.style.left = point.x + 'px';
+            plotEl.style.top = point.y + 'px';
+            plotEl.dataset.plotId = point.id;
+            plotEl.title = point.name;
+            
+            currentRoomEl.appendChild(plotEl);
+        });
+    }
+
+    // Check plot point collision
+    checkPlotPointCollision() {
+        const plotPoints = this.container.querySelectorAll('.sussy-plot-point');
+        const currentRoom = this.container.querySelector(`.sussy-room-${this.currentRoom}`);
+        const catSprite = currentRoom.querySelector('.sussy-cat-sprite');
+        
+        if (!catSprite) return;
+        
+        plotPoints.forEach(plotEl => {
+            const plotRect = plotEl.getBoundingClientRect();
+            const catRect = catSprite.getBoundingClientRect();
+            
+            if (this.isColliding(catRect, plotRect)) {
+                const plotId = plotEl.dataset.plotId;
+                this.activatePlotPoint(plotId);
+                plotEl.remove();
+            }
+        });
+    }
+
+    // Activate plot point effect
+    activatePlotPoint(plotId) {
+        const plotPoint = this.plotPoints.find(p => p.id === plotId);
+        if (!plotPoint || plotPoint.used) return;
+        
+        plotPoint.used = true;
+        
+        switch (plotPoint.effect) {
+            case 'speed':
+                this.speedBoost = 2.0;
+                this.activeEffects.push({ type: 'speed', duration: 150 }); // 15 seconds
+                this.showMessage(`${plotPoint.displayEmoji} Plotting activated! Speed boost for 15 seconds! Zoom zoom! 💨`);
+                break;
+            case 'stealth':
+                this.detectionLevel = Math.max(0, this.detectionLevel - 50);
+                this.activeEffects.push({ type: 'stealth', duration: 100 }); // 10 seconds
+                this.showMessage(`${plotPoint.displayEmoji} Plotting activated! Stealth mode for 10 seconds! Super sneaky! 👻`);
+                break;
+            case 'bonus':
+                this.score += 30;
+                this.showMessage(`${plotPoint.displayEmoji} Plotting activated! Bonus points! +30 sus points! 💰`);
+                break;
+            case 'time':
+                this.timeLeft += 10;
+                this.showMessage(`${plotPoint.displayEmoji} Plotting activated! Time bonus! +10 seconds! ⏰`);
+                break;
+        }
+        
+        this.updateDetectionBar();
+    }
+
+    // Update active effects
+    updateActiveEffects() {
+        this.activeEffects = this.activeEffects.filter(effect => {
+            effect.duration--;
+            if (effect.duration <= 0) {
+                // Effect expired
+                if (effect.type === 'speed') {
+                    this.speedBoost = 1.0;
+                    this.showMessage("Speed boost expired! Back to normal sneaking speed! 🐾");
+                } else if (effect.type === 'stealth') {
+                    this.showMessage("Stealth mode expired! Back to being detectable! 👀");
+                }
+                return false;
+            }
+            return true;
+        });
+    }
+
+    // Room setup without conflicting inline styles
     setupRoomsForLevel(container, levelConfig) {
-        // Instead of setting display styles, we'll use CSS classes
         const allRooms = ['living', 'kitchen', 'bedroom', 'bathroom'];
         
         allRooms.forEach(roomId => {
@@ -414,7 +738,7 @@ class SussyCatGame {
         }
     }
 
-    // FIXED: New method to properly initialize room display
+    // Initialize room display properly
     initializeRoomDisplay(container) {
         // Clear all active states and hide all cats
         const allRooms = container.querySelectorAll('.sussy-room');
@@ -564,8 +888,11 @@ class SussyCatGame {
     update() {
         if (!this.gameActive || this.isHiding) return;
         
+        // Update active effects
+        this.updateActiveEffects();
+        
         // Movement
-        const moveSpeed = 3;
+        const moveSpeed = 3 * this.speedBoost;
         let moved = false;
         
         if (this.keys['ArrowUp'] && this.catPosition.y > 10) {
@@ -588,15 +915,25 @@ class SussyCatGame {
         if (moved) {
             this.updateCatPosition();
             this.checkItemCollision();
+            this.checkPlotPointCollision();
             
-            // Increase detection when moving
-            this.detectionLevel = Math.min(this.maxDetection, this.detectionLevel + 0.5);
+            // Increase detection when moving (unless in stealth mode)
+            const hasStealthEffect = this.activeEffects.some(effect => effect.type === 'stealth');
+            if (!hasStealthEffect) {
+                this.detectionLevel = Math.min(this.maxDetection, this.detectionLevel + 0.5);
+            }
         } else {
             // Decrease detection when still
             this.detectionLevel = Math.max(0, this.detectionLevel - 0.2);
         }
         
         this.updateDetectionBar();
+        
+        // Check for timeout - caught being too sus!
+        if (this.detectionLevel >= this.maxDetection) {
+            this.showTimeoutScreen();
+            return;
+        }
         
         // Check for high detection warning
         if (this.detectionLevel > 80 && this.currentRoom === 'bedroom') {
@@ -667,7 +1004,7 @@ class SussyCatGame {
         }
     }
 
-    // FIXED: Improved room changing logic
+    // Improved room changing logic
     changeRoom() {
         const levelConfig = this.levelConfig[this.currentLevel];
         const availableRooms = levelConfig.availableRooms;
@@ -713,6 +1050,10 @@ class SussyCatGame {
         this.catPosition = { x: 50, y: 50 };
         this.updateCatPosition();
         this.renderItems();
+        this.renderPlotPoints();
+        
+        // Reset hiding flag for new room
+        this.hasHiddenInCurrentRoom = false;
         
         this.showMessage(`Sneaking into the ${this.rooms[this.currentRoom].name}... 🕵️‍♂️`);
     }
@@ -730,6 +1071,11 @@ class SussyCatGame {
             return;
         }
         
+        if (this.hasHiddenInCurrentRoom && !this.isHiding) {
+            this.showMessage("Already used the Sussy Lair in this room! Leave and come back to hide again! 🕳️");
+            return;
+        }
+        
         this.isHiding = !this.isHiding;
         const currentRoom = this.container.querySelector(`.sussy-room-${this.currentRoom}`);
         const catSprite = currentRoom.querySelector('.sussy-cat-sprite');
@@ -737,6 +1083,7 @@ class SussyCatGame {
         if (this.isHiding) {
             catSprite.style.opacity = '0.3';
             this.detectionLevel = Math.max(0, this.detectionLevel - 30);
+            this.hasHiddenInCurrentRoom = true;
             this.showMessage("Hidden in the Sussy Lair! Sus level decreasing... 🕳️");
         } else {
             catSprite.style.opacity = '1';
@@ -772,6 +1119,30 @@ class SussyCatGame {
         }
     }
 
+    showTimeoutScreen() {
+        this.gameActive = false;
+        clearInterval(this.gameTimer);
+        clearInterval(this.gameLoop);
+        
+        const playArea = this.container.querySelector('.sussy-cat-play-area');
+        const timeoutScreen = this.container.querySelector('.sussy-cat-timeout-screen');
+        const timeoutIcon = this.container.querySelector('.sussy-timeout-icon');
+        const timeoutMessage = this.container.querySelector('.sussy-timeout-message p');
+        
+        playArea.style.display = 'none';
+        timeoutScreen.style.display = 'block';
+        
+        // Hide header on timeout screen
+        this.toggleHeader(false);
+        
+        // Setup timeout icon image
+        this.setupTimeoutIcon(timeoutIcon);
+        
+        // Show random funny timeout message
+        const randomMessage = this.timeoutMessages[Math.floor(Math.random() * this.timeoutMessages.length)];
+        timeoutMessage.textContent = randomMessage;
+    }
+
     showMessage(text) {
         const messageEl = this.container.querySelector('.sussy-message');
         messageEl.textContent = text;
@@ -799,6 +1170,9 @@ class SussyCatGame {
         
         playArea.style.display = 'none';
         endScreen.style.display = 'block';
+        
+        // Hide header on end screen
+        this.toggleHeader(false);
         
         const levelConfig = this.levelConfig[this.currentLevel];
         
@@ -828,7 +1202,7 @@ class SussyCatGame {
                 // Show next level button if not on final level
                 if (this.currentLevel < this.maxLevel) {
                     nextLevelBtn.style.display = 'inline-block';
-                    nextLevelBtn.textContent = `😈 Level ${this.currentLevel + 1}: ${this.levelConfig[this.currentLevel + 1].name}`;
+                    nextLevelBtn.textContent = `😈 Next Sus Level!`;
                 } else {
                     nextLevelBtn.style.display = 'none';
                     resultMessage.textContent = "🎉 ULTIMATE SUS MASTER! Pushing Cat has conquered all levels! The family will never know what hit them! 😈🏆";
@@ -868,28 +1242,33 @@ class SussyCatGame {
         const initialScreen = container.querySelector('.sussy-cat-initial-screen');
         const startScreen = container.querySelector('.sussy-cat-start-screen');
         const endScreen = container.querySelector('.sussy-cat-end-screen');
+        const timeoutScreen = container.querySelector('.sussy-cat-timeout-screen');
         
         endScreen.style.display = 'none';
-        startScreen.style.display = 'none';
-        initialScreen.style.display = 'block';
+        initialScreen.style.display = 'none';
+        timeoutScreen.style.display = 'none';
+        startScreen.style.display = 'block';
+        
+        // Hide header on reset
+        this.toggleHeader(false);
         
         // Reset current level to 1
         this.currentLevel = 1;
         
         // Reset all displays
         container.querySelector('.sussy-level-value').textContent = '1';
-        container.querySelector('.sussy-score-value').textContent = '0/12'; // Level 1 now has 12 items
+        container.querySelector('.sussy-score-value').textContent = '0/12';
         container.querySelector('.sussy-timer-value').textContent = '2:00';
         container.querySelector('.sussy-detection-fill').style.width = '0%';
         
         // Clear any existing items
         document.querySelectorAll('.sussy-item').forEach(item => item.remove());
+        document.querySelectorAll('.sussy-plot-point').forEach(point => point.remove());
         
-        // FIXED: Reset room display properly
+        // Reset room display properly
         const allRooms = container.querySelectorAll('.sussy-room');
         allRooms.forEach(room => {
             room.classList.remove('active', 'sussy-room-available', 'sussy-room-unavailable');
-            // Clear any inline styles that might have been set
             room.style.display = '';
         });
         
