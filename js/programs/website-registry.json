@@ -1,0 +1,417 @@
+{
+    "snoogle.ex": {
+        "title": "Snoogle - Search the ExWeb",
+        "type": "homepage",
+        "searchData": {
+            "keywords": ["search", "home", "snoogle"],
+            "description": "Search the ExWeb and discover amazing websites!",
+            "category": "Search"
+        }
+    },
+    "elxamail.ex": {
+        "title": "ElxaMail - Your Gateway to the ExWeb",
+        "type": "file",
+        "path": "./assets/interwebs/exmail/index.html",
+        "searchData": {
+            "keywords": ["email", "mail", "messaging", "communication", "contact", "inbox", "send", "receive", "elxamail", "elxacorp", "snakesia"],
+            "description": "Snakesia\"s premier email service. Send and receive messages, manage contacts, and stay connected across the ExWeb. Trusted by millions of Snakesians since 1997.",
+            "category": "Utilities"
+        }
+    },
+    "fsb.ex": {
+        "title": "First Snakesian Bank - Online Banking",
+        "type": "file",
+        "path": "./assets/interwebs/fsb/index.html",
+        "searchData": {
+            "keywords": ["bank", "banking", "money", "account", "savings", "checking", "deposit", "withdraw", "currency", "snakes", "usd", "financial", "atm"],
+            "description": "Secure online banking for all your financial needs. Manage your checking and savings accounts, transfer money, and convert between USD and Snakes. FDICS insured.",
+            "category": "Business"
+        }
+    },
+    "privilege-palace.ex": {
+        "title": "Privilege Palace - Premium Privileges for Kids",
+        "type": "file", 
+        "path": "./assets/interwebs/privilege-palace/index.html",
+        "searchData": {
+            "keywords": ["privileges", "rewards", "shopping", "kids", "behavior", "incentives"],
+            "description": "Premium privilege shopping for exceptional kids. Earn stars and unlock amazing rewards!",
+            "category": "Shopping"
+        }
+    },
+    "snoogle-dictionary.ex": {
+        "title": "Snoogle Dictionary",
+        "type": "file",
+        "path": "./assets/interwebs/snoogle-dictionary/index.html",
+        "css": "./assets/interwebs/snoogle-dictionary/styles.css",
+        "searchData": {
+            "keywords": ["dictionary", "language", "reference", "words", "definitions", "thesaurus", "vocabulary", "snakesian"],
+            "description": "Comprehensive dictionary and language reference tool featuring Snakesian and standard English definitions, etymologies, and usage examples.",
+            "category": "Utilities"
+        }
+    },
+    "snoogle-pedia.ex": {
+        "title": "SnooglePedia - The ExWeb Encyclopedia",
+        "type": "file",
+        "path": "./assets/interwebs/snoogle-pedia/index.html",
+        "css": "./assets/interwebs/snoogle-pedia/styles.css",
+        "searchData": {
+            "keywords": ["encyclopedia", "Wikipedia", "wikipedia", "learn", "learning", "knowledge", "articles", "reference", "research", "education", "information", "wiki", "snakesia"],
+            "description": "Free online encyclopedia covering topics from Snakesian history to modern technology. Community-edited with verified sources.",
+            "category": "Education"
+        }
+    },
+    "weather.ex": {
+        "title": "Snakesia Weather Service",
+        "type": "file",
+        "path": "./assets/interwebs/snakesia-weather/index.html",
+        "css": "./assets/interwebs/snakesia-weather/styles.css",
+        "searchData": {
+            "keywords": ["weather", "forecast", "temperature", "climate", "meteorology", "snakesia", "radar", "precipitation"],
+            "description": "Official Snakesian weather forecasting service providing real-time updates, radar maps, and climate data for all regions.",
+            "category": "Utilities"
+        }
+    },
+    "phones.ex": {
+        "title": "Phoneverse",
+        "type": "file",
+        "path": "./assets/interwebs/phones/index.html",
+        "css": "./assets/interwebs/phones/styles.css",
+        "searchData": {
+            "keywords": ["phone", "phones", "cell", "mobile", "directory", "contacts", "business", "yellow pages", "phone numbers", "listings", "local"],
+            "description": "Complete phone directory for Snakesia. Find business and residential listings, along with local service information.",
+            "category": "Utilities"
+        }
+    },
+    "keycuts.ex": {
+        "title": "KeyCuts - Shortcut Reference",
+        "type": "file",
+        "path": "./assets/interwebs/keycuts/index.html",
+        "css": "./assets/interwebs/keycuts/styles.css",
+        "searchData": {
+            "keywords": ["keyboard shortcuts", "keyboard", "shortcut", "productivity", "elxaos", "hotkeys", "reference", "guide", "computer tips"],
+            "description": "Official ElxaOS keyboard shortcut reference guide. Learn to navigate your system like a pro!",
+            "category": "Utilities"
+        }
+    },
+    "rpi-guide.ex": {
+        "title": "Raspberry Pi 4 Guide",
+        "type": "file",
+        "path": "./assets/interwebs/rpi-guide/index.html",
+        "css": "./assets/interwebs/rpi-guide/styles.css",
+        "searchData": {
+            "keywords": ["raspberry pi", "linux", "hardware", "diy", "computer", "computing", "electronics", "programming", "gpio", "python"],
+            "description": "Complete guide to setting up and programming the Raspberry Pi 4 in Snakesia. Includes ElxaOS compatibility tips.",
+            "category": "Technology"
+        }
+    },
+    "chihuahua-info.ex": {
+        "title": "Chihuahua Information Center",
+        "type": "file",
+        "path": "./assets/interwebs/cic/index.html",
+        "css": "./assets/interwebs/cic/styles.css",
+        "searchData": {
+            "keywords": ["chihuahua", "chihuahuas", "dogs", "dog", "pet", "pets", "research", "veterinary", "canine studies", "snake-u", "animal science"],
+            "description": "Academic resource for Chihuahua research from the Department of Canine Studies at Snake-E University.",
+            "category": "Education"
+        }
+    },
+    "sussy-cat.ex": {
+        "title": "Sussy Cat Adventure - ElxaCorp Games",
+        "type": "file",
+        "path": "./assets/interwebs/sussy-cat/index.html",
+        "searchData": {
+            "keywords": ["sussy cat", "games", "stealth", "adventure", "kids", "pushing cat", "elxacorp", "retro", "pixel art", "family", "mischief", "hiding", "plotting", "sus"],
+            "description": "Official website for Sussy Cat Adventure - the cozy stealth game featuring Pushing Cat and his mischievous house adventures. From ElxaCorp Games Division.",
+            "category": "Gaming"
+        }
+    },
+    "remicraft.ex": {
+        "title": "RemiCraft - Official Server",
+        "type": "file",
+        "path": "./assets/interwebs/remicraft/index.html",
+        "css": "./assets/interwebs/remicraft/styles.css",
+        "searchData": {
+            "keywords": ["minecraft", "gaming", "server", "remi", "marway", "multiplayer", "games"],
+            "description": "Official Minecraft server hosted by Remi Marway. Join the most popular game server in Snakesia!",
+            "category": "Gaming"
+        }
+    },
+    "snakesia.gov.ex": {
+        "title": "Official Website of Snakesia - Home",
+        "type": "file",
+        "path": "./assets/interwebs/snakesia-gov/index.html",
+        "css": "./assets/interwebs/snakesia-gov/styles.css",
+        "searchData": {
+            "keywords": ["snakesia", "government", "tourism", "embassy", "currency", "snake dollars"],
+            "description": "Official government website of Snakesia. Information about tourism, business, and embassy services.",
+            "category": "Government"
+        }
+    },
+    "snakesia.gov.ex/business": {
+        "title": "Official Website of Snakesia - Business",
+        "type": "file",
+        "path": "./assets/interwebs/snakesia-gov/business.html",
+        "css": "./assets/interwebs/snakesia-gov/styles.css",
+        "searchData": {
+            "keywords": ["business", "snakesia", "commerce", "trade", "economy"],
+            "description": "Business information and resources for Snakesia.",
+            "category": "Government"
+        }
+    },
+    "snakesia.gov.ex/embassy": {
+        "title": "Official Website of Snakesia - Embassy",
+        "type": "file",
+        "path": "./assets/interwebs/snakesia-gov/embassy.html",
+        "css": "./assets/interwebs/snakesia-gov/styles.css",
+        "searchData": {
+            "keywords": ["embassy", "consulate", "visa", "passport", "diplomatic"],
+            "description": "Embassy and consular services for Snakesia.",
+            "category": "Government"
+        }
+    },
+    "snakesia.gov.ex/tourism": {
+        "title": "Official Website of Snakesia - Tourism",
+        "type": "file",
+        "path": "./assets/interwebs/snakesia-gov/tourism.html",
+        "css": "./assets/interwebs/snakesia-gov/styles.css",
+        "searchData": {
+            "keywords": ["tourism", "travel", "vacation", "attractions", "snakesia"],
+            "description": "Discover the beauty and attractions of Snakesia.",
+            "category": "Government"
+        }
+    },
+    "snakesia.gov.ex/mansion": {
+        "title": "Official Website of Snakesia - Mansion Tours",
+        "type": "file",
+        "path": "./assets/interwebs/snakesia-gov/mansion.html",
+        "css": "./assets/interwebs/snakesia-gov/styles.css",
+        "searchData": {
+            "keywords": ["mansion", "tours", "presidential", "palace", "history"],
+            "description": "Tour the famous Snakesian Presidential Mansion.",
+            "category": "Government"
+        }
+    },
+    "snakesia.gov.ex/maps": {
+        "title": "Official Website of Snakesia - Maps",
+        "type": "file",
+        "path": "./assets/interwebs/snakesia-gov/maps.html",
+        "css": "./assets/interwebs/snakesia-gov/styles.css",
+        "searchData": {
+            "keywords": ["maps", "geography", "locations", "navigation"],
+            "description": "Interactive maps and geographic information for Snakesia.",
+            "category": "Government"
+        }
+    },
+    "elxatech.ex": {
+        "title": "ElxaTech - Educational Technology Platform",
+        "type": "file",
+        "path": "./assets/interwebs/elxatech/index.html",
+        "css": "./assets/interwebs/elxatech/styles.css",
+        "searchData": {
+            "keywords": ["education", "technology", "science", "math", "chemistry", "phones", "retro", "learning", "tutorials", "snake-e", "academic"],
+            "description": "Premier educational technology platform offering resources in mathematics, chemistry, computer science, and technology history.",
+            "category": "Education"
+        }
+    },
+    "elxatech.ex/about": {
+        "title": "ElxaTech - About Us",
+        "type": "file",
+        "path": "./assets/interwebs/elxatech/about.html",
+        "css": "./assets/interwebs/elxatech/styles.css",
+        "searchData": {
+            "keywords": ["about", "elxatech", "team", "mission"],
+            "description": "Learn about ElxaTech and our educational mission.",
+            "category": "Education"
+        }
+    },
+    "elxatech.ex/chemistry": {
+        "title": "ElxaTech - Chemistry Resources",
+        "type": "file",
+        "path": "./assets/interwebs/elxatech/chemistry.html",
+        "css": "./assets/interwebs/elxatech/styles.css",
+        "searchData": {
+            "keywords": ["chemistry", "chemical", "elements", "reactions", "lab"],
+            "description": "Comprehensive chemistry resources and interactive experiments.",
+            "category": "Education"
+        }
+    },
+    "elxatech.ex/math": {
+        "title": "ElxaTech - Mathematics Center",
+        "type": "file",
+        "path": "./assets/interwebs/elxatech/math.html",
+        "css": "./assets/interwebs/elxatech/styles.css",
+        "searchData": {
+            "keywords": ["math", "mathematics", "algebra", "geometry", "calculus"],
+            "description": "Advanced mathematics tutorials and problem solving.",
+            "category": "Education"
+        }
+    },
+    "elxatech.ex/phones": {
+        "title": "ElxaTech - Phone Technology",
+        "type": "file",
+        "path": "./assets/interwebs/elxatech/phones.html",
+        "css": "./assets/interwebs/elxatech/styles.css",
+        "searchData": {
+            "keywords": ["phones", "mobile", "technology", "communication"],
+            "description": "Explore the evolution of phone technology.",
+            "category": "Technology"
+        }
+    },
+    "elxatech.ex/retro": {
+        "title": "ElxaTech - Retro Computing",
+        "type": "file",
+        "path": "./assets/interwebs/elxatech/retro.html",
+        "css": "./assets/interwebs/elxatech/styles.css",
+        "searchData": {
+            "keywords": ["retro", "vintage", "computing", "history", "old computers"],
+            "description": "Journey through the history of computing technology.",
+            "category": "Technology"
+        }
+    },
+
+    "snake-deluxe.ex": {
+        "title": "Snake Deluxe Executive Training Suite - ElxaCorp Business Solutions",
+        "type": "file",
+        "path": "./assets/interwebs/snake-deluxe/index.html",
+        "searchData": {
+            "keywords": ["snake deluxe", "executive", "business", "corporate", "leadership", "snake-e", "professional development", "elxacorp", "management", "ceo", "strategy", "navigation", "corporate training", "business solutions"],
+            "description": "Official website for Snake Deluxe Executive Training Suite - the professional development platform featuring CEO Snake-e. Corporate leadership training from ElxaCorp Business Solutions.",
+            "category": "Business"
+        }
+    },
+    "snake-e.corp.ex": {
+        "title": "ElxaCorp - Home",
+        "type": "file",
+        "path": "./assets/interwebs/snake-e-corp/index.html",
+        "css": "./assets/interwebs/snake-e-corp/styles.css",
+        "searchData": {
+            "keywords": ["elxa", "corporation", "snake-e", "business", "technology", "software", "elxaos"],
+            "description": "ElxaCorp - Leading technology innovation in Snakesia. Creators of ElxaOS.",
+            "category": "Business"
+        }
+    },
+    "snake-e.corp.ex/about": {
+        "title": "ElxaCorp - About",
+        "type": "file",
+        "path": "./assets/interwebs/snake-e-corp/about.html",
+        "css": "./assets/interwebs/snake-e-corp/styles.css",
+        "searchData": {
+            "keywords": ["about", "elxacorp", "company", "history"],
+            "description": "Learn about ElxaCorp\"s history and mission.",
+            "category": "Business"
+        }
+    },
+    "snake-e.corp.ex/careers": {
+        "title": "ElxaCorp - Careers",
+        "type": "file",
+        "path": "./assets/interwebs/snake-e-corp/careers.html",
+        "css": "./assets/interwebs/snake-e-corp/styles.css",
+        "searchData": {
+            "keywords": ["careers", "jobs", "employment", "work"],
+            "description": "Join the ElxaCorp team and build the future.",
+            "category": "Business"
+        }
+    },
+    "pacman-xeocities.ex": {
+        "title": "PacMan Power! 👻",
+        "type": "file",
+        "path": "./assets/interwebs/pp-xeocities/index.html",
+        "searchData": {
+            "keywords": ["pacman", "games", "retro", "arcade", "personal"],
+            "description": "Your ultimate guide to PacMan! Tips, tricks, and high scores!",
+            "category": "Personal"
+        }
+    },
+    "chi-corner-xeocities.ex": {
+        "title": "ChiChis Chihuahua Corner",
+        "type": "file",
+        "path": "./assets/interwebs/chi-xeocities/index.html",
+        "searchData": {
+            "keywords": ["chihuahua", "dogs", "pets", "cute", "personal"],
+            "description": "All about the cutest little dogs in the world!",
+            "category": "Personal"
+        }
+    },
+    "craftzone-xeocities.ex": {
+        "title": "CRAFTZONE",
+        "type": "file",
+        "path": "./assets/interwebs/craftzone-xeocities/index.html",
+        "searchData": {
+            "keywords": ["games", "gaming", "Minecraft", "hobbies", "personal", "personal page", "xeocities", "projects", "tutorials"],
+            "description": "Your ultimate guide to Minecraft facts! Featuring tips and tricks!",
+            "category": "Personal"
+        }
+    },
+    "nr-xeocities.ex": {
+        "title": "NileRed Chemistry Corner",
+        "type": "file",
+        "path": "./assets/interwebs/nr-xeocities/index.html",
+        "searchData": {
+            "keywords": ["NileRed", "chemistry", "experiment", "experiments", "science", "reaction", "reactions", "blue iodine", "crystal growing"],
+            "description": "Explore unique Snakesian chemical reactions and experiments. Features our special blue iodine and naturally-forming copper sulfate crystals!",
+            "category": "Education"
+        }
+    },
+    "cat-xeocities.ex": {
+        "title": "Whiskers World~",
+        "type": "file",
+        "path": "./assets/interwebs/cat-xeocities/index.html",
+        "searchData": {
+            "keywords": ["cats", "cat", "kitty", "pet", "pets", "felines", "cat facts", "cat care"],
+            "description": "The ultimate fan site for Snakesian cats and their unique characteristics. Featuring facts, care tips, and photos of our special 19-toed felines!",
+            "category": "Personal"
+        }
+    },
+    "ms-xeocities.ex": {
+        "title": "Mrs. Snake-e-s Corner",
+        "type": "file",
+        "path": "./assets/interwebs/ms-xeocities/index.html",
+        "searchData": {
+            "keywords": ["gardening", "garden", "plant", "baking", "bake", "recipe", "recipes", "cookie", "cookies", "garden tips", "homemade"],
+            "description": "Traditional Snakesian gardening tips and family recipes from Mrs. Snake-E herself. Growing blue roses and baking snake-shaped cookies since 1975.",
+            "category": "Personal"
+        }
+    },
+    "snakebook.ex": {
+        "title": "Snakebook",
+        "type": "file",
+        "path": "./assets/interwebs/snakebook/index.html",
+        "css": "./assets/interwebs/snakebook/styles.css",
+        "searchData": {
+            "keywords": ["social media", "networking", "friends", "social network", "snakebook", "profiles", "messaging", "snakesia social", "status updates", "photos"],
+            "description": "Snakesia\"s largest social network. Connect with friends, share updates, and join the largest online community in Snakesia.",
+            "category": "Social"
+        }
+    },
+    "dissscord.ex": {
+        "title": "DisssCord",
+        "type": "file",
+        "path": "./assets/interwebs/dissscord/index.html",
+        "css": "./assets/interwebs/dissscord/styles.css",
+        "searchData": {
+            "keywords": ["chat", "communities", "discord", "voice chat", "gaming", "servers", "groups", "messaging", "voice channels", "text channels"],
+            "description": "Join the conversation on DisssCord! The premier chat platform for Snakesian communities, gamers, and groups. Create servers, chat with friends, and join voice channels.",
+            "category": "Social"
+        }
+    },
+    "abbit.ex": {
+        "title": "Abbit",
+        "type": "file",
+        "path": "./assets/interwebs/abbit/index.html",
+        "css": "./assets/interwebs/abbit/styles.css",
+        "searchData": {
+            "keywords": ["forum", "community", "discussions", "subrabbits", "news", "memes", "posts", "upvotes", "threads", "karma"],
+            "description": "Dive into endless discussions on Abbit, where Snakesians share news, memes, and join topic-focused communities called subrabbits. Your daily source for what\"s trending in Snakesia.",
+            "category": "Social"
+        }
+    },
+    "directory": {
+        "title": "ExWeb Directory",
+        "type": "directory",
+        "searchData": {
+            "keywords": ["directory", "list", "sites", "browse"],
+            "description": "Browse all available websites on the ExWeb.",
+            "category": "Utilities"
+        }
+    }
+}

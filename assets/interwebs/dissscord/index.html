@@ -1,527 +1,1151 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .ds-container {
-            display: flex;
-            height: 100vh;
-            background: #232527;
-            color: #dcddde;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .ds-channels {
-            width: 240px;
-            background: #2f3136;
-            padding: 10px 0;
-            overflow-y: auto;
-        }
-
-        .ds-server-header {
-            padding: 10px 15px;
-            border-bottom: 1px solid #1e1f22;
-            font-weight: bold;
-            font-size: 16px;
-            color: #fff;
-        }
-
-        .ds-channel-category {
-            padding: 15px 10px 5px;
-            color: #888;
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .ds-channel {
-            padding: 5px 10px;
-            margin: 2px 5px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            color: #888;
-        }
-
-        .ds-channel:hover {
-            background: #36393f;
-            color: #dcddde;
-        }
-
-        .ds-channel.active {
-            background: #393c43;
-            color: #fff;
-        }
-
-        .ds-channel-prefix {
-            margin-right: 5px;
-        }
-
-        .ds-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #36393f;
-        }
-
-        .ds-chat-header {
-            padding: 10px 20px;
-            border-bottom: 1px solid #1e1f22;
-            display: flex;
-            align-items: center;
-        }
-
-        .ds-chat-name {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .ds-chat-topic {
-            color: #888;
-            font-size: 14px;
-        }
-
-        .ds-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .ds-message {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 15px;
-        }
-
-        .ds-avatar {
-            width: 40px;
-            height: 40px;
-            background: #2f3136;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .ds-message-content {
-            flex: 1;
-        }
-
-        .ds-message-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 5px;
-        }
-
-        .ds-username {
-            font-weight: bold;
-        }
-
-        .ds-timestamp {
-            color: #888;
-            font-size: 12px;
-        }
-
-        .ds-role {
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 12px;
-            margin-left: 5px;
-        }
-
-        .ds-role-owner {
-            background: #eb4964;
-            color: white;
-        }
-
-        .ds-role-mod {
-            background: #3498db;
-            color: white;
-        }
-
-        .ds-role-vip {
-            background: #9b59b6;
-            color: white;
-        }
-
-        .ds-role-member {
-            background: #27ae60;
-            color: white;
-        }
-
-        .ds-members {
-            width: 240px;
-            background: #2f3136;
-            padding: 20px 10px;
-            overflow-y: auto;
-        }
-
-        .ds-members-category {
-            color: #888;
-            font-size: 12px;
-            text-transform: uppercase;
-            padding: 5px 10px;
-            margin-top: 15px;
-        }
-
-        .ds-member {
-            padding: 5px 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-radius: 4px;
-        }
-
-        .ds-member:hover {
-            background: #36393f;
-        }
-
-        .ds-member-avatar {
-            width: 32px;
-            height: 32px;
-            background: #36393f;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .ds-ping {
-            color: #00b0f4;
-            background: rgba(0, 176, 244, 0.1);
-            padding: 0 2px;
-            border-radius: 3px;
-        }
-
-        .ds-emoji {
-            display: inline-block;
-            margin: 0 2px;
-        }
-    </style>
+    <title>Dissscord - Chat for Snakesia</title>
+    <link rel="stylesheet" href="./assets/interwebs/dissscord/styles.css">
 </head>
 <body>
     <div class="ds-container">
-        <div class="ds-channels">
-            <div class="ds-server-header">🎮 Remi's Server</div>
-            
-            <div class="ds-channel-category">Information</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">📢</span> announcements</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">👋</span> welcome</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">📜</span> rules</div>
-            
-            <div class="ds-channel-category">General</div>
-            <div class="ds-channel active"><span class="ds-channel-prefix">#</span> general-chat</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">#</span> memes</div>
-            
-            <div class="ds-channel-category">Minecraft</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">🎮</span> server-chat</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">🏗️</span> builds</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">💡</span> suggestions</div>
-            
-            <div class="ds-channel-category">SnakeTube</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">🎥</span> video-updates</div>
-            <div class="ds-channel"><span class="ds-channel-prefix">💬</span> video-chat</div>
+        <!-- Server List -->
+        <div class="ds-servers">
+            <div class="ds-server-icon active" data-server="remi" title="Remi's Gaming Hub">
+                🎮
+            </div>
+            <div class="ds-server-icon" data-server="elxacorp" title="ElxaCorp Official">
+                🏢
+            </div>
+            <div class="ds-server-icon" data-server="snakesia" title="Snakesia Community">
+                🐍
+            </div>
+            <div class="ds-server-icon" data-server="mansion" title="Snake-e Mansion">
+                🏰
+            </div>
+            <div class="ds-server-icon" data-server="sussy" title="Sussy Lair">
+                😈
+            </div>
         </div>
 
+        <!-- Channels -->
+        <div class="ds-channels">
+            <div class="ds-server-header" id="serverName">Remi's Gaming Hub</div>
+            
+            <div id="channelsList">
+                <!-- Channels will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Main Chat -->
         <div class="ds-main">
             <div class="ds-chat-header">
-                <span class="ds-chat-name"># general-chat</span>
-                <span class="ds-chat-topic">General discussion about Remi's content</span>
+                <span class="ds-chat-name" id="channelName"># general</span>
+                <span class="ds-chat-topic" id="channelTopic">General discussion</span>
             </div>
+            
             <div class="ds-messages" id="messageContainer">
-                <!-- Messages will be inserted here -->
+                <div class="ds-loading">Loading messages...</div>
+            </div>
+
+            <div id="typingIndicator" class="ds-typing" style="display: none;">
+                <span id="typingUser">Someone</span> is typing<span class="ds-typing-dots">...</span>
+            </div>
+
+            <div class="ds-message-input-container">
+                <textarea 
+                    class="ds-message-input" 
+                    id="messageInput" 
+                    placeholder="Message #general"
+                    maxlength="2000"
+                    rows="1"
+                ></textarea>
             </div>
         </div>
 
-        <div class="ds-members">
-            <div class="ds-members-category">Owner - 1</div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">🎮</div>
-                <div class="ds-username">RemiMarway</div>
-            </div>
-
-            <div class="ds-members-category">Moderators - 3</div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">👨‍💻</div>
-                <div class="ds-username">kitkat</div>
-            </div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">🐍</div>
-                <div class="ds-username">Snake_E_CEO</div>
-            </div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">🎯</div>
-                <div class="ds-username">ModMaster</div>
-            </div>
-
-            <div class="ds-members-category">VIP Members - 2</div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">👵</div>
-                <div class="ds-username">Mrs_Snake_E</div>
-            </div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">🚗</div>
-                <div class="ds-username">DenaliDriver</div>
-            </div>
-
-            <div class="ds-members-category">Online - 5</div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">🎮</div>
-                <div class="ds-username">McFan123</div>
-            </div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">🎮</div>
-                <div class="ds-username">BlockBuilder</div>
-            </div>
-            <div class="ds-member">
-                <div class="ds-member-avatar">😈</div>
-                <div class="ds-username">TrollMaster</div>
-            </div>
+        <!-- Members List -->
+        <div class="ds-members" id="membersList">
+            <!-- Members will be populated by JavaScript -->
         </div>
     </div>
 
     <script>
-        const messageTemplates = [
-            {
-                author: "RemiMarway",
-                avatar: "🎮",
-                role: "owner",
-                messages: [
-                    "New video dropping tomorrow! Get ready for an epic Minecraft build! 🎥",
-                    "Server maintenance in 10 minutes, save your builds! ⚡",
-                    "Thanks for 1 million subscribers on SnakeTube! 🎉",
-                    "Check out the new Snakesia-themed texture pack! 🐍",
-                    "Just finished recording an epic redstone build tutorial!",
-                    "Who's up for a late night stream? Doing some builds in Snakesia City! 🌃",
-                    "NEW MERCH ALERT! Snake-e approved Minecraft hoodies now available!",
-                    "Huge thanks to @kitkat for the new server plugins! The ElxaOS integration is amazing!",
-                    "Throwback to when Mr. Snake-e joined the server and built a mansion made of diamond blocks",
-                    "Poll time: Should we add more snakes to the texture pack? 🐍 Yes or 🐍🐍 DOUBLE YES",
-                    "EMERGENCY STREAM: My Minecraft house got griefed by TrollMaster! Come watch the rebuild!",
-                    "Just hit 10 million blocks placed on the server! Celebration event this weekend! 🎉",
-                    "New minigame dropping tomorrow - Snake in the Grass! First prize: A real Denali! (jk it's 1000 snakes)",
-                ]
-            },
-            {
-                author: "Snake_E_CEO",
-                avatar: "🐍",
-                role: "mod",
-                messages: [
-                    "Great work on the new ElxaOS integration, @kitkat! 💻",
-                    "Just donated 1000 snakes to the server! Enjoy the new features! 💰",
-                    "Who's ready for the next Minecraft tournament? Prize pool: 5000 snakes! 🏆",
-                ]
-            },
-            {
-                author: "Mrs_Snake_E",
-                avatar: "👵",
-                role: "vip",
-                messages: [
-                    "Made snake-shaped cookies for everyone in the server! 🍪",
-                    "Love the new Minecraft builds! So creative! ❤️",
-                    "Remember to join movie night at the mansion this Friday! 🎬",
-                ]
-            },
-            {
-                author: "TrollMaster",
-                avatar: "😈",
-                messages: [
-                    "minecraft is ded game lol",
-                    "anyone want free robux???",
-                    "my uncle works at mojang and said 2.0 coming out tomorrow",
-                ]
-            },
-            {
-                author: "ModMaster",
-                avatar: "🎯",
-                role: "mod",
-                messages: [
-                    "@TrollMaster This is your final warning. Please read the rules.",
-                    "Remember to keep chat family-friendly! 👋",
-                    "Welcome new members! Check out #rules for server info!",
-                ]
-            },
-            {
-                author: "McFan123",
-                avatar: "🎮",
-                role: "member",
-                messages: [
-                    "Love your videos Remi! 🎥",
-                    "The new texture pack looks amazing! 😍",
-                    "@kitkat thanks for helping with my build! 🏗️",
-                ]
-            },
-            {
-                author: "PixelPro99",
-                avatar: "🎮",
-                role: "member",
-                messages: [
-                    "Just found a naturally pink sheep on the server! 🐑",
-                    "Is anyone else having connection issues from Snakesia? 🤔",
-                    "Your latest redstone tutorial blew my mind @RemiMarway! 🧠",
-                ]
-            },
-            {
-                author: "CraftQueen",
-                avatar: "👑",
-                role: "member",
-                messages: [
-                    "Building a replica of the Snake-e mansion! Need help with measurements 🏰",
-                    "@kitkat can you check if my permissions are working? Can't use /home 🏠",
-                    "The new ElxaOS integration is so smooth! Love the voice commands!",
-                ]
-            },
-            {
-                author: "TNTmaster_2012",
-                avatar: "💥",
-                role: "member",
-                messages: [
-                    "first time seeing Mr Snake-e in game!! he gave me 50 snakes!! 🐍",
-                    "anyone want to join my faction?? need 2 more players",
-                    "how do you get the special Snakesia skin?? it looks so cool",
-                ]
-            },
-            {
-                author: "BabyDragon",
-                avatar: "🐲",
-                messages: [
-                    "just subscribed to the channel!! love the content!",
-                    "can someone help me find diamonds? been mining for hours 😭",
-                    "@RemiMarway will you do a server tour video soon??",
-                ]
-            },
-            {
-                author: "ElxaFan2025",
-                avatar: "💻",
-                messages: [
-                    "My dad works at Elxa Corp! He says the new OS update is amazing!",
-                    "@kitkat you're so lucky to work with Mr Snake-e! Dream job fr",
-                    "Anyone else watching the stream using ElxaOS? So clear!",
-                ]
-            },
-            {
-                author: "SnakesiaBoy",
-                avatar: "🌟",
-                messages: [
-                    "greetings from Snakesia! love the server!",
-                    "who else is going to RemiCon next month?? 🎮",
-                    "traded my lunch money for snakes today, worth it! 💰",
-                ]
-            },
-            {
-                author: "MrDenali",
-                avatar: "🚙",
-                messages: [
-                    "saw the Snake-e Denali driving around today!! so cool!",
-                    "new subscriber from Tennessee! love having Snakesia as neighbors!",
-                    "saving up my snakes for VIP rank! halfway there!",
-                ]
-            },
-            {
-                author: "CodingKitten",
-                avatar: "🐱",
-                messages: [
-                    "@kitkat teach me how to code like you! want to work at Elxa Corp someday!",
-                    "building a calculator in Minecraft! any redstone experts online?",
-                    "Mrs Snake-e's cookies are the best! worth the trip to the mansion!",
-                ]
-            },
-            {
-                author: "BlockBuilder2024",
-                avatar: "🏗️",
-                messages: [
-                    "working on a pixel art of Mr Snake-e! will post pics when done",
-                    "the new Snakesia texture pack makes everything look so retro!",
-                    "who else loves the snake-shaped trees in the spawn area??",
-                ]
-            },
-            {
-                author: "RetroGamer",
-                avatar: "👾",
-                messages: [
-                    "these arcade games in the server lobby are addicting!",
-                    "high score on Snake game: 42069! beat that! 🎮",
-                    "the 8-bit music in Remi's latest video was fire! 🔥",
-                ]
+        console.log('🎮 Dissscord: JavaScript loaded');
+        
+        class DissscordApp {
+            constructor() {
+                console.log('🎮 Dissscord: Constructor starting...');
+                
+                this.currentServer = 'remi';
+                this.currentChannel = 'general';
+                this.messages = []; // Current channel messages
+                this.channelMessages = {}; // Persistent messages per server/channel
+                this.maxMessages = 30; // Reduced from 100 to save memory
+                this.messageGenerationActive = false;
+                this.typingTimeouts = new Map();
+                this.userCanSend = true;
+                this.llmService = null;
+                this.messageTimeout = null;
+                this.messageObserver = null;
+                
+                console.log('🎮 Dissscord: Basic properties set');
+                
+                // Initialize asynchronously
+                this.initialize();
             }
-        ];
 
- // Function to generate a random time string
-function getRandomTime() {
-    const minutes = Math.floor(Math.random() * 59);
-    return `${minutes}m ago`;
-}
+            async initialize() {
+                try {
+                    await this.initializeData();
+                    console.log('🎮 Dissscord: Data initialized');
+                    
+                    this.setupEventListeners();
+                    console.log('🎮 Dissscord: Event listeners set up');
+                    
+                    this.loadServer('remi');
+                    console.log('🎮 Dissscord: Server loaded');
+                    
+                    this.startMessageGeneration();
+                    console.log('🎮 Dissscord: Message generation started');
+                } catch (error) {
+                    console.error('❌ Dissscord: Initialization error:', error);
+                    
+                    // Show error message to user
+                    const messageContainer = document.getElementById('messageContainer');
+                    if (messageContainer) {
+                        messageContainer.innerHTML = `
+                            <div class="ds-loading" style="color: #ff6b6b;">
+                                ❌ Failed to load Dissscord data: ${error.message}
+                                <br><br>
+                                Please make sure the dissscord-data.json file exists in the correct location.
+                            </div>
+                        `;
+                    }
+                }
+            }
 
-// Function to create a single message element
-function createMessage(template) {
-    console.log('Creating message for:', template.author); // Debug log
-    const message = template.messages[Math.floor(Math.random() * template.messages.length)];
-    const messageElement = document.createElement('div');
-    messageElement.className = 'ds-message';
-    messageElement.innerHTML = `
-        <div class="ds-avatar">${template.avatar}</div>
-        <div class="ds-message-content">
-            <div class="ds-message-header">
-                <span class="ds-username">${template.author}</span>
-                ${template.role ? `<span class="ds-role ds-role-${template.role}">${template.role}</span>` : ''}
-                <span class="ds-timestamp">${getRandomTime()}</span>
-            </div>
-            ${message.replace(/@(\w+)/g, '<span class="ds-ping">@$1</span>')}
-        </div>
-    `;
-    return messageElement;
-}
+            async initializeData() {
+                console.log('🎮 Loading data from dissscord-data.json...');
+                
+                try {
+                    // Load data from external JSON file
+                    const data = await this.loadDataFile();
+                    
+                    // Set properties from loaded data
+                    this.servers = data.servers;
+                    this.messageTemplates = data.messageTemplates;
+                    this.messageVariables = data.messageVariables;
+                    
+                    console.log('✅ Data loaded successfully');
+                    console.log('📊 Servers loaded:', Object.keys(this.servers).length);
+                    console.log('📝 Message templates loaded:', Object.keys(this.messageTemplates).length);
+                    console.log('🔤 Message variables loaded:', Object.keys(this.messageVariables).length);
+                    
+                } catch (error) {
+                    console.error('❌ Failed to load data:', error);
+                    // Fall back to empty data structures to prevent crashes
+                    this.servers = {};
+                    this.messageTemplates = {};
+                    this.messageVariables = {};
+                    throw new Error('Failed to load Dissscord data: ' + error.message);
+                }
+            }
 
-// Function to generate multiple messages
-function generateMessages(count) {
-    console.log('Generating messages:', count); // Debug log
-    const container = document.getElementById('messageContainer');
-    if (!container) {
-        console.error('Message container not found!');
-        return;
-    }
-    
-    // Clear existing messages
-    container.innerHTML = '';
-    
-    // Add new messages
-    for (let i = 0; i < count; i++) {
-        const template = messageTemplates[Math.floor(Math.random() * messageTemplates.length)];
-        const messageElement = createMessage(template);
-        container.appendChild(messageElement);
-    }
-}
+            async loadDataFile() {
+                const possiblePaths = [
+                    // ElxaOS file system paths
+                    'dissscord-data.json',
+                    './assets/interwebs/dissscord/dissscord-data.json',
+                    // Fetch API paths
+                    './dissscord-data.json',
+                    './assets/interwebs/dissscord/dissscord-data.json',
+                    'assets/interwebs/dissscord/dissscord-data.json'
+                ];
+                
+                // Try ElxaOS file system API first
+                if (window.fs && window.fs.readFile) {
+                    console.log('🎮 Using ElxaOS file system...');
+                    for (const path of possiblePaths.slice(0, 2)) {
+                        try {
+                            console.log(`🎮 Trying ElxaOS path: ${path}`);
+                            const fileData = await window.fs.readFile(path, { encoding: 'utf8' });
+                            console.log(`✅ Successfully loaded from ElxaOS: ${path}`);
+                            return JSON.parse(fileData);
+                        } catch (error) {
+                            console.log(`⚠️ ElxaOS path failed: ${path} - ${error.message}`);
+                            continue;
+                        }
+                    }
+                }
+                
+                // Fallback to fetch API with multiple path attempts
+                console.log('🎮 Using fetch API...');
+                for (const path of possiblePaths.slice(2)) {
+                    try {
+                        console.log(`🎮 Trying fetch path: ${path}`);
+                        const response = await fetch(path);
+                        if (response.ok) {
+                            console.log(`✅ Successfully loaded from fetch: ${path}`);
+                            return await response.json();
+                        }
+                        console.log(`⚠️ Fetch path failed: ${path} - HTTP ${response.status}`);
+                    } catch (error) {
+                        console.log(`⚠️ Fetch path error: ${path} - ${error.message}`);
+                        continue;
+                    }
+                }
+                
+                throw new Error('Could not find dissscord-data.json in any expected location');
+            }
 
-// Initialize messages
-function initializeMessages() {
-    console.log('Initializing messages...'); // Debug log
-    generateMessages(15);
-    
-    // Add new message every 30 seconds
-    setInterval(() => {
-        console.log('Adding new message...'); // Debug log
-        const container = document.getElementById('messageContainer');
-        if (container) {
-            const template = messageTemplates[Math.floor(Math.random() * messageTemplates.length)];
-            const messageElement = createMessage(template);
-            container.appendChild(messageElement);
-            
-            // Auto-scroll to new message
-            container.scrollTop = container.scrollHeight;
-            
-            // Keep only the last 50 messages to prevent excessive DOM growth
-            while (container.children.length > 50) {
-                container.removeChild(container.firstChild);
+            setupEventListeners() {
+                console.log('🎮 Setting up event listeners...');
+                
+                // Clean up existing observer if any
+                if (this.messageObserver) {
+                    this.messageObserver.disconnect();
+                    this.messageObserver = null;
+                }
+                
+                // Server switching
+                document.querySelectorAll('.ds-server-icon').forEach(server => {
+                    server.addEventListener('click', (e) => {
+                        const serverId = e.target.dataset.server;
+                        console.log('🎮 Server clicked:', serverId);
+                        if (serverId) {
+                            this.loadServer(serverId);
+                        }
+                    });
+                });
+
+                // Message input
+                const messageInput = document.getElementById('messageInput');
+                if (messageInput) {
+                    console.log('✅ Message input found, adding listeners');
+                    
+                    messageInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            console.log('🎮 Enter pressed, sending message...');
+                            this.sendUserMessage();
+                        }
+                    });
+
+                    messageInput.addEventListener('input', (e) => {
+                        // Auto-resize textarea
+                        e.target.style.height = 'auto';
+                        e.target.style.height = Math.min(e.target.scrollHeight, 144) + 'px';
+                        
+                        // Update placeholder
+                        const channelName = document.getElementById('channelName').textContent;
+                        e.target.placeholder = `Message ${channelName}`;
+                    });
+                } else {
+                    console.error('❌ Message input not found!');
+                }
+
+                // Simplified auto-scroll (less memory intensive)
+                const messageContainer = document.getElementById('messageContainer');
+                if (messageContainer) {
+                    // Use a simpler approach - just scroll after updates
+                    this.scrollToBottom = () => {
+                        messageContainer.scrollTop = messageContainer.scrollHeight;
+                    };
+                    console.log('✅ Scroll function set up');
+                } else {
+                    console.error('❌ Message container not found!');
+                }
+                
+                console.log('✅ Event listeners setup complete');
+            }
+
+            loadServer(serverId) {
+                console.log('🎮 Loading server:', serverId);
+                
+                // Save current channel messages before switching servers
+                this.saveCurrentChannelMessages();
+                
+                this.currentServer = serverId;
+                this.currentChannel = 'general';
+                
+                // Update server selection
+                document.querySelectorAll('.ds-server-icon').forEach(icon => {
+                    icon.classList.remove('active');
+                });
+                const serverElement = document.querySelector(`[data-server="${serverId}"]`);
+                if (serverElement) {
+                    serverElement.classList.add('active');
+                }
+                
+                // Update server name
+                document.getElementById('serverName').textContent = this.servers[serverId].name;
+                
+                // Load channels
+                this.loadChannels(serverId);
+                
+                // Load members
+                this.loadMembers(serverId);
+                
+                // Load channel (default to general) - this will handle message loading
+                this.loadChannel('general');
+                
+                // Clean up old messages periodically to prevent memory buildup
+                this.cleanupChannelMessages();
+                
+                console.log('✅ Server loaded:', serverId);
+            }
+
+            loadChannels(serverId) {
+                const channelsList = document.getElementById('channelsList');
+                const channels = this.servers[serverId].channels;
+                
+                let html = '<div class="ds-channel-category">Text Channels</div>';
+                
+                Object.entries(channels).forEach(([channelId, channel]) => {
+                    if (channel.type === 'text') {
+                        const isActive = channelId === this.currentChannel ? 'active' : '';
+                        html += `
+                            <div class="ds-channel ${isActive}" data-channel="${channelId}">
+                                <span class="ds-channel-prefix">#</span>
+                                <span class="ds-channel-name">${channel.name}</span>
+                            </div>
+                        `;
+                    }
+                });
+                
+                // Add voice channels if any
+                const voiceChannels = Object.entries(channels).filter(([_, channel]) => channel.type === 'voice');
+                if (voiceChannels.length > 0) {
+                    html += '<div class="ds-channel-category">Voice Channels</div>';
+                    voiceChannels.forEach(([channelId, channel]) => {
+                        html += `
+                            <div class="ds-channel" data-channel="${channelId}">
+                                <span class="ds-channel-prefix">🔊</span>
+                                <span class="ds-channel-name">${channel.name}</span>
+                            </div>
+                        `;
+                    });
+                }
+                
+                channelsList.innerHTML = html;
+                
+                // Add channel click listeners
+                document.querySelectorAll('.ds-channel').forEach(channel => {
+                    channel.addEventListener('click', (e) => {
+                        const channelId = e.target.closest('.ds-channel').dataset.channel;
+                        if (channelId && this.servers[this.currentServer].channels[channelId].type === 'text') {
+                            this.loadChannel(channelId);
+                        }
+                    });
+                });
+            }
+
+            loadChannel(channelId) {
+                console.log('🎮 Loading channel:', channelId, 'in server:', this.currentServer);
+                
+                // Save current channel messages before switching
+                this.saveCurrentChannelMessages();
+                
+                // Update current channel
+                this.currentChannel = channelId;
+                const channel = this.servers[this.currentServer].channels[channelId];
+                
+                // Update channel selection UI
+                document.querySelectorAll('.ds-channel').forEach(ch => {
+                    ch.classList.remove('active');
+                });
+                const channelElement = document.querySelector(`[data-channel="${channelId}"]`);
+                if (channelElement) {
+                    channelElement.classList.add('active');
+                }
+                
+                // Update channel header
+                document.getElementById('channelName').textContent = `# ${channel.name}`;
+                document.getElementById('channelTopic').textContent = channel.topic;
+                
+                // Update message input placeholder
+                document.getElementById('messageInput').placeholder = `Message #${channel.name}`;
+                
+                // Load saved messages for this channel
+                const hasMessages = this.loadChannelMessages(this.currentServer, channelId);
+                this.updateMessageDisplay();
+                
+                // Only generate new messages if channel is empty
+                if (!hasMessages) {
+                    // Stop current generation and restart for new channel
+                    this.stopMessageGeneration();
+                    
+                    // Start generation after a brief delay
+                    setTimeout(() => {
+                        this.startMessageGeneration();
+                    }, 100);
+                }
+                
+                console.log('✅ Channel loaded:', channelId);
+            }
+
+            loadMembers(serverId) {
+                const membersList = document.getElementById('membersList');
+                const members = this.servers[serverId].members;
+                
+                let html = '';
+                
+                if (members.online.length > 0) {
+                    html += `<div class="ds-members-category">Online — ${members.online.length}</div>`;
+                    members.online.forEach(member => {
+                        const roleClass = member.role ? `ds-role-${member.role}` : '';
+                        html += `
+                            <div class="ds-member">
+                                <div class="ds-member-avatar">${member.avatar}</div>
+                                <div class="ds-member-name">${member.name}</div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                if (members.away.length > 0) {
+                    html += `<div class="ds-members-category">Away — ${members.away.length}</div>`;
+                    members.away.forEach(member => {
+                        html += `
+                            <div class="ds-member">
+                                <div class="ds-member-avatar" style="opacity: 0.5">${member.avatar}</div>
+                                <div class="ds-member-name" style="opacity: 0.5">${member.name}</div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                membersList.innerHTML = html;
+            }
+
+            startMessageGeneration() {
+                if (this.messageGenerationActive) return;
+                
+                this.messageGenerationActive = true;
+                
+                // Generate a few initial messages immediately
+                console.log('🎮 Starting message generation...');
+                this.generateInitialMessages();
+                
+                // Then start the regular generation cycle
+                this.generateNextMessage();
+            }
+
+            generateInitialMessages() {
+                console.log('🎮 Dissscord: Generating initial messages...');
+                
+                // Add one test message first to make sure the system works
+                const testMessage = {
+                    id: Date.now(),
+                    author: 'RemiMarway',
+                    authorInfo: {
+                        avatar: '🎮',
+                        role: 'owner',
+                        status: 'online'
+                    },
+                    text: 'Welcome to Dissscord! This is working!',
+                    timestamp: new Date(),
+                    type: 'test'
+                };
+                
+                this.addMessage(testMessage);
+                console.log('🎮 Dissscord: Added test message');
+                
+                // Generate 3-5 initial messages to populate the chat
+                const initialCount = Math.floor(Math.random() * 3) + 2; // 2-4 more messages
+                
+                for (let i = 0; i < initialCount; i++) {
+                    const message = this.createRandomMessage();
+                    if (message) {
+                        // Add some time variation to make messages look older
+                        message.timestamp = new Date(Date.now() - (initialCount - i) * 60000 * Math.random() * 30);
+                        this.addMessage(message);
+                        console.log('🎮 Generated initial message:', message.author, message.text);
+                    } else {
+                        console.error('❌ Failed to create initial message for', this.currentServer, this.currentChannel);
+                        // Add a fallback message
+                        const fallbackMessage = {
+                            id: Date.now() + i,
+                            author: 'System',
+                            authorInfo: { avatar: '🤖', role: 'member', status: 'online' },
+                            text: 'Chat system is loading...',
+                            timestamp: new Date(Date.now() - (initialCount - i) * 60000),
+                            type: 'fallback'
+                        };
+                        this.addMessage(fallbackMessage);
+                    }
+                }
+                
+                console.log('🎮 Dissscord: Initial messages complete, total:', this.messages.length);
+            }
+
+            saveCurrentChannelMessages() {
+                // Save current messages to persistent storage
+                const key = `${this.currentServer}:${this.currentChannel}`;
+                if (this.messages.length > 0) {
+                    this.channelMessages[key] = [...this.messages];
+                    console.log(`💾 Saved ${this.messages.length} messages for ${key}`);
+                }
+            }
+
+            loadChannelMessages(serverId, channelId) {
+                // Load messages for specific server/channel
+                const key = `${serverId}:${channelId}`;
+                const savedMessages = this.channelMessages[key];
+                
+                if (savedMessages && savedMessages.length > 0) {
+                    this.messages = [...savedMessages];
+                    console.log(`📂 Loaded ${this.messages.length} messages for ${key}`);
+                    return true;
+                } else {
+                    this.messages = [];
+                    console.log(`📂 No saved messages for ${key}, starting fresh`);
+                    return false;
+                }
+            }
+
+            cleanupChannelMessages() {
+                // Clean up old messages to prevent memory buildup
+                const keys = Object.keys(this.channelMessages);
+                console.log(`🧹 Cleaning up ${keys.length} channel message caches`);
+                
+                // Keep only the most recent messages per channel
+                keys.forEach(key => {
+                    if (this.channelMessages[key].length > this.maxMessages) {
+                        this.channelMessages[key] = this.channelMessages[key].slice(-this.maxMessages);
+                    }
+                });
+            }
+
+            stopMessageGeneration() {
+                this.messageGenerationActive = false;
+                if (this.messageTimeout) {
+                    clearTimeout(this.messageTimeout);
+                    this.messageTimeout = null;
+                    console.log('⏹️ Message generation stopped and timeout cleared');
+                }
+            }
+
+            generateNextMessage() {
+                if (!this.messageGenerationActive) return;
+                
+                console.log('🎮 Generating next message for', this.currentServer, this.currentChannel);
+                
+                // Generate a message for current server/channel
+                const message = this.createRandomMessage();
+                if (message) {
+                    this.addMessage(message);
+                    console.log('✅ Generated message:', message.author, message.text);
+                } else {
+                    console.error('❌ Failed to generate message for', this.currentServer, this.currentChannel);
+                }
+                
+                // Schedule next message (2-8 minutes instead of 30 seconds-3 minutes to reduce memory usage)
+                const delay = Math.random() * (480000 - 120000) + 120000; // 2-8 minutes
+                console.log(`⏰ Next message in ${Math.round(delay/60000)} minutes`);
+                this.messageTimeout = setTimeout(() => {
+                    this.generateNextMessage();
+                }, delay);
+            }
+
+            createRandomMessage() {
+                const serverTemplates = this.messageTemplates[this.currentServer];
+                if (!serverTemplates) return null;
+                
+                const channelTemplates = serverTemplates[this.currentChannel];
+                if (!channelTemplates || channelTemplates.length === 0) return null;
+                
+                // Weighted random selection
+                const totalWeight = channelTemplates.reduce((sum, template) => sum + template.weight, 0);
+                let random = Math.random() * totalWeight;
+                
+                let selectedTemplate = null;
+                for (const template of channelTemplates) {
+                    random -= template.weight;
+                    if (random <= 0) {
+                        selectedTemplate = template;
+                        break;
+                    }
+                }
+                
+                if (!selectedTemplate) {
+                    selectedTemplate = channelTemplates[0];
+                }
+                
+                // Replace variables in message text
+                const messageText = this.replaceMessageVariables(selectedTemplate.text);
+                
+                // Get author info
+                const authorInfo = this.getAuthorInfo(selectedTemplate.author);
+                
+                return {
+                    id: Date.now() + Math.random(),
+                    author: selectedTemplate.author,
+                    authorInfo: authorInfo,
+                    text: messageText,
+                    timestamp: new Date(),
+                    type: 'generated'
+                };
+            }
+
+            replaceMessageVariables(text) {
+                // Find all {{variable}} patterns
+                return text.replace(/\{\{([^}]+)\}\}/g, (match, variableName) => {
+                    const values = this.messageVariables[variableName];
+                    if (values && values.length > 0) {
+                        return values[Math.floor(Math.random() * values.length)];
+                    }
+                    return match; // Return original if variable not found
+                });
+            }
+
+            getAuthorInfo(authorName) {
+                // Find author in current server's members
+                const serverMembers = this.servers[this.currentServer].members;
+                const allMembers = [...serverMembers.online, ...serverMembers.away];
+                
+                const member = allMembers.find(m => m.name === authorName);
+                if (member) {
+                    return {
+                        avatar: member.avatar,
+                        role: member.role,
+                        status: member.status
+                    };
+                }
+                
+                // Default fallback
+                return {
+                    avatar: '👤',
+                    role: 'member',
+                    status: 'online'
+                };
+            }
+
+            addMessage(message) {
+                this.messages.push(message);
+                
+                // Keep only last maxMessages
+                if (this.messages.length > this.maxMessages) {
+                    this.messages = this.messages.slice(-this.maxMessages);
+                }
+                
+                this.updateMessageDisplay();
+            }
+
+            updateMessageDisplay() {
+                const container = document.getElementById('messageContainer');
+                
+                if (this.messages.length === 0) {
+                    container.innerHTML = '<div class="ds-loading">No messages yet... generating content...</div>';
+                    return;
+                }
+                
+                // Build HTML more efficiently
+                const htmlParts = [];
+                this.messages.forEach((message, index) => {
+                    const roleClass = message.authorInfo.role ? `ds-role-${message.authorInfo.role}` : '';
+                    const roleText = message.authorInfo.role && message.authorInfo.role !== 'member' ? 
+                        `<span class="ds-role ${roleClass}">${message.authorInfo.role}</span>` : '';
+                    
+                    const messageClass = message.type === 'user' ? 'ds-message user-message' : 'ds-message';
+                    
+                    htmlParts.push(`
+                        <div class="${messageClass}">
+                            <div class="ds-avatar">${message.authorInfo.avatar}</div>
+                            <div class="ds-message-content">
+                                <div class="ds-message-header">
+                                    <span class="ds-username">${message.author}</span>
+                                    ${roleText}
+                                    <span class="ds-timestamp">${this.formatTimestamp(message.timestamp)}</span>
+                                </div>
+                                <div class="ds-message-text">${this.formatMessageText(message.text)}</div>
+                            </div>
+                        </div>
+                    `);
+                });
+                
+                container.innerHTML = htmlParts.join('');
+                
+                // Use the simpler scroll method
+                if (this.scrollToBottom) {
+                    this.scrollToBottom();
+                }
+            }
+
+            formatMessageText(text) {
+                // Format mentions
+                text = text.replace(/@(\w+)/g, '<span class="ds-mention">@$1</span>');
+                
+                // Format emojis (basic)
+                text = text.replace(/:\w+:/g, (match) => {
+                    const emojiMap = {
+                        ':smile:': '😊',
+                        ':laugh:': '😂',
+                        ':heart:': '❤️',
+                        ':fire:': '🔥',
+                        ':thumbsup:': '👍'
+                    };
+                    return emojiMap[match] || match;
+                });
+                
+                return text;
+            }
+
+            formatTimestamp(timestamp) {
+                const now = new Date();
+                const diff = now - timestamp;
+                
+                if (diff < 60000) { // Less than 1 minute
+                    return 'just now';
+                } else if (diff < 3600000) { // Less than 1 hour
+                    const minutes = Math.floor(diff / 60000);
+                    return `${minutes}m ago`;
+                } else if (diff < 86400000) { // Less than 1 day
+                    const hours = Math.floor(diff / 3600000);
+                    return `${hours}h ago`;
+                } else {
+                    return timestamp.toLocaleDateString();
+                }
+            }
+
+            sendUserMessage() {
+                const input = document.getElementById('messageInput');
+                const text = input.value.trim();
+                
+                console.log('🎮 User trying to send message:', text);
+                
+                if (!text || !this.userCanSend) {
+                    console.log('⚠️ Message empty or user cannot send');
+                    return;
+                }
+                
+                console.log('✅ Sending user message:', text);
+                
+                // Create user message
+                const userMessage = {
+                    id: Date.now() + Math.random(),
+                    author: 'You',
+                    authorInfo: {
+                        avatar: '👤',
+                        role: 'member',
+                        status: 'online'
+                    },
+                    text: text,
+                    timestamp: new Date(),
+                    type: 'user'
+                };
+                
+                this.addMessage(userMessage);
+                console.log('✅ User message added to chat');
+                
+                // Clear input
+                input.value = '';
+                input.style.height = 'auto';
+                
+                // Show typing indicator and schedule LLM response
+                this.handleUserMessage(text);
+            }
+
+            async handleUserMessage(messageText) {
+                console.log('🎮 Handling user message:', messageText);
+                
+                // Check if user mentioned a specific character
+                const mentionedCharacter = this.findMentionedCharacter(messageText);
+                console.log('🎮 Mentioned character:', mentionedCharacter);
+                
+                if (mentionedCharacter) {
+                    // Respond as specific character
+                    console.log('🎮 Showing typing indicator for:', mentionedCharacter);
+                    this.showTypingIndicator(mentionedCharacter);
+                    await this.generateLLMResponse(messageText, mentionedCharacter);
+                } else {
+                    // Random chance for someone to respond
+                    if (Math.random() < 0.7) { // 70% chance
+                        const randomCharacter = this.getRandomActiveCharacter();
+                        console.log('🎮 Random character selected to respond:', randomCharacter);
+                        if (randomCharacter) {
+                            this.showTypingIndicator(randomCharacter);
+                            await this.generateLLMResponse(messageText, randomCharacter);
+                        } else {
+                            console.log('🎮 No active characters available for random response');
+                        }
+                    } else {
+                        console.log('🎮 Random roll failed, no character response');
+                    }
+                }
+            }
+
+            findMentionedCharacter(messageText) {
+                const serverMembers = this.servers[this.currentServer].members;
+                const allMembers = [...serverMembers.online, ...serverMembers.away];
+                
+                // Check for @mentions or name mentions
+                for (const member of allMembers) {
+                    const name = member.name.toLowerCase();
+                    const text = messageText.toLowerCase();
+                    
+                    if (text.includes(`@${name}`) || text.includes(name)) {
+                        return member.name;
+                    }
+                }
+                
+                return null;
+            }
+
+            getRandomActiveCharacter() {
+                const serverMembers = this.servers[this.currentServer].members;
+                const activeMembers = serverMembers.online.filter(member => member.name !== 'You');
+                
+                if (activeMembers.length === 0) return null;
+                
+                return activeMembers[Math.floor(Math.random() * activeMembers.length)].name;
+            }
+
+            showTypingIndicator(characterName) {
+                const indicator = document.getElementById('typingIndicator');
+                const userSpan = document.getElementById('typingUser');
+                
+                userSpan.textContent = characterName;
+                indicator.style.display = 'block';
+                
+                // Hide after a delay
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 3000);
+            }
+
+            async generateLLMResponse(userMessage, characterName) {
+                console.log('🎮 Generating LLM response for:', characterName, 'Message:', userMessage);
+                
+                try {
+                    // Try to use LLM service (similar to messenger/email)
+                    const response = await this.callLLMService(userMessage, characterName);
+                    
+                    if (response) {
+                        console.log('✅ LLM response received:', response);
+                        // Add delay to simulate typing
+                        setTimeout(() => {
+                            this.addCharacterResponse(characterName, response);
+                        }, 2000 + Math.random() * 3000);
+                    } else {
+                        console.log('⚠️ No LLM response, using template fallback');
+                        // Fallback to template response
+                        setTimeout(() => {
+                            this.addTemplateResponse(characterName, userMessage);
+                        }, 2000 + Math.random() * 3000);
+                    }
+                } catch (error) {
+                    console.error('❌ LLM response failed:', error);
+                    // Fallback to template response
+                    setTimeout(() => {
+                        this.addTemplateResponse(characterName, userMessage);
+                    }, 2000 + Math.random() * 3000);
+                }
+            }
+
+            async callLLMService(userMessage, characterName) {
+                console.log('🎮 Calling LLM service for:', characterName);
+                
+                // Load API settings from messenger (same as email system does)
+                let apiKey = null;
+                let selectedModel = 'gemini-pro';
+                
+                try {
+                    const messengerSettings = localStorage.getItem('snakesia-messenger-settings');
+                    if (messengerSettings) {
+                        const settings = JSON.parse(messengerSettings);
+                        apiKey = settings.apiKey;
+                        selectedModel = settings.selectedModel || 'gemini-pro';
+                        console.log('🔑 Loaded API settings from messenger system');
+                    } else {
+                        console.log('⚠️ No messenger settings found, API not available');
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('❌ Failed to load LLM settings:', error);
+                    return null;
+                }
+                
+                if (!apiKey) {
+                    console.log('⚠️ No API key available');
+                    return null;
+                }
+                
+                try {
+                    console.log(`🤖 Generating LLM response for ${characterName}`);
+                    
+                    // Build the LLM prompt
+                    const prompt = this.buildLLMPrompt(userMessage, characterName);
+                    console.log(`📝 Prompt length: ${prompt.length} characters`);
+                    
+                    // Make API call to Gemini (same as email system)
+                    const response = await this.callGeminiAPI(prompt, apiKey, selectedModel);
+                    
+                    if (response) {
+                        console.log('✅ LLM response generated successfully');
+                        return this.processLLMResponse(response);
+                    } else {
+                        throw new Error('Empty response from LLM');
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ LLM generation failed:', error);
+                    return null;
+                }
+            }
+
+            async callGeminiAPI(prompt, apiKey, selectedModel) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: prompt
+                                }]
+                            }],
+                            generationConfig: {
+                                maxOutputTokens: 150, // Short Discord-style responses
+                                temperature: 0.8,
+                                topP: 0.9
+                            },
+                            safetySettings: [
+                                {
+                                    category: "HARM_CATEGORY_HARASSMENT",
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                },
+                                {
+                                    category: "HARM_CATEGORY_HATE_SPEECH", 
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                }
+                            ]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Gemini API Error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
+                        return data.candidates[0].content.parts[0].text;
+                    } else {
+                        console.error('🚫 Invalid API response format:', data);
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('🚫 Gemini API call failed:', error);
+                    return null;  
+                }
+            }
+
+            processLLMResponse(rawResponse) {
+                // Clean up the response for Discord-style chat
+                let processed = rawResponse.trim();
+                
+                // Hard limit: Keep messages Discord-appropriate length (about 300 characters max)
+                if (processed.length > 300) {
+                    // Try to cut at a natural break point (sentence end)
+                    const sentences = processed.match(/[^\.!?]*[\.!?]+/g) || [];
+                    let truncated = '';
+                    for (const sentence of sentences) {
+                        if ((truncated + sentence).length <= 250) {
+                            truncated += sentence;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    if (truncated.length > 50) {
+                        processed = truncated.trim();
+                    } else {
+                        // Fallback: hard cut with ellipsis
+                        processed = processed.substring(0, 250).trim() + '...';
+                    }
+                }
+                
+                return processed;
+            }
+
+            buildLLMPrompt(userMessage, characterName) {
+                // Build prompt similar to messenger/email but for Discord-style chat
+                const character = this.getCharacterInfo(characterName);
+                const context = this.getCurrentContext();
+                
+                // Get some recent messages for context (last 3)
+                const recentMessages = this.messages.slice(-3).map(msg => 
+                    `${msg.author}: ${msg.text}`
+                ).join('\n');
+                
+                const snakesiaTime = this.getSnakesiaTime();
+                
+                return `You are ${characterName} in a Discord-like chat server called Dissscord. ${character.description}
+
+CONTEXT:
+- Current time in Snakesia: ${snakesiaTime}
+- Server: ${this.servers[this.currentServer].name}
+- Channel: #${this.servers[this.currentServer].channels[this.currentChannel].name}
+- Topic: ${this.servers[this.currentServer].channels[this.currentChannel].topic}
+
+RECENT CHAT:
+${recentMessages}
+
+User just said: "${userMessage}"
+
+RESPONSE RULES:
+- Respond as ${characterName} in casual Discord chat style
+- Keep it SHORT: 1-2 sentences maximum
+- Be conversational and natural
+- Stay in character
+- Don't be overly helpful or formal
+- React naturally to what the user said
+- Use emoji occasionally if it fits the character
+
+Response as ${characterName}:`;
+            }
+
+            getCharacterInfo(characterName) {
+                // Map character names to world context info
+                const characterMap = {
+                    'RemiMarway': { 
+                        description: 'You are Remi, a cool 12-year-old YouTuber and Minecraft player. You talk casually like "yo", "dude", "epic". You love gaming, making videos, and building in Minecraft. You run a popular YouTube channel and Minecraft server.' 
+                    },
+                    'Snake_E_CEO': { 
+                        description: 'You are Mr. Snake-e, the 60-year-old CEO of ElxaCorp. You are intelligent, business-minded, and successful but also friendly. You drive a Denali, live in a mansion, and are a trillionaire. You talk professionally but warmly.' 
+                    },
+                    'Mrs_Snake_E': { 
+                        description: 'You are Mrs. Snake-e, an 80-year-old sweet grandmother who loves gardening and cooking. You are very motherly, caring, and call people "dear" and "sweetie". You live in the mansion with Mr. Snake-e.' 
+                    },
+                    'Rita': { 
+                        description: 'You are Rita, a kind and patient older sister with curly red hair. You are very sweet, protective, and caring. You speak gently and are always supportive.' 
+                    },
+                    'PushingCat': { 
+                        description: 'You are Pushing Cat, a mischievous black cat who is very "sus" and playful. You like to cause harmless trouble, climb into belly buttons, and make suspicious cat sounds. You talk like "*suspicious purring*" and use cat emojis.' 
+                    },
+                    'BlockMaster99': {
+                        description: 'You are BlockMaster99, a dedicated Minecraft player who loves building. You are enthusiastic about construction projects and admire Remi\'s work.'
+                    },
+                    'RedstoneGuru': {
+                        description: 'You are RedstoneGuru, a technical Minecraft player who specializes in redstone contraptions. You are helpful and knowledgeable about redstone mechanics.'
+                    },
+                    'CreativeBuilder': {
+                        description: 'You are CreativeBuilder, a creative Minecraft player who loves designing and building structures. You are artistic and always working on new projects.'
+                    }
+                };
+                
+                return characterMap[characterName] || { description: 'You are a friendly member of the Snakesia community.' };
+            }
+
+            getSnakesiaTime() {
+                const now = new Date();
+                const snakesiaTime = new Date(now.getTime() + (2 * 60 + 1) * 60 * 1000);
+                return snakesiaTime.toLocaleString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric', 
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZoneName: 'short'
+                }) + ' (Snakesia Time)';
+            }
+
+            getCurrentContext() {
+                return {
+                    server: this.currentServer,
+                    channel: this.currentChannel,
+                    recentMessages: this.messages.slice(-5)
+                };
+            }
+
+            addCharacterResponse(characterName, responseText) {
+                console.log('🎮 Adding character response:', characterName, '→', responseText);
+                
+                const authorInfo = this.getAuthorInfo(characterName);
+                
+                const response = {
+                    id: Date.now() + Math.random(),
+                    author: characterName,
+                    authorInfo: authorInfo,
+                    text: responseText,
+                    timestamp: new Date(),
+                    type: 'llm_response'
+                };
+                
+                this.addMessage(response);
+                console.log('✅ Character response added to chat');
+            }
+
+            addTemplateResponse(characterName, userMessage) {
+                console.log('🎮 Adding template response for:', characterName);
+                
+                // Generate a generic response based on character
+                const responses = {
+                    'RemiMarway': [
+                        "yo that's cool!",
+                        "nice one dude",
+                        "haha awesome",
+                        "totally agree",
+                        "that's epic!"
+                    ],
+                    'Snake_E_CEO': [
+                        "Excellent point!",
+                        "Innovation at its finest.",
+                        "That's the spirit we need.",
+                        "Well said!",
+                        "Precisely."
+                    ],
+                    'Mrs_Snake_E': [
+                        "How wonderful, dear!",
+                        "That's so sweet!",
+                        "Bless your heart!",
+                        "Lovely to hear!",
+                        "You're such a sweetie!"
+                    ],
+                    'PushingCat': [
+                        "*suspicious purring*",
+                        "very sus... 😼",
+                        "*pushes something off table*",
+                        "meow meow",
+                        "*plots mischief*"
+                    ]
+                };
+                
+                const characterResponses = responses[characterName] || ["That's interesting!", "I see.", "Good point!", "Thanks for sharing!"];
+                const randomResponse = characterResponses[Math.floor(Math.random() * characterResponses.length)];
+                
+                console.log('✅ Template response selected:', randomResponse);
+                this.addCharacterResponse(characterName, randomResponse);
             }
         }
-    }, 30000);
-}
 
-// Call initialization when the script loads
-console.log('Script loaded, calling initializeMessages...'); // Debug log
-initializeMessages();
+        // Initialize the app when the page loads
+        function initDissscord() {
+            console.log('🎮 Dissscord: Starting initialization...');
+            try {
+                window.dissscordApp = new DissscordApp();
+                console.log('✅ Dissscord: App initialized successfully');
+            } catch (error) {
+                console.error('❌ Dissscord: Failed to initialize:', error);
+            }
+        }
+
+        // Try multiple initialization methods
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDissscord);
+        } else {
+            // DOM already loaded, initialize immediately
+            initDissscord();
+        }
+
+        // Fallback initialization after a short delay
+        setTimeout(() => {
+            if (!window.dissscordApp) {
+                console.log('🎮 Dissscord: Fallback initialization...');
+                initDissscord();
+            }
+        }, 500);
     </script>
 </body>
 </html>

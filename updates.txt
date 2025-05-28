@@ -1,22 +1,11 @@
-🚀 **Welcome to ElxaOS v4.0.1!**
+🚀 **Welcome to ElxaOS v4.1.0!**
 
 **What's New:**
 
-• **Proper ElxaOS Logo** - Isn't it cute?
-• **ElxaOS Wallpapers** - Official wallpapers for ElxaOS!
-• **Snakesia Time** - Now available in the clock app
-
-**New Programs:**
-• ElxaBooks - Accounting software (functional)
-• Sussy Cat Adventure - A game featuring our favorite sneaky lil kitty (look in Programs folder)
-
-**System Improvements:**
-• Paint - reimagined! Should be more fun to use
-• Numerous bug fixes
-• Fixed broken VirusLab CSS
-• Fixed issue with dialogs being cut off
-• Theme colors applied more consistently - even more so than before
-• Improved several webpages for Snoogle Browser
+• **E-mail** - You can now send and receive e-mails! Go to elxamail.ex to try it out!
+• **Messenger Upgrade** - Messenger has been improved; now with memory/history
+• **Snake Deluxe Improvements** - Better design, better gameplay - visit snake-deluxe.ex to download it!
+• **New game: Mail Room Mayhem** - Still a WIP but playable
 
 *Enjoy exploring your new operating system!*
 

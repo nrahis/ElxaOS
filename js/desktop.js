@@ -62,24 +62,52 @@ class Desktop {
             }
         });
 
-        // Right-click context menu for desktop icons
+        // Right-click context menu for desktop icons - IMPROVED: Better targeting
         document.getElementById('desktopIcons').addEventListener('contextmenu', (e) => {
             const icon = e.target.closest('.desktop-icon');
             if (icon) {
                 e.preventDefault();
                 e.stopPropagation();
+                e.stopImmediatePropagation(); // ADDED: Prevent other handlers
                 this.showContextMenu(e, icon);
+                return false; // ADDED: Extra prevention
             }
         });
 
-        // Hide context menu on any click
-        document.addEventListener('click', () => {
-            this.hideContextMenu();
+        // IMPROVED: Better context menu hiding with more specific targeting
+        document.addEventListener('click', (e) => {
+            // Only hide if click is not within an email interface or other special areas
+            const isEmailInterface = e.target.closest('#emailInterface, .elxamail-container, .elxamail-context-menu');
+            const isBrowserInterface = e.target.closest('.browser-window, .browser-page');
+            
+            if (!isEmailInterface && !isBrowserInterface) {
+                this.hideContextMenu();
+            }
         });
 
-        // Clear selection when clicking desktop
+        // IMPROVED: Desktop context menu - only for actual desktop areas
+        document.addEventListener('contextmenu', (e) => {
+            // Check if we're right-clicking on the actual desktop (not in email, browser, etc.)
+            const isDesktopArea = e.target.id === 'desktop' || e.target.id === 'wallpaper' || 
+                                  e.target.closest('#desktop') && !e.target.closest('.desktop-icon');
+            
+            // Don't show desktop context menu if we're in email interface, browser, or other apps
+            const isInApp = e.target.closest('#emailInterface, .elxamail-container, .browser-window, .window-content');
+            
+            if (isDesktopArea && !isInApp) {
+                // Could add desktop-wide context menu here in the future
+                // For now, just prevent default browser context menu
+                e.preventDefault();
+            }
+        });
+
+        // Clear selection when clicking desktop - IMPROVED: Better targeting
         document.getElementById('desktop').addEventListener('click', (e) => {
-            if (e.target.id === 'desktop' || e.target.id === 'wallpaper') {
+            // Only clear selection if clicking actual desktop areas, not app content
+            const isDesktopArea = e.target.id === 'desktop' || e.target.id === 'wallpaper';
+            const isInApp = e.target.closest('.window-content, #emailInterface, .elxamail-container');
+            
+            if (isDesktopArea && !isInApp) {
                 this.clearSelection();
             }
         });
@@ -252,6 +280,8 @@ class Desktop {
                 const filePath = JSON.parse(this.selectedIcon.dataset.filepath);
                 const fileName = filePath[filePath.length - 1];
                 const folderPath = filePath.slice(0, -1);
+                
+
                 
                 // Get the program from the icon
                 const program = this.selectedIcon.dataset.program;
@@ -708,6 +738,10 @@ class ElxaOS {
         if (!documentsContents.some(file => file.name === 'Projects')) {
             this.fileSystem.createFolder(['root', 'Documents'], 'Projects');
         }
+
+        if (!documentsContents.some(file => file.name === 'Bank')) {
+            this.fileSystem.createFolder(['root', 'System'], 'Bank');
+        }
         
         const picturesContents = this.fileSystem.listContents(['root', 'Pictures']);
         if (!picturesContents.some(file => file.name === 'Screenshots')) {
@@ -803,7 +837,25 @@ class ElxaOS {
             this.fileSystem.createFile(['root', 'Programs'], 'Snake Game.abby', JSON.stringify(snakeGameInstaller));
         }
 
-        // Snake Deluxe installer - The Epic Adventure!
+        if (!programsContents.some(file => file.name === 'Mail Room Mayhem.abby')) {
+            const mailRoomMayhemInstaller = {
+                id: 'mail_room_mayhem',
+                name: 'Mail Room Mayhem',
+                description: "Step into the fast-paced ElxaCorp Mail Room! Sort letters and packages for Mr. Snake-e, Remi, Rita, and the rest of Snakesia before the mail piles up. Watch out for Pushing Cat's 'help'!",
+                icon: '📬',
+                version: '1.0',
+                author: 'ElxaCorp Game Studios',
+                gameData: { // These are initial/default game settings if needed by the game class
+                    type: 'mail_room_mayhem', // Matches the case in your launcher
+                    initialSpeed: 3000, // Example: initial delay for mail generation in ms
+                    difficulty: 'employee' // Example difficulty setting
+                }
+            };
+            
+            this.fileSystem.createFile(['root', 'Programs'], 'Mail Room Mayhem.abby', JSON.stringify(mailRoomMayhemInstaller));
+        }
+
+        /*// Snake Deluxe installer - The Epic Adventure!
         if (!programsContents.some(file => file.name === 'Snake Deluxe.abby')) {
             const snakeDeluxeInstaller = {
                 id: 'snake_deluxe',
@@ -820,10 +872,10 @@ class ElxaOS {
             };
             
             this.fileSystem.createFile(['root', 'Programs'], 'Snake Deluxe.abby', JSON.stringify(snakeDeluxeInstaller));
-        }
+        }*/
 
         // Sussy Cat Adventure installer - The silly stealth game!
-        if (!programsContents.some(file => file.name === 'Sussy Cat Adventure.abby')) {
+        /* if (!programsContents.some(file => file.name === 'Sussy Cat Adventure.abby')) {
             const sussyCatInstaller = {
                 id: 'sussy_cat_adventure',
                 name: 'Sussy Cat Adventure',
@@ -840,7 +892,7 @@ class ElxaOS {
             };
             
             this.fileSystem.createFile(['root', 'Programs'], 'Sussy Cat Adventure.abby', JSON.stringify(sussyCatInstaller));
-        }
+        } */
 
         if (!documentsContents.some(file => file.name === 'My First Code.elxa')) {
             this.fileSystem.createFile(['root', 'Documents'], 'My First Code.elxa', `// My First ElxaCode Program! 🚀

@@ -1,0 +1,521 @@
+/* =================================
+   SYSTEM DIALOGS
+================================= */
+.system-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    background: var(--windowBg);
+    border: 2px outset var(--windowBorder);
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    min-width: 300px;
+    max-height: 90vh; /* Prevent dialog from exceeding viewport height */
+    overflow: hidden; /* Ensure proper clipping */
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Match parent max-height */
+}
+
+.dialog-content.warning {
+    border: 2px solid #ff8800;
+}
+
+.dialog-content.critical {
+    border: 2px solid #ff0000;
+    animation: urgentBlink 1s infinite;
+}
+
+@keyframes urgentBlink {
+    0%, 50% { border-color: #ff0000; }
+    51%, 100% { border-color: #ffffff; }
+}
+
+.dialog-header {
+    background: var(--titlebarBg);
+    color: var(--menuHoverText); /* Use theme text color instead of hard-coded white */
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.dialog-title {
+    flex: 1;
+    color: var(--menuHoverText); /* Ensure title uses theme color */
+}
+
+.dialog-close {
+    width: 16px;
+    height: 14px;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 8px;
+    font-weight: bold;
+    color: var(--menuText);
+}
+
+.dialog-close:hover {
+    background: var(--buttonHoverBg);
+}
+
+.dialog-close:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
+.dialog-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    background: var(--windowBg);
+    color: var(--menuText);
+    overflow-y: auto; /* Allow scrolling if content is too tall */
+    flex: 1; /* Take remaining space */
+}
+
+/* =================================
+   THEME DIALOG SPECIFIC
+================================= */
+.theme-dialog {
+    min-width: 580px;
+    max-width: 680px; /* Reduced max width */
+    max-height: 85vh; /* Better height management */
+}
+
+.theme-dialog .dialog-content {
+    height: auto;
+    max-height: 85vh;
+}
+
+.theme-dialog .dialog-body {
+    min-height: 420px; /* Increased to prevent cut-off */
+    max-height: calc(85vh - 60px); /* Account for header and controls */
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.theme-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--windowBorder);
+    margin-bottom: 12px;
+    flex-shrink: 0; /* Prevent tabs from shrinking */
+}
+
+.theme-tab {
+    padding: 6px 16px;
+    cursor: pointer;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    border-bottom: none;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--menuText);
+    transition: background 0.2s ease;
+}
+
+.theme-tab.active {
+    background: var(--windowBg);
+    border: 1px inset var(--windowBorder);
+    border-bottom: 1px solid var(--windowBg);
+    margin-bottom: -1px;
+}
+
+.theme-tab:hover:not(.active) {
+    background: var(--buttonHoverBg);
+}
+
+.theme-content {
+    min-height: 280px;
+    max-height: 320px; 
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder);
+    background: var(--windowBg);
+    padding: 12px;
+    flex: 1; /* Take available space */
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.theme-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+    padding: 8px;
+    border-top: 1px solid var(--windowBorder);
+    background: var(--menuBg);
+    flex-shrink: 0; /* Prevent controls from shrinking */
+}
+
+/* =================================
+   SYSTEM MESSAGES
+================================= */
+.system-message {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    padding: 8px 16px;
+    border: 2px outset var(--windowBorder);
+    z-index: 3000;
+    font-weight: bold;
+    font-size: 11px;
+    animation: slideIn 0.3s ease-out;
+    border-radius: 3px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.system-message.info {
+    background: var(--menuBg);
+    color: var(--menuText);
+}
+
+.system-message.success {
+    background: #00ff00;
+    color: black;
+}
+
+.system-message.warning {
+    background: #ffff00;
+    color: black;
+}
+
+.system-message.error {
+    background: #ff0000;
+    color: white;
+}
+
+/* =================================
+   DESKTOP CONTEXT MENU
+================================= */
+.context-menu {
+    position: fixed;
+    background: var(--menuBg);
+    border: 2px outset var(--windowBorder);
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    z-index: 2500;
+    min-width: 120px;
+    font-size: 11px;
+    color: var(--menuText);
+}
+
+.context-item {
+    padding: 4px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--menuText);
+}
+
+.context-item:hover {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.context-separator {
+    height: 1px;
+    background: var(--windowBorder);
+    margin: 2px 0;
+}
+
+/* =================================
+   INSTALLER DIALOG
+================================= */
+.installer-dialog {
+    min-width: 450px;
+    max-width: 600px;
+    background: var(--windowBg);
+}
+
+.installer-dialog .dialog-body {
+    padding: 16px;
+    min-height: 200px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.install-header {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--menuBg);
+    border: 1px solid var(--windowBorder);
+    border-radius: 8px;
+}
+
+.install-icon {
+    font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: var(--buttonBg);
+    border-radius: 8px;
+    border: 2px solid var(--windowBorder);
+}
+
+.install-info {
+    flex: 1;
+}
+
+.program-name {
+    margin: 0 0 8px 0;
+    color: var(--menuHoverBg);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.program-description {
+    margin: 0 0 12px 0;
+    color: var(--menuText);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.program-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-item {
+    font-size: 11px;
+    color: var(--menuText);
+    opacity: 0.8;
+}
+
+.detail-item strong {
+    color: var(--menuText);
+    min-width: 60px;
+    display: inline-block;
+}
+
+.install-progress-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.install-status {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--menuHoverBg);
+    margin-bottom: 16px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: var(--buttonBg);
+    border: 1px inset var(--windowBorder);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, #00aa00, #00ff00);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 3px;
+}
+
+.install-step {
+    font-size: 11px;
+    color: var(--menuText);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.install-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.install-btn {
+    background: linear-gradient(to bottom, #00aa00, #008800);
+    border: 2px outset #00aa00;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 170, 0, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(0, 170, 0, 0); }
+}
+
+.install-btn:hover {
+    background: linear-gradient(to bottom, #00cc00, #00aa00);
+    transform: translateY(-1px);
+}
+
+.install-btn:active {
+    border: 2px inset #00aa00;
+    transform: translateY(0);
+}
+
+.cancel-btn {
+    background: linear-gradient(to bottom, #ff6666, #ff4444);
+    border: 2px outset #ff4444;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(to bottom, #ff8888, #ff6666);
+}
+
+.cancel-btn:active {
+    border: 2px inset #ff4444;
+}
+
+.install-complete {
+    text-align: center;
+    padding: 20px;
+}
+
+.success-message {
+    margin-bottom: 20px;
+}
+
+.success-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.success-message h3 {
+    color: #008800;
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+
+.success-message p {
+    color: var(--menuText);
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+.finish-btn {
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    border: 2px outset #4CAF50;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.finish-btn:hover {
+    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+    transform: translateY(-1px);
+}
+
+.finish-btn:active {
+    border: 2px inset #4CAF50;
+    transform: translateY(0);
+}
+
+/* =================================
+   RESPONSIVE SIZING FIXES
+================================= */
+@media (max-height: 700px) {
+    .theme-dialog {
+        max-height: 95vh;
+    }
+    
+    .theme-dialog .dialog-body {
+        min-height: 300px;
+        max-height: calc(95vh - 100px);
+    }
+    
+    .theme-content {
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 700px) {
+    .theme-dialog {
+        min-width: 300px;
+        width: 95vw; /* Only use viewport width on mobile */
+        max-width: 95vw;
+    }
+    
+    .theme-dialog .dialog-body {
+        padding: 8px;
+    }
+    
+    .theme-content {
+        padding: 8px;
+    }
+    
+    .theme-controls {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .theme-grid {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 6px;
+    }
+    
+    .wallpaper-grid {
+        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+        gap: 6px;
+    }
+}
+
+/* =================================
+   DARK THEME ADJUSTMENTS
+================================= */
+/* Login screen maintains original colors regardless of theme */

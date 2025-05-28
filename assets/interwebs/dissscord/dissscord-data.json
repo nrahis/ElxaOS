@@ -1,0 +1,249 @@
+{
+  "servers": {
+    "remi": {
+      "name": "Remi's Gaming Hub",
+      "icon": "🎮",
+      "channels": {
+        "general": { "name": "general", "topic": "General gaming discussion", "type": "text" },
+        "minecraft": { "name": "minecraft-builds", "topic": "Show off your amazing builds!", "type": "text" },
+        "youtube": { "name": "video-chat", "topic": "Discuss Remi's latest videos", "type": "text" },
+        "voice": { "name": "Gaming Voice", "topic": "Voice chat for gaming sessions", "type": "voice" }
+      },
+      "members": {
+        "online": [
+          { "name": "RemiMarway", "avatar": "🎮", "role": "owner", "status": "online" },
+          { "name": "BlockMaster99", "avatar": "🧱", "role": "member", "status": "online" },
+          { "name": "RedstoneGuru", "avatar": "🔴", "role": "member", "status": "online" },
+          { "name": "CreativeBuilder", "avatar": "🏗️", "role": "member", "status": "online" }
+        ],
+        "away": [
+          { "name": "MinecraftPro", "avatar": "⚡", "role": "member", "status": "away" },
+          { "name": "Snake_E_CEO", "avatar": "🐍", "role": "mod", "status": "away" }
+        ]
+      }
+    },
+    "elxacorp": {
+      "name": "ElxaCorp Official",
+      "icon": "🏢",
+      "channels": {
+        "announcements": { "name": "announcements", "topic": "Official ElxaCorp news", "type": "text" },
+        "general": { "name": "general", "topic": "General discussion", "type": "text" },
+        "tech": { "name": "tech-support", "topic": "Technical support and help", "type": "text" },
+        "hr": { "name": "hr-updates", "topic": "Human resources announcements", "type": "text" }
+      },
+      "members": {
+        "online": [
+          { "name": "Snake_E_CEO", "avatar": "🐍", "role": "owner", "status": "online" },
+          { "name": "ElxaCorp_HR", "avatar": "📋", "role": "mod", "status": "online" },
+          { "name": "ElxaCorp_IT", "avatar": "💻", "role": "mod", "status": "online" },
+          { "name": "DevTeamLead", "avatar": "👨‍💻", "role": "member", "status": "online" }
+        ],
+        "away": [
+          { "name": "MarketingManager", "avatar": "📊", "role": "member", "status": "away" }
+        ]
+      }
+    },
+    "snakesia": {
+      "name": "Snakesia Community",
+      "icon": "🐍",
+      "channels": {
+        "general": { "name": "general", "topic": "General community chat", "type": "text" },
+        "events": { "name": "events", "topic": "Community events and meetups", "type": "text" },
+        "marketplace": { "name": "marketplace", "topic": "Buy and sell with snakes", "type": "text" },
+        "news": { "name": "local-news", "topic": "What's happening in Snakesia", "type": "text" }
+      },
+      "members": {
+        "online": [
+          { "name": "SnakesiaResident1", "avatar": "🏠", "role": "member", "status": "online" },
+          { "name": "LocalMerchant", "avatar": "🛒", "role": "member", "status": "online" },
+          { "name": "CommunityHelper", "avatar": "🤝", "role": "member", "status": "online" }
+        ],
+        "away": [
+          { "name": "TownMayor", "avatar": "🏛️", "role": "mod", "status": "away" }
+        ]
+      }
+    },
+    "mansion": {
+      "name": "Snake-e Mansion",
+      "icon": "🏰",
+      "channels": {
+        "general": { "name": "general", "topic": "Welcome to the mansion!", "type": "text" },
+        "garden": { "name": "garden-chat", "topic": "Mrs. Snake-e's garden updates", "type": "text" },
+        "dining": { "name": "dining-room", "topic": "Meal planning and recipes", "type": "text" },
+        "garage": { "name": "denali-garage", "topic": "Car talk and Denali updates", "type": "text" }
+      },
+      "members": {
+        "online": [
+          { "name": "Snake_E_CEO", "avatar": "🐍", "role": "owner", "status": "online" },
+          { "name": "Mrs_Snake_E", "avatar": "👵", "role": "owner", "status": "online" },
+          { "name": "RemiMarway", "avatar": "🎮", "role": "vip", "status": "online" },
+          { "name": "Rita", "avatar": "👩‍🦰", "role": "vip", "status": "online" }
+        ],
+        "away": [
+          { "name": "MansionStaff", "avatar": "🎩", "role": "member", "status": "away" }
+        ]
+      }
+    },
+    "sussy": {
+      "name": "Sussy Lair",
+      "icon": "😈",
+      "channels": {
+        "general": { "name": "general", "topic": "Welcome to the sussy lair... 😈", "type": "text" },
+        "plotting": { "name": "plotting-room", "topic": "Secret plans and mischief", "type": "text" },
+        "belly": { "name": "belly-button-raids", "topic": "Planning belly button invasions", "type": "text" }
+      },
+      "members": {
+        "online": [
+          { "name": "PushingCat", "avatar": "🐱", "role": "owner", "status": "online" },
+          { "name": "SussyHelper1", "avatar": "😼", "role": "member", "status": "online" },
+          { "name": "MischievousCat", "avatar": "😻", "role": "member", "status": "online" }
+        ],
+        "away": []
+      }
+    }
+  },
+  "messageTemplates": {
+    "remi": {
+      "general": [
+        { "author": "RemiMarway", "text": "just finished recording a new {{video_type}} video! dropping {{time_period}}! 🎥", "weight": 3 },
+        { "author": "RemiMarway", "text": "who's online for some {{game_activity}}? {{enthusiasm}}", "weight": 2 },
+        { "author": "BlockMaster99", "text": "{{remi_praise}} that last {{content_type}} was {{positive_adjective}}!", "weight": 2 },
+        { "author": "RedstoneGuru", "text": "need help with {{redstone_project}}? im {{availability}}", "weight": 1 },
+        { "author": "CreativeBuilder", "text": "{{building_update}} my {{build_type}} is {{progress_status}}!", "weight": 1 }
+      ],
+      "minecraft": [
+        { "author": "RemiMarway", "text": "check out the new {{structure_type}} I built in {{minecraft_location}}! {{build_details}}", "weight": 3 },
+        { "author": "BlockMaster99", "text": "{{minecraft_achievement}} just {{achievement_action}}!", "weight": 2 },
+        { "author": "RedstoneGuru", "text": "{{redstone_announcement}} my {{redstone_device}} {{device_status}}", "weight": 2 },
+        { "author": "CreativeBuilder", "text": "{{building_question}} for my {{build_project}}?", "weight": 1 }
+      ],
+      "youtube": [
+        { "author": "RemiMarway", "text": "{{youtube_update}} the {{video_type}} got {{view_count}} views! {{gratitude}}", "weight": 3 },
+        { "author": "BlockMaster99", "text": "{{comment_reaction}} on the latest video! {{video_praise}}", "weight": 2 },
+        { "author": "CreativeBuilder", "text": "{{video_request}} for {{content_suggestion}}?", "weight": 1 }
+      ]
+    },
+    "elxacorp": {
+      "announcements": [
+        { "author": "Snake_E_CEO", "text": "{{company_announcement}} {{business_update}} {{company_vision}}", "weight": 3 },
+        { "author": "ElxaCorp_HR", "text": "{{hr_announcement}} {{policy_update}} {{hr_contact}}", "weight": 2 }
+      ],
+      "general": [
+        { "author": "DevTeamLead", "text": "{{dev_update}} {{technical_progress}} {{dev_enthusiasm}}", "weight": 2 },
+        { "author": "ElxaCorp_IT", "text": "{{it_announcement}} {{system_status}} {{it_support}}", "weight": 2 },
+        { "author": "MarketingManager", "text": "{{marketing_update}} {{product_promotion}} {{market_excitement}}", "weight": 1 }
+      ]
+    },
+    "snakesia": {
+      "general": [
+        { "author": "SnakesiaResident1", "text": "{{community_greeting}} {{local_event}} {{community_spirit}}", "weight": 2 },
+        { "author": "LocalMerchant", "text": "{{merchant_offer}} {{product_announcement}} {{currency_mention}}", "weight": 2 },
+        { "author": "CommunityHelper", "text": "{{help_offer}} {{community_support}} {{friendly_closing}}", "weight": 1 }
+      ],
+      "marketplace": [
+        { "author": "LocalMerchant", "text": "{{selling_item}} for {{price}} snakes! {{item_description}}", "weight": 2 },
+        { "author": "SnakesiaResident1", "text": "{{buying_request}} {{budget}} snakes to spend!", "weight": 1 }
+      ]
+    },
+    "mansion": {
+      "general": [
+        { "author": "Mrs_Snake_E", "text": "{{greeting_dear}} {{mansion_update}} {{motherly_care}}", "weight": 2 },
+        { "author": "Snake_E_CEO", "text": "{{mansion_business}} {{denali_mention}} {{ceo_lifestyle}}", "weight": 1 }
+      ],
+      "garden": [
+        { "author": "Mrs_Snake_E", "text": "{{garden_update}} {{plant_mention}} {{gardening_joy}}", "weight": 3 },
+        { "author": "Rita", "text": "{{garden_appreciation}} {{helping_mrs_snake}}", "weight": 1 }
+      ]
+    },
+    "sussy": {
+      "general": [
+        { "author": "PushingCat", "text": "{{sussy_greeting}} {{mischief_plan}} {{cat_mischief}}", "weight": 3 },
+        { "author": "SussyHelper1", "text": "{{sussy_agreement}} {{chaos_support}}", "weight": 1 },
+        { "author": "MischievousCat", "text": "{{cat_mischief}} {{sussy_activity}}", "weight": 1 }
+      ],
+      "plotting": [
+        { "author": "PushingCat", "text": "{{plotting_announcement}} {{secret_plan}} {{sussy_confidence}}", "weight": 2 }
+      ]
+    }
+  },
+  "messageVariables": {
+    "video_type": ["Minecraft", "redstone tutorial", "building", "survival", "creative mode"],
+    "time_period": ["tomorrow", "this weekend", "next week", "later today"],
+    "game_activity": ["Minecraft", "building session", "redstone challenge", "survival world"],
+    "enthusiasm": ["let's go!", "who's in?", "gonna be epic!", "should be fun!"],
+    "remi_praise": ["@RemiMarway", "remi", "dude", "yo remi"],
+    "content_type": ["video", "build", "tutorial", "stream"],
+    "positive_adjective": ["awesome", "amazing", "epic", "incredible", "so cool"],
+    "building_update": ["btw", "update:", "hey everyone", "quick update"],
+    "build_type": ["castle", "mansion", "redstone contraption", "pixel art", "modern house"],
+    "progress_status": ["almost done", "looking great", "half finished", "coming along nicely"],
+    "structure_type": ["castle", "mansion", "skyscraper", "pyramid", "bridge"],
+    "minecraft_location": ["spawn", "the mountains", "my base", "the desert", "near spawn"],
+    "build_details": ["took me hours!", "using the new blocks", "fully automated", "still working on it"],
+    "minecraft_achievement": ["guys!", "omg", "finally!", "can't believe it"],
+    "achievement_action": ["found diamonds", "beat the ender dragon", "finished my build", "got full netherite"],
+    "redstone_announcement": ["hey everyone", "update on", "finished", "working on"],
+    "redstone_device": ["automatic farm", "door system", "elevator", "sorting system"],
+    "device_status": ["is working perfectly", "needs some tweaks", "is almost done", "is so satisfying"],
+    "redstone_project": ["automatic farms", "door systems", "elevators", "sorting machines"],
+    "availability": ["free right now", "online for a bit", "happy to help", "around if needed"],
+    "building_question": ["any suggestions", "need ideas", "what do you think", "looking for feedback"],
+    "build_project": ["new castle", "modern house", "pixel art", "underground base"],
+    "youtube_update": ["omg guys", "can't believe", "so excited", "thanks everyone"],
+    "view_count": ["1000", "5000", "10K", "50K", "100K"],
+    "gratitude": ["thanks for watching!", "you all are amazing!", "couldn't do it without you", "love you all"],
+    "comment_reaction": ["loved the comments", "great feedback", "thanks for watching", "y'all are the best"],
+    "video_praise": ["so entertaining!", "learned so much", "keep it up!", "amazing content"],
+    "video_request": ["any chance", "would love to see", "could you do", "what about"],
+    "content_suggestion": ["more redstone", "building tutorials", "survival series", "modded minecraft"],
+    "company_announcement": ["team update:", "exciting news:", "quarterly results:", "innovation update:"],
+    "business_update": ["we've reached new milestones", "elxaos adoption is growing", "our snakesia expansion continues", "customer satisfaction is at 98%"],
+    "company_vision": ["innovation drives everything we do", "the future is bright", "together we build tomorrow", "excellence through collaboration"],
+    "hr_announcement": ["policy update:", "employee benefits:", "reminder:", "important notice:"],
+    "policy_update": ["new wellness program starting", "flexible work hours now available", "team building events coming up", "innovation time expanded"],
+    "hr_contact": ["questions? email hr@elxacorp.ex", "visit the hr portal", "speak with your manager", "check your email for details"],
+    "dev_update": ["sprint update:", "deployment news:", "new features:", "bug fixes:"],
+    "technical_progress": ["elxaos 2.0 is coming along", "mobile app improvements", "cloud infrastructure upgrade", "security enhancements"],
+    "dev_enthusiasm": ["exciting times ahead!", "the code is looking great", "users will love this", "shipping next week"],
+    "it_announcement": ["system maintenance:", "update available:", "network status:", "security reminder:"],
+    "system_status": ["all systems operational", "scheduled maintenance tonight", "new backup systems online", "performance improvements"],
+    "it_support": ["contact IT for help", "ticket system available", "remote support ready", "24/7 monitoring active"],
+    "marketing_update": ["campaign launch:", "product announcement:", "market research:", "brand update:"],
+    "product_promotion": ["elxaphone sales up 200%", "new elxaos features", "customer testimonials amazing", "snakesia market leader"],
+    "market_excitement": ["customers love it!", "best quarter yet", "trending on snakebook", "viral on snakesia social"],
+    "community_greeting": ["hey everyone", "good morning snakesia", "happy snake day", "greetings neighbors"],
+    "local_event": ["farmers market this weekend", "community bbq next week", "snake day festival coming", "new park opening"],
+    "community_spirit": ["love this community", "proud to be snakesian", "best neighbors ever", "together we're strong"],
+    "merchant_offer": ["special deal:", "new stock:", "limited time:", "grand opening:"],
+    "product_announcement": ["fresh produce from snake valley", "handmade crafts available", "local honey in stock", "elxacorp gadgets"],
+    "currency_mention": ["accepting snakes only", "discount for bulk snakes", "exchange rate: 2 snakes per dollar", "best prices in snakes"],
+    "help_offer": ["need help with anything?", "happy to assist", "community support available", "we're here for each other"],
+    "community_support": ["volunteering at the shelter", "organizing neighborhood watch", "planning community events", "helping new residents"],
+    "friendly_closing": ["have a great day!", "stay safe everyone", "see you around town", "snakesia strong!"],
+    "selling_item": ["selling my elxaphone", "fresh vegetables", "handmade furniture", "vintage elxaos computer"],
+    "price": ["100", "250", "500", "1000", "50"],
+    "item_description": ["barely used", "great condition", "perfect for beginners", "rare collector's item"],
+    "buying_request": ["looking for", "need to buy", "anyone selling", "want to purchase"],
+    "budget": ["up to 200", "around 500", "maybe 1000", "only 100"],
+    "greeting_dear": ["hello dears", "good morning sweeties", "how are you today", "welcome to the mansion"],
+    "mansion_update": ["finished replanting the garden", "baked fresh cookies", "cleaned the denali", "organized the library"],
+    "motherly_care": ["stay hydrated!", "don't work too hard", "remember to eat", "take care of yourselves"],
+    "mansion_business": ["board meeting went well", "elxacorp expansion plans", "new denali features", "quarterly profits excellent"],
+    "denali_mention": ["took the denali for a drive", "denali needs washing", "new denali upgrades", "denali running perfectly"],
+    "ceo_lifestyle": ["busy but fulfilling", "innovation never stops", "proud of our team", "snakesia is thriving"],
+    "garden_update": ["roses are blooming beautifully", "planted new herbs today", "vegetables are growing well", "garden looks spectacular"],
+    "plant_mention": ["snake lilies", "snakesia roses", "herb garden", "tomato plants"],
+    "gardening_joy": ["gardening brings such peace", "love watching things grow", "nature is wonderful", "therapeutic work"],
+    "garden_appreciation": ["mrs snake-e's garden is amazing", "love helping in the garden", "learned so much about plants", "the flowers are beautiful"],
+    "helping_mrs_snake": ["helped plant new flowers", "watered the vegetables", "learned about composting", "picked fresh herbs"],
+    "sussy_greeting": ["*sneaky cat sounds*", "greetings fellow sus cats", "meow meow", "*suspicious purring*"],
+    "mischief_plan": ["plotting something big", "time for belly button raids", "chaos incoming", "mischief is afoot"],
+    "cat_mischief": ["😼", "*pushes thing off table*", "*hides under blanket*", "*plans world domination*"],
+    "sussy_agreement": ["very sus indeed", "count me in", "chaos is good", "let's cause trouble"],
+    "chaos_support": ["*evil cat laugh*", "perfect plan", "so mischievous", "pure chaos"],
+    "sussy_activity": ["*knocks over cup*", "*steals socks*", "*hides in weird places*", "*stares suspiciously*"],
+    "plotting_announcement": ["attention sus cats", "new plan incoming", "*whispers suspiciously*", "gather round"],
+    "secret_plan": ["operation belly button invasion", "midnight sock theft", "strategic blanket hiding", "chaos creation protocol"],
+    "sussy_confidence": ["they'll never see it coming", "perfect plan is perfect", "sus level: maximum", "*evil purring*"]
+  }
+}

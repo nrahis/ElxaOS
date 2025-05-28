@@ -1,0 +1,194 @@
+{
+  "corporateMessages": {
+    "elxacorp_hr": [
+      {
+        "from": "hr@elxacorp.ex",
+        "fromName": "ElxaCorp HR",
+        "subject": "📋 {{policy_type}} Policy Update - {{month}} {{year}}",
+        "body": "Dear {{team_name}} Team,\n\nWe're updating our {{policy_type}} policy to better support {{benefit_focus}}. The new guidelines take effect {{effective_date}}.\n\nKey changes:\n• {{change_1}}\n• {{change_2}}\n\nQuestions? Reply to this email or visit hr.elxacorp.ex/{{policy_slug}}\n\nBest regards,\nElxaCorp HR Department\n\n\"Supporting innovation through great people.\"",
+        "frequency": "monthly",
+        "category": "policy"
+      },
+      {
+        "from": "hr@elxacorp.ex",
+        "fromName": "ElxaCorp HR",
+        "subject": "🎉 Employee Spotlight: {{employee_achievement}}",
+        "body": "Congratulations to our {{department}} team for {{achievement_description}}!\n\nThis month's innovation award goes to {{achievement_focus}} which has {{impact_description}}. Way to embody our core value: \"{{company_motto}}\"!\n\n{{celebration_note}}\n\nKeep up the excellent work!\n\nElxaCorp HR Team",
+        "frequency": "monthly", 
+        "category": "recognition"
+      },
+      {
+        "from": "hr@elxacorp.ex",
+        "fromName": "ElxaCorp HR",
+        "subject": "📅 Upcoming: {{event_type}} on {{event_date}}",
+        "body": "Join us for our {{event_type}} on {{event_date}} at {{event_time}}!\n\n{{event_description}}\n\nWhat to expect:\n• {{activity_1}}\n• {{activity_2}}\n• {{activity_3}}\n\nRSVP by {{rsvp_date}} to hr@elxacorp.ex\n\nLooking forward to seeing everyone!\n\nElxaCorp HR Team",
+        "frequency": "bi-weekly",
+        "category": "events"
+      }
+    ],
+    "elxacorp_it": [
+      {
+        "from": "itsupport@elxacorp.ex",
+        "fromName": "ElxaCorp IT Support",
+        "subject": "🔧 {{system_name}} Maintenance - {{day_of_week}} {{time_range}}",
+        "body": "IT Maintenance Notice:\n\nScheduled maintenance for {{system_name}} on {{maintenance_date}} from {{time_range}}.\n\nExpected downtime: {{duration}}\nAffected services: {{affected_services}}\nBackup options: {{backup_info}}\n\nWe apologize for any inconvenience and appreciate your patience as we {{maintenance_purpose}}.\n\nQuestions? Contact IT Support at itsupport@elxacorp.ex\n\n-ElxaCorp IT Support Team\n\"Keeping Snakesia connected.\"",
+        "frequency": "weekly",
+        "category": "maintenance"
+      },
+      {
+        "from": "itsupport@elxacorp.ex", 
+        "fromName": "ElxaCorp IT Support",
+        "subject": "🚀 {{software_name}} {{update_type}} Now Available!",
+        "body": "Great news! {{software_name}} {{update_type}} is now available.\n\nNew features:\n• {{feature_1}}\n• {{feature_2}}\n• {{feature_3}}\n\nTo update: {{update_instructions}}\n\nIf you experience any issues, {{support_info}}\n\nEnhancing your Snakesian tech experience!\n\nElxaCorp IT Support",
+        "frequency": "bi-weekly",
+        "category": "updates"
+      },
+      {
+        "from": "itsupport@elxacorp.ex",
+        "fromName": "ElxaCorp IT Support", 
+        "subject": "🔒 Security Alert: {{security_topic}}",
+        "body": "Important Security Notice\n\nWe've identified {{security_issue}} affecting {{affected_systems}}.\n\n{{security_description}}\n\nImmediate actions required:\n• {{action_1}}\n• {{action_2}}\n\nFor assistance: {{security_contact}}\n\nThank you for helping keep ElxaCorp secure!\n\nElxaCorp IT Security Team",
+        "frequency": "as-needed",
+        "category": "security"
+      }
+    ],
+    "elxacorp_news": [
+      {
+        "from": "news@elxacorp.ex",
+        "fromName": "ElxaCorp News",
+        "subject": "🌟 ElxaCorp {{achievement_type}} - {{exciting_number}} {{metric_unit}}!",
+        "body": "{{greeting}},\n\nMr. Snake-e is {{emotion}} to announce that ElxaCorp has achieved {{achievement_desc}}!\n\n{{fun_fact}}\n\nThis {{milestone_type}} puts us {{position}} in {{market_segment}}. Our next goal: {{next_goal}} by {{target_date}}.\n\n\"{{inspirational_quote}}\" - Mr. Snake-e, CEO\n\nRead the full announcement: elxacorp.ex/news/{{news_slug}}\n\nCelebrating innovation together,\nElxaCorp News Team",
+        "frequency": "monthly",
+        "category": "achievement"
+      },
+      {
+        "from": "news@elxacorp.ex",
+        "fromName": "ElxaCorp News",
+        "subject": "📱 Introducing: {{product_name}} {{product_version}}",
+        "body": "Innovation Alert! 🚀\n\nWe're {{announcement_emotion}} to unveil {{product_name}} {{product_version}}, featuring {{key_innovation}}!\n\n{{product_description}}\n\nKey highlights:\n• {{highlight_1}}\n• {{highlight_2}} \n• {{highlight_3}}\n\nAvailable {{availability_timeline}} at {{price_point}} snakes.\n\nPre-order now: {{product_url}}\n\n\"{{product_quote}}\" - {{quote_source}}\n\nThe future of {{product_category}} is here!\n\nElxaCorp Innovation Team",
+        "frequency": "quarterly",
+        "category": "product"
+      },
+      {
+        "from": "news@elxacorp.ex",
+        "fromName": "ElxaCorp News",
+        "subject": "🤝 ElxaCorp Partners with {{partner_name}}",
+        "body": "Partnership Announcement 🤝\n\nElxaCorp is {{partnership_emotion}} to announce our strategic partnership with {{partner_name}}!\n\nThis collaboration will {{partnership_benefit}} and {{partnership_goal}}.\n\n{{partnership_description}}\n\nWhat this means for Snakesians:\n• {{benefit_1}}\n• {{benefit_2}}\n• {{benefit_3}}\n\n\"{{partnership_quote}}\" - {{partnership_spokesperson}}\n\nStay tuned for more exciting developments!\n\nElxaCorp Business Development",
+        "frequency": "quarterly",
+        "category": "partnership"
+      }
+    ]
+  },
+  "variables": {
+    "policy_type": ["Remote Work", "Equipment Use", "Time Off", "Benefits", "Security", "Innovation Time", "Wellness", "Professional Development"],
+    "team_name": ["Development", "Marketing", "Sales", "All Staff", "Management", "Innovation", "Customer Success"],
+    "benefit_focus": ["work-life balance", "employee wellness", "professional development", "innovation time", "team collaboration", "mental health support"],
+    "change_1": ["Flexible hours now available", "New wellness stipend added", "Equipment upgrade budget increased", "Innovation time expanded to 20%", "Mental health days added"],
+    "change_2": ["Remote work options extended", "Team building budget doubled", "Learning stipend raised to 500 snakes", "Vacation days increased", "Gym membership reimbursement added"],
+    "effective_date": ["next Monday", "the 1st of next month", "immediately", "after the next all-hands meeting"],
+    "policy_slug": ["remote-work-2025", "equipment-policy", "wellness-initiative", "innovation-time"],
+    
+    "employee_achievement": ["Outstanding Innovation", "Customer Success Excellence", "Team Leadership", "Problem-Solving Excellence"],
+    "department": ["Engineering", "Customer Success", "Marketing", "Sales", "IT", "HR"],
+    "achievement_description": ["streamlining the ElxaOS update process", "achieving 99.9% customer satisfaction", "launching the new ElxaPhone campaign", "implementing zero-downtime deployments"],
+    "achievement_focus": ["their innovative automation system", "the new customer feedback platform", "the enhanced security protocols", "the streamlined deployment pipeline"],
+    "impact_description": ["reduced update time by 75%", "increased customer satisfaction significantly", "improved system security across all platforms", "eliminated weekend maintenance work"],
+    "company_motto": ["Innovation drives everything we do", "Excellence through collaboration", "Technology that serves Snakesia", "Building the future together"],
+    "celebration_note": ["Pizza party in the break room this Friday!", "They've earned a 1000 snake bonus!", "Featured in next month's Snakesia Tech Magazine!", "Mr. Snake-e wants to personally congratulate them!"],
+    
+    "event_type": ["Innovation Showcase", "All-Hands Meeting", "Team Building Day", "Tech Talk Series", "Wellness Workshop", "Snake Valley Picnic"],
+    "event_date": ["next Friday", "the 15th", "this coming Tuesday", "end of the month"],
+    "event_time": ["2:00 PM Snakesia Time", "lunch time", "after work hours", "10:00 AM sharp"],
+    "event_description": ["Join us for presentations from our innovation teams", "Quarterly updates and exciting announcements", "Fun activities and team bonding", "Learn about cutting-edge tech from industry experts"],
+    "activity_1": ["Innovation demos", "Networking lunch", "Team challenges", "Q&A with leadership"],
+    "activity_2": ["Prize giveaways", "Technical presentations", "Group activities", "Innovation workshops"],
+    "activity_3": ["Photo booth", "Free snacks", "Collaborative brainstorming", "Recognition ceremony"],
+    "rsvp_date": ["this Wednesday", "end of week", "by Monday", "ASAP"],
+    
+    "system_name": ["ElxaOS Core Services", "ElxaMail Servers", "Network Infrastructure", "ElxaPhone Systems", "Customer Database", "Development Tools"],
+    "day_of_week": ["Sunday", "Saturday", "Friday night", "early Sunday morning"],
+    "time_range": ["2:00-4:00 AM", "midnight-2:00 AM", "3:00-5:00 AM", "1:00-3:00 AM"],
+    "maintenance_date": ["this Saturday", "this weekend", "next Sunday", "this Friday night"],
+    "duration": ["2 hours", "90 minutes", "3 hours maximum", "2.5 hours"],
+    "affected_services": ["email and messaging", "file storage", "authentication systems", "mobile app connectivity"],
+    "backup_info": ["mobile hotspot available", "backup servers online", "local file cache enabled", "emergency contact: 555-ELXA"],
+    "maintenance_purpose": ["improve system performance", "implement security updates", "upgrade hardware", "optimize network speeds"],
+    
+    "software_name": ["ElxaOS", "ElxaMail", "ElxaPhone App", "ElxaMessenger", "ElxaOffice Suite"],
+    "update_type": ["v2.5", "v3.0", "Security Update", "Feature Update", "Performance Update"],
+    "feature_1": ["Enhanced notification system", "Improved battery optimization", "New dark mode", "Advanced search capabilities"],
+    "feature_2": ["Better file synchronization", "Upgraded emoji picker", "Smart autocomplete", "Voice message transcription"],
+    "feature_3": ["Streamlined interface", "Enhanced security", "Cross-platform sync", "AI-powered suggestions"],
+    "update_instructions": ["Check Settings > System Update", "Visit elxatech.ex/updates", "Use the auto-updater in your system tray", "Restart your device when prompted"],
+    "support_info": ["contact IT at itsupport@elxacorp.ex", "visit our help desk", "use the built-in feedback tool", "call our 24/7 support line"],
+    
+    "security_topic": ["Phishing Awareness", "Password Security", "Network Safety", "Software Updates"],
+    "security_issue": ["increased phishing attempts", "suspicious network activity", "potential security vulnerabilities", "unusual login patterns"],
+    "affected_systems": ["email systems", "authentication servers", "network connections", "mobile devices"],
+    "security_description": ["Please be extra cautious with email links and attachments", "We're monitoring all network traffic closely", "Immediate security patches are being deployed", "Multi-factor authentication is now required"],
+    "action_1": ["Verify all email senders before clicking links", "Update your passwords immediately", "Install the latest security update", "Enable two-factor authentication"],
+    "action_2": ["Report suspicious emails to IT", "Avoid using public WiFi", "Run a security scan on your devices", "Review your recent login activity"],
+    "security_contact": ["itsupport@elxacorp.ex or ext. 2424", "our security hotline at 555-SAFE", "the IT help desk", "security@elxacorp.ex"],
+    
+    "achievement_type": ["Milestone Reached", "Record Broken", "New Partnership", "Innovation Award", "Market Leadership", "Customer Success"],
+    "exciting_number": ["1 Million", "500,000", "2.5 Million", "750,000", "10 Million", "3.2 Million"],
+    "metric_unit": ["Snakes Revenue", "Active Users", "Devices Sold", "Messages Sent", "Apps Downloaded", "Happy Customers"],
+    "emotion": ["thrilled", "excited", "proud", "delighted", "amazed", "overjoyed"],
+    "achievement_desc": ["record-breaking quarterly revenue", "our 1 millionth ElxaPhone sale", "industry recognition for innovation", "the largest software deployment in Snakesia"],
+    "fun_fact": ["That's one ElxaPhone for every snake in Snake Valley!", "Our servers process 50,000 messages per second!", "We've now served every household in Snakesia!", "Our code base contains over 2 million lines!"],
+    "milestone_type": ["achievement", "milestone", "breakthrough", "success"],
+    "position": ["as the leader", "ahead of competitors", "at the forefront", "in first place"],
+    "market_segment": ["Snakesian technology", "mobile communications", "operating systems", "innovation platforms"],
+    "next_goal": ["10 million active users", "expansion to 5 new regions", "launch of ElxaPhone Pro", "100% renewable energy"],
+    "target_date": ["Q3 2025", "end of year", "next summer", "Snake Day 2026"],
+    "greeting": ["Fellow Snakesians", "Dear Innovation Partners", "ElxaCorp Family", "Valued Customers"],
+    "inspirational_quote": ["Innovation never sleeps in Snakesia", "Every snake deserves great technology", "The future is what we build today", "Excellence is our only standard"],
+    "news_slug": ["record-revenue-q1", "millionth-elxaphone", "innovation-award-2025", "snakesia-market-leader"],
+    
+    "product_name": ["ElxaPhone", "ElxaOS", "ElxaPod", "ElxaWatch", "ElxaBook", "ElxaTab"],
+    "product_version": ["Pro Max", "Enterprise", "2025 Edition", "Ultra", "Plus", "Air"],
+    "announcement_emotion": ["thrilled", "excited", "proud", "delighted"],
+    "key_innovation": ["revolutionary AI integration", "breakthrough battery technology", "advanced biometric security", "quantum-encrypted communications"],
+    "product_description": ["This game-changing device redefines what's possible", "Designed specifically for the Snakesian lifestyle", "Built with cutting-edge technology and elegant design", "The perfect fusion of innovation and practicality"],
+    "highlight_1": ["48-hour battery life", "AI-powered personal assistant", "Unbreakable screen technology", "5G connectivity across Snakesia"],
+    "highlight_2": ["Water and dust resistant", "Professional-grade camera system", "Wireless charging and reverse charging", "Seamless ElxaOS integration"],
+    "highlight_3": ["Sustainable materials", "Voice control in Snakesian", "Advanced security features", "Lightning-fast performance"],
+    "availability_timeline": ["next month", "Q2 2025", "this summer", "before Snake Day"],
+    "price_point": ["starting at 2,000", "from 3,500", "only 1,500", "beginning at 4,000"],
+    "product_url": ["elxacorp.ex/elxaphone-pro", "store.elxacorp.ex", "elxacorp.ex/preorder", "get.elxacorp.ex"],
+    "product_quote": ["This will change how Snakesians communicate forever", "Innovation at its finest", "Technology that adapts to you", "The future in your hands"],
+    "quote_source": ["Mr. Snake-e, CEO", "Chief Innovation Officer", "Lead Product Designer", "Customer Experience Director"],
+    "product_category": ["mobile technology", "personal computing", "wearable devices", "smart home"],
+    
+    "partner_name": ["Snake Valley University", "Slither & Associates", "Scales Technologies", "Venom Ventures", "Reptile Robotics"],
+    "partnership_emotion": ["excited", "thrilled", "proud", "delighted"],
+    "partnership_benefit": ["accelerate innovation", "expand our reach", "enhance customer experience", "develop new technologies"],
+    "partnership_goal": ["bring AI to every Snakesian", "revolutionize education", "advance sustainable technology", "create new opportunities"],
+    "partnership_description": ["Together, we'll develop next-generation educational technology", "This partnership combines our strengths in hardware and software", "We're joining forces to tackle Snakesia's biggest challenges", "Our combined expertise will create unprecedented value"],
+    "benefit_1": ["Access to cutting-edge research", "New educational apps and tools", "Expanded product ecosystem", "Better integration across platforms"],
+    "benefit_2": ["Internship opportunities for students", "Enhanced customer support", "More innovation labs", "Faster product development"],
+    "benefit_3": ["Community technology programs", "Reduced costs through economies of scale", "Better accessibility features", "Environmental sustainability initiatives"],
+    "partnership_quote": ["This partnership represents the future of Snakesian innovation", "Together we're stronger than the sum of our parts", "Innovation happens when great minds collaborate", "This is just the beginning of something amazing"],
+    "partnership_spokesperson": ["Partnership Director", "Mr. Snake-e", "Joint Venture Team", "Innovation Alliance"],
+    
+    "month": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    "year": ["2025", "2026"]
+  },
+  "scheduling": {
+    "elxacorp_hr": {
+      "min_days": 5,
+      "max_days": 14,
+      "weight": 0.3
+    },
+    "elxacorp_it": {
+      "min_days": 3,
+      "max_days": 10,
+      "weight": 0.4
+    },
+    "elxacorp_news": {
+      "min_days": 7,
+      "max_days": 21,
+      "weight": 0.25
+    }
+  }
+}

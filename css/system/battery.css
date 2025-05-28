@@ -1,0 +1,430 @@
+/* =================================
+   FRESH BATTERY DIALOG STYLES
+   Clean implementation with unique names
+================================= */
+
+.bdialog-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 550px;
+    background: var(--windowBg, #c0c0c0);
+    border: 2px outset var(--windowBorder, #808080);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    font-family: 'MS Sans Serif', sans-serif;
+    font-size: 11px;
+}
+
+.bdialog-header {
+    background: var(--titlebarBg, #008080);
+    color: var(--titlebarText, white);
+    padding: 2px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.bdialog-title {
+    flex: 1;
+}
+
+.bdialog-close {
+    width: 16px;
+    height: 14px;
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--buttonBorder, #808080);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: bold;
+    color: black;
+}
+
+.bdialog-close:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
+}
+
+.bdialog-close:active {
+    border: 1px inset var(--buttonBorder, #808080);
+}
+
+.bdialog-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 12px;
+    overflow: hidden;
+    background: var(--windowBg, #c0c0c0);
+}
+
+/* Warning Message */
+.bdialog-warning {
+    background: #ffe6e6;
+    border: 2px solid #ff4444;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    color: #cc0000;
+    flex-shrink: 0;
+}
+
+/* Main Battery Display */
+.bdialog-main {
+    display: flex;
+    gap: 16px;
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--windowBorder, #808080);
+    padding: 12px;
+    flex-shrink: 0;
+}
+
+.bdialog-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.bdialog-icon {
+    font-size: 40px;
+}
+
+.bdialog-percentage {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000080;
+}
+
+.bdialog-level-bar {
+    width: 80px;
+    height: 12px;
+    background: white;
+    border: 1px inset var(--windowBorder, #808080);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.bdialog-level-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.bdialog-stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bdialog-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: white;
+    border: 1px inset var(--windowBorder, #808080);
+    font-size: 10px;
+}
+
+.bdialog-stat-label {
+    font-weight: bold;
+}
+
+.bdialog-stat-value {
+    font-weight: bold;
+}
+
+/* Tabs */
+.bdialog-tabs {
+    display: flex;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--windowBorder, #808080);
+}
+
+.bdialog-tab {
+    padding: 6px 16px;
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--buttonBorder, #808080);
+    border-bottom: none;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    color: black;
+    position: relative;
+}
+
+.bdialog-tab:hover:not(.bdialog-tab-active) {
+    background: var(--buttonHoverBg, #d4d0c8);
+}
+
+.bdialog-tab-active {
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--buttonBorder, #808080);
+    border-bottom: 1px solid var(--windowBg, #c0c0c0);
+    margin-bottom: -1px;
+    z-index: 1;
+}
+
+/* Tab Content Area */
+.bdialog-content {
+    flex: 1;
+    border: 1px inset var(--windowBorder, #808080);
+    border-top: none;
+    background: var(--windowBg, #c0c0c0);
+    position: relative;
+    overflow: hidden;
+}
+
+.bdialog-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px;
+    overflow-y: auto;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bdialog-panel-active {
+    display: flex;
+}
+
+/* Details Panel */
+.bdialog-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.bdialog-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: white;
+    border: 1px inset var(--windowBorder, #808080);
+    font-size: 9px;
+}
+
+.bdialog-detail-label {
+    font-weight: bold;
+}
+
+.bdialog-detail-value {
+    color: #000080;
+    font-weight: bold;
+}
+
+.bdialog-cells {
+    margin-top: 12px;
+}
+
+.bdialog-cells-title {
+    font-weight: bold;
+    font-size: 10px;
+    margin-bottom: 8px;
+}
+
+.bdialog-cells-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.bdialog-cell {
+    padding: 6px;
+    border: 1px solid var(--windowBorder, #808080);
+    text-align: center;
+    font-size: 8px;
+    background: white;
+}
+
+.bdialog-cell-good {
+    background: #e6ffe6;
+    border-color: #00aa00;
+}
+
+.bdialog-cell-empty {
+    background: #ffe6e6;
+    border-color: #aa0000;
+}
+
+.bdialog-cell-label {
+    font-weight: bold;
+}
+
+.bdialog-cell-voltage {
+    color: #000080;
+    margin-top: 2px;
+}
+
+/* Settings Panel */
+.bdialog-section {
+    margin-bottom: 16px;
+}
+
+.bdialog-section:last-child {
+    margin-bottom: 0;
+}
+
+.bdialog-section-title {
+    margin: 0 0 8px 0;
+    color: #000080;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.bdialog-modes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.bdialog-mode {
+    flex: 1;
+    padding: 8px 4px;
+    border: 2px solid var(--windowBorder, #808080);
+    text-align: center;
+    cursor: pointer;
+    background: var(--buttonBg, #c0c0c0);
+    transition: all 0.2s ease;
+}
+
+.bdialog-mode:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
+}
+
+.bdialog-mode-active {
+    border-color: #000080;
+    background: #e6f3ff;
+    box-shadow: inset 0 0 4px rgba(0, 0, 128, 0.3);
+}
+
+.bdialog-mode-icon {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.bdialog-mode-name {
+    font-weight: bold;
+    font-size: 9px;
+}
+
+.bdialog-mode-desc {
+    font-size: 8px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.bdialog-setting {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+/* History Panel */
+.bdialog-history-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.bdialog-stat-card {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    background: white;
+    border: 1px inset var(--windowBorder, #808080);
+}
+
+.bdialog-stat-number {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000080;
+}
+
+.bdialog-stat-card-label {
+    font-size: 8px;
+    margin-top: 4px;
+}
+
+.bdialog-tips {
+    flex: 1;
+}
+
+.bdialog-tips-title {
+    margin: 0 0 8px 0;
+    color: #000080;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.bdialog-tips ul {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+.bdialog-tips li {
+    margin-bottom: 4px;
+}
+
+/* Controls */
+.bdialog-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.bdialog-btn {
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+    border: 1px outset var(--buttonBorder, #808080);
+}
+
+.bdialog-btn:hover {
+    transform: translateY(-1px);
+}
+
+.bdialog-btn:active {
+    border: 1px inset var(--buttonBorder, #808080);
+    transform: translateY(0);
+}
+
+.bdialog-btn-recharge {
+    background: linear-gradient(to bottom, #ff6b35, #f7931e);
+    color: white;
+}
+
+.bdialog-btn-calibrate {
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    color: white;
+}
+
+.bdialog-btn-close {
+    background: var(--buttonBg, #c0c0c0);
+    color: black;
+}

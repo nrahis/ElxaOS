@@ -331,6 +331,7 @@ class FileSystem {
             children: {
                 'Desktop': { type: 'folder', name: 'Desktop', children: {} },
                 'Programs': { type: 'folder', name: 'Programs', children: {} },
+                'System': { type: 'folder', name: 'System', children: {} },
                 'Documents': { type: 'folder', name: 'Documents', children: {} },
                 'Pictures': { type: 'folder', name: 'Pictures', children: {} },
                 'RecycleBin': { type: 'folder', name: 'Recycle Bin', children: {} }

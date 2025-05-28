@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snake Deluxe Executive Training Suite - ElxaCorp Business Solutions</title>
+    <style>
+        /* Corporate 90s/2000s Business Software Aesthetic */
+        @import url('https://fonts.googleapis.com/css2?family=MS+Sans+Serif&family=Trebuchet+MS&display=swap');
+        
+        .snake-deluxe-body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: 'Trebuchet MS', Arial, sans-serif !important;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 50%, #d0d0d0 100%) !important;
+            color: #000000 !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+        }
+        
+        .snake-deluxe-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px outset #c0c0c0;
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+            min-height: 100vh;
+        }
+        
+        /* Corporate Header */
+        .snake-deluxe-header {
+            background: linear-gradient(180deg, #004080 0%, #002060 100%);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #ffd700;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .snake-deluxe-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700 0%, #ffffff 50%, #ffd700 100%);
+        }
+        
+        .snake-deluxe-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .snake-deluxe-logo-img {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+            border: 3px outset #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #004080;
+            font-weight: bold;
+        }
+        
+        .snake-deluxe-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+            text-shadow: 2px 2px 0 #000040;
+            letter-spacing: 1px;
+        }
+        
+        .snake-deluxe-subtitle {
+            font-size: 14px;
+            color: #ffd700;
+            margin: 5px 0 0 0;
+            font-weight: normal;
+            text-shadow: 1px 1px 0 #000040;
+        }
+        
+        .snake-deluxe-tagline {
+            font-size: 16px;
+            color: #ffffff;
+            margin: 15px 0 0 0;
+            font-style: italic;
+            text-shadow: 1px 1px 0 #000040;
+        }
+        
+        /* Corporate Navigation */
+        .snake-deluxe-nav {
+            background: linear-gradient(180deg, #e0e0e0 0%, #c0c0c0 100%);
+            border-bottom: 2px inset #c0c0c0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .snake-deluxe-nav-item {
+            padding: 8px 20px;
+            background: linear-gradient(180deg, #e0e0e0 0%, #c0c0c0 100%);
+            border-right: 1px solid #808080;
+            border-left: 1px solid #ffffff;
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 11px;
+            transition: all 0.2s ease;
+        }
+        
+        .snake-deluxe-nav-item:hover {
+            background: linear-gradient(180deg, #f0f0f0 0%, #d0d0d0 100%);
+        }
+        
+        .snake-deluxe-nav-item:active {
+            border: 1px inset #c0c0c0;
+        }
+        
+        /* Main Content */
+        .snake-deluxe-content {
+            padding: 25px;
+            background: #ffffff;
+        }
+        
+        .snake-deluxe-section {
+            margin-bottom: 25px;
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 100%);
+            border: 2px outset #c0c0c0;
+            padding: 15px;
+            box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+        }
+        
+        .snake-deluxe-section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #004080;
+            margin: 0 0 12px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #ffd700;
+            text-shadow: 1px 1px 0 #ffffff;
+        }
+        
+        /* Executive Introduction */
+        .snake-deluxe-exec-intro {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+            border: 2px inset #c0c0c0;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .snake-deluxe-exec-intro::before {
+            content: '📋 EXECUTIVE BRIEFING';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #004080;
+            color: #ffffff;
+            padding: 2px 12px;
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px outset #004080;
+        }
+        
+        .snake-deluxe-exec-photo {
+            width: 120px;
+            height: 150px;
+            background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+            border: 3px outset #c0c0c0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .snake-deluxe-exec-photo::after {
+            content: 'CEO PORTRAIT';
+            position: absolute;
+            bottom: 5px;
+            font-size: 8px;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .snake-deluxe-exec-details {
+            flex: 1;
+        }
+        
+        .snake-deluxe-exec-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #004080;
+            margin: 0 0 5px 0;
+        }
+        
+        .snake-deluxe-exec-title {
+            font-size: 12px;
+            color: #666;
+            margin: 0 0 10px 0;
+            font-style: italic;
+        }
+        
+        .snake-deluxe-exec-bio {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #333;
+        }
+        
+        /* Screenshot Gallery */
+        .snake-deluxe-screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .snake-deluxe-screenshot {
+            background: #000000;
+            border: 3px inset #c0c0c0;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .snake-deluxe-screenshot-img {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #004080 0%, #002060 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ffd700;
+            border: 1px solid #333;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .snake-deluxe-screenshot-img::after {
+            content: 'SCREENSHOT';
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 8px;
+            color: #888;
+        }
+        
+        .snake-deluxe-screenshot-caption {
+            font-size: 10px;
+            color: #ffd700;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        
+        /* Features List */
+        .snake-deluxe-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .snake-deluxe-feature-box {
+            background: linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%);
+            border: 2px outset #c0c0c0;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .snake-deluxe-feature-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .snake-deluxe-feature-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #004080;
+            margin-bottom: 5px;
+        }
+        
+        .snake-deluxe-feature-desc {
+            font-size: 11px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        /* Corporate Purchase Section */
+        .snake-deluxe-purchase {
+            background: linear-gradient(135deg, #004080 0%, #002060 100%);
+            border: 3px outset #004080;
+            text-align: center;
+            padding: 20px;
+            margin: 25px 0;
+            color: #ffffff;
+            position: relative;
+        }
+        
+        .snake-deluxe-purchase::before {
+            content: '💼 EXECUTIVE PURCHASE PORTAL';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffd700;
+            color: #004080;
+            padding: 3px 15px;
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px outset #ffd700;
+        }
+        
+        .snake-deluxe-price-big {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 10px 0;
+            text-shadow: 2px 2px 0 #000040;
+        }
+        
+        .snake-deluxe-price-subtitle {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .snake-deluxe-purchase-btn {
+            background: linear-gradient(180deg, #ffd700 0%, #daa520 100%);
+            color: #004080;
+            border: 3px outset #ffd700;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            text-shadow: 1px 1px 0 #ffffff;
+        }
+        
+        .snake-deluxe-purchase-btn:hover {
+            background: linear-gradient(180deg, #ffed4a 0%, #e6b800 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .snake-deluxe-purchase-btn:active {
+            border: 3px inset #ffd700;
+            transform: translateY(0);
+        }
+        
+        .snake-deluxe-demo-btn {
+            background: linear-gradient(180deg, #e0e0e0 0%, #c0c0c0 100%);
+            color: #004080;
+            border: 3px outset #c0c0c0;
+        }
+        
+        .snake-deluxe-demo-btn:hover {
+            background: linear-gradient(180deg, #f0f0f0 0%, #d0d0d0 100%);
+        }
+        
+        /* System Requirements */
+        .snake-deluxe-sysreq {
+            background: #f0f0f0;
+            border: 2px inset #c0c0c0;
+            padding: 15px;
+            font-family: 'MS Sans Serif', monospace;
+            font-size: 11px;
+        }
+        
+        .snake-deluxe-sysreq-title {
+            color: #004080;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        
+        .snake-deluxe-sysreq-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .snake-deluxe-sysreq-list li {
+            margin: 3px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .snake-deluxe-sysreq-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #004080;
+            font-size: 8px;
+        }
+        
+        /* Corporate Reviews */
+        .snake-deluxe-review {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%);
+            border: 2px outset #c0c0c0;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #ffd700;
+        }
+        
+        .snake-deluxe-review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .snake-deluxe-review-source {
+            font-weight: bold;
+            color: #004080;
+            font-size: 12px;
+        }
+        
+        .snake-deluxe-review-rating {
+            color: #ffd700;
+            font-size: 14px;
+        }
+        
+        .snake-deluxe-review-text {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #333;
+            font-style: italic;
+        }
+        
+        /* Corporate Footer */
+        .snake-deluxe-footer {
+            background: linear-gradient(180deg, #c0c0c0 0%, #a0a0a0 100%);
+            border-top: 2px outset #c0c0c0;
+            padding: 20px;
+            text-align: center;
+            font-size: 10px;
+            color: #333;
+        }
+        
+        .snake-deluxe-footer-logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #004080;
+            margin-bottom: 10px;
+        }
+        
+        .snake-deluxe-footer-links {
+            margin-bottom: 10px;
+        }
+        
+        .snake-deluxe-footer-links a {
+            color: #004080;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        
+        .snake-deluxe-footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Corporate Info Table */
+        .snake-deluxe-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #ffffff;
+            border: 2px inset #c0c0c0;
+        }
+        
+        .snake-deluxe-info-table td {
+            padding: 8px 12px;
+            border: 1px solid #c0c0c0;
+            font-size: 12px;
+        }
+        
+        .snake-deluxe-info-table td:first-child {
+            background: linear-gradient(180deg, #e0e0e0 0%, #d0d0d0 100%);
+            font-weight: bold;
+            color: #004080;
+            width: 30%;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .snake-deluxe-container {
+                max-width: 100%;
+                border: none;
+            }
+            
+            .snake-deluxe-nav {
+                flex-direction: column;
+            }
+            
+            .snake-deluxe-exec-intro {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .snake-deluxe-exec-photo {
+                width: 100px;
+                height: 120px;
+                align-self: center;
+            }
+            
+            .snake-deluxe-screenshots {
+                grid-template-columns: 1fr;
+            }
+            
+            .snake-deluxe-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="snake-deluxe-body">
+    <div class="snake-deluxe-container">
+        <div class="snake-deluxe-header">
+            <div class="snake-deluxe-logo">
+                <div class="snake-deluxe-logo-img">🐍💼</div>
+                <div>
+                    <div class="snake-deluxe-title">Snake Deluxe</div>
+                    <div class="snake-deluxe-subtitle">Executive Training Suite</div>
+                </div>
+            </div>
+            <div class="snake-deluxe-tagline">
+                "Empowering Corporate Leaders Through Strategic Navigation Excellence"
+            </div>
+        </div>
+        
+        <div class="snake-deluxe-nav">
+            <a href="#overview" class="snake-deluxe-nav-item">📊 OVERVIEW</a>
+            <a href="#features" class="snake-deluxe-nav-item">💼 FEATURES</a>
+            <a href="#screenshots" class="snake-deluxe-nav-item">📸 GALLERY</a>
+            <a href="#purchase" class="snake-deluxe-nav-item">💳 PURCHASE</a>
+            <a href="#support" class="snake-deluxe-nav-item">📞 SUPPORT</a>
+        </div>
+        
+        <div class="snake-deluxe-content">
+            <!-- Executive Introduction -->
+            <div class="snake-deluxe-section" id="overview">
+                <div class="snake-deluxe-section-title">👔 Meet Your Executive Training Team</div>
+                <div class="snake-deluxe-exec-intro">
+                    <div class="snake-deluxe-exec-photo">🐍</div>
+                    <div class="snake-deluxe-exec-details">
+                        <div class="snake-deluxe-exec-name">Mr. Snake-e, MBA</div>
+                        <div class="snake-deluxe-exec-title">Chief Executive Officer, ElxaCorp Industries</div>
+                        <div class="snake-deluxe-exec-bio">
+                            <p>With over 15 years of leadership experience in the competitive world of Snakesian business, CEO Snake-e has revolutionized corporate training methodologies. Together with his beloved wife Mrs. Snake-e (age 82, still actively managing our Garden Operations Division), he brings you this cutting-edge executive development platform.</p>
+                            
+                            <p><strong>🚗 Personal Note:</strong> When not optimizing corporate efficiency, CEO Snake-e enjoys maintaining his prized Denali and spending quality time with his extensive feline advisory board.</p>
+                            
+                            <p><em>"Success isn't just about reaching your destination—it's about navigating the corporate landscape with strategic precision and collecting valuable resources along the way!"</em> - CEO Snake-e</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Overview -->
+            <div class="snake-deluxe-section">
+                <div class="snake-deluxe-section-title">🏢 Executive Training Program Overview</div>
+                <p><strong>Snake Deluxe Executive Training Suite</strong> is a comprehensive leadership development program designed for today's dynamic business environment. Navigate through progressively challenging corporate scenarios while developing essential executive skills:</p>
+                
+                <div class="snake-deluxe-features">
+                    <div class="snake-deluxe-feature-box">
+                        <div class="snake-deluxe-feature-icon">🏢</div>
+                        <div class="snake-deluxe-feature-title">Corporate Navigation</div>
+                        <div class="snake-deluxe-feature-desc">Master the art of strategic movement through complex organizational structures</div>
+                    </div>
+                    <div class="snake-deluxe-feature-box">
+                        <div class="snake-deluxe-feature-icon">📊</div>
+                        <div class="snake-deluxe-feature-title">Resource Management</div>
+                        <div class="snake-deluxe-feature-desc">Optimize collection and utilization of corporate assets and opportunities</div>
+                    </div>
+                    <div class="snake-deluxe-feature-box">
+                        <div class="snake-deluxe-feature-icon">⚡</div>
+                        <div class="snake-deluxe-feature-title">Executive Efficiency</div>
+                        <div class="snake-deluxe-feature-desc">Develop rapid decision-making skills under increasing time pressure</div>
+                    </div>
+                    <div class="snake-deluxe-feature-box">
+                        <div class="snake-deluxe-feature-icon">🎯</div>
+                        <div class="snake-deluxe-feature-title">Strategic Growth</div>
+                        <div class="snake-deluxe-feature-desc">Experience sustainable expansion while maintaining operational integrity</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Training Modules -->
+            <div class="snake-deluxe-section">
+                <div class="snake-deluxe-section-title">📚 Executive Training Modules</div>
+                <table class="snake-deluxe-info-table">
+                    <tr>
+                        <td>Module 1:</td>
+                        <td><strong>ElxaCorp Lobby</strong> - Corporate orientation and coffee procurement strategies</td>
+                    </tr>
+                    <tr>
+                        <td>Module 2:</td>
+                        <td><strong>Server Room Operations</strong> - IT infrastructure navigation and data management</td>
+                    </tr>
+                    <tr>
+                        <td>Module 3:</td>
+                        <td><strong>Mrs. Snake-e's Garden</strong> - Sustainability leadership and organic growth principles</td>
+                    </tr>
+                    <tr>
+                        <td>Module 4:</td>
+                        <td><strong>Executive Garage</strong> - Asset maintenance and luxury vehicle management</td>
+                    </tr>
+                    <tr>
+                        <td>Module 5:</td>
+                        <td><strong>Snakesia Capital</strong> - Market expansion and urban leadership challenges</td>
+                    </tr>
+                    <tr>
+                        <td>Module 6:</td>
+                        <td><strong>Mathematics Laboratory</strong> - Advanced analytical thinking and problem solving</td>
+                    </tr>
+                    <tr>
+                        <td>Module 7:</td>
+                        <td><strong>Cybersecurity Operations</strong> - Digital transformation and security leadership</td>
+                    </tr>
+                    <tr>
+                        <td>Module 8:</td>
+                        <td><strong>Corporate Cat Sanctuary</strong> - Employee wellness and morale management</td>
+                    </tr>
+                    <tr>
+                        <td>Module 9:</td>
+                        <td><strong>Executive Boardroom</strong> - High-stakes decision making and presentation skills</td>
+                    </tr>
+                    <tr>
+                        <td>Module 10:</td>
+                        <td><strong>Snakesia Throne Room</strong> - Ultimate leadership mastery and legacy building</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Screenshots -->
+            <div class="snake-deluxe-section" id="screenshots">
+                <div class="snake-deluxe-section-title">📸 Training Interface Gallery</div>
+                <div class="snake-deluxe-screenshots">
+                    <div class="snake-deluxe-screenshot">
+                        <div class="snake-deluxe-screenshot-img">🏢</div>
+                        <div class="snake-deluxe-screenshot-caption">Executive Dashboard</div>
+                    </div>
+                    <div class="snake-deluxe-screenshot">
+                        <div class="snake-deluxe-screenshot-img">💻</div>
+                        <div class="snake-deluxe-screenshot-caption">Server Room Training</div>
+                    </div>
+                    <div class="snake-deluxe-screenshot">
+                        <div class="snake-deluxe-screenshot-img">🌸</div>
+                        <div class="snake-deluxe-screenshot-caption">Garden Management</div>
+                    </div>
+                    <div class="snake-deluxe-screenshot">
+                        <div class="snake-deluxe-screenshot-img">🚗</div>
+                        <div class="snake-deluxe-screenshot-caption">Asset Maintenance</div>
+                    </div>
+                    <div class="snake-deluxe-screenshot">
+                        <div class="snake-deluxe-screenshot-img">🏙️</div>
+                        <div class="snake-deluxe-screenshot-caption">Market Expansion</div>
+                    </div>
+                    <div class="snake-deluxe-screenshot">
+                        <div class="snake-deluxe-screenshot-img">👑</div>
+                        <div class="snake-deluxe-screenshot-caption">Leadership Mastery</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Corporate Purchase Section -->
+            <div class="snake-deluxe-purchase" id="purchase">
+                <div class="snake-deluxe-price-big">$39.99</div>
+                <div class="snake-deluxe-price-subtitle">Professional Executive Training License</div>
+                <p style="margin: 10px 0; font-size: 13px;">Includes lifetime access to all training modules, executive achievement tracking, and quarterly performance analytics reports.</p>
+                
+                <button class="snake-deluxe-purchase-btn" onclick="purchaseSnakeDeluxe()">
+                    💼 Purchase Training Suite
+                </button>
+                <br>
+                <button class="snake-deluxe-purchase-btn snake-deluxe-demo-btn" onclick="downloadSnakeDeluxeDemo()">
+                    📁 Download Executive Demo
+                </button>
+                
+                <div style="margin-top: 15px; font-size: 11px; color: #cccccc;">
+                    30-day money-back guarantee | Volume licensing available for corporate clients
+                </div>
+            </div>
+            
+            <!-- System Requirements -->
+            <div class="snake-deluxe-section">
+                <div class="snake-deluxe-section-title">⚙️ Executive Workstation Requirements</div>
+                <div class="snake-deluxe-sysreq">
+                    <div class="snake-deluxe-sysreq-title">Minimum Corporate Configuration:</div>
+                    <ul class="snake-deluxe-sysreq-list">
+                        <li>ElxaOS 2.0 or compatible executive operating system</li>
+                        <li>64 MB RAM (128 MB recommended for optimal performance)</li>
+                        <li>120 MB available executive storage space</li>
+                        <li>Business-grade SVGA graphics adapter (1024x768, 16-bit color)</li>
+                        <li>Corporate audio system compatible with ElxaOS</li>
+                        <li>CD-ROM drive for installation media</li>
+                        <li>Executive keyboard and precision pointing device required</li>
+                        <li>Network connectivity for achievement synchronization (optional)</li>
+                    </ul>
+                    
+                    <div class="snake-deluxe-sysreq-title" style="margin-top: 15px;">Recommended Executive Configuration:</div>
+                    <ul class="snake-deluxe-sysreq-list">
+                        <li>ElxaOS 3.0 Professional Edition</li>
+                        <li>256 MB RAM for enterprise-level multitasking</li>
+                        <li>Executive-grade sound card with 3D audio enhancement</li>
+                        <li>High-resolution monitor (1280x1024 or higher)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Corporate Reviews -->
+            <div class="snake-deluxe-section">
+                <div class="snake-deluxe-section-title">📈 Executive Testimonials</div>
+                
+                <div class="snake-deluxe-review">
+                    <div class="snake-deluxe-review-header">
+                        <div class="snake-deluxe-review-source">Corporate Executive Training Quarterly</div>
+                        <div class="snake-deluxe-review-rating">★★★★★</div>
+                    </div>
+                    <div class="snake-deluxe-review-text">
+                        "Snake Deluxe Executive Training Suite represents a paradigm shift in corporate leadership development. The progressive difficulty scaling mirrors real-world executive challenges perfectly. CEO Snake-e has created something truly revolutionary for the business training market."
+                    </div>
+                </div>
+                
+                <div class="snake-deluxe-review">
+                    <div class="snake-deluxe-review-header">
+                        <div class="snake-deluxe-review-source">Business Leadership Magazine</div>
+                        <div class="snake-deluxe-review-rating">★★★★☆</div>
+                    </div>
+                    <div class="snake-deluxe-review-text">
+                        "An innovative approach to executive skill development. The integration of strategic navigation with resource management creates an engaging learning environment. Particularly enjoyed the Garden Management module - Mrs. Snake-e's wisdom really shines through."
+                    </div>
+                </div>
+                
+                <div class="snake-deluxe-review">
+                    <div class="snake-deluxe-review-header">
+                        <div class="snake-deluxe-review-source">Fortune 500 Executive Council</div>
+                        <div class="snake-deluxe-review-rating">★★★★★</div>
+                    </div>
+                    <div class="snake-deluxe-review-text">
+                        "We've implemented Snake Deluxe across our entire C-suite training program. The metrics show measurable improvement in strategic decision-making and operational efficiency. The cat sanctuary module is unexpectedly profound for stress management training."
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Corporate Information -->
+            <div class="snake-deluxe-section">
+                <div class="snake-deluxe-section-title">📋 Corporate Product Information</div>
+                <table class="snake-deluxe-info-table">
+                    <tr>
+                        <td>Developer:</td>
+                        <td>ElxaCorp Business Solutions Division</td>
+                    </tr>
+                    <tr>
+                        <td>Executive Producer:</td>
+                        <td>Mr. Snake-e, MBA, CEO</td>
+                    </tr>
+                    <tr>
+                        <td>Sustainability Consultant:</td>
+                        <td>Mrs. Snake-e, Senior Garden Operations Manager</td>
+                    </tr>
+                    <tr>
+                        <td>Release Date:</td>
+                        <td>Q3 2001 Corporate Fiscal Year</td>
+                    </tr>
+                    <tr>
+                        <td>Training Category:</td>
+                        <td>Executive Development / Strategic Leadership</td>
+                    </tr>
+                    <tr>
+                        <td>Certification Level:</td>
+                        <td>Corporate Training Approved (CTA) - All Executive Levels</td>
+                    </tr>
+                    <tr>
+                        <td>Support Options:</td>
+                        <td>24/7 Executive Helpdesk, Email Support, Corporate Training Manuals</td>
+                    </tr>
+                    <tr>
+                        <td>Licensing:</td>
+                        <td>Single Executive License (Volume Corporate Rates Available)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="snake-deluxe-footer">
+            <div class="snake-deluxe-footer-logo">ElxaCorp Business Solutions</div>
+            <div class="snake-deluxe-footer-links">
+                <a href="mailto:executive@elxacorp.ex">Executive Support</a>
+                <a href="#" onclick="alert('Corporate training catalog coming soon!')">Training Catalog</a>
+                <a href="#" onclick="alert('Volume licensing information available upon request.')">Volume Licensing</a>
+                <a href="#" onclick="alert('Privacy policy: We respect executive confidentiality.')">Privacy Policy</a>
+            </div>
+            <p>© 2001 ElxaCorp Industries. All rights reserved.<br>
+            Snake Deluxe Executive Training Suite and Mr. Snake-e are registered trademarks of ElxaCorp.<br>
+            Corporate headquarters located in beautiful downtown Snakesia City.</p>
+            <p style="font-size: 9px; margin-top: 10px;">
+                Last updated: November 12, 2001 | Build 2.1.1547 | 
+                Executive Portal Version 3.2 | 
+                <a href="mailto:webmaster@elxacorp.ex" style="color: #004080;">Technical Support</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Payment System Integration -->
+    <script src="../../../js/services/payment-system.js"></script>
+    <script>
+        // Snake Deluxe specific purchase function
+        function purchaseSnakeDeluxe() {
+            if (typeof purchaseProduct === 'function') {
+                purchaseProduct({
+                    name: 'Snake Deluxe Executive Training Suite',
+                    price: '$39.99',
+                    description: 'Professional Executive Development Platform'
+                });
+            } else {
+                alert('Payment system not available. Please ensure the payment system is loaded.');
+            }
+        }
+        
+        // Demo download function
+        function downloadSnakeDeluxeDemo() {
+            // Create installer data for Snake Deluxe (matching desktop.js structure)
+            const installerData = {
+                id: 'snake_deluxe',
+                name: 'Snake Deluxe',
+                description: 'Join Mr. Snake-e, the 60-year-old billionaire CEO of ElxaCorp, on his epic adventures through Snakesia! Navigate through 10 magical levels with his 82-year-old wife Mrs. Snake-e!',
+                icon: '🐍',
+                version: '2.0',
+                author: 'ElxaCorp Game Studios',
+                gameData: {
+                    type: 'snake_deluxe',
+                    difficulty: 'normal',
+                    boardSize: 24
+                }
+            };
+            
+            // Try to access the file system
+            if (typeof elxaOS !== 'undefined' && elxaOS.fileSystem) {
+                try {
+                    const installerContent = JSON.stringify(installerData, null, 2);
+                    const fileName = 'Snake Deluxe.abby';
+                    
+                    // Save to Programs folder
+                    elxaOS.fileSystem.createFile(['root', 'Programs'], fileName, installerContent, 'abby');
+                    
+                    // Show success message
+                    alert('Snake Deluxe Executive Training Suite Demo downloaded successfully.\n\nInstaller saved to Programs folder.');
+                    
+                    // Trigger desktop refresh
+                    if (elxaOS.eventBus) {
+                        elxaOS.eventBus.emit('desktop.changed');
+                    }
+                    
+                } catch (error) {
+                    console.error('Failed to create installer file:', error);
+                    alert('❌ Download failed!\n\nPlease ensure the Programs folder exists and try again.');
+                }
+            } else {
+                console.error('File system not available');
+                alert('❌ Download failed!\n\nFile system not available. Please ensure ElxaOS is properly loaded.');
+            }
+        }
+        
+        // Corporate navigation (smooth scrolling)
+        document.querySelectorAll('.snake-deluxe-nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /* =================================
-   SNOOGLE BROWSER STYLES (THEMED)
+   SNOOGLE BROWSER STYLES (REAL 90s WEB)
 ================================= */
 
 .browser-window .window-content {
@@ -325,170 +325,287 @@
 }
 
 /* =================================
-   WEBPAGE CONTENT (ORIGINAL COLORS)
-   These styles should NOT use theme colors
+   CLASSIC 90s SNOOGLE HOMEPAGE
 ================================= */
-
-/* SNOOGLE HOMEPAGE - Original styling preserved */
 .snoogle-homepage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100%;
-    background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
-    background-size: 400% 400%;
-    animation: snoogleGradient 10s ease infinite;
-    color: white;
+    background: white;
+    color: black;
+    font-family: Times New Roman, serif;
+    padding: 20px;
     text-align: center;
-    padding: 40px 20px;
+    min-height: 100%;
 }
 
-@keyframes snoogleGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+.snoogle-header {
+    margin-bottom: 30px;
 }
 
 .snoogle-logo {
-    font-size: 72px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    animation: logoFloat 3s ease-in-out infinite;
+    font-size: 48px;
+    font-weight: normal;
+    margin-bottom: 10px;
+    color: #0066cc;
 }
 
-@keyframes logoFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+.snoogle-logo .letter-s1 { color: #0066cc; }
+.snoogle-logo .letter-n1 { color: #dc143c; }
+.snoogle-logo .letter-o1 { color: #ff8c00; }
+.snoogle-logo .letter-o2 { color: #0066cc; }
+.snoogle-logo .letter-g1 { color: #008000; }
+.snoogle-logo .letter-l1 { color: #dc143c; }
+.snoogle-logo .letter-e1 { color: #0066cc; }
+
+.snoogle-tagline {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.snoogle-search-container {
+    margin: 30px auto;
+    max-width: 500px;
 }
 
 .snoogle-search {
-    background: white;
-    border-radius: 24px;
-    padding: 8px 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 12px;
-    min-width: 400px;
-    max-width: 600px;
-    width: 90%;
+    gap: 5px;
+    margin-bottom: 20px;
 }
 
 .search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 16px;
-    color: #333;
-    background: transparent;
+    width: 300px;
+    padding: 4px;
+    border: 1px solid #999;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
 }
 
 .search-button {
-    background: #4285f4;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 16px;
+    padding: 4px 8px;
+    background: #f0f0f0;
+    border: 1px outset #ccc;
+    font-size: 11px;
     cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
+    font-family: Arial, sans-serif;
 }
 
 .search-button:hover {
-    background: #3367d6;
+    background: #e0e0e0;
+}
+
+.search-button:active {
+    border: 1px inset #ccc;
 }
 
 .snoogle-buttons {
     display: flex;
-    gap: 12px;
-    margin-bottom: 30px;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .snoogle-btn {
-    background: rgba(255,255,255,0.9);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border: 1px outset #ccc;
+    font-size: 11px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
+    font-family: Arial, sans-serif;
 }
 
 .snoogle-btn:hover {
-    background: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background: #e0e0e0;
 }
 
 .snoogle-btn:active {
-    transform: translateY(0);
+    border: 1px inset #ccc;
 }
 
-.snoogle-footer {
-    margin-top: auto;
-    font-size: 12px;
-    opacity: 0.8;
+.snoogle-stats {
+    margin-top: 40px;
+    font-size: 11px;
+    color: #666;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
 }
 
-/* SEARCH RESULTS PAGE - Original styling preserved */
-.search-results-page {
+.stats-table {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.stats-table td {
+    padding: 4px 8px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.stats-number {
+    font-weight: bold;
+    color: #0066cc;
+}
+
+/* =================================
+   CLASSIC 90s DIRECTORY STYLE
+================================= */
+.site-directory {
     background: white;
+    color: black;
+    font-family: Times New Roman, serif;
     padding: 20px;
-    color: #333;
+    min-height: 100%;
 }
 
-.search-header {
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 12px;
+.directory-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #0066cc;
+    padding-bottom: 15px;
+}
+
+.directory-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0066cc;
+    margin-bottom: 8px;
+}
+
+.directory-subtitle {
+    font-size: 14px;
+    color: #666;
+}
+
+.category-section {
+    margin-bottom: 30px;
+}
+
+.category-section h2 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000080;
+    margin-bottom: 10px;
+    padding: 4px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.site-grid {
+    display: block;
+}
+
+.site-row {
+    display: table;
+    width: 100%;
+    margin-bottom: 15px;
+    border-collapse: collapse;
+}
+
+.site-category-table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: 20px;
 }
 
+.site-category-table td {
+    padding: 8px 12px;
+    vertical-align: top;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.site-link {
+    color: #0000ee;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.site-link:hover {
+    color: #0000cc;
+    background: #ffffcc;
+}
+
+.site-link:visited {
+    color: #551a8b;
+}
+
+.site-description {
+    font-size: 11px;
+    color: #666;
+    margin-top: 2px;
+    line-height: 1.3;
+}
+
+.directory-footer {
+    margin-top: 40px;
+    border-top: 1px solid #ccc;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+}
+
+/* =================================
+   SEARCH RESULTS - CLASSIC STYLE
+================================= */
+.search-results-page {
+    background: white;
+    padding: 20px;
+    color: #000;
+    font-family: Arial, sans-serif;
+}
+
+.search-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
 .search-logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #4285f4;
+    font-size: 20px;
+    font-weight: normal;
+    color: #0066cc;
     margin-bottom: 8px;
 }
 
 .search-stats {
-    font-size: 12px;
+    font-size: 11px;
     color: #666;
 }
 
 .search-result {
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
 }
 
 .result-url {
-    font-size: 12px;
-    color: #006621;
-    margin-bottom: 4px;
+    font-size: 10px;
+    color: #008000;
+    margin-bottom: 2px;
 }
 
 .result-title {
-    font-size: 18px;
-    color: #1a0dab;
+    font-size: 14px;
+    color: #0000ee;
     cursor: pointer;
-    margin-bottom: 4px;
-    text-decoration: none;
-}
-
-.result-title:hover {
+    margin-bottom: 2px;
     text-decoration: underline;
 }
 
+.result-title:hover {
+    color: #0000cc;
+}
+
+.result-title:visited {
+    color: #551a8b;
+}
+
 .result-description {
-    font-size: 13px;
-    color: #333;
-    line-height: 1.4;
+    font-size: 12px;
+    color: #000;
+    line-height: 1.3;
 }
 
 .no-results {
@@ -499,151 +616,82 @@
 
 .no-results h3 {
     margin-bottom: 12px;
-    color: #333;
+    color: #000;
 }
 
-/* SITE DIRECTORY - Original styling preserved */
-.site-directory {
-    background: white;
-    padding: 20px;
-    color: #333;
-}
-
-.directory-header {
-    text-align: center;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #4285f4;
-    padding-bottom: 16px;
-}
-
-.directory-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #4285f4;
-    margin-bottom: 8px;
-}
-
-.directory-subtitle {
-    font-size: 14px;
-    color: #666;
-}
-
-.site-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.site-card {
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
-}
-
-.site-card:hover {
-    background: #e8f0fe;
-    border-color: #4285f4;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.site-icon {
-    font-size: 48px;
-    margin-bottom: 12px;
-}
-
-.site-name {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.site-description {
-    font-size: 12px;
-    color: #666;
-    line-height: 1.4;
-}
-
-/* NO INTERNET PAGE - Original styling preserved */
+/* =================================
+   NO INTERNET PAGE - CLASSIC STYLE
+================================= */
 .no-internet-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100%;
-    background: #f0f0f0;
+    background: white;
     text-align: center;
     padding: 40px 20px;
-    color: #333;
+    color: #000;
+    font-family: Arial, sans-serif;
 }
 
 .no-internet-icon {
-    font-size: 96px;
+    font-size: 64px;
     margin-bottom: 20px;
-    color: #666;
-    animation: disconnectPulse 2s ease-in-out infinite;
-}
-
-@keyframes disconnectPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    color: #999;
 }
 
 .no-internet-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
     margin-bottom: 12px;
-    color: #d32f2f;
+    color: #cc0000;
 }
 
 .no-internet-message {
-    font-size: 14px;
+    font-size: 12px;
     margin-bottom: 20px;
     max-width: 400px;
-    line-height: 1.5;
+    line-height: 1.4;
+    color: #666;
 }
 
 .wifi-connect-btn {
-    background: linear-gradient(to bottom, #4285f4, #3367d6);
-    border: none;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
+    background: #f0f0f0;
+    border: 1px outset #ccc;
+    color: #000;
+    padding: 8px 16px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-size: 11px;
+    font-family: Arial, sans-serif;
 }
 
 .wifi-connect-btn:hover {
-    background: linear-gradient(to bottom, #3367d6, #2d56c4);
-    transform: translateY(-1px);
+    background: #e0e0e0;
+}
+
+.wifi-connect-btn:active {
+    border: 1px inset #ccc;
 }
 
 /* =================================
    RESPONSIVE DESIGN
 ================================= */
 @media (max-width: 600px) {
-    .snoogle-search {
-        min-width: 300px;
+    .search-input {
+        width: 250px;
     }
     
     .snoogle-logo {
-        font-size: 48px;
-    }
-    
-    .site-grid {
-        grid-template-columns: 1fr;
+        font-size: 36px;
     }
     
     .browser-sidebar {
         width: 200px;
+    }
+    
+    .snoogle-buttons {
+        flex-direction: column;
+        align-items: center;
     }
 }

@@ -1,0 +1,30 @@
+{
+  "responses": {
+    "mr_snake_e": [
+        "Thank you for your email. I'll review this and get back to you shortly.\n\nBest regards,\nMr. Snake-e\nCEO, ElxaCorp\n\n\"Innovation drives everything we do.\"",
+        "I appreciate you reaching out. This sounds like an interesting opportunity.\n\nLet's schedule a meeting to discuss further.\n\nBest,\nMr. Snake-e",
+        "Thank you for bringing this to my attention. ElxaCorp values employee input.\n\nI'll have my team look into this immediately.\n\nRegards,\nMr. Snake-e\nCEO, ElxaCorp"
+    ],
+    "mrs_snake_e": [
+        "Oh my dear, thank you for your lovely message!\n\nI was just in the garden this morning picking fresh tomatoes. Would you like the recipe for my famous snake-shaped cookies?\n\nWith love,\nMrs. Snake-e\n\nP.S. - Don't forget to water your plants! 🌻",
+        "How wonderful to hear from you! Your message brightened my day.\n\nI'm baking a fresh batch of snickerdoodles today. Stop by if you're in the neighborhood!\n\nLove and hugs,\nMrs. Snake-e",
+        "Dear sweetie,\n\nThank you for thinking of me! I hope you're eating well and getting enough sleep.\n\nMy roses are blooming beautifully this season. Come visit the garden soon!\n\nWith warm regards,\nMrs. Snake-e 🌹"
+    ],
+    "remi": [
+        "yo that's pretty cool! been working on some new minecraft builds lately, you should check out my channel\n\nbtw did you see my latest video? got like 50k views already lol\n\ncya,\nremi",
+        "hey! yeah I saw your message. sounds awesome!\n\nI'm streaming tonight if you wanna hang out in chat. probably gonna do some pvp\n\npeace,\nremi ✨",
+        "sup! thanks for the email dude\n\ntotally agree with what you said. maybe we should collab on something?\n\nlater,\nremi"
+    ],
+    "rita": [
+        "Hi there! 😊\n\nThank you so much for your sweet message! You're always so thoughtful.\n\nI hope you're taking care of yourself and staying safe out there.\n\nLots of love,\nRita ❤️",
+        "Hello sweetie!\n\nYour message made me smile! I'm so proud of how well you're doing.\n\nRemember, I'm always here if you need anything at all.\n\nHugs and kisses,\nRita 💕",
+        "Hey you! 🌟\n\nThanks for reaching out! You know I always love hearing from you.\n\nTake care of yourself, okay? And don't hesitate to call if you need big sister advice!\n\nLove,\nRita"
+    ],
+    "pushing_cat": [
+        "*pushes keyboard while typing*\n\nmeow meow suspicious activities detected!! 😼\n\ni've been very busy pushing things off tables and being generally sus today\n\nthe sussy lair is extra cozy if you wanna hang out and plot mischief\n\n*knocks something over*\n\n-Pushing Cat\nProfessional Troublemaker & Belly Button Climber",
+        "purrr... 😸\n\ngot your message while i was hiding under the blankets in my sussy lair\n\nwanna join my super secret sus club? we push things and climb in belly buttons (it's not weird, it's tactical)\n\nbeen practicing my sneaking skills... very sus indeed\n\n*tail swish*\n\nPushing Cat 🐾",
+        "ALERT: maximum sus levels detected! 😼⚠️\n\nyour email has been reviewed by the Department of Sussy Activities\n\nverdict: adequately suspicious, you may proceed\n\nremember: always push things when nobody's looking\n\nstay sus,\nPushing Cat\nChief Mischief Officer, Sussy Lair HQ"
+    ]
+  },
+  "defaultResponse": "Thank you for contacting {contactName}. We have received your message and will respond within 24-48 hours.\n\nBest regards,\n{contactName}\n{contactTitle}"
+}

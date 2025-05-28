@@ -145,7 +145,7 @@ class ClockSystem {
                     <!-- Timer Tab -->
                     <div class="clock-panel" data-panel="timer">
                         <div class="timer-creator">
-                            <h3>🔥 Create New Timer</h3>
+                            <h3>Create New Timer</h3>
                             <div class="timer-inputs">
                                 <input type="number" id="timerHours" min="0" max="23" value="0" placeholder="H">
                                 <span>:</span>
@@ -154,7 +154,7 @@ class ClockSystem {
                                 <input type="number" id="timerSeconds" min="0" max="59" value="0" placeholder="S">
                             </div>
                             <input type="text" id="timerName" placeholder="Timer name (e.g., 'Homework Break')" maxlength="30">
-                            <button class="create-timer-btn" id="createTimerBtn">🚀 Start Timer!</button>
+                            <button class="create-timer-btn" id="createTimerBtn">Start Timer!</button>
                         </div>
                         
                         <div class="active-timers" id="activeTimers">
@@ -166,7 +166,7 @@ class ClockSystem {
                     <!-- Alarm Tab -->
                     <div class="clock-panel" data-panel="alarm">
                         <div class="alarm-creator">
-                            <h3>⏰ Create New Alarm</h3>
+                            <h3>Create New Alarm</h3>
                             <div class="alarm-inputs">
                                 <input type="time" id="alarmTime" value="07:00">
                                 <input type="text" id="alarmName" placeholder="Alarm name (e.g., 'Wake up!')" maxlength="30">

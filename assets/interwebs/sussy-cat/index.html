@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sussy Cat Adventure - ElxaCorp Games</title>
+    <!-- All styles inlined to avoid path issues in mock browser -->
+    <style>
+        /* Authentic 90s game website styling - matches Sussy Cat's cozy aesthetic */
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');        
+        .sussycat-web-body {
+            margin: 0 !important;
+            padding: 10px !important;
+            font-family: 'Courier Prime', 'Courier New', monospace !important;
+            background: #2a1f4f !important;
+            color: #ffffff !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+        }
+        
+        /* Specifically target common browser container classes - but only within our page */
+        .sussy-cat-website-root {
+            background: #2a1f4f !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            position: relative;
+        }
+        
+        /* Only apply box-sizing within our container */
+        .sussy-cat-website-root * {
+            box-sizing: border-box;
+        }
+        
+        /* Ensure all text elements maintain proper colors - scoped to our container */
+        .sussycat-web-container * {
+            color: inherit;
+        }
+        
+        .sussycat-web-container p {
+            color: #ffffff !important;
+        }
+        
+        .sussycat-web-container td {
+            color: #ffffff !important;
+        }
+        
+        .sussycat-web-container li {
+            color: #ffffff !important;
+        }
+        
+        .sussycat-web-container {
+            max-width: 640px;
+            margin: 0 auto;
+            background: #4a3f6f !important;
+            border: 3px solid #5a4a5a;
+            border-top-color: #8a7a8a;
+            border-left-color: #8a7a8a;
+            border-right-color: #2a1a2a;
+            border-bottom-color: #2a1a2a;
+        }
+        
+        .sussycat-web-header {
+            background: linear-gradient(180deg, #8B4A9C 0%, #5A2D5A 100%);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #3a1a3a;
+            box-shadow: inset 0 1px 0 #bb7acc, inset 0 -1px 0 #4a2a4a;
+        }
+        
+        .sussycat-web-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 0 0 5px 0;
+            text-shadow: 1px 1px 0 #2a1a2a;
+            letter-spacing: 1px;
+        }
+        
+        .sussycat-web-subtitle {
+            font-size: 11px;
+            color: #90EE90;
+            margin: 0;
+            font-style: italic;
+        }
+        
+        .sussycat-web-content {
+            padding: 20px;
+            background: transparent !important;
+        }
+        
+        .sussycat-web-section {
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, #3a2f5f 0%, #2a1f4f 100%) !important;
+            border: 2px solid #5a4a5a;
+            border-top-color: #6a5a6a;
+            border-left-color: #6a5a6a;
+            border-right-color: #2a1a2a;
+            border-bottom-color: #2a1a2a;
+            padding: 12px;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.1);
+        }
+        
+        .sussycat-web-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 0 0 10px 0;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .sussycat-web-screenshot-area {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .sussycat-web-screenshot {
+            display: inline-block;
+            background: #000;
+            border: 2px solid #5a4a5a;
+            border-top-color: #2a1a2a;
+            border-left-color: #2a1a2a;
+            border-right-color: #7a6a7a;
+            border-bottom-color: #7a6a7a;
+            padding: 5px;
+            margin: 5px;
+        }
+        
+        .sussycat-web-screenshot-img {
+            width: 120px;
+            height: 90px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #333;
+            border: 1px solid #666;
+        }
+        
+        .sussycat-web-screenshot-kitchen {
+            background: linear-gradient(135deg, #55a3ff 0%, #003d82 100%);
+        }
+        
+        .sussycat-web-screenshot-bedroom {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        }
+        
+        .sussycat-web-screenshot-caption {
+            font-size: 10px;
+            color: #90EE90;
+            margin-top: 3px;
+            font-style: italic;
+        }
+        
+        .sussycat-web-features {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        
+        .sussycat-web-features li {
+            margin: 5px 0;
+            padding-left: 15px;
+            position: relative;
+            font-size: 11px;
+        }
+        
+        .sussycat-web-features li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .sussycat-web-buy-section {
+            background: linear-gradient(180deg, #6a5a7a 0%, #4a3a5a 100%);
+            border: 3px solid #5a4a5a;
+            border-top-color: #8a7a8a;
+            border-left-color: #8a7a8a;
+            border-right-color: #2a1a2a;
+            border-bottom-color: #2a1a2a;
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2);
+        }
+        
+        .sussycat-web-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #90EE90;
+            margin: 0 0 8px 0;
+        }
+        
+        .sussycat-web-buy-btn {
+            background: linear-gradient(180deg, #6a5a7a 0%, #4a3a5a 100%);
+            color: #FFD700;
+            border: 3px solid #5a4a5a;
+            border-top-color: #8a7a8a;
+            border-left-color: #8a7a8a;
+            border-right-color: #2a1a2a;
+            border-bottom-color: #2a1a2a;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2);
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .sussycat-web-buy-btn:hover {
+            background: linear-gradient(180deg, #7a6a8a 0%, #5a4a6a 100%);
+            border-top-color: #9a8a9a;
+            border-left-color: #9a8a9a;
+        }
+        
+        .sussycat-web-buy-btn:active {
+            background: linear-gradient(180deg, #4a3a5a 0%, #3a2a4a 100%);
+            border-top-color: #3a2a3a;
+            border-left-color: #3a2a3a;
+            border-right-color: #6a5a6a;
+            border-bottom-color: #6a5a6a;
+            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3);
+        }
+        
+        .sussycat-web-requirements {
+            background: #2a1a2a;
+            border: 2px solid #3a2a3a;
+            border-top-color: #1a0a1a;
+            border-left-color: #1a0a1a;
+            border-right-color: #5a4a5a;
+            border-bottom-color: #5a4a5a;
+            padding: 10px;
+            font-size: 10px;
+            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.5);
+        }
+        
+        .sussycat-web-requirements h4 {
+            color: #90EE90;
+            margin: 0 0 8px 0;
+            font-size: 11px;
+        }
+        
+        .sussycat-web-requirements ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        .sussycat-web-requirements li {
+            margin: 3px 0;
+        }
+        
+        .sussycat-web-news {
+            background: #2a1f4f;
+            border: 1px solid #5a4a5a;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 10px;
+            border-left: 3px solid #FFD700;
+        }
+        
+        .sussycat-web-news-title {
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .sussycat-web-footer {
+            background: #1a0f2f;
+            border-top: 2px solid #3a2a3a;
+            padding: 10px;
+            text-align: center;
+            font-size: 9px;
+            color: #999;
+        }
+        
+        .sussycat-web-counter {
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #333;
+            padding: 2px 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .sussycat-web-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        .sussycat-web-table td {
+            padding: 8px;
+            vertical-align: top;
+            border: 1px solid #5a4a5a;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .sussycat-web-table td:first-child {
+            width: 30%;
+            font-weight: bold;
+            color: #90EE90;
+        }
+    </style>   
+    <!-- Payment System CSS - Inlined to avoid path issues in mock browser -->
+
+</head>
+<body class="sussycat-web-body">
+    <div class="sussy-cat-website-root">
+        <div class="sussycat-web-container">
+        <div class="sussycat-web-header">
+            <div class="sussycat-web-title">Sussy Cat Adventure</div>
+            <div class="sussycat-web-subtitle">A Cozy Stealth Game for Kids</div>
+        </div>
+        
+        <div class="sussycat-web-content">
+            <div class="sussycat-web-section">
+                <div class="sussycat-web-section-title">About the Game</div>
+                <p>Meet Pushing Cat, the most mischievous little black cat in Snakesia! When his family leaves the house, it's time for some serious sus adventures.</p>
+                
+                <p>Help Pushing Cat collect items from around the house while avoiding detection. Use stealth, hide in the secret Sussy Lair, and master the art of being perfectly sus!</p>
+                
+                <div class="sussycat-web-news">
+                    <div class="sussycat-web-news-title">NEW in Version 1.2:</div>
+                    Advanced Plotting Mechanic! Discover mysterious plot points throughout the house for special abilities and bonus points!
+                </div>
+            </div>
+            
+            <div class="sussycat-web-section">
+                <div class="sussycat-web-section-title">Screenshots</div>
+                <div class="sussycat-web-screenshot-area">
+                    <div class="sussycat-web-screenshot">
+                        <div class="sussycat-web-screenshot-img">
+                            <img src="./assets/interwebs/sussy-cat/images/sussy1.png" alt="Start Screen" style="width: 100%; height: 100%; object-fit: cover; border-radius: 2px;">
+                        </div>
+                        <div class="sussycat-web-screenshot-caption">Get Started</div>
+                    </div>
+                    <div class="sussycat-web-screenshot">
+                        <div class="sussycat-web-screenshot-img">
+                            <img src="./assets/interwebs/sussy-cat/images/sussy2.png" alt="Kitchen Scene" style="width: 100%; height: 100%; object-fit: cover; border-radius: 2px;">
+                        </div>
+                        <div class="sussycat-web-screenshot-caption">Kitchen</div>
+                    </div>
+                    <div class="sussycat-web-screenshot">
+                        <div class="sussycat-web-screenshot-img">
+                            <img src="./assets/interwebs/sussy-cat/images/sussy3.png" alt="Bedroom and Sussy Lair" style="width: 100%; height: 100%; object-fit: cover; border-radius: 2px;">
+                        </div>
+                        <div class="sussycat-web-screenshot-caption">Bedroom & Sussy Lair</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sussycat-web-section">
+                <div class="sussycat-web-section-title">Game Features</div>
+                <ul class="sussycat-web-features">
+                    <li>6 challenging levels with increasing difficulty</li>
+                    <li>4 rooms to explore: Living Room, Kitchen, Bedroom, and Bathroom</li>
+                    <li>Hide in the secret Sussy Lair to reduce detection</li>
+                    <li>New Plotting Mechanic with special power-ups</li>
+                    <li>Over 24 different items to collect</li>
+                    <li>Retro pixel art style with smooth controls</li>
+                    <li>Family-friendly stealth gameplay</li>
+                    <li>Save your progress and try to beat your best times</li>
+                </ul>
+            </div>
+            
+            <div class="sussycat-web-section">
+                <div class="sussycat-web-section-title">Game Information</div>
+                <table class="sussycat-web-table">
+                    <tr>
+                        <td>Developer:</td>
+                        <td>ElxaCorp Games Division</td>
+                    </tr>
+                    <tr>
+                        <td>Release Date:</td>
+                        <td>September 1999</td>
+                    </tr>
+                    <tr>
+                        <td>Genre:</td>
+                        <td>Stealth/Adventure</td>
+                    </tr>
+                    <tr>
+                        <td>Players:</td>
+                        <td>1 Player</td>
+                    </tr>
+                    <tr>
+                        <td>Rating:</td>
+                        <td>Everyone - Suitable for all ages</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="sussycat-web-buy-section">
+                <div class="sussycat-web-price">$14.99 (CD-ROM)</div>
+                <div style="margin-bottom: 8px; font-size: 10px;">Available at computer stores throughout Snakesia</div>
+                <button class="sussycat-web-buy-btn" onclick="purchaseSussyCat()">Order Now</button>
+                <a href="#" class="sussycat-web-buy-btn" onclick="downloadSussyCatDemo()">Download Demo</a>
+            </div>
+            
+            <div class="sussycat-web-section">
+                <div class="sussycat-web-section-title">System Requirements</div>
+                <div class="sussycat-web-requirements">
+                    <h4>Minimum:</h4>
+                    <ul>
+                        <li>ElxaOS 1.0 or compatible system</li>
+                        <li>16 MB RAM (32 MB recommended)</li>
+                        <li>50 MB free hard disk space</li>
+                        <li>SVGA graphics (640x480, 256 colors)</li>
+                        <li>Sound card compatible with ElxaOS</li>
+                        <li>CD-ROM drive</li>
+                        <li>Keyboard required</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sussycat-web-section">
+                <div class="sussycat-web-section-title">Reviews</div>
+                <p><strong>Snakesia Computer Gaming Monthly:</strong> "A delightful stealth game that's perfect for younger players. The hiding mechanic is innovative and the pixel art is charming." - 4/5 stars</p>
+                
+                <p><strong>Family PC Games:</strong> "Sussy Cat Adventure strikes the perfect balance between challenge and accessibility. Our kids loved helping Pushing Cat with his mischievous adventures!" - Recommended</p>
+            </div>
+        </div>
+        
+        <div class="sussycat-web-footer">
+            <div class="sussycat-web-counter">Visitors: 002,847</div>
+            <p>© 1999 ElxaCorp. All rights reserved.<br>
+            Sussy Cat Adventure and Pushing Cat are trademarks of ElxaCorp.</p>
+            <p>Last updated: October 15, 1999 | <a href="mailto:games@elxacorp.ex" style="color: #90EE90;">Contact Us</a></p>
+        </div>
+        
+    </div> <!-- Close sussy-cat-website-root -->
+
+    <!-- Payment System JavaScript -->
+    <script src="../../../js/services/payment-system.js"></script>
+</body>
+</html>

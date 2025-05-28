@@ -1,5 +1,5 @@
 // =================================
-// SNOOGLE BROWSER PROGRAM (FIXED)
+// SNOOGLE BROWSER WITH WIFI INTEGRATION
 // =================================
 class BrowserProgram {
     constructor(windowManager, fileSystem, eventBus) {
@@ -12,422 +12,244 @@ class BrowserProgram {
         this.currentHistoryIndex = -1;
         this.favorites = [];
         this.isConnected = false;
-        this.websiteRegistry = this.initializeWebsiteRegistry();
+        this.websiteRegistry = {};
+        this.loadWebsiteRegistry();
+        this.visitorCount = this.getVisitorCount();
+        this.eventListeners = []; // Track event listeners for cleanup
         
         this.setupEventListeners();
         this.loadUserData();
-        
-        // Listen for window close events to clean up scripts
-        this.eventBus.on('window.closed', (data) => {
-            if (data.id === this.windowId) {
-                this.clearPageScripts();
-                this.windowId = null;
-            }
-        });
     }
 
-    initializeWebsiteRegistry() {
-        return {
-            'snoogle.ex': {
-                title: 'Snoogle - Search the ExWeb',
-                type: 'homepage',
-                searchData: {
-                    keywords: ['search', 'home', 'snoogle'],
-                    description: 'Search the ExWeb and discover amazing websites!',
-                    category: 'Search'
-                }
-            },
+    // Check if the browser window is still valid
+    isWindowValid() {
+        return this.windowId && this.windowManager.windows.has(this.windowId);
+    }
+
+    // Safe method to get window element with validation
+    getWindowElement() {
+        if (!this.isWindowValid()) {
+            return null;
+        }
+        return this.windowManager.windows.get(this.windowId).element;
+    }
+
+    getVisitorCount() {
+        // Generate a fake but consistent visitor count
+        const base = 2847;
+        const today = new Date().toDateString();
+        const hash = today.split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+        }, 0);
+        return base + Math.abs(hash % 1000);
+    }
+
+    async loadWebsiteRegistry() {
+        try {
+            console.log('📁 Loading website registry from JSON...');
             
-            // Utility Sites
-            'snoogle-dictionary.ex': {
-                title: 'Snoogle Dictionary',
-                type: 'file',
-                path: './assets/interwebs/snoogle-dictionary/index.html',
-                css: './assets/interwebs/snoogle-dictionary/styles.css',
-                searchData: {
-                    keywords: ['dictionary', 'language', 'reference', 'words', 'definitions', 'thesaurus', 'vocabulary', 'snakesian'],
-                    description: 'Comprehensive dictionary and language reference tool featuring Snakesian and standard English definitions, etymologies, and usage examples.',
-                    category: 'Utilities'
-                }
-            },
-            'snoogle-pedia.ex': {
-                title: 'SnooglePedia - The ExWeb Encyclopedia',
-                type: 'file',
-                path: './assets/interwebs/snoogle-pedia/index.html',
-                css: './assets/interwebs/snoogle-pedia/styles.css',
-                searchData: {
-                    keywords: ['encyclopedia', 'Wikipedia', 'wikipedia', 'learn', 'learning', 'knowledge', 'articles', 'reference', 'research', 'education', 'information', 'wiki', 'snakesia'],
-                    description: 'Free online encyclopedia covering topics from Snakesian history to modern technology. Community-edited with verified sources.',
-                    category: 'Education'
-                }
-            },
-            'weather.ex': {
-                title: 'Snakesia Weather Service',
-                type: 'file',
-                path: './assets/interwebs/snakesia-weather/index.html',
-                css: './assets/interwebs/snakesia-weather/styles.css',
-                searchData: {
-                    keywords: ['weather', 'forecast', 'temperature', 'climate', 'meteorology', 'snakesia', 'radar', 'precipitation'],
-                    description: 'Official Snakesian weather forecasting service providing real-time updates, radar maps, and climate data for all regions.',
-                    category: 'Utilities'
-                }
-            },
-            'phones.ex': {
-                title: 'Phoneverse',
-                type: 'file',
-                path: './assets/interwebs/phones/index.html',
-                css: './assets/interwebs/phones/styles.css',
-                searchData: {
-                    keywords: ['phone', 'phones', 'cell', 'mobile', 'directory', 'contacts', 'business', 'yellow pages', 'phone numbers', 'listings', 'local'],
-                    description: 'Complete phone directory for Snakesia. Find business and residential listings, along with local service information.',
-                    category: 'Utilities'
-                }
-            },
-            'keycuts.ex': {
-                title: 'KeyCuts - Shortcut Reference',
-                type: 'file',
-                path: './assets/interwebs/keycuts/index.html',
-                css: './assets/interwebs/keycuts/styles.css',
-                searchData: {
-                    keywords: ['keyboard shortcuts', 'keyboard', 'shortcut', 'productivity', 'elxaos', 'hotkeys', 'reference', 'guide', 'computer tips'],
-                    description: 'Official ElxaOS keyboard shortcut reference guide. Learn to navigate your system like a pro!',
-                    category: 'Utilities'
-                }
-            },
-            'rpi-guide.ex': {
-                title: 'Raspberry Pi 4 Guide',
-                type: 'file',
-                path: './assets/interwebs/rpi-guide/index.html',
-                css: './assets/interwebs/rpi-guide/styles.css',
-                searchData: {
-                    keywords: ['raspberry pi', 'linux', 'hardware', 'diy', 'computer', 'computing', 'electronics', 'programming', 'gpio', 'python'],
-                    description: 'Complete guide to setting up and programming the Raspberry Pi 4 in Snakesia. Includes ElxaOS compatibility tips.',
-                    category: 'Technology'
-                }
-            },
-            'chihuahua-info.ex': {
-                title: 'Chihuahua Information Center',
-                type: 'file',
-                path: './assets/interwebs/cic/index.html',
-                css: './assets/interwebs/cic/styles.css',
-                searchData: {
-                    keywords: ['chihuahua', 'chihuahuas', 'dogs', 'dog', 'pet', 'pets', 'research', 'veterinary', 'canine studies', 'snake-u', 'animal science'],
-                    description: 'Academic resource for Chihuahua research from the Department of Canine Studies at Snake-E University.',
-                    category: 'Education'
-                }
-            },
+            // Try multiple possible paths
+            const possiblePaths = [
+                './js/programs/website-registry.json',
+                './website-registry.json',
+                'js/programs/website-registry.json',
+                '/js/programs/website-registry.json'
+            ];
             
-            // Gaming
-            'remicraft.ex': {
-                title: 'RemiCraft - Official Server',
-                type: 'file',
-                path: './assets/interwebs/remicraft/index.html',
-                css: './assets/interwebs/remicraft/styles.css',
-                searchData: {
-                    keywords: ['minecraft', 'gaming', 'server', 'remi', 'marway', 'multiplayer', 'games'],
-                    description: 'Official Minecraft server hosted by Remi Marway. Join the most popular game server in Snakesia!',
-                    category: 'Gaming'
-                }
-            },
+            let data = null;
+            let successfulPath = null;
             
-            // Government - Multi-page site
-            'snakesia.gov.ex': {
-                title: 'Official Website of Snakesia - Home',
-                type: 'file',
-                path: './assets/interwebs/snakesia-gov/index.html',
-                css: './assets/interwebs/snakesia-gov/styles.css',
-                searchData: {
-                    keywords: ['snakesia', 'government', 'tourism', 'embassy', 'currency', 'snake dollars'],
-                    description: 'Official government website of Snakesia. Information about tourism, business, and embassy services.',
-                    category: 'Government'
-                }
-            },
-            'snakesia.gov.ex/business': {
-                title: 'Official Website of Snakesia - Business',
-                type: 'file',
-                path: './assets/interwebs/snakesia-gov/business.html',
-                css: './assets/interwebs/snakesia-gov/styles.css',
-                searchData: {
-                    keywords: ['business', 'snakesia', 'commerce', 'trade', 'economy'],
-                    description: 'Business information and resources for Snakesia.',
-                    category: 'Government'
-                }
-            },
-            'snakesia.gov.ex/embassy': {
-                title: 'Official Website of Snakesia - Embassy',
-                type: 'file',
-                path: './assets/interwebs/snakesia-gov/embassy.html',
-                css: './assets/interwebs/snakesia-gov/styles.css',
-                searchData: {
-                    keywords: ['embassy', 'consulate', 'visa', 'passport', 'diplomatic'],
-                    description: 'Embassy and consular services for Snakesia.',
-                    category: 'Government'
-                }
-            },
-            'snakesia.gov.ex/tourism': {
-                title: 'Official Website of Snakesia - Tourism',
-                type: 'file',
-                path: './assets/interwebs/snakesia-gov/tourism.html',
-                css: './assets/interwebs/snakesia-gov/styles.css',
-                searchData: {
-                    keywords: ['tourism', 'travel', 'vacation', 'attractions', 'snakesia'],
-                    description: 'Discover the beauty and attractions of Snakesia.',
-                    category: 'Government'
-                }
-            },
-            'snakesia.gov.ex/mansion': {
-                title: 'Official Website of Snakesia - Mansion Tours',
-                type: 'file',
-                path: './assets/interwebs/snakesia-gov/mansion.html',
-                css: './assets/interwebs/snakesia-gov/styles.css',
-                searchData: {
-                    keywords: ['mansion', 'tours', 'presidential', 'palace', 'history'],
-                    description: 'Tour the famous Snakesian Presidential Mansion.',
-                    category: 'Government'
-                }
-            },
-            'snakesia.gov.ex/maps': {
-                title: 'Official Website of Snakesia - Maps',
-                type: 'file',
-                path: './assets/interwebs/snakesia-gov/maps.html',
-                css: './assets/interwebs/snakesia-gov/styles.css',
-                searchData: {
-                    keywords: ['maps', 'geography', 'locations', 'navigation'],
-                    description: 'Interactive maps and geographic information for Snakesia.',
-                    category: 'Government'
-                }
-            },
-            
-            // ElxaTech - Multi-page site
-            'elxatech.ex': {
-                title: 'ElxaTech - Educational Technology Platform',
-                type: 'file',
-                path: './assets/interwebs/elxatech/index.html',
-                css: './assets/interwebs/elxatech/styles.css',
-                searchData: {
-                    keywords: ['education', 'technology', 'science', 'math', 'chemistry', 'phones', 'retro', 'learning', 'tutorials', 'snake-e', 'academic'],
-                    description: 'Premier educational technology platform offering resources in mathematics, chemistry, computer science, and technology history.',
-                    category: 'Education'
-                }
-            },
-            'elxatech.ex/about': {
-                title: 'ElxaTech - About Us',
-                type: 'file',
-                path: './assets/interwebs/elxatech/about.html',
-                css: './assets/interwebs/elxatech/styles.css',
-                searchData: {
-                    keywords: ['about', 'elxatech', 'team', 'mission'],
-                    description: 'Learn about ElxaTech and our educational mission.',
-                    category: 'Education'
-                }
-            },
-            'elxatech.ex/chemistry': {
-                title: 'ElxaTech - Chemistry Resources',
-                type: 'file',
-                path: './assets/interwebs/elxatech/chemistry.html',
-                css: './assets/interwebs/elxatech/styles.css',
-                searchData: {
-                    keywords: ['chemistry', 'chemical', 'elements', 'reactions', 'lab'],
-                    description: 'Comprehensive chemistry resources and interactive experiments.',
-                    category: 'Education'
-                }
-            },
-            'elxatech.ex/math': {
-                title: 'ElxaTech - Mathematics Center',
-                type: 'file',
-                path: './assets/interwebs/elxatech/math.html',
-                css: './assets/interwebs/elxatech/styles.css',
-                searchData: {
-                    keywords: ['math', 'mathematics', 'algebra', 'geometry', 'calculus'],
-                    description: 'Advanced mathematics tutorials and problem solving.',
-                    category: 'Education'
-                }
-            },
-            'elxatech.ex/phones': {
-                title: 'ElxaTech - Phone Technology',
-                type: 'file',
-                path: './assets/interwebs/elxatech/phones.html',
-                css: './assets/interwebs/elxatech/styles.css',
-                searchData: {
-                    keywords: ['phones', 'mobile', 'technology', 'communication'],
-                    description: 'Explore the evolution of phone technology.',
-                    category: 'Technology'
-                }
-            },
-            'elxatech.ex/retro': {
-                title: 'ElxaTech - Retro Computing',
-                type: 'file',
-                path: './assets/interwebs/elxatech/retro.html',
-                css: './assets/interwebs/elxatech/styles.css',
-                searchData: {
-                    keywords: ['retro', 'vintage', 'computing', 'history', 'old computers'],
-                    description: 'Journey through the history of computing technology.',
-                    category: 'Technology'
-                }
-            },
-            
-            // ElxaCorp - Multi-page site
-            'snake-e.corp.ex': {
-                title: 'ElxaCorp - Home',
-                type: 'file',
-                path: './assets/interwebs/snake-e-corp/index.html',
-                css: './assets/interwebs/snake-e-corp/styles.css',
-                searchData: {
-                    keywords: ['elxa', 'corporation', 'snake-e', 'business', 'technology', 'software', 'elxaos'],
-                    description: 'ElxaCorp - Leading technology innovation in Snakesia. Creators of ElxaOS.',
-                    category: 'Business'
-                }
-            },
-            'snake-e.corp.ex/about': {
-                title: 'ElxaCorp - About',
-                type: 'file',
-                path: './assets/interwebs/snake-e-corp/about.html',
-                css: './assets/interwebs/snake-e-corp/styles.css',
-                searchData: {
-                    keywords: ['about', 'elxacorp', 'company', 'history'],
-                    description: 'Learn about ElxaCorp\'s history and mission.',
-                    category: 'Business'
-                }
-            },
-            'snake-e.corp.ex/careers': {
-                title: 'ElxaCorp - Careers',
-                type: 'file',
-                path: './assets/interwebs/snake-e-corp/careers.html',
-                css: './assets/interwebs/snake-e-corp/styles.css',
-                searchData: {
-                    keywords: ['careers', 'jobs', 'employment', 'work'],
-                    description: 'Join the ElxaCorp team and build the future.',
-                    category: 'Business'
-                }
-            },
-            
-            // Xeocities Personal Sites
-            'pacman-xeocities.ex': {
-                title: 'PacMan Power! 👻',
-                type: 'file',
-                path: './assets/interwebs/pp-xeocities/index.html',
-                searchData: {
-                    keywords: ['pacman', 'games', 'retro', 'arcade', 'personal'],
-                    description: 'Your ultimate guide to PacMan! Tips, tricks, and high scores!',
-                    category: 'Personal'
-                }
-            },
-            'chi-corner-xeocities.ex': {
-                title: 'ChiChis Chihuahua Corner',
-                type: 'file',
-                path: './assets/interwebs/chi-xeocities/index.html',
-                searchData: {
-                    keywords: ['chihuahua', 'dogs', 'pets', 'cute', 'personal'],
-                    description: 'All about the cutest little dogs in the world!',
-                    category: 'Personal'
-                }
-            },
-            'craftzone-xeocities.ex': {
-                title: 'CRAFTZONE',
-                type: 'file',
-                path: './assets/interwebs/craftzone-xeocities/index.html',
-                searchData: {
-                    keywords: ['games', 'gaming', 'Minecraft', 'hobbies', 'personal', 'personal page', 'xeocities', 'projects', 'tutorials'],
-                    description: 'Your ultimate guide to Minecraft facts! Featuring tips and tricks!',
-                    category: 'Personal'
-                }
-            },
-            'nr-xeocities.ex': {
-                title: 'NileRed Chemistry Corner',
-                type: 'file',
-                path: './assets/interwebs/nr-xeocities/index.html',
-                searchData: {
-                    keywords: ['NileRed', 'chemistry', 'experiment', 'experiments', 'science', 'reaction', 'reactions', 'blue iodine', 'crystal growing'],
-                    description: 'Explore unique Snakesian chemical reactions and experiments. Features our special blue iodine and naturally-forming copper sulfate crystals!',
-                    category: 'Education'
-                }
-            },
-            'cat-xeocities.ex': {
-                title: 'Whiskers World~',
-                type: 'file',
-                path: './assets/interwebs/cat-xeocities/index.html',
-                searchData: {
-                    keywords: ['cats', 'cat', 'kitty', 'pet', 'pets', 'felines', 'cat facts', 'cat care'],
-                    description: 'The ultimate fan site for Snakesian cats and their unique characteristics. Featuring facts, care tips, and photos of our special 19-toed felines!',
-                    category: 'Personal'
-                }
-            },
-            'ms-xeocities.ex': {
-                title: 'Mrs. Snake-e-s Corner',
-                type: 'file',
-                path: './assets/interwebs/ms-xeocities/index.html',
-                searchData: {
-                    keywords: ['gardening', 'garden', 'plant', 'baking', 'bake', 'recipe', 'recipes', 'cookie', 'cookies', 'garden tips', 'homemade'],
-                    description: 'Traditional Snakesian gardening tips and family recipes from Mrs. Snake-E herself. Growing blue roses and baking snake-shaped cookies since 1975.',
-                    category: 'Personal'
-                }
-            },
-            
-            // Social Media
-            'snakebook.ex': {
-                title: 'Snakebook',
-                type: 'file',
-                path: './assets/interwebs/snakebook/index.html',
-                css: './assets/interwebs/snakebook/styles.css',
-                searchData: {
-                    keywords: ['social media', 'networking', 'friends', 'social network', 'snakebook', 'profiles', 'messaging', 'snakesia social', 'status updates', 'photos'],
-                    description: 'Snakesia\'s largest social network. Connect with friends, share updates, and join the largest online community in Snakesia.',
-                    category: 'Social'
-                }
-            },
-            'dissscord.ex': {
-                title: 'DisssCord',
-                type: 'file',
-                path: './assets/interwebs/dissscord/index.html',
-                css: './assets/interwebs/dissscord/styles.css',
-                searchData: {
-                    keywords: ['chat', 'communities', 'discord', 'voice chat', 'gaming', 'servers', 'groups', 'messaging', 'voice channels', 'text channels'],
-                    description: 'Join the conversation on DisssCord! The premier chat platform for Snakesian communities, gamers, and groups. Create servers, chat with friends, and join voice channels.',
-                    category: 'Social'
-                }
-            },
-            'abbit.ex': {
-                title: 'Abbit',
-                type: 'file',
-                path: './assets/interwebs/abbit/index.html',
-                css: './assets/interwebs/abbit/styles.css',
-                searchData: {
-                    keywords: ['forum', 'community', 'discussions', 'subrabbits', 'news', 'memes', 'posts', 'upvotes', 'threads', 'karma'],
-                    description: 'Dive into endless discussions on Abbit, where Snakesians share news, memes, and join topic-focused communities called subrabbits. Your daily source for what\'s trending in Snakesia.',
-                    category: 'Social'
-                }
-            },
-            
-            // Special pages
-            'directory': {
-                title: 'ExWeb Directory',
-                type: 'directory',
-                searchData: {
-                    keywords: ['directory', 'list', 'sites', 'browse'],
-                    description: 'Browse all available websites on the ExWeb.',
-                    category: 'Utilities'
+            for (const path of possiblePaths) {
+                try {
+                    console.log(`🔍 Trying path: ${path}`);
+                    const response = await fetch(path);
+                    if (response.ok) {
+                        data = await response.json();
+                        successfulPath = path;
+                        console.log(`✅ Successfully loaded from: ${path}`);
+                        console.log('📊 Raw JSON data:', data);
+                        break;
+                    } else {
+                        console.log(`❌ Path failed with status: ${response.status}`);
+                    }
+                } catch (pathError) {
+                    console.log(`❌ Path ${path} failed:`, pathError.message);
                 }
             }
-        };
+            
+            if (!data) {
+                throw new Error('Could not load website registry from any path');
+            }
+            
+            // Check if data has websites property or is the websites object directly
+            if (data.websites) {
+                this.websiteRegistry = data.websites;
+                console.log(`✅ Loaded ${Object.keys(this.websiteRegistry).length} websites from data.websites`);
+            } else if (typeof data === 'object' && Object.keys(data).length > 0) {
+                // Maybe the JSON is structured as the websites object directly
+                this.websiteRegistry = data;
+                console.log(`✅ Loaded ${Object.keys(this.websiteRegistry).length} websites directly from data`);
+            } else {
+                throw new Error('JSON data does not contain valid website registry');
+            }
+            
+        } catch (error) {
+            console.error('❌ Failed to load website registry:', error);
+            console.log('🔧 Using fallback website registry');
+            // Fallback to minimal registry
+            this.websiteRegistry = {
+                'snoogle.ex': {
+                    title: 'Snoogle - Search the ExWeb',
+                    type: 'homepage',
+                    searchData: {
+                        keywords: ['search', 'home', 'snoogle'],
+                        description: 'Search the ExWeb and discover amazing websites!',
+                        category: 'Search'
+                    }
+                },
+                'elxamail.ex': {
+                    title: 'ElxaMail - Your Gateway to the ExWeb',
+                    type: 'file',
+                    path: './assets/interwebs/exmail/index.html',
+                    searchData: {
+                        keywords: ['email', 'mail', 'messaging'],
+                        description: 'Snakesia\'s premier email service.',
+                        category: 'Utilities'
+                    }
+                }
+            };
+            console.log('✅ Fallback registry loaded with', Object.keys(this.websiteRegistry).length, 'websites');
+        }
     }
 
     setupEventListeners() {
-        // Listen for WiFi connection changes
-        this.eventBus.on('wifi.connected', () => {
-            this.isConnected = true;
-            this.refreshCurrentPage();
-        });
+        // Store event listener cleanup functions
+        const cleanupFunctions = [];
 
-        this.eventBus.on('wifi.disconnected', () => {
+        // Listen for WiFi connection changes with proper cleanup
+        const onWifiConnected = (data) => {
+            console.log('🌐 Browser: WiFi connected', data);
+            this.isConnected = true;
+            this.updateConnectionStatus();
+            this.refreshCurrentPageSafe();
+        };
+
+        const onWifiDisconnected = () => {
+            console.log('🌐 Browser: WiFi disconnected');
             this.isConnected = false;
-            this.refreshCurrentPage();
-        });
+            this.updateConnectionStatus();
+            this.refreshCurrentPageSafe();
+        };
+
+        this.eventBus.on('wifi.connected', onWifiConnected);
+        this.eventBus.on('wifi.disconnected', onWifiDisconnected);
+
+        // Store cleanup functions for later removal
+        cleanupFunctions.push(
+            () => this.eventBus.off('wifi.connected', onWifiConnected),
+            () => this.eventBus.off('wifi.disconnected', onWifiDisconnected)
+        );
+
+        // Listen for window close events to clean up
+        const onWindowClosed = (data) => {
+            if (data.id === this.windowId) {
+                console.log('🌐 Browser: Window closed, cleaning up...');
+                this.clearPageScripts();
+                this.windowId = null;
+                // Clean up all event listeners
+                cleanupFunctions.forEach(cleanup => cleanup());
+            }
+        };
+
+        this.eventBus.on('window.closed', onWindowClosed);
+        cleanupFunctions.push(() => this.eventBus.off('window.closed', onWindowClosed));
+
+        // Store cleanup functions for external access
+        this.cleanupEventListeners = () => {
+            cleanupFunctions.forEach(cleanup => cleanup());
+        };
     }
 
-    launch() {
+    // Safe version of refreshCurrentPage that checks window validity
+    refreshCurrentPageSafe() {
+        if (!this.isWindowValid()) {
+            console.log('🌐 Browser: Skipping refresh - window no longer valid');
+            return;
+        }
+        this.refreshCurrentPage();
+    }
+
+    // Update connection status in the browser UI
+    updateConnectionStatus() {
+        if (!this.isWindowValid()) return;
+
+        const window = this.getWindowElement();
+        if (!window) return;
+
+        // Update the toolbar to show connection status
+        const toolbar = window.querySelector('.browser-toolbar');
+        if (toolbar) {
+            // Remove existing connection indicator
+            const existingIndicator = toolbar.querySelector('.connection-status');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+
+            // Add new connection indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'connection-status';
+            indicator.style.cssText = `
+                display: flex;
+                align-items: center;
+                padding: 2px 8px;
+                font-size: 10px;
+                border-radius: 3px;
+                margin-left: 8px;
+                ${this.isConnected ? 
+                    'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : 
+                    'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'
+                }
+            `;
+
+            if (this.isConnected) {
+                const connectionInfo = elxaOS.wifiService?.getConnectionInfo();
+                if (connectionInfo) {
+                    indicator.innerHTML = `📶 ${connectionInfo.network} (${Math.round(connectionInfo.signalStrength)}/5)`;
+                    indicator.title = `Connected to ${connectionInfo.network}\nSecurity: ${connectionInfo.security}\nFrequency: ${connectionInfo.frequency}`;
+                } else {
+                    indicator.innerHTML = '🌐 Online';
+                }
+            } else {
+                indicator.innerHTML = '📡 Offline';
+                indicator.title = 'No internet connection - Click to connect to WiFi';
+                indicator.style.cursor = 'pointer';
+                indicator.addEventListener('click', () => {
+                    if (elxaOS.wifiService) {
+                        elxaOS.wifiService.showWiFiDialog();
+                    }
+                });
+            }
+
+            // Insert before the browser actions
+            const actions = toolbar.querySelector('.browser-actions');
+            if (actions) {
+                toolbar.insertBefore(indicator, actions);
+            } else {
+                toolbar.appendChild(indicator);
+            }
+        }
+    }
+
+    async launch() {
         if (this.windowId && this.windowManager.windows.has(this.windowId)) {
             this.windowManager.focusWindow(this.windowId);
             return;
+        }
+
+        // Ensure website registry is loaded before launching
+        if (Object.keys(this.websiteRegistry).length === 0) {
+            await this.loadWebsiteRegistry();
         }
 
         // Check current WiFi status
@@ -454,6 +276,9 @@ class BrowserProgram {
         window.classList.add('browser-window');
         this.setupBrowserEvents();
         
+        // Update connection status indicator
+        this.updateConnectionStatus();
+        
         // Load homepage or no internet page
         this.navigateToHome();
     }
@@ -471,6 +296,7 @@ class BrowserProgram {
                 <div class="browser-actions">
                     <button class="home-button" id="homeBtn" title="Home">🏠</button>
                     <button class="favorite-button" id="favoriteBtn" title="Add to Favorites">⭐</button>
+                    <button class="nav-button" id="wifiBtn" title="WiFi Settings">📶</button>
                     <button class="nav-button" id="menuBtn" title="Menu">☰</button>
                     <button class="nav-button" id="debugBtn" title="Debug Info">🔍</button>
                 </div>
@@ -496,18 +322,28 @@ class BrowserProgram {
                 <div class="browser-menu-separator"></div>
                 <div class="browser-menu-item" data-action="clearHistory">🗑️ Clear History</div>
                 <div class="browser-menu-item" data-action="clearFavorites">❌ Clear Favorites</div>
+                <div class="browser-menu-separator"></div>
+                <div class="browser-menu-item" data-action="wifiSettings">📶 WiFi Settings</div>
             </div>
         `;
     }
 
     setupBrowserEvents() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
         
         // Navigation buttons
         window.querySelector('#backBtn').addEventListener('click', () => this.goBack());
         window.querySelector('#forwardBtn').addEventListener('click', () => this.goForward());
         window.querySelector('#refreshBtn').addEventListener('click', () => this.refresh());
         window.querySelector('#homeBtn').addEventListener('click', () => this.navigateToHome());
+        
+        // WiFi button - NEW
+        window.querySelector('#wifiBtn').addEventListener('click', () => {
+            if (elxaOS.wifiService) {
+                elxaOS.wifiService.showWiFiDialog();
+            }
+        });
         
         // URL input and Go button
         const urlInput = window.querySelector('#urlInput');
@@ -620,19 +456,48 @@ class BrowserProgram {
     }
 
     showSnoogleHomepage() {
+        const totalSites = Object.keys(this.websiteRegistry).length - 2; // Exclude homepage and directory
+        
         const content = `
             <div class="snoogle-homepage">
-                <div class="snoogle-logo">Snoogle</div>
-                <div class="snoogle-search">
-                    <input type="text" class="search-input" id="snoogleSearchInput" placeholder="Search the ExWeb...">
-                    <button class="search-button" id="snoogleSearchBtn">Search</button>
+                <div class="snoogle-header">
+                    <div class="snoogle-logo">
+                        <span class="letter-s1">S</span><span class="letter-n1">n</span><span class="letter-o1">o</span><span class="letter-o2">o</span><span class="letter-g1">g</span><span class="letter-l1">l</span><span class="letter-e1">e</span>
+                    </div>
+                    <div class="snoogle-tagline">Search the ExWeb</div>
                 </div>
-                <div class="snoogle-buttons">
-                    <button class="snoogle-btn" id="directoryBtn">📂 Browse All Sites</button>
-                    <button class="snoogle-btn" id="randomBtn">🎲 I'm Feeling Lucky</button>
+                
+                <div class="snoogle-search-container">
+                    <div class="snoogle-search">
+                        <input type="text" class="search-input" id="snoogleSearchInput" placeholder="Search">
+                        <button class="search-button" id="snoogleSearchBtn">Snoogle Search</button>
+                    </div>
+                    <div class="snoogle-buttons">
+                        <button class="snoogle-btn" id="directoryBtn">Browse Directory</button>
+                        <button class="snoogle-btn" id="randomBtn">I'm Feeling Lucky</button>
+                    </div>
                 </div>
-                <div class="snoogle-footer">
-                    Welcome to the ExWeb! 🌐
+
+                <div class="snoogle-stats">
+                    <table class="stats-table">
+                        <tr>
+                            <td>ExWeb pages indexed:</td>
+                            <td class="stats-number">${totalSites}</td>
+                        </tr>
+                        <tr>
+                            <td>Active sites:</td>
+                            <td class="stats-number">${totalSites}</td>
+                        </tr>
+                        <tr>
+                            <td>Visitors today:</td>
+                            <td class="stats-number">${this.visitorCount}</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 15px; font-size: 10px;">
+                        © 1997 Snoogle Corp. | 
+                        <a href="#" style="color: #0066cc;" onclick="elxaOS.programs.browser.loadPage('directory')">Browse Sites</a> | 
+                        About Snoogle
+                    </p>
                 </div>
             </div>
         `;
@@ -642,7 +507,9 @@ class BrowserProgram {
     }
 
     setupSnoogleEvents() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const searchInput = window.querySelector('#snoogleSearchInput');
         const searchBtn = window.querySelector('#snoogleSearchBtn');
         const directoryBtn = window.querySelector('#directoryBtn');
@@ -684,7 +551,9 @@ class BrowserProgram {
     }
 
     setupPageLinkHandling() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const browserPage = window.querySelector('#browserPage');
         
         // Remove any existing listeners to avoid duplicates
@@ -700,22 +569,21 @@ class BrowserProgram {
                 
                 // Get href from either href or href attribute
                 const href = link.getAttribute('href') || link.href;
-                console.log(`🔗 Link clicked:`, {
-                    href: href,
-                    currentUrl: this.currentUrl,
-                    linkText: link.textContent?.trim()
-                });
                 
                 // Handle different types of links
                 if (href.startsWith('#')) {
                     // Anchor links - scroll to element or ignore
                     this.handleAnchorLink(href);
                 } else if (href.startsWith('http://') || href.startsWith('https://')) {
-                    // External links - show message that external links don't work
-                    this.showExternalLinkMessage(href);
+                    // External links - ignore silently (REMOVED TOAST)
+                    console.log(`🌐 External link clicked: ${href} (ignoring silently)`);
                 } else if (href.startsWith('mailto:') || href.startsWith('tel:')) {
-                    // Special protocol links - show message
-                    this.showSpecialLinkMessage(href);
+                    // Special protocol links - ignore silently (REMOVED TOAST)
+                    console.log(`📧 Special link clicked: ${href} (ignoring silently)`);
+                } else if (href.startsWith('javascript:')) {
+                    // JavaScript links - ignore completely
+                    console.log('🚫 Ignoring JavaScript link');
+                    return;
                 } else if (href === '/' || href === './index.html' || href === 'index.html' || href === './') {
                     // Home page of current site
                     this.navigateToSiteHome();
@@ -732,7 +600,9 @@ class BrowserProgram {
 
     handleAnchorLink(href) {
         // Try to scroll to the element with the matching ID
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const browserPage = window.querySelector('#browserPage');
         const targetId = href.substring(1); // Remove the #
         const targetElement = browserPage.querySelector(`#${targetId}`);
@@ -741,24 +611,6 @@ class BrowserProgram {
             targetElement.scrollIntoView({ behavior: 'smooth' });
         }
         // If element doesn't exist, just ignore the click
-    }
-
-    showExternalLinkMessage(href) {
-        // Show a message that external links don't work in our mock browser
-        try {
-            const siteName = new URL(href).hostname;
-            this.showMessage(`External link to ${siteName} - External links don't work in our mock browser!`, 'info');
-        } catch (e) {
-            this.showMessage('External links don\'t work in our mock browser!', 'info');
-        }
-    }
-
-    showSpecialLinkMessage(href) {
-        if (href.startsWith('mailto:')) {
-            this.showMessage('Email links don\'t work in our mock browser!', 'info');
-        } else if (href.startsWith('tel:')) {
-            this.showMessage('Phone links don\'t work in our mock browser!', 'info');
-        }
     }
 
     navigateToSiteHome() {
@@ -805,7 +657,7 @@ class BrowserProgram {
         
         console.log(`🧹 Clean path: ${cleanPath}`);
         
-        // FIXED: Check if the clean path is already a complete URL in our system
+        // Check if the clean path is already a complete URL in our system
         if (this.websiteRegistry[cleanPath]) {
             console.log(`✅ Clean path is already a complete URL: ${cleanPath}`);
             targetUrl = cleanPath;
@@ -848,36 +700,10 @@ class BrowserProgram {
                 console.log(`✅ Found variation: ${foundVariation}`);
                 this.loadPage(foundVariation);
             } else {
-                // Show a "page not found" message for this site
-                this.showPageNotFoundMessage(targetUrl, href);
+                // REMOVED: No more toast messages for missing pages
+                console.log(`🚫 Page "${targetUrl}" not found, ignoring silently`);
             }
         }
-    }
-
-    showPageNotFoundMessage(targetUrl, originalHref) {
-        const siteName = this.getCurrentSiteBaseUrl();
-        const siteInfo = this.websiteRegistry[siteName];
-        const siteTitle = siteInfo ? siteInfo.title : siteName;
-        
-        // Show available pages for this site
-        const availablePages = Object.keys(this.websiteRegistry)
-            .filter(url => url.startsWith(siteName) && url !== siteName)
-            .map(url => url.replace(siteName + '/', ''));
-        
-        let availableList = '';
-        if (availablePages.length > 0) {
-            availableList = `<br><br><strong>Available pages:</strong><br>• ${availablePages.join('<br>• ')}`;
-        }
-        
-        this.showMessage(`Page "${targetUrl}" doesn't exist on ${siteTitle}${availableList}`, 'info');
-        
-        // Also log debugging info
-        console.log(`🚫 Page not found:`, {
-            targetUrl,
-            originalHref,
-            siteName,
-            availablePages
-        });
     }
 
     performSearch(query) {
@@ -894,25 +720,42 @@ class BrowserProgram {
             <div class="search-results-page">
                 <div class="search-header">
                     <div class="search-logo">Snoogle</div>
-                    <div class="search-stats">About ${resultCount} results for "${query}"</div>
+                    <div class="search-stats">Results 1-${Math.min(10, resultCount)} of about ${resultCount} for <b>${query}</b> (0.${Math.floor(Math.random() * 89) + 10} seconds)</div>
                 </div>
         `;
         
         if (results.length > 0) {
-            results.forEach(site => {
+            results.slice(0, 10).forEach(site => {
                 content += `
                     <div class="search-result">
                         <div class="result-url">elxaos.interwebs/${site.url}</div>
-                        <div class="result-title" onclick="elxaOS.programs.browser.loadPage('${site.url}')">${site.name}</div>
-                        <div class="result-description">${site.description}</div>
+                        <div class="result-title" onclick="elxaOS.programs.browser.loadPage('${site.url}')">${site.title}</div>
+                        <div class="result-description">${site.searchData.description}</div>
                     </div>
                 `;
             });
+            
+            // Add pagination-style footer if there are more results
+            if (results.length > 10) {
+                content += `
+                    <div style="text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc;">
+                        <div style="font-size: 11px; color: #666;">
+                            Result Page: <b>1</b> 2 3 4 5 6 7 8 9 10 <a href="#" style="color: #0000ee;">Next</a>
+                        </div>
+                    </div>
+                `;
+            }
         } else {
             content += `
                 <div class="no-results">
-                    <h3>No results found</h3>
-                    <p>Try different keywords or browse our <span style="color: #1a0dab; cursor: pointer;" onclick="elxaOS.programs.browser.loadPage('directory')">site directory</span></p>
+                    <h3>Your search - <b>${query}</b> - did not match any documents.</h3>
+                    <p>Suggestions:</p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Make sure all words are spelled correctly.</li>
+                        <li>Try different keywords.</li>
+                        <li>Try more general keywords.</li>
+                        <li>Browse our <a href="#" style="color: #0000ee;" onclick="elxaOS.programs.browser.loadPage('directory')">directory</a> instead.</li>
+                    </ul>
                 </div>
             `;
         }
@@ -987,16 +830,17 @@ class BrowserProgram {
     }
 
     showSiteDirectory() {
-        // Define categories and their display names
+        // Define categories and their display names - Yahoo style
         const categories = {
-            'Government': '🏛️ Government & Public Services',
-            'Business': '💼 Business & Corporate',
-            'Social': '👥 Social Networks',
-            'Gaming': '🎮 Games & Entertainment',
-            'Personal': '🏠 Personal Pages',
-            'Education': '📚 Educational Resources',
-            'Technology': '💻 Technology',
-            'Utilities': '🔧 Utilities & Tools'
+            'Government': 'Government',
+            'Business': 'Business and Economy',
+            'Shopping': 'Shopping',
+            'Social': 'Society and Culture',
+            'Gaming': 'Recreation and Games',
+            'Personal': 'Regional and Personal',
+            'Education': 'Education',
+            'Technology': 'Computers and Internet',
+            'Utilities': 'Reference'
         };
 
         // Organize sites into categories (exclude sub-pages and special pages)
@@ -1014,7 +858,7 @@ class BrowserProgram {
                 categorizedSites[category].push({ url, site });
             });
 
-        // Generate HTML for each category
+        // Generate HTML for each category - Yahoo style table layout
         const categoryHTML = Object.entries(categories)
             .map(([category, displayName]) => {
                 if (!categorizedSites[category] || categorizedSites[category].length === 0) {
@@ -1024,30 +868,38 @@ class BrowserProgram {
                 const sitesHTML = categorizedSites[category]
                     .sort((a, b) => a.site.title.localeCompare(b.site.title))
                     .map(({ url, site }) => `
-                        <div class="site-card" onclick="elxaOS.programs.browser.loadPage('${url}')">
-                            <div class="site-icon">${this.getSiteIcon(site.searchData.category)}</div>
-                            <div class="site-name">${site.title}</div>
-                            <div class="site-description">${site.searchData.description}</div>
-                        </div>
+                        <tr>
+                            <td style="width: 20px;">•</td>
+                            <td>
+                                <div class="site-link" onclick="elxaOS.programs.browser.loadPage('${url}')">${site.title}</div>
+                                <div class="site-description">${site.searchData.description}</div>
+                            </td>
+                        </tr>
                     `).join('');
 
                 return `
                     <div class="category-section">
                         <h2>${displayName}</h2>
-                        <div class="site-grid">
+                        <table class="site-category-table">
                             ${sitesHTML}
-                        </div>
+                        </table>
                     </div>
                 `;
             }).join('');
 
+        const totalSites = Object.keys(this.websiteRegistry).length - 2;
+        
         const content = `
             <div class="site-directory">
                 <div class="directory-header">
-                    <div class="directory-title">📂 ExWeb Directory</div>
-                    <div class="directory-subtitle">Explore all the amazing sites on our network!</div>
+                    <div class="directory-title">ExWeb Directory</div>
+                    <div class="directory-subtitle">A guide to ${totalSites} useful and interesting sites</div>
                 </div>
                 ${categoryHTML}
+                <div class="directory-footer">
+                    ${totalSites} sites listed • Last updated: ${new Date().toLocaleDateString()}<br>
+                    © 1997 ElxaCorp • <a href="#" style="color: #0066cc;" onclick="elxaOS.programs.browser.navigateToHome()">Back to Snoogle</a>
+                </div>
             </div>
         `;
         
@@ -1058,6 +910,7 @@ class BrowserProgram {
         const icons = {
             'Government': '🏛️',
             'Business': '💼',
+            'Shopping': '🛍️',
             'Social': '👥',
             'Gaming': '🎮',
             'Personal': '🏠',
@@ -1131,7 +984,9 @@ class BrowserProgram {
 
     executePageScripts() {
         // Execute any script tags in the loaded content with error handling
-        const container = this.windowManager.windows.get(this.windowId).element.querySelector('#browserPage');
+        const container = this.getWindowElement()?.querySelector('#browserPage');
+        if (!container) return;
+        
         const scripts = container.getElementsByTagName('script');
         
         Array.from(scripts).forEach((script, index) => {
@@ -1218,23 +1073,27 @@ class BrowserProgram {
 
     showFileNotFoundPage(site, url) {
         const content = `
-            <div style="padding: 40px; text-align: center; background: white; min-height: 100%;">
-                <div style="font-size: 64px; margin-bottom: 20px;">📄</div>
-                <h1 style="color: #333; margin-bottom: 16px;">${site.title}</h1>
-                <p style="color: #666; font-size: 16px; margin-bottom: 24px;">
+            <div style="padding: 40px; text-align: center; background: white; min-height: 100%; font-family: Arial, sans-serif;">
+                <div style="font-size: 48px; margin-bottom: 20px;">📄</div>
+                <h1 style="color: #333; margin-bottom: 16px; font-size: 24px;">${site.title}</h1>
+                <p style="color: #666; font-size: 14px; margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto;">
                     ${site.searchData.description}
                 </p>
-                <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border: 1px solid #ffeaa7; max-width: 500px; margin: 0 auto;">
-                    <h3 style="color: #856404; margin-bottom: 12px;">🚧 Under Construction</h3>
-                    <p style="font-size: 14px; color: #856404; line-height: 1.5;">
-                        This website is being built! The HTML file should be placed at:<br>
-                        <code>${site.path}</code>
+                <div style="background: #ffffcc; padding: 20px; border: 1px solid #cccc99; max-width: 500px; margin: 0 auto 20px auto;">
+                    <h3 style="color: #666; margin-bottom: 12px; font-size: 16px;">Under Construction</h3>
+                    <p style="font-size: 12px; color: #666; line-height: 1.4;">
+                        This website is currently being developed.<br>
+                        The content file should be located at: <code>${site.path}</code>
                     </p>
                 </div>
                 <div style="margin-top: 30px;">
                     <button onclick="elxaOS.programs.browser.navigateToHome()" 
-                            style="background: #4285f4; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px;">
-                        🏠 Back to Snoogle
+                            style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px; margin-right: 10px;">
+                        Back to Snoogle
+                    </button>
+                    <button onclick="elxaOS.programs.browser.loadPage('directory')" 
+                            style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px;">
+                        Browse Directory
                     </button>
                 </div>
             </div>
@@ -1245,20 +1104,20 @@ class BrowserProgram {
 
     show404Page(url) {
         const content = `
-            <div style="padding: 40px; text-align: center; background: white; min-height: 100%;">
-                <div style="font-size: 96px; margin-bottom: 20px;">❌</div>
-                <h1 style="color: #d32f2f; margin-bottom: 16px;">404 - Page Not Found</h1>
-                <p style="color: #666; font-size: 16px; margin-bottom: 24px;">
-                    The page "${url}" doesn't exist on the ExWeb.
+            <div style="padding: 40px; text-align: center; background: white; min-height: 100%; font-family: Arial, sans-serif;">
+                <div style="font-size: 72px; margin-bottom: 20px; color: #ccc;">404</div>
+                <h1 style="color: #cc0000; margin-bottom: 16px; font-size: 24px;">Not Found</h1>
+                <p style="color: #666; font-size: 14px; margin-bottom: 24px;">
+                    The requested URL <code>${url}</code> was not found on this server.
                 </p>
                 <div style="margin-top: 30px;">
                     <button onclick="elxaOS.programs.browser.navigateToHome()" 
-                            style="background: #4285f4; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; margin-right: 12px;">
-                        🏠 Back to Snoogle
+                            style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px; margin-right: 10px;">
+                        Back to Snoogle
                     </button>
                     <button onclick="elxaOS.programs.browser.loadPage('directory')" 
-                            style="background: #34a853; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px;">
-                        📂 Browse Sites
+                            style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px;">
+                        Browse Directory
                     </button>
                 </div>
             </div>
@@ -1268,17 +1127,54 @@ class BrowserProgram {
     }
 
     showNoInternetPage() {
-        const content = `
-            <div class="no-internet-page">
-                <div class="no-internet-icon">📡</div>
-                <div class="no-internet-title">No Internet Connection</div>
-                <div class="no-internet-message">
-                    Oops! It looks like you're not connected to the ElxaNet. 
-                    Connect to WiFi to browse the amazing sites on our network!
+        const connectionInfo = elxaOS.wifiService?.getConnectionInfo();
+        const availableNetworks = elxaOS.wifiService?.getAllNetworks?.() || [];
+        
+        let networksList = '';
+        if (availableNetworks.length > 0) {
+            networksList = `
+                <div style="margin-top: 20px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
+                    <h4 style="color: #666; margin-bottom: 10px;">Available Networks:</h4>
+                    ${availableNetworks.slice(0, 5).map(network => `
+                        <div style="padding: 8px; background: #f9f9f9; border: 1px solid #ddd; margin-bottom: 4px; border-radius: 3px; display: flex; justify-content: space-between; align-items: center;">
+                            <span>${network.name} ${network.security !== 'None' ? '🔒' : '🌐'}</span>
+                            <span style="font-size: 11px; color: #666;">
+                                ${'█'.repeat(Math.max(1, Math.round(network.signalStrength)))}${'░'.repeat(5 - Math.max(1, Math.round(network.signalStrength)))}
+                            </span>
+                        </div>
+                    `).join('')}
                 </div>
-                <button class="wifi-connect-btn" onclick="elxaOS.wifiService.showWiFiDialog()">
-                    📶 Connect to WiFi
-                </button>
+            `;
+        }
+        
+        const content = `
+            <div class="no-internet-page" style="padding: 40px; text-align: center; background: white; min-height: 100%; font-family: Arial, sans-serif;">
+                <div style="font-size: 72px; margin-bottom: 20px;">📡</div>
+                <div style="font-size: 24px; color: #333; margin-bottom: 16px;">No Internet Connection</div>
+                <div style="color: #666; font-size: 14px; margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    This page cannot be displayed because you are not connected to the ElxaNet. 
+                    Please connect to a wireless network to browse websites.
+                </div>
+                
+                ${networksList}
+                
+                <div style="margin-top: 30px;">
+                    <button onclick="elxaOS.wifiService.showWiFiDialog()" 
+                            style="background: #0066cc; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-right: 10px;">
+                        📶 Connect to Network
+                    </button>
+                    <button onclick="elxaOS.programs.browser.refresh()" 
+                            style="background: #f0f0f0; border: 1px solid #ccc; color: #000; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                        ↻ Try Again
+                    </button>
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 12px; color: #999;">
+                    ${connectionInfo ? 
+                        `Last connected to: ${connectionInfo.network}` : 
+                        `Tip: ElxaNet provides free WiFi access points throughout Snakesia`
+                    }
+                </div>
             </div>
         `;
         
@@ -1286,7 +1182,12 @@ class BrowserProgram {
     }
 
     setPageContent(content) {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) {
+            console.log('🌐 Browser: Cannot set page content - window not valid');
+            return;
+        }
+        
         const page = window.querySelector('#browserPage');
         if (page) {
             // Clear any existing intervals/timeouts from previous page
@@ -1317,11 +1218,19 @@ class BrowserProgram {
     }
 
     showDebugInfo() {
+        const wifiInfo = elxaOS.wifiService ? {
+            isConnected: elxaOS.wifiService.isOnline(),
+            connectionInfo: elxaOS.wifiService.getConnectionInfo(),
+            availableNetworks: elxaOS.wifiService.getAllNetworks?.()?.length || 0
+        } : 'WiFi service not available';
+        
         const debugInfo = {
             currentUrl: this.currentUrl,
             isConnected: this.isConnected,
             historyLength: this.history.length,
             favoritesLength: this.favorites.length,
+            windowValid: this.isWindowValid(),
+            wifiInfo: wifiInfo,
             registryUrls: Object.keys(this.websiteRegistry),
             currentSitePages: Object.keys(this.websiteRegistry).filter(url => 
                 url.startsWith(this.getCurrentSiteBaseUrl())
@@ -1331,7 +1240,8 @@ class BrowserProgram {
         console.log('🔍 Browser Debug Info:', debugInfo);
         
         const debugText = JSON.stringify(debugInfo, null, 2);
-        this.showMessage(`Debug info logged to console. Current URL: ${this.currentUrl}`, 'info');
+        // REMOVED: No more toast message for debug info
+        console.log(`🔍 Debug info logged to console. Current URL: ${this.currentUrl}`);
     }
 
     addToHistory(url) {
@@ -1414,7 +1324,8 @@ class BrowserProgram {
         if (existingIndex >= 0) {
             // Remove from favorites
             this.favorites.splice(existingIndex, 1);
-            this.showMessage('Removed from favorites', 'info');
+            // REMOVED: No more toast message for favorites
+            console.log('Removed from favorites');
         } else {
             // Add to favorites
             const favorite = {
@@ -1424,7 +1335,8 @@ class BrowserProgram {
                 timestamp: new Date().toLocaleString()
             };
             this.favorites.push(favorite);
-            this.showMessage('Added to favorites', 'success');
+            // REMOVED: No more toast message for favorites
+            console.log('Added to favorites');
         }
         
         this.updateFavoriteButton();
@@ -1442,7 +1354,9 @@ class BrowserProgram {
     }
 
     updateAddressBar() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const urlInput = window.querySelector('#urlInput');
         if (urlInput) {
             urlInput.value = this.currentUrl || 'snoogle.ex';
@@ -1450,7 +1364,9 @@ class BrowserProgram {
     }
 
     updateNavigationButtons() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const backBtn = window.querySelector('#backBtn');
         const forwardBtn = window.querySelector('#forwardBtn');
         
@@ -1463,7 +1379,9 @@ class BrowserProgram {
     }
 
     updateFavoriteButton() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const favoriteBtn = window.querySelector('#favoriteBtn');
         
         if (favoriteBtn) {
@@ -1474,7 +1392,9 @@ class BrowserProgram {
     }
 
     updateSidebar(tab) {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const sidebarContent = window.querySelector('#sidebarContent');
         
         if (!sidebarContent) return;
@@ -1524,7 +1444,10 @@ class BrowserProgram {
     }
 
     handleMenuAction(action) {
-        const sidebar = this.windowManager.windows.get(this.windowId).element.querySelector('#browserSidebar');
+        const window = this.getWindowElement();
+        if (!window) return;
+        
+        const sidebar = window.querySelector('#browserSidebar');
         
         switch (action) {
             case 'favorites':
@@ -1545,6 +1468,11 @@ class BrowserProgram {
                     this.clearFavorites();
                 }
                 break;
+            case 'wifiSettings':
+                if (elxaOS.wifiService) {
+                    elxaOS.wifiService.showWiFiDialog();
+                }
+                break;
         }
     }
 
@@ -1554,7 +1482,8 @@ class BrowserProgram {
         this.saveUserData();
         this.updateSidebar('history');
         this.updateNavigationButtons();
-        this.showMessage('History cleared', 'info');
+        // REMOVED: No more toast message for history cleared
+        console.log('History cleared');
     }
 
     clearFavorites() {
@@ -1562,11 +1491,14 @@ class BrowserProgram {
         this.saveUserData();
         this.updateSidebar('favorites');
         this.updateFavoriteButton();
-        this.showMessage('Favorites cleared', 'info');
+        // REMOVED: No more toast message for favorites cleared
+        console.log('Favorites cleared');
     }
 
     showLoading() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const loading = window.querySelector('#browserLoading');
         if (loading) {
             loading.style.display = 'block';
@@ -1574,56 +1506,13 @@ class BrowserProgram {
     }
 
     hideLoading() {
-        const window = this.windowManager.windows.get(this.windowId).element;
+        const window = this.getWindowElement();
+        if (!window) return;
+        
         const loading = window.querySelector('#browserLoading');
         if (loading) {
             loading.style.display = 'none';
         }
-    }
-
-    showMessage(text, type = 'info') {
-        // Create a simple toast message
-        const message = document.createElement('div');
-        message.style.cssText = `
-            position: fixed;
-            top: 60px;
-            right: 20px;
-            background: ${type === 'info' ? '#4285f4' : '#34a853'};
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10000;
-            font-size: 12px;
-            max-width: 300px;
-            animation: slideIn 0.3s ease;
-        `;
-        message.textContent = text;
-        
-        // Add animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        document.body.appendChild(message);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            message.style.animation = 'slideIn 0.3s ease reverse';
-            setTimeout(() => {
-                if (message.parentNode) {
-                    message.parentNode.removeChild(message);
-                }
-                if (style.parentNode) {
-                    style.parentNode.removeChild(style);
-                }
-            }, 300);
-        }, 3000);
     }
 
     saveUserData() {
@@ -1655,6 +1544,16 @@ class BrowserProgram {
             this.history = [];
             this.currentHistoryIndex = -1;
         }
+    }
+
+    // Cleanup method for when the browser is destroyed
+    destroy() {
+        console.log('🌐 Browser: Destroying browser instance...');
+        this.clearPageScripts();
+        if (this.cleanupEventListeners) {
+            this.cleanupEventListeners();
+        }
+        this.windowId = null;
     }
 
     // Public method for external access

@@ -1,0 +1,759 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>First Snakesian Bank - Online Banking</title>
+    <style>
+        /* Authentic late 90s/early 2000s bank website styling */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: Arial, sans-serif !important;
+            background: #f0f8ff !important;
+            color: #000080 !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+            min-height: 100vh !important;
+        }
+        
+        .bank-website-root {
+            background: #f0f8ff !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .bank-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff !important;
+            border: 2px solid #4169e1;
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .bank-header {
+            background: linear-gradient(180deg, #4169e1 0%, #191970 100%);
+            color: white;
+            padding: 15px 20px;
+            border-bottom: 3px solid #000080;
+        }
+        
+        .bank-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+        }
+        
+        .bank-tagline {
+            font-size: 11px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .bank-nav {
+            background: #e6f2ff;
+            border-bottom: 1px solid #4169e1;
+            padding: 8px 20px;
+            font-size: 11px;
+        }
+        
+        .bank-nav a {
+            color: #000080;
+            text-decoration: underline;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .bank-nav a:hover {
+            color: #ff6347;
+        }
+        
+        .bank-content {
+            padding: 20px;
+            min-height: 400px;
+        }
+        
+        .bank-login-form, .bank-register-form {
+            max-width: 400px;
+            margin: 20px auto;
+            background: #f9f9ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .bank-form-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #4169e1;
+            padding-bottom: 8px;
+        }
+        
+        .bank-form-group {
+            margin-bottom: 12px;
+        }
+        
+        .bank-form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: bold;
+            color: #000080;
+        }
+        
+        .bank-form-group input, .bank-form-group select {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px inset #c0c0c0;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+        
+        .bank-btn {
+            background: linear-gradient(180deg, #4169e1 0%, #191970 100%);
+            color: white;
+            border: 2px outset #4169e1;
+            padding: 6px 16px;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: inherit;
+            margin: 5px;
+        }
+        
+        .bank-btn:hover {
+            background: linear-gradient(180deg, #5179f1 0%, #292980 100%);
+        }
+        
+        .bank-btn:active {
+            border: 2px inset #4169e1;
+        }
+        
+        .bank-btn-secondary {
+            background: #f0f0f0;
+            color: #000080;
+            border: 2px outset #c0c0c0;
+        }
+        
+        .bank-btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .bank-btn-protected {
+            background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
+            color: white;
+            border: 2px outset #8b4513;
+        }
+        
+        .bank-btn-protected:hover {
+            background: linear-gradient(180deg, #a0522d 0%, #704530 100%);
+        }
+        
+        .bank-dashboard.hidden {
+            display: none;
+        }
+        
+        .bank-welcome {
+            background: #e6ffe6;
+            border: 1px solid #00aa00;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #00aa00;
+        }
+        
+        .bank-accounts-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .bank-account-card {
+            background: #f9f9ff;
+            border: 2px solid #4169e1;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .bank-account-card.trust-account {
+            background: #fff8dc;
+            border: 2px solid #8b4513;
+            position: relative;
+        }
+        
+        .trust-badge {
+            position: absolute;
+            top: -8px;
+            right: 8px;
+            background: #8b4513;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .bank-account-type {
+            font-weight: bold;
+            color: #000080;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .bank-account-type.trust {
+            color: #8b4513;
+        }
+        
+        .bank-account-balance {
+            font-size: 18px;
+            font-weight: bold;
+            color: #006400;
+            margin-bottom: 5px;
+        }
+        
+        .bank-account-number {
+            font-size: 10px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .bank-actions {
+            background: #fff8dc;
+            border: 1px solid #daa520;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .bank-actions h3 {
+            margin: 0 0 10px 0;
+            color: #b8860b;
+            font-size: 14px;
+        }
+        
+        .bank-transaction-form.hidden {
+            display: none;
+        }
+        
+        .bank-transaction-form {
+            background: #fffacd;
+            border: 2px solid #daa520;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .bank-transaction-form.trust-form {
+            background: #faf0e6;
+            border: 2px solid #8b4513;
+        }
+        
+        .password-required {
+            background: #ffe4b5;
+            border: 1px solid #daa520;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 3px;
+            font-size: 10px;
+            text-align: center;
+        }
+        
+        .bank-currency-converter {
+            background: #f0f8ff;
+            border: 1px solid #4169e1;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        
+        .bank-conversion-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 5px 0;
+        }
+        
+        .bank-transactions {
+            background: white;
+            border: 1px solid #4169e1;
+            margin-top: 20px;
+        }
+        
+        .bank-transactions h3 {
+            background: #e6f2ff;
+            margin: 0;
+            padding: 10px 15px;
+            color: #000080;
+            font-size: 14px;
+            border-bottom: 1px solid #4169e1;
+        }
+        
+        .bank-transaction-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .bank-transaction-item {
+            padding: 8px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 11px;
+        }
+        
+        .bank-transaction-item:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .bank-transaction-date {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .bank-transaction-desc {
+            margin: 2px 0;
+        }
+        
+        .bank-transaction-amount {
+            font-weight: bold;
+            float: right;
+        }
+        
+        .bank-transaction-amount.positive {
+            color: #006400;
+        }
+        
+        .bank-transaction-amount.negative {
+            color: #dc143c;
+        }
+        
+        .bank-footer {
+            background: #e6f2ff;
+            border-top: 1px solid #4169e1;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .bank-security-notice {
+            background: #ffffcc;
+            border: 1px solid #ffcc00;
+            padding: 10px;
+            margin: 15px 0;
+            font-size: 10px;
+            border-left: 4px solid #ffcc00;
+        }
+        
+        .bank-error {
+            background: #ffe6e6;
+            border: 1px solid #ff6b6b;
+            color: #cc0000;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        
+        .bank-success {
+            background: #e6ffe6;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        @media (max-width: 800px) {
+            .bank-accounts-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .bank-conversion-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .bank-accounts-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bank-website-root">
+        <div class="bank-container">
+            <div class="bank-header">
+                <div class="bank-logo">🏛️ First Snakesian Bank</div>
+                <div class="bank-tagline">Your Trusted Partner Since 1923 • Serving All of Snakesia</div>
+            </div>
+            
+            <div class="bank-nav">
+                <a href="#" onclick="bankSystem.showLogin()">Login</a>
+                <a href="#" onclick="bankSystem.showRegister()">Open Account</a>
+                <a href="#" onclick="bankSystem.showAbout()">About Us</a>
+                <a href="#" onclick="bankSystem.showLocations()">Locations</a>
+                <a href="#" onclick="bankSystem.showHelp()">Help</a>
+                <span id="loggedInNav" class="hidden">
+                    | <a href="#" onclick="bankSystem.logout()">Logout</a>
+                </span>
+            </div>
+            
+            <div class="bank-content">
+                <!-- Login Form -->
+                <div id="loginSection" class="bank-login-form">
+                    <div class="bank-form-title">🔐 Online Banking Login</div>
+                    <div class="bank-security-notice">
+                        <strong>Security Notice:</strong> For your protection, please ensure you are accessing this site from a secure computer. Never share your login information.
+                    </div>
+                    
+                    <div class="bank-form-group">
+                        <label for="loginUsername">Username:</label>
+                        <input type="text" id="loginUsername" maxlength="20">
+                    </div>
+                    
+                    <div class="bank-form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" maxlength="20">
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="bank-btn" onclick="bankSystem.login()">Login</button>
+                        <button class="bank-btn-secondary" onclick="bankSystem.showRegister()">New Customer</button>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px; font-size: 10px;">
+                        <a href="#" style="color: #4169e1;">Forgot Password?</a> | 
+                        <a href="#" style="color: #4169e1;">Technical Support</a>
+                    </div>
+                </div>
+                
+                <!-- Registration Form -->
+                <div id="registerSection" class="bank-register-form hidden">
+                    <div class="bank-form-title">🆕 Open New Account</div>
+                    <div style="text-align: center; margin-bottom: 15px; font-size: 11px; color: #666;">
+                        Welcome to First Snakesian Bank! Opening an account is quick and easy.
+                    </div>
+                    
+                    <div class="bank-form-group">
+                        <label for="regFirstName">First Name:</label>
+                        <input type="text" id="regFirstName" maxlength="50">
+                    </div>
+                    
+                    <div class="bank-form-group">
+                        <label for="regLastName">Last Name:</label>
+                        <input type="text" id="regLastName" maxlength="50">
+                    </div>
+                    
+                    <div class="bank-form-group">
+                        <label for="regUsername">Choose Username:</label>
+                        <input type="text" id="regUsername" maxlength="20" placeholder="3-20 characters">
+                    </div>
+                    
+                    <div class="bank-form-group">
+                        <label for="regPassword">Choose Password:</label>
+                        <input type="password" id="regPassword" maxlength="20" placeholder="4-20 characters">
+                    </div>
+                    
+                    <div class="bank-form-group">
+                        <label for="regConfirmPassword">Confirm Password:</label>
+                        <input type="password" id="regConfirmPassword" maxlength="20">
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="bank-btn" onclick="bankSystem.register()">Create Account</button>
+                        <button class="bank-btn-secondary" onclick="bankSystem.showLogin()">Back to Login</button>
+                    </div>
+                </div>
+                
+                <!-- Dashboard -->
+                <div id="dashboardSection" class="bank-dashboard hidden">
+                    <div class="bank-welcome">
+                        <strong>Welcome back, <span id="welcomeName"></span>!</strong><br>
+                        Last login: <span id="lastLogin"></span>
+                    </div>
+                    
+                    <div class="bank-accounts-overview">
+                        <div class="bank-account-card">
+                            <div class="bank-account-type">💳 Checking Account</div>
+                            <div class="bank-account-balance" id="checkingBalance">$0.00 (0🐍)</div>
+                            <div class="bank-account-number">Account: <span id="checkingNumber"></span></div>
+                        </div>
+                        
+                        <div class="bank-account-card">
+                            <div class="bank-account-type">🏦 Savings Account</div>
+                            <div class="bank-account-balance" id="savingsBalance">$0.00 (0🐍)</div>
+                            <div class="bank-account-number">Account: <span id="savingsNumber"></span></div>
+                        </div>
+                        
+                        <div class="bank-account-card trust-account">
+                            <div class="trust-badge">PROTECTED</div>
+                            <div class="bank-account-type trust">👑 Trust Account</div>
+                            <div class="bank-account-balance" id="trustBalance">$0.00 (0🐍)</div>
+                            <div class="bank-account-number">Account: <span id="trustNumber"></span></div>
+                            <div style="font-size: 9px; color: #8b4513; margin-top: 4px; font-style: italic;">
+                                Password required for transactions
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bank-actions">
+                        <h3>💰 Account Actions</h3>
+                        <button class="bank-btn" onclick="bankSystem.showDepositForm()">Deposit Funds</button>
+                        <button class="bank-btn" onclick="bankSystem.showWithdrawForm()">Withdraw Funds</button>
+                        <button class="bank-btn" onclick="bankSystem.showTransferForm()">Transfer Money</button>
+                        <button class="bank-btn-protected" onclick="bankSystem.showTrustForm()">Trust Account</button>
+                        <button class="bank-btn-secondary" onclick="bankSystem.refreshAccount()">Refresh Balance</button>
+                    </div>
+                    
+                    <!-- Regular Transaction Forms -->
+                    <div id="depositForm" class="bank-transaction-form hidden">
+                        <h3 style="margin: 0 0 10px 0; color: #b8860b;">💵 Deposit Funds</h3>
+                        <div class="bank-form-group">
+                            <label for="depositAccount">Deposit To:</label>
+                            <select id="depositAccount" style="width: 100%; padding: 4px;">
+                                <option value="checking">Checking Account</option>
+                                <option value="savings">Savings Account</option>
+                            </select>
+                        </div>
+                        <div class="bank-form-group">
+                            <label for="depositAmount">Amount (USD):</label>
+                            <input type="number" id="depositAmount" min="0.01" step="0.01" placeholder="0.00">
+                        </div>
+                        <div style="text-align: center;">
+                            <button class="bank-btn" onclick="bankSystem.processDeposit()">Deposit</button>
+                            <button class="bank-btn-secondary" onclick="bankSystem.hideTransactionForms()">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <div id="withdrawForm" class="bank-transaction-form hidden">
+                        <h3 style="margin: 0 0 10px 0; color: #b8860b;">💸 Withdraw Funds</h3>
+                        <div class="bank-form-group">
+                            <label for="withdrawAccount">Withdraw From:</label>
+                            <select id="withdrawAccount" style="width: 100%; padding: 4px;">
+                                <option value="checking">Checking Account</option>
+                                <option value="savings">Savings Account</option>
+                            </select>
+                        </div>
+                        <div class="bank-form-group">
+                            <label for="withdrawAmount">Amount (USD):</label>
+                            <input type="number" id="withdrawAmount" min="0.01" step="0.01" placeholder="0.00">
+                        </div>
+                        <div style="text-align: center;">
+                            <button class="bank-btn" onclick="bankSystem.processWithdraw()">Withdraw</button>
+                            <button class="bank-btn-secondary" onclick="bankSystem.hideTransactionForms()">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <div id="transferForm" class="bank-transaction-form hidden">
+                        <h3 style="margin: 0 0 10px 0; color: #b8860b;">↔️ Transfer Money</h3>
+                        <div class="bank-form-group">
+                            <label for="transferFrom">Transfer From:</label>
+                            <select id="transferFrom" style="width: 100%; padding: 4px;">
+                                <option value="checking">Checking Account</option>
+                                <option value="savings">Savings Account</option>
+                            </select>
+                        </div>
+                        <div class="bank-form-group">
+                            <label for="transferTo">Transfer To:</label>
+                            <select id="transferTo" style="width: 100%; padding: 4px;">
+                                <option value="savings">Savings Account</option>
+                                <option value="checking">Checking Account</option>
+                            </select>
+                        </div>
+                        <div class="bank-form-group">
+                            <label for="transferAmount">Amount (USD):</label>
+                            <input type="number" id="transferAmount" min="0.01" step="0.01" placeholder="0.00">
+                        </div>
+                        <div style="text-align: center;">
+                            <button class="bank-btn" onclick="bankSystem.processTransfer()">Transfer</button>
+                            <button class="bank-btn-secondary" onclick="bankSystem.hideTransactionForms()">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Trust Account Form -->
+                    <div id="trustForm" class="bank-transaction-form trust-form hidden">
+                        <h3 style="margin: 0 0 10px 0; color: #8b4513;">👑 Trust Account Management</h3>
+                        <div class="password-required">
+                            🔒 This account requires banker authorization for all transactions
+                        </div>
+                        
+                        <div class="bank-form-group">
+                            <label for="trustPassword">Banker Password:</label>
+                            <input type="password" id="trustPassword" placeholder="Enter banker password">
+                        </div>
+                        
+                        <div class="bank-form-group">
+                            <label for="trustAction">Action:</label>
+                            <select id="trustAction" style="width: 100%; padding: 4px;" onchange="bankSystem.updateTrustFormFields()">
+                                <option value="deposit">Deposit to Trust Account</option>
+                                <option value="withdraw">Withdraw from Trust Account</option>
+                                <option value="transfer-to">Transfer from other account to Trust</option>
+                                <option value="transfer-from">Transfer from Trust to other account</option>
+                            </select>
+                        </div>
+                        
+                        <div id="trustOtherAccount" class="bank-form-group">
+                            <label for="trustOtherSelect">Other Account:</label>
+                            <select id="trustOtherSelect" style="width: 100%; padding: 4px;">
+                                <option value="checking">Checking Account</option>
+                                <option value="savings">Savings Account</option>
+                            </select>
+                        </div>
+                        
+                        <div class="bank-form-group">
+                            <label for="trustAmount">Amount (USD):</label>
+                            <input type="number" id="trustAmount" min="0.01" step="0.01" placeholder="0.00">
+                        </div>
+                        
+                        <div class="bank-form-group">
+                            <label for="trustMemo">Memo (optional):</label>
+                            <input type="text" id="trustMemo" placeholder="e.g., Reward for good grades">
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <button class="bank-btn-protected" onclick="bankSystem.processTrustTransaction()">Execute Transaction</button>
+                            <button class="bank-btn-secondary" onclick="bankSystem.hideTransactionForms()">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Currency Converter -->
+                    <div class="bank-currency-converter">
+                        <h3 style="margin: 0 0 10px 0; color: #4169e1; font-size: 13px;">🔄 Currency Converter</h3>
+                        <div style="font-size: 10px; color: #666; margin-bottom: 8px;">
+                            Current Exchange Rate: 1 USD = 2 Snakes (🐍)
+                        </div>
+                        <div class="bank-conversion-row">
+                            <input type="number" id="usdInput" placeholder="USD" step="0.01" style="flex: 1; padding: 4px;">
+                            <span>=</span>
+                            <input type="number" id="snakeInput" placeholder="Snakes" step="0.01" style="flex: 1; padding: 4px;">
+                        </div>
+                    </div>
+                    
+                    <!-- Transaction History -->
+                    <div class="bank-transactions">
+                        <h3>📊 Recent Transactions</h3>
+                        <div class="bank-transaction-list" id="transactionList">
+                            <div style="padding: 20px; text-align: center; color: #666; font-size: 11px;">
+                                No transactions yet. Start by making a deposit!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- About Page -->
+                <div id="aboutSection" class="hidden">
+                    <h2 style="color: #000080;">About First Snakesian Bank</h2>
+                    <p>Founded in 1923, First Snakesian Bank has been serving the financial needs of Snakesia for over 75 years. We are proud to be the most trusted financial institution in all five regions of Snakesia.</p>
+                    
+                    <h3 style="color: #000080;">Our Services</h3>
+                    <ul>
+                        <li>Personal and Business Checking Accounts</li>
+                        <li>High-Yield Savings Accounts</li>
+                        <li>Protected Trust Accounts for Families</li>
+                        <li>Currency Exchange (USD ↔ Snakes)</li>
+                        <li>Online Banking and Mobile Access</li>
+                        <li>24/7 Customer Support</li>
+                    </ul>
+                    
+                    <div class="bank-security-notice">
+                        <strong>FDIC Insured:</strong> Your deposits are insured by the Federal Deposit Insurance Corporation of Snakesia (FDICS) up to $250,000 per account.
+                    </div>
+                </div>
+                
+                <!-- Locations Page -->
+                <div id="locationsSection" class="hidden">
+                    <h2 style="color: #000080;">Branch Locations</h2>
+                    <p>Visit any of our convenient branch locations throughout Snakesia:</p>
+                    
+                    <div style="background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin: 10px 0;">
+                        <h4 style="margin: 0 0 8px 0; color: #000080;">North Snakesia Branch</h4>
+                        <p style="margin: 0; font-size: 11px;">123 Snake Avenue, Snake City, NS 12345<br>
+                        Hours: Mon-Fri 9AM-5PM, Sat 9AM-1PM</p>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin: 10px 0;">
+                        <h4 style="margin: 0 0 8px 0; color: #000080;">Central Snakesia Branch</h4>
+                        <p style="margin: 0; font-size: 11px;">456 Banking Boulevard, Central City, CS 67890<br>
+                        Hours: Mon-Fri 9AM-6PM, Sat 9AM-3PM</p>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin: 10px 0;">
+                        <h4 style="margin: 0 0 8px 0; color: #000080;">South Snakesia Branch</h4>
+                        <p style="margin: 0; font-size: 11px;">789 Financial Street, South Town, SS 13579<br>
+                        Hours: Mon-Fri 9AM-5PM, Sat 10AM-2PM</p>
+                    </div>
+                </div>
+                
+                <!-- Help Page -->
+                <div id="helpSection" class="hidden">
+                    <h2 style="color: #000080;">Customer Support</h2>
+                    <p>Need help with your account? We're here to assist you!</p>
+                    
+                    <h3 style="color: #000080;">Frequently Asked Questions</h3>
+                    <div style="background: #f9f9f9; border: 1px solid #ddd; padding: 12px; margin: 8px 0;">
+                        <strong>Q: What is a Trust Account?</strong><br>
+                        <span style="font-size: 11px;">A: A Trust Account is a special protected account that requires banker authorization for transactions. Perfect for family savings and rewards!</span>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; border: 1px solid #ddd; padding: 12px; margin: 8px 0;">
+                        <strong>Q: How do I convert between USD and Snakes?</strong><br>
+                        <span style="font-size: 11px;">A: Use our built-in currency converter! The current rate is 1 USD = 2 Snakes.</span>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; border: 1px solid #ddd; padding: 12px; margin: 8px 0;">
+                        <strong>Q: Is my money safe?</strong><br>
+                        <span style="font-size: 11px;">A: Yes! All deposits are FDICS insured and we use the latest security technology.</span>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; border: 1px solid #ddd; padding: 12px; margin: 8px 0;">
+                        <strong>Q: Can I access my account from any computer?</strong><br>
+                        <span style="font-size: 11px;">A: Yes! Our online banking works from any ElxaNet-connected computer in Snakesia.</span>
+                    </div>
+                    
+                    <h3 style="color: #000080;">Contact Information</h3>
+                    <p style="font-size: 11px;">
+                        📞 Customer Service: 1-800-BANK-SNK<br>
+                        📧 Email: support@firstsnakesianbank.ex<br>
+                        💬 Live Chat: Available Mon-Fri 8AM-8PM
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bank-footer">
+                <p>© 2025 First Snakesian Bank. All rights reserved. | Member FDICS<br>
+                Equal Housing Lender | Privacy Policy | Terms of Service</p>
+                <p>Online Banking is available 24/7. Technical support: 1-800-TECH-SNK</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank System JavaScript -->
+    <script src="../../../js/services/bank-system.js"></script>
+    <script>
+        // Initialize the bank system when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            bankSystem.init();
+            
+            // Set up currency converter
+            document.getElementById('usdInput').addEventListener('input', function() {
+                const usd = parseFloat(this.value) || 0;
+                document.getElementById('snakeInput').value = (usd * 2).toFixed(2);
+            });
+            
+            document.getElementById('snakeInput').addEventListener('input', function() {
+                const snakes = parseFloat(this.value) || 0;
+                document.getElementById('usdInput').value = (snakes / 2).toFixed(2);
+            });
+        });
+    </script>
+</body>
+</html>

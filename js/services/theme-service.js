@@ -431,7 +431,6 @@ class ThemeService {
 
     // 🎨 NEW METHOD: Load wallpapers from project assets/backgrounds folder
     loadAssetBackgrounds() {
-        console.log('🎨 Loading backgrounds from project assets/backgrounds folder...');
         
         // 🎨 SIMPLE APPROACH: Just list your actual background images here
         // Add the relative path from js/services/ to your assets/backgrounds/
@@ -464,12 +463,7 @@ class ThemeService {
         });
         
         const loadedCount = Object.keys(assetBackgrounds).length;
-        console.log(`🎨 Loaded ${loadedCount} background(s) from project assets/backgrounds`);
     }
-
-
-
-
 
     setupEvents() {
         // Listen for theme dialog requests (could be triggered from start menu)
@@ -696,21 +690,18 @@ class ThemeService {
             // Import image button
             if (e.target.classList.contains('import-image-btn')) {
                 e.preventDefault();
-                console.log('Import image button clicked!'); // Debug log
                 this.showImageImportDialog();
             }
             
             // Browse paint files button
             if (e.target.classList.contains('browse-paint-btn')) {
                 e.preventDefault();
-                console.log('Browse paint button clicked!'); // Debug log
                 this.showPaintFileBrowser();
             }
 
             // 🎨 NEW: Refresh assets button
             if (e.target.classList.contains('refresh-assets-btn')) {
                 e.preventDefault();
-                console.log('Refresh assets button clicked!');
                 this.refreshAssetBackgrounds();
                 // Refresh the dialog to show updated counts
                 this.hideThemeDialog();
@@ -735,7 +726,6 @@ class ThemeService {
     }
 
     showImageImportDialog() {
-        console.log('showImageImportDialog called'); // Debug log
         
         try {
             const dialog = document.createElement('div');
@@ -764,7 +754,6 @@ class ThemeService {
             `;
 
             document.body.appendChild(dialog);
-            console.log('Dialog appended to body'); // Debug log
 
             // Setup event listeners for this dialog
             const closeBtn = dialog.querySelector('.dialog-close');
@@ -773,23 +762,18 @@ class ThemeService {
             const previewGrid = dialog.querySelector('.preview-grid');
             const importBtn = dialog.querySelector('.import-selected-btn');
             
-            console.log('Found elements:', { closeBtn, cancelBtn, fileInput, previewGrid, importBtn }); // Debug log
-            
             let selectedImages = [];
 
             // Close dialog events
             closeBtn.addEventListener('click', () => {
-                console.log('Close button clicked');
                 dialog.remove();
             });
             
             cancelBtn.addEventListener('click', () => {
-                console.log('Cancel button clicked');
                 dialog.remove();
             });
 
             fileInput.addEventListener('change', (e) => {
-                console.log('File input changed', e.target.files);
                 const files = Array.from(e.target.files);
                 previewGrid.innerHTML = '';
                 selectedImages = [];
@@ -824,7 +808,6 @@ class ThemeService {
             });
 
             importBtn.addEventListener('click', () => {
-                console.log('Import button clicked');
                 const checkboxes = dialog.querySelectorAll('.import-checkbox:checked');
                 let importedCount = 0;
 
@@ -871,13 +854,10 @@ class ThemeService {
         }
     }
 
-    showPaintFileBrowser() {
-        console.log('showPaintFileBrowser called'); // Debug log
-        
+    showPaintFileBrowser() {        
         try {
             // Get all image files from the file system that could be Paint creations
             const allImageFiles = this.findImageFiles();
-            console.log('Found image files:', allImageFiles); // Debug log
             
             if (allImageFiles.length === 0) {
                 this.showMessage('No image files found in the file system', 'info');
@@ -916,7 +896,6 @@ class ThemeService {
             `;
 
             document.body.appendChild(dialog);
-            console.log('Paint dialog appended to body'); // Debug log
 
             const closeBtn = dialog.querySelector('.dialog-close');
             const cancelBtn = dialog.querySelector('.cancel-btn');
@@ -926,19 +905,16 @@ class ThemeService {
 
             // Close dialog events
             closeBtn.addEventListener('click', () => {
-                console.log('Paint dialog close clicked');
                 dialog.remove();
             });
             
             cancelBtn.addEventListener('click', () => {
-                console.log('Paint dialog cancel clicked');
                 dialog.remove();
             });
 
             paintGrid.addEventListener('click', (e) => {
                 const fileItem = e.target.closest('.paint-file-item');
                 if (fileItem) {
-                    console.log('Paint file selected:', fileItem.dataset.name);
                     // Clear previous selection
                     dialog.querySelectorAll('.paint-file-item').forEach(item => 
                         item.classList.remove('selected'));
@@ -954,7 +930,6 @@ class ThemeService {
             });
 
             useBtn.addEventListener('click', () => {
-                console.log('Use paint file button clicked', selectedFile);
                 if (selectedFile) {
                     this.usePaintFileAsBackground(selectedFile);
                 }
@@ -1015,10 +990,7 @@ class ThemeService {
             return;
         }
         
-        console.log('📄 File found with content type:', typeof actualFile.content);
-        
         if (actualFile.content.startsWith('data:image/')) {
-            console.log('✅ Valid image data URL found');
             
             const wallpaperKey = `paint_${Date.now()}`;
             
@@ -1134,8 +1106,6 @@ class ThemeService {
         Object.keys(theme.colors).forEach(colorKey => {
             root.style.setProperty(`--${colorKey}`, theme.colors[colorKey]);
         });
-        
-        console.log('🎨 Applied theme colors via CSS custom properties:', theme.colors);
 
         // Special handling for dark themes - add body class
         if (this.currentTheme === 'zune') {
@@ -1170,7 +1140,6 @@ class ThemeService {
     }
 
     applyWallpaper(wallpaper) {
-        console.log('🖼️ Applying wallpaper:', wallpaper);
         
         const desktop = document.querySelector('.desktop');
         let wallpaperElement = document.querySelector('.desktop-wallpaper');
@@ -1180,7 +1149,6 @@ class ThemeService {
             wallpaperElement = document.createElement('div');
             wallpaperElement.className = 'desktop-wallpaper';
             desktop.appendChild(wallpaperElement);
-            console.log('✨ Created wallpaper element');
         }
         
         // Use wallpaper element if available, otherwise fall back to desktop
@@ -1191,10 +1159,7 @@ class ThemeService {
             return;
         }
         
-        console.log('🎯 Target element:', target.className || target.tagName);
-        
         if (wallpaper.type === 'gradient') {
-            console.log('🎨 Applying gradient wallpaper:', wallpaper.value);
             
             // Clear any existing background image
             target.style.backgroundImage = '';
@@ -1207,10 +1172,7 @@ class ThemeService {
             target.style.backgroundPosition = '';
             target.style.backgroundRepeat = '';
             
-            console.log('✅ Gradient applied');
-            
         } else if (wallpaper.type === 'image') {
-            console.log('🖼️ Applying image wallpaper');
             
             // Clear any existing background gradient
             target.style.background = '';
@@ -1220,8 +1182,6 @@ class ThemeService {
             target.style.backgroundSize = 'cover';
             target.style.backgroundPosition = 'center';
             target.style.backgroundRepeat = 'no-repeat';
-            
-            console.log('✅ Image applied');
         }
         
         // Force repaint
@@ -1268,7 +1228,6 @@ class ThemeService {
             };
             
             localStorage.setItem('elxaOS-theme-settings', JSON.stringify(settingsToSave));
-            console.log('🎨 Theme settings saved to localStorage:', settingsToSave);
         } catch (error) {
             console.error('❌ Failed to save theme settings:', error);
         }
@@ -1289,7 +1248,6 @@ class ThemeService {
                     this.customWallpapers = settings.customWallpapers;
                 }
                 
-                console.log('🎨 Theme settings loaded from localStorage:', settings);
             } else {
                 console.log('🎨 No saved theme settings found, using defaults');
             }

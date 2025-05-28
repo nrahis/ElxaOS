@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Privilege Palace - Premium Privileges for Kids</title>
+    <style>
+        /* Late 90s shopping site aesthetic */
+        @import url('https://fonts.googleapis.com/css2?family=Arial:400,700&display=swap');
+        
+        .privilege-palace-body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: Arial, sans-serif !important;
+            background: #000080 !important;
+            color: #ffffff !important;
+            font-size: 11px !important;
+            line-height: 1.3 !important;
+            min-height: 100vh !important;
+        }
+        
+        .privilege-palace-root {
+            background: #000080 !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .privilege-palace-container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            color: #000000;
+        }
+        
+        .privilege-palace-header {
+            background: linear-gradient(90deg, #0066cc 0%, #003399 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px inset #c0c0c0;
+        }
+        
+        .privilege-palace-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            text-shadow: 2px 2px 0 #000033;
+            letter-spacing: 2px;
+        }
+        
+        .privilege-palace-subtitle {
+            font-size: 12px;
+            margin: 0;
+            color: #ffff99;
+        }
+        
+        .privilege-palace-nav {
+            background: #e0e0e0;
+            border-bottom: 1px solid #808080;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .privilege-palace-nav-btn {
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            color: #000000;
+            padding: 4px 12px;
+            margin: 0 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .privilege-palace-nav-btn:hover {
+            background: #d0d0d0;
+        }
+        
+        .privilege-palace-nav-btn:active {
+            border: 2px inset #c0c0c0;
+        }
+        
+        .privilege-palace-nav-btn.active {
+            background: #808080;
+            color: white;
+            border: 2px inset #c0c0c0;
+        }
+        
+        .privilege-palace-content {
+            padding: 15px;
+            background: white;
+            min-height: 400px;
+        }
+        
+        .privilege-palace-section {
+            display: none;
+        }
+        
+        .privilege-palace-section.active {
+            display: block;
+        }
+        
+        .privilege-palace-category {
+            margin-bottom: 25px;
+            background: #f0f0f0;
+            border: 2px outset #c0c0c0;
+            padding: 12px;
+        }
+        
+        .privilege-palace-category-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000080;
+            margin: 0 0 10px 0;
+            text-align: center;
+            background: linear-gradient(90deg, #ffff99 0%, #ffffcc 100%);
+            padding: 6px;
+            border: 1px solid #808080;
+        }
+        
+        .privilege-palace-star-rating {
+            display: inline-block;
+            color: #ff6600;
+            margin-left: 5px;
+        }
+        
+        .privilege-palace-product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .privilege-palace-product {
+            background: white;
+            border: 2px outset #c0c0c0;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .privilege-palace-product-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .privilege-palace-product-name {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #000080;
+        }
+        
+        .privilege-palace-product-desc {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .privilege-palace-product-price {
+            font-size: 14px;
+            font-weight: bold;
+            color: #008000;
+            margin-bottom: 8px;
+        }
+        
+        .privilege-palace-product-btn {
+            background: #008000;
+            color: white;
+            border: 2px outset #008000;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .privilege-palace-product-btn:hover {
+            background: #009900;
+        }
+        
+        .privilege-palace-product-btn:active {
+            border: 2px inset #008000;
+        }
+        
+        .privilege-palace-cart-summary {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ffff99;
+            border: 2px outset #c0c0c0;
+            padding: 8px;
+            font-size: 10px;
+            min-width: 120px;
+            z-index: 1000;
+        }
+        
+        .privilege-palace-cart-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+            color: #000080;
+        }
+        
+        .privilege-palace-cart-count {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .privilege-palace-cart-total {
+            text-align: center;
+            font-weight: bold;
+            color: #008000;
+            margin-bottom: 8px;
+        }
+        
+        .privilege-palace-cart-btn {
+            background: #0066cc;
+            color: white;
+            border: 2px outset #0066cc;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 9px;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+        
+        .privilege-palace-cart-btn:hover {
+            background: #0077dd;
+        }
+        
+        .privilege-palace-cart-btn:active {
+            border: 2px inset #0066cc;
+        }
+        
+        .privilege-palace-cart-item {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-bottom: 8px;
+            font-size: 10px;
+        }
+        
+        .privilege-palace-cart-item-name {
+            font-weight: bold;
+            color: #000080;
+        }
+        
+        .privilege-palace-cart-item-price {
+            color: #008000;
+            font-weight: bold;
+        }
+        
+        .privilege-palace-remove-btn {
+            background: #cc0000;
+            color: white;
+            border: 1px outset #cc0000;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 8px;
+            float: right;
+        }
+        
+        .privilege-palace-remove-btn:hover {
+            background: #dd0000;
+        }
+        
+        .privilege-palace-checkout-btn {
+            background: #ff6600;
+            color: white;
+            border: 3px outset #ff6600;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        .privilege-palace-checkout-btn:hover {
+            background: #ff7700;
+        }
+        
+        .privilege-palace-checkout-btn:active {
+            border: 3px inset #ff6600;
+        }
+        
+        .privilege-palace-checkout-btn:disabled {
+            background: #999;
+            border: 3px outset #999;
+            cursor: not-allowed;
+        }
+        
+        .privilege-palace-purchased-item {
+            background: #f0fff0;
+            border: 2px outset #90ee90;
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .privilege-palace-purchased-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .privilege-palace-purchased-item-name {
+            font-weight: bold;
+            color: #006600;
+            font-size: 12px;
+        }
+        
+        .privilege-palace-purchased-item-date {
+            font-size: 9px;
+            color: #666;
+        }
+        
+        .privilege-palace-purchased-item-desc {
+            font-size: 10px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .privilege-palace-redeem-btn {
+            background: #ff6600;
+            color: white;
+            border: 2px outset #ff6600;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .privilege-palace-redeem-btn:hover {
+            background: #ff7700;
+        }
+        
+        .privilege-palace-redeem-btn:active {
+            border: 2px inset #ff6600;
+        }
+        
+        .privilege-palace-footer {
+            background: #e0e0e0;
+            border-top: 1px solid #808080;
+            padding: 10px;
+            text-align: center;
+            font-size: 9px;
+            color: #666;
+        }
+        
+        .privilege-palace-message {
+            background: #ffffcc;
+            border: 2px solid #ffcc00;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 0;
+            font-size: 11px;
+        }
+        
+        .privilege-palace-message.success {
+            background: #ccffcc;
+            border-color: #00cc00;
+            color: #006600;
+        }
+        
+        .privilege-palace-message.error {
+            background: #ffcccc;
+            border-color: #cc0000;
+            color: #cc0000;
+        }
+        
+        .privilege-palace-bank-status {
+            background: #e6f3ff;
+            border: 2px solid #6a4c93;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 10px;
+        }
+        
+        .privilege-palace-bank-status.trust-account {
+            background: #f5f0ff;
+            border-color: #6a4c93;
+        }
+        
+        .privilege-palace-bank-title {
+            font-weight: bold;
+            color: #6a4c93;
+            margin-bottom: 5px;
+        }
+        
+        .privilege-palace-trust-notice {
+            background: #fff8dc;
+            border: 2px solid #daa520;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 10px;
+            color: #8b6914;
+        }
+        
+        .privilege-palace-empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .privilege-palace-empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body class="privilege-palace-body">
+    <div class="privilege-palace-root">
+        <div class="privilege-palace-container">
+            <div class="privilege-palace-header">
+                <div class="privilege-palace-title">🏰 PRIVILEGE PALACE 🏰</div>
+                <div class="privilege-palace-subtitle">Premium Privileges for Exceptional Kids • Est. 1999</div>
+            </div>
+            
+            <div class="privilege-palace-nav">
+                <button class="privilege-palace-nav-btn active" onclick="privilegePalace.showSection('shop')">🛒 Shop</button>
+                <button class="privilege-palace-nav-btn" onclick="privilegePalace.showSection('cart')">🛍️ Cart</button>
+                <button class="privilege-palace-nav-btn" onclick="privilegePalace.showSection('privileges')">⭐ My Privileges</button>
+                <button class="privilege-palace-nav-btn" onclick="privilegePalace.showSection('about')">ℹ️ About</button>
+            </div>
+            
+            <!-- Shopping cart summary (always visible) -->
+            <div class="privilege-palace-cart-summary" id="cartSummary">
+                <div class="privilege-palace-cart-title">🛍️ Cart</div>
+                <div class="privilege-palace-cart-count" id="cartCount">0 items</div>
+                <div class="privilege-palace-cart-total" id="cartTotal">$0.00</div>
+                <button class="privilege-palace-cart-btn" onclick="privilegePalace.showSection('cart')">View Cart</button>
+                <button class="privilege-palace-cart-btn" onclick="privilegePalace.checkout()" id="miniCheckoutBtn" disabled>Checkout</button>
+            </div>
+            
+            <div class="privilege-palace-content">
+                <!-- Trust Account Notice -->
+                <div class="privilege-palace-trust-notice">
+                    <strong>👑 Trust Account Notice:</strong> Privilege Palace uses your parent-managed Trust Account for all purchases. 
+                    This ensures that privilege purchases are approved and monitored by your parents.
+                </div>
+                
+                <!-- Bank Status -->
+                <div class="privilege-palace-bank-status trust-account" id="bankStatus">
+                    <div class="privilege-palace-bank-title">👑 First Snakesian Bank - Trust Account Status</div>
+                    <div id="bankInfo">Checking connection...</div>
+                </div>
+                
+                <!-- Shop Section -->
+                <div class="privilege-palace-section active" id="shopSection">
+                    <div class="privilege-palace-category">
+                        <div class="privilege-palace-category-title">⭐ 1-STAR PRIVILEGES <span class="privilege-palace-star-rating">⭐</span></div>
+                        <div class="privilege-palace-product-grid">
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🌙</div>
+                                <div class="privilege-palace-product-name">Night Owl (Basic)</div>
+                                <div class="privilege-palace-product-desc">Stay up an extra 15 minutes past bedtime</div>
+                                <div class="privilege-palace-product-price">$3.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('night_owl_1', 'Night Owl (Basic)', '🌙', 'Stay up an extra 15 minutes past bedtime', 3.00, 1)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">💻</div>
+                                <div class="privilege-palace-product-name">Admin Role (Basic)</div>
+                                <div class="privilege-palace-product-desc">Use electronics after 7pm until bedtime</div>
+                                <div class="privilege-palace-product-price">$4.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('admin_role_1', 'Admin Role (Basic)', '💻', 'Use electronics after 7pm until bedtime', 4.00, 1)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🍭</div>
+                                <div class="privilege-palace-product-name">Sweet Tooth (Basic)</div>
+                                <div class="privilege-palace-product-desc">Enjoy 1 piece of candy</div>
+                                <div class="privilege-palace-product-price">$2.50</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('sweet_tooth_1', 'Sweet Tooth (Basic)', '🍭', 'Enjoy 1 piece of candy', 2.50, 1)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🎬</div>
+                                <div class="privilege-palace-product-name">Movie Night</div>
+                                <div class="privilege-palace-product-desc">Choose the family movie for movie night</div>
+                                <div class="privilege-palace-product-price">$5.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('movie_night_1', 'Movie Night', '🎬', 'Choose the family movie for movie night', 5.00, 1)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🧹</div>
+                                <div class="privilege-palace-product-name">Lazy Day</div>
+                                <div class="privilege-palace-product-desc">Skip one assigned chore for the day</div>
+                                <div class="privilege-palace-product-price">$3.50</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('lazy_day_1', 'Lazy Day', '🧹', 'Skip one assigned chore for the day', 3.50, 1)">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="privilege-palace-category">
+                        <div class="privilege-palace-category-title">⭐⭐ 2-STAR PRIVILEGES <span class="privilege-palace-star-rating">⭐⭐</span></div>
+                        <div class="privilege-palace-product-grid">
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🌙</div>
+                                <div class="privilege-palace-product-name">Night Owl (Standard)</div>
+                                <div class="privilege-palace-product-desc">Stay up an extra 30 minutes past bedtime</div>
+                                <div class="privilege-palace-product-price">$8.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('night_owl_2', 'Night Owl (Standard)', '🌙', 'Stay up an extra 30 minutes past bedtime', 8.00, 2)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">💰</div>
+                                <div class="privilege-palace-product-name">Snake Exchange (Basic)</div>
+                                <div class="privilege-palace-product-desc">Convert bank money to real money at 1:4 rate</div>
+                                <div class="privilege-palace-product-price">$10.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('snake_exchange_2', 'Snake Exchange (Basic)', '💰', 'Convert bank money to real money at 1:4 rate', 10.00, 2)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🍬</div>
+                                <div class="privilege-palace-product-name">Sweet Tooth (Standard)</div>
+                                <div class="privilege-palace-product-desc">Enjoy 2 pieces of candy</div>
+                                <div class="privilege-palace-product-price">$6.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('sweet_tooth_2', 'Sweet Tooth (Standard)', '🍬', 'Enjoy 2 pieces of candy', 6.00, 2)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">👨‍🍳</div>
+                                <div class="privilege-palace-product-name">Chef's Choice</div>
+                                <div class="privilege-palace-product-desc">Choose what's for dinner one night</div>
+                                <div class="privilege-palace-product-price">$12.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('chef_choice_2', 'Chef Choice', '🍽️', 'Choose what is for dinner one night', 12.00, 2)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">📚</div>
+                                <div class="privilege-palace-product-name">Library Adventure</div>
+                                <div class="privilege-palace-product-desc">Extra special trip to the library</div>
+                                <div class="privilege-palace-product-price">$9.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('library_adventure_2', 'Library Adventure', '📚', 'Extra special trip to the library', 9.00, 2)">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="privilege-palace-category">
+                        <div class="privilege-palace-category-title">⭐⭐⭐ 3-STAR PRIVILEGES <span class="privilege-palace-star-rating">⭐⭐⭐</span></div>
+                        <div class="privilege-palace-product-grid">
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🌙</div>
+                                <div class="privilege-palace-product-name">Night Owl (Premium)</div>
+                                <div class="privilege-palace-product-desc">Stay up an extra full hour past bedtime</div>
+                                <div class="privilege-palace-product-price">$18.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('night_owl_3', 'Night Owl (Premium)', '🌙', 'Stay up an extra full hour past bedtime', 18.00, 3)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">💰</div>
+                                <div class="privilege-palace-product-name">Snake Exchange (Standard)</div>
+                                <div class="privilege-palace-product-desc">Convert bank money to real money at 1:2 rate</div>
+                                <div class="privilege-palace-product-price">$20.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('snake_exchange_3', 'Snake Exchange (Standard)', '💰', 'Convert bank money to real money at 1:2 rate', 20.00, 3)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">💻</div>
+                                <div class="privilege-palace-product-name">Admin Role (Premium)</div>
+                                <div class="privilege-palace-product-desc">Use electronics past bedtime (quiet/educational)</div>
+                                <div class="privilege-palace-product-price">$15.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('admin_role_3', 'Admin Role (Premium)', '💻', 'Use electronics past bedtime (quiet/educational)', 15.00, 3)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🍫</div>
+                                <div class="privilege-palace-product-name">Sweet Tooth (Premium)</div>
+                                <div class="privilege-palace-product-desc">Enjoy 3 pieces of candy</div>
+                                <div class="privilege-palace-product-price">$12.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('sweet_tooth_3', 'Sweet Tooth (Premium)', '🍫', 'Enjoy 3 pieces of candy', 12.00, 3)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🏰</div>
+                                <div class="privilege-palace-product-name">Fort Builder</div>
+                                <div class="privilege-palace-product-desc">Build an epic blanket fort in the living room</div>
+                                <div class="privilege-palace-product-price">$16.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('fort_builder_3', 'Fort Builder', '🏰', 'Build an epic blanket fort in the living room', 16.00, 3)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🎨</div>
+                                <div class="privilege-palace-product-name">Art Supplies</div>
+                                <div class="privilege-palace-product-desc">Access to special art materials for a project</div>
+                                <div class="privilege-palace-product-price">$14.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('art_supplies_3', 'Art Supplies', '🎨', 'Access to special art materials for a project', 14.00, 3)">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="privilege-palace-category">
+                        <div class="privilege-palace-category-title">⭐⭐⭐⭐ 4-STAR PRIVILEGES <span class="privilege-palace-star-rating">⭐⭐⭐⭐</span></div>
+                        <div class="privilege-palace-product-grid">
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🌙</div>
+                                <div class="privilege-palace-product-name">Night Owl (Ultimate)</div>
+                                <div class="privilege-palace-product-desc">No bedtime on Friday or Saturday night!</div>
+                                <div class="privilege-palace-product-price">$35.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('night_owl_4', 'Night Owl (Ultimate)', '🌙', 'No bedtime on Friday or Saturday night!', 35.00, 4)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">💰</div>
+                                <div class="privilege-palace-product-name">Snake Exchange (Premium)</div>
+                                <div class="privilege-palace-product-desc">Convert bank money to real money at 1:1 rate</div>
+                                <div class="privilege-palace-product-price">$40.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('snake_exchange_4', 'Snake Exchange (Premium)', '💰', 'Convert bank money to real money at 1:1 rate', 40.00, 4)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🚗</div>
+                                <div class="privilege-palace-product-name">Travel Voucher</div>
+                                <div class="privilege-palace-product-desc">One special trip to the park or store</div>
+                                <div class="privilege-palace-product-price">$30.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('travel_voucher_4', 'Travel Voucher', '🚗', 'One special trip to the park or store', 30.00, 4)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🛍️</div>
+                                <div class="privilege-palace-product-name">Sweet Tooth (Ultimate)</div>
+                                <div class="privilege-palace-product-desc">Buy 1 small bag of candy from the store</div>
+                                <div class="privilege-palace-product-price">$25.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('sweet_tooth_4', 'Sweet Tooth (Ultimate)', '🛍️', 'Buy 1 small bag of candy from the store', 25.00, 4)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">🛏️</div>
+                                <div class="privilege-palace-product-name">Breakfast in Bed</div>
+                                <div class="privilege-palace-product-desc">Special weekend breakfast served in bed</div>
+                                <div class="privilege-palace-product-price">$28.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('breakfast_bed_4', 'Breakfast in Bed', '🛏️', 'Special weekend breakfast served in bed', 28.00, 4)">Add to Cart</button>
+                            </div>
+                            <div class="privilege-palace-product">
+                                <div class="privilege-palace-product-icon">📞</div>
+                                <div class="privilege-palace-product-name">Phone Friend</div>
+                                <div class="privilege-palace-product-desc">Make a special phone call to a friend or relative</div>
+                                <div class="privilege-palace-product-price">$22.00</div>
+                                <button class="privilege-palace-product-btn" onclick="privilegePalace.addToCart('phone_friend_4', 'Phone Friend', '📞', 'Make a special phone call to a friend or relative', 22.00, 4)">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cart Section -->
+                <div class="privilege-palace-section" id="cartSection">
+                    <h2>🛍️ Shopping Cart</h2>
+                    <div id="cartContent">
+                        <div class="privilege-palace-empty-state">
+                            <div class="privilege-palace-empty-state-icon">🛒</div>
+                            <h3>Your cart is empty</h3>
+                            <p>Browse our privileges and add some to your cart!</p>
+                        </div>
+                    </div>
+                    <div id="cartActions" style="display: none;">
+                        <button class="privilege-palace-checkout-btn" onclick="privilegePalace.checkout()" id="checkoutBtn" disabled>
+                            🛒 Proceed to Checkout - $0.00
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- My Privileges Section -->
+                <div class="privilege-palace-section" id="privilegesSection">
+                    <h2>⭐ My Purchased Privileges</h2>
+                    <div id="privilegesContent">
+                        <div class="privilege-palace-empty-state">
+                            <div class="privilege-palace-empty-state-icon">⭐</div>
+                            <h3>No privileges purchased yet</h3>
+                            <p>Purchase some privileges from the shop to see them here!</p>
+                        </div>
+                    </div>
+                    <button class="privilege-palace-nav-btn" onclick="privilegePalace.refreshPrivileges()" style="margin-top: 15px;">🔄 Refresh</button>
+                </div>
+                
+                <!-- About Section -->
+                <div class="privilege-palace-section" id="aboutSection">
+                    <h2>ℹ️ About Privilege Palace</h2>
+                    <div class="privilege-palace-category">
+                        <div class="privilege-palace-category-title">Welcome to Privilege Palace!</div>
+                        <p><strong>Privilege Palace</strong> is Snakesia's premier destination for earning special privileges and rewards! Here's how it works:</p>
+                        
+                        <h3>⭐ Star Rating System</h3>
+                        <ul>
+                            <li><strong>1-Star:</strong> Basic privileges that are easy to earn ($2.50-$5.00)</li>
+                            <li><strong>2-Star:</strong> Standard privileges with more benefits ($6.00-$12.00)</li>
+                            <li><strong>3-Star:</strong> Premium privileges for special occasions ($12.00-$20.00)</li>
+                            <li><strong>4-Star:</strong> Ultimate privileges for extraordinary achievements ($22.00-$40.00)</li>
+                        </ul>
+                        
+                        <h3>👑 Trust Account System</h3>
+                        <p>All Privilege Palace purchases are made using your <strong>Trust Account</strong> at First Snakesian Bank. This special account is managed by your parents to ensure all privilege purchases are approved and monitored.</p>
+                        
+                        <h3>💳 How to Purchase</h3>
+                        <p>Make sure you're logged in to your bank account and that your parents have added sufficient funds to your Trust Account before shopping!</p>
+                        
+                        <h3>⚡ How to Redeem</h3>
+                        <p>Once purchased, privileges appear in your "My Privileges" section. Click the "Redeem Now" button when you want to use a privilege. <strong>Each privilege can only be used once!</strong></p>
+                        
+                        <h3>🏆 Earning Money</h3>
+                        <p>Complete chores, homework, and special tasks to earn deposits to your Trust Account from your parents. The harder you work, the more amazing privileges you can afford!</p>
+                        
+                        <div style="background: #ffffcc; border: 2px solid #ffcc00; padding: 10px; margin: 15px 0;">
+                            <strong>💡 Tip:</strong> Save up for higher-star privileges - they offer much better value and more exciting rewards!
+                        </div>
+                        
+                        <div style="background: #f5f0ff; border: 2px solid #6a4c93; padding: 10px; margin: 15px 0;">
+                            <strong>👑 Parent Note:</strong> The Trust Account system gives you full control over privilege spending while maintaining the fun shopping experience for your child.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="privilege-palace-footer">
+                © 1999 Privilege Palace Corp. • A division of ElxaCorp Family Services<br>
+                "Making Good Behavior Profitable Since 1999" • <a href="#" style="color: #0066cc;">Terms</a> | <a href="#" style="color: #0066cc;">Privacy</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment System JavaScript -->
+    <script src="../../../js/services/payment-system.js"></script>
+    
+    <script>
+        // Privilege Palace Shopping System - Enhanced with Trust Account Integration
+        class PrivilegePalace {
+            constructor() {
+                this.cart = [];
+                this.purchased = [];
+                this.init();
+            }
+            
+            init() {
+                this.loadData();
+                this.updateBankStatus();
+                this.updateCartDisplay();
+                this.updatePrivilegesDisplay();
+                
+                // Update bank status periodically
+                setInterval(() => {
+                    this.updateBankStatus();
+                }, 5000);
+            }
+            
+            updateBankStatus() {
+                const bankInfo = document.getElementById('bankInfo');
+                
+                if (typeof window.bankSystem !== 'undefined') {
+                    if (window.bankSystem.isLoggedIn) {
+                        const balances = window.bankSystem.getAccountBalances();
+                        bankInfo.innerHTML = `
+                            ✅ <strong>Logged in as:</strong> ${window.bankSystem.currentUser.firstName} ${window.bankSystem.currentUser.lastName}<br>
+                            👑 <strong>Trust Account Balance:</strong> $${balances.trust.toFixed(2)} (${(balances.trust * 2).toFixed(0)}🐍)<br>
+                            <small style="color: #666;">This account is managed by your parents for privilege purchases</small>
+                        `;
+                    } else {
+                        bankInfo.innerHTML = `
+                            ❌ <strong>Not logged in</strong><br>
+                            <a href="#" onclick="privilegePalace.openBank()" style="color: #0066cc;">Click here to log in to First Snakesian Bank</a><br>
+                            <small style="color: #666;">You need to be logged in to make privilege purchases</small>
+                        `;
+                    }
+                } else {
+                    bankInfo.innerHTML = `
+                        ⚠️ <strong>Bank system not available</strong><br>
+                        Please ensure the banking system is loaded<br>
+                        <small style="color: #666;">Trust Account required for privilege purchases</small>
+                    `;
+                }
+            }
+            
+            openBank() {
+                if (typeof elxaOS !== 'undefined' && elxaOS.programs && elxaOS.programs.browser) {
+                    elxaOS.programs.browser.loadPage('fsb.ex');
+                } else {
+                    alert('Please open the Snoogle Browser and navigate to fsb.ex to log in to your bank account.');
+                }
+            }
+            
+            showSection(sectionName) {
+                // Hide all sections
+                const sections = document.querySelectorAll('.privilege-palace-section');
+                sections.forEach(section => section.classList.remove('active'));
+                
+                // Remove active from all nav buttons
+                const navBtns = document.querySelectorAll('.privilege-palace-nav-btn');
+                navBtns.forEach(btn => btn.classList.remove('active'));
+                
+                // Show selected section
+                document.getElementById(sectionName + 'Section').classList.add('active');
+                
+                // Update nav button - find the correct button based on section name
+                const targetBtn = Array.from(navBtns).find(btn => {
+                    const btnText = btn.textContent.toLowerCase();
+                    return (sectionName === 'shop' && btnText.includes('shop')) ||
+                           (sectionName === 'cart' && btnText.includes('cart')) ||
+                           (sectionName === 'privileges' && btnText.includes('privileges')) ||
+                           (sectionName === 'about' && btnText.includes('about'));
+                });
+                if (targetBtn) {
+                    targetBtn.classList.add('active');
+                }
+                
+                // Refresh data for certain sections
+                if (sectionName === 'privileges') {
+                    this.updatePrivilegesDisplay();
+                } else if (sectionName === 'cart') {
+                    this.updateCartContent();
+                }
+            }
+            
+            addToCart(id, name, icon, description, price, stars) {
+                // Check if item already in cart
+                const existingItem = this.cart.find(item => item.id === id);
+                if (existingItem) {
+                    this.showMessage('This privilege is already in your cart!', 'error');
+                    return;
+                }
+                
+                const item = {
+                    id: id,
+                    name: name,
+                    icon: icon,
+                    description: description,
+                    price: price,
+                    stars: stars,
+                    dateAdded: new Date().toISOString()
+                };
+                
+                this.cart.push(item);
+                this.saveData();
+                this.updateCartDisplay();
+                this.showMessage(`${name} added to cart!`, 'success');
+            }
+            
+            removeFromCart(id) {
+                this.cart = this.cart.filter(item => item.id !== id);
+                this.saveData();
+                this.updateCartDisplay();
+                this.updateCartContent();
+                this.showMessage('Item removed from cart', 'success');
+            }
+            
+            updateCartDisplay() {
+                const cartCount = document.getElementById('cartCount');
+                const cartTotal = document.getElementById('cartTotal');
+                const miniCheckoutBtn = document.getElementById('miniCheckoutBtn');
+                
+                const itemCount = this.cart.length;
+                const total = this.cart.reduce((sum, item) => sum + item.price, 0);
+                
+                cartCount.textContent = `${itemCount} item${itemCount !== 1 ? 's' : ''}`;
+                cartTotal.textContent = `$${total.toFixed(2)}`;
+                
+                miniCheckoutBtn.disabled = itemCount === 0;
+            }
+            
+            updateCartContent() {
+                const cartContent = document.getElementById('cartContent');
+                const cartActions = document.getElementById('cartActions');
+                const checkoutBtn = document.getElementById('checkoutBtn');
+                
+                if (this.cart.length === 0) {
+                    cartContent.innerHTML = `
+                        <div class="privilege-palace-empty-state">
+                            <div class="privilege-palace-empty-state-icon">🛒</div>
+                            <h3>Your cart is empty</h3>
+                            <p>Browse our privileges and add some to your cart!</p>
+                        </div>
+                    `;
+                    cartActions.style.display = 'none';
+                } else {
+                    const total = this.cart.reduce((sum, item) => sum + item.price, 0);
+                    
+                    cartContent.innerHTML = this.cart.map(item => `
+                        <div class="privilege-palace-cart-item">
+                            <button class="privilege-palace-remove-btn" onclick="privilegePalace.removeFromCart('${item.id}')">Remove</button>
+                            <div class="privilege-palace-cart-item-name">
+                                ${item.icon} ${item.name} <span class="privilege-palace-star-rating">${'⭐'.repeat(item.stars)}</span>
+                            </div>
+                            <div style="font-size: 9px; color: #666; margin: 2px 0;">${item.description}</div>
+                            <div class="privilege-palace-cart-item-price">$${item.price.toFixed(2)}</div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    `).join('');
+                    
+                    cartActions.style.display = 'block';
+                    checkoutBtn.textContent = `👑 Proceed to Trust Account Checkout - $${total.toFixed(2)}`;
+                    checkoutBtn.disabled = false;
+                }
+            }
+            
+            checkout() {
+                if (this.cart.length === 0) {
+                    this.showMessage('Your cart is empty!', 'error');
+                    return;
+                }
+                
+                const total = this.cart.reduce((sum, item) => sum + item.price, 0);
+                const itemCount = this.cart.length;
+                
+                // Create description of what's being purchased
+                const itemNames = this.cart.map(item => item.name).join(', ');
+                let description = `${itemCount} privilege${itemCount !== 1 ? 's' : ''}`;
+                if (itemCount <= 3) {
+                    description += `: ${itemNames}`;
+                }
+                
+                // Use the payment system with Trust Account specification
+                if (typeof window.elxaMockPayment !== 'undefined') {
+                    // Check if user is logged in and has access to trust account
+                    if (typeof window.bankSystem === 'undefined' || !window.bankSystem.isLoggedIn) {
+                        this.showMessage('Please log in to your First Snakesian Bank account first!', 'error');
+                        return;
+                    }
+                    
+                    // Check trust account balance
+                    const trustBalance = window.bankSystem.getAccountBalances().trust;
+                    if (trustBalance < total) {
+                        this.showMessage(`Insufficient funds in Trust Account! Available: $${trustBalance.toFixed(2)}, Required: $${total.toFixed(2)}. Ask a parent to add more funds.`, 'error');
+                        return;
+                    }
+                    
+                    // Set up a callback for when payment completes
+                    this.setupPaymentCallback();
+                    
+                    // Launch payment dialog with Trust Account specification
+                    window.elxaMockPayment.purchase({
+                        name: 'Privilege Palace Order',
+                        price: `$${total.toFixed(2)}`,
+                        description: description,
+                        preferredAccount: 'trust',
+                        trustAuthorized: true,
+                        isPrivilegePurchase: true,
+                        privilegeData: {
+                            cart: [...this.cart],
+                            total: total
+                        }
+                    });
+                } else {
+                    this.showMessage('Payment system not available. Please ensure the payment system is loaded.', 'error');
+                }
+            }
+            
+            // Set up callback to handle successful payment
+            setupPaymentCallback() {
+                // Store reference to this instance
+                const privilegePalaceInstance = this;
+                
+                // Override the payment system's close dialog method temporarily
+                const originalCloseDialog = window.elxaMockPayment.closePaymentDialog;
+                
+                window.elxaMockPayment.closePaymentDialog = function() {
+                    // Check if this was a successful privilege purchase
+                    if (this.currentOrder && this.currentOrder.isPrivilegePurchase && this.currentOrder.privilegeData) {
+                        // Complete the privilege purchase
+                        privilegePalaceInstance.completeOrder(this.currentOrder.privilegeData);
+                    }
+                    
+                    // Restore original method
+                    window.elxaMockPayment.closePaymentDialog = originalCloseDialog;
+                    
+                    // Call original close method
+                    originalCloseDialog.call(this);
+                };
+            }
+            
+            // This method will be called after successful payment
+            completeOrder(privilegeData) {
+                if (!privilegeData || !privilegeData.cart) {
+                    this.showMessage('No privilege data found!', 'error');
+                    return;
+                }
+                
+                const { cart } = privilegeData;
+                
+                // Payment successful - move items to purchased
+                const purchaseDate = new Date().toISOString();
+                cart.forEach(item => {
+                    this.purchased.push({
+                        ...item,
+                        purchaseDate: purchaseDate,
+                        redeemed: false,
+                        purchaseMethod: 'trust_account'
+                    });
+                });
+                
+                // Clear cart
+                this.cart = [];
+                this.saveData();
+                this.updateCartDisplay();
+                this.updateCartContent();
+                this.updatePrivilegesDisplay();
+                
+                this.showMessage(`👑 Payment successful from Trust Account! Your privileges are now available in the "My Privileges" section. 🎉`, 'success');
+                
+                // Auto-switch to privileges section after a delay
+                setTimeout(() => {
+                    this.showSection('privileges');
+                }, 2000);
+            }
+            
+            updatePrivilegesDisplay() {
+                const privilegesContent = document.getElementById('privilegesContent');
+                const unredeemedPrivileges = this.purchased.filter(p => !p.redeemed);
+                
+                if (unredeemedPrivileges.length === 0) {
+                    privilegesContent.innerHTML = `
+                        <div class="privilege-palace-empty-state">
+                            <div class="privilege-palace-empty-state-icon">⭐</div>
+                            <h3>No privileges available</h3>
+                            <p>Purchase some privileges from the shop to see them here!</p>
+                            <p><small>Remember: Privileges are purchased using your Trust Account</small></p>
+                        </div>
+                    `;
+                } else {
+                    privilegesContent.innerHTML = unredeemedPrivileges.map(privilege => `
+                        <div class="privilege-palace-purchased-item">
+                            <div class="privilege-palace-purchased-item-header">
+                                <div class="privilege-palace-purchased-item-name">
+                                    ${privilege.icon} ${privilege.name} <span class="privilege-palace-star-rating">${'⭐'.repeat(privilege.stars)}</span>
+                                </div>
+                                <div class="privilege-palace-purchased-item-date">
+                                    Purchased: ${new Date(privilege.purchaseDate).toLocaleDateString()}<br>
+                                    <small>👑 From Trust Account</small>
+                                </div>
+                            </div>
+                            <div class="privilege-palace-purchased-item-desc">${privilege.description}</div>
+                            <button class="privilege-palace-redeem-btn" onclick="privilegePalace.redeemPrivilege('${privilege.id}', '${privilege.purchaseDate}')">
+                                ⚡ Redeem Now
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            }
+            
+            redeemPrivilege(id, purchaseDate) {
+                const privilege = this.purchased.find(p => p.id === id && p.purchaseDate === purchaseDate && !p.redeemed);
+                
+                if (!privilege) {
+                    this.showMessage('Privilege not found or already redeemed!', 'error');
+                    return;
+                }
+                
+                // Confirm redemption
+                if (!confirm(`Are you sure you want to redeem "${privilege.name}"? This cannot be undone!`)) {
+                    return;
+                }
+                
+                // Mark as redeemed
+                privilege.redeemed = true;
+                privilege.redeemedDate = new Date().toISOString();
+                
+                this.saveData();
+                this.updatePrivilegesDisplay();
+                
+                this.showMessage(`👑 "${privilege.name}" has been redeemed! Enjoy your privilege! 🎉`, 'success');
+            }
+            
+            refreshPrivileges() {
+                this.loadData();
+                this.updatePrivilegesDisplay();
+                this.showMessage('Privileges refreshed!', 'success');
+            }
+            
+            showMessage(message, type = 'info') {
+                // Remove any existing messages
+                const existingMessages = document.querySelectorAll('.privilege-palace-message');
+                existingMessages.forEach(msg => msg.remove());
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `privilege-palace-message ${type}`;
+                messageDiv.textContent = message;
+                
+                // Insert at the top of the content area
+                const content = document.querySelector('.privilege-palace-content');
+                content.insertBefore(messageDiv, content.firstChild);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.parentNode.removeChild(messageDiv);
+                    }
+                }, 5000);
+            }
+            
+            saveData() {
+                try {
+                    const data = {
+                        cart: this.cart,
+                        purchased: this.purchased,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    
+                    // Try to save to ElxaOS file system
+                    if (typeof elxaOS !== 'undefined' && elxaOS.fileSystem) {
+                        try {
+                            // Ensure the PrivilegePalace folder exists
+                            try {
+                                elxaOS.fileSystem.createFolder(['root', 'System'], 'PrivilegePalace');
+                            } catch (e) {
+                                // Folder probably already exists
+                            }
+                            
+                            elxaOS.fileSystem.createFile(['root', 'System', 'PrivilegePalace'], 'privilege-data.json', JSON.stringify(data), 'json');
+                        } catch (fsError) {
+                            console.log('ElxaOS file system not available, using localStorage only');
+                        }
+                    }
+                    
+                    // Also save to localStorage as backup
+                    localStorage.setItem('elxaOS-privilege-palace-data', JSON.stringify(data));
+                } catch (error) {
+                    console.error('Failed to save privilege data:', error);
+                }
+            }
+            
+            loadData() {
+                try {
+                    let data = null;
+                    
+                    // Try to load from ElxaOS file system first
+                    if (typeof elxaOS !== 'undefined' && elxaOS.fileSystem) {
+                        try {
+                            const file = elxaOS.fileSystem.getFile(['root', 'System', 'PrivilegePalace'], 'privilege-data.json');
+                            if (file && file.content) {
+                                data = JSON.parse(file.content);
+                            }
+                        } catch (fsError) {
+                            console.log('Could not load from ElxaOS file system, trying localStorage');
+                        }
+                    }
+                    
+                    // If not found in file system, try localStorage
+                    if (!data) {
+                        const localData = localStorage.getItem('elxaOS-privilege-palace-data');
+                        if (localData) {
+                            data = JSON.parse(localData);
+                        }
+                    }
+                    
+                    if (data) {
+                        this.cart = data.cart || [];
+                        this.purchased = data.purchased || [];
+                    } else {
+                        this.cart = [];
+                        this.purchased = [];
+                    }
+                } catch (error) {
+                    console.error('Failed to load privilege data:', error);
+                    this.cart = [];
+                    this.purchased = [];
+                }
+            }
+        }
+        
+        // Initialize the system
+        const privilegePalace = new PrivilegePalace();
+        
+        // Make it globally accessible
+        window.privilegePalace = privilegePalace;
+    </script>
+</body>
+</html>

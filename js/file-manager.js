@@ -1025,7 +1025,6 @@ class FileManagerProgram {
                     // Handle program shortcuts
                     try {
                         const shortcutData = JSON.parse(file.content);
-                        console.log('Processing .lnk file:', file.name, shortcutData);
                         if (shortcutData.type === 'program_shortcut') {
                             icon = shortcutData.programInfo.icon;
                             program = shortcutData.programId;

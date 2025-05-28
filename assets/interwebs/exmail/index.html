@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ElxaMail - Your Gateway to the ExWeb</title>
+    <style>
+        /* Classic late 90s/early 2000s email styling */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: Arial, sans-serif !important;
+            background: #c0c0c0 !important;
+            color: #000000 !important;
+            font-size: 11px !important;
+            line-height: 1.4 !important;
+            min-height: 100vh !important;
+        }
+        
+        .elxamail-website-root {
+            background: #c0c0c0 !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .elxamail-container {
+            background: #ffffff !important;
+            border: 2px outset #c0c0c0;
+            margin: 10px;
+            min-height: calc(100vh - 20px);
+        }
+        
+        .elxamail-header {
+            background: linear-gradient(180deg, #0066cc 0%, #004499 100%);
+            color: white;
+            padding: 8px 15px;
+            border-bottom: 2px inset #c0c0c0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .elxamail-logo {
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+        }
+        
+        .elxamail-tagline {
+            font-size: 10px;
+            font-style: italic;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+        
+        .elxamail-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .elxamail-nav {
+            background: #e6e6e6;
+            border-bottom: 1px solid #999;
+            padding: 4px 15px;
+            font-size: 10px;
+        }
+        
+        .elxamail-nav a {
+            color: #0066cc;
+            text-decoration: underline;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .elxamail-nav a:hover {
+            color: #ff6600;
+        }
+        
+        .elxamail-content {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        /* Login/Register Forms */
+        .elxamail-login-form, .elxamail-register-form {
+            max-width: 400px;
+            margin: 40px auto;
+            background: #f0f0f0;
+            border: 2px inset #c0c0c0;
+            padding: 20px;
+        }
+        
+        .elxamail-form-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #999;
+            padding-bottom: 8px;
+        }
+        
+        .elxamail-form-group {
+            margin-bottom: 12px;
+        }
+        
+        .elxamail-form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: bold;
+            color: #000080;
+            font-size: 10px;
+        }
+        
+        .elxamail-form-group input {
+            width: 100%;
+            padding: 3px;
+            border: 1px inset #c0c0c0;
+            font-size: 11px;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+        
+        .elxamail-btn {
+            background: linear-gradient(180deg, #e6e6e6 0%, #cccccc 100%);
+            border: 2px outset #c0c0c0;
+            padding: 4px 12px;
+            font-size: 10px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            margin: 3px;
+        }
+        
+        .elxamail-btn:hover {
+            background: linear-gradient(180deg, #f0f0f0 0%, #d6d6d6 100%);
+        }
+        
+        .elxamail-btn:active {
+            border: 2px inset #c0c0c0;
+        }
+        
+        .elxamail-btn-primary {
+            background: linear-gradient(180deg, #0066cc 0%, #004499 100%);
+            color: white;
+            border: 2px outset #0066cc;
+        }
+        
+        .elxamail-btn-primary:hover {
+            background: linear-gradient(180deg, #0077dd 0%, #0055aa 100%);
+        }
+        
+        .elxamail-btn-danger {
+            background: linear-gradient(180deg, #cc0000 0%, #990000 100%);
+            color: white;
+            border: 2px outset #cc0000;
+        }
+        
+        .elxamail-btn-danger:hover {
+            background: linear-gradient(180deg, #dd0000 0%, #aa0000 100%);
+        }
+        
+        /* Main Email Interface */
+        .elxamail-sidebar {
+            width: 180px;
+            background: #f0f0f0;
+            border-right: 1px solid #999;
+            padding: 10px;
+        }
+        
+        .elxamail-main {
+            flex: 1;
+            background: white;
+            padding: 10px;
+        }
+        
+        .elxamail-folder {
+            display: block;
+            padding: 4px 8px;
+            margin: 2px 0;
+            text-decoration: none;
+            color: #000;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .elxamail-folder:hover {
+            background: #e0e0e0;
+            border: 1px solid #999;
+        }
+        
+        .elxamail-folder.active {
+            background: #0066cc;
+            color: white;
+            border: 1px solid #004499;
+        }
+        
+        .elxamail-folder-icon {
+            margin-right: 6px;
+        }
+        
+        .elxamail-toolbar {
+            background: #e6e6e6;
+            border: 1px solid #999;
+            padding: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .elxamail-email-list {
+            border: 1px solid #999;
+            background: white;
+        }
+        
+        .elxamail-email-item {
+            display: flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .elxamail-email-item:hover {
+            background: #e6f3ff;
+        }
+        
+        .elxamail-email-item.unread {
+            font-weight: bold;
+        }
+        
+        .elxamail-email-item.selected {
+            background: #3366cc;
+            color: white;
+        }
+        
+        .elxamail-email-checkbox {
+            margin-right: 8px;
+        }
+        
+        .elxamail-email-from {
+            width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .elxamail-email-subject {
+            flex: 1;
+            margin: 0 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .elxamail-email-date {
+            width: 80px;
+            text-align: right;
+            color: #666;
+        }
+        
+        /* Bulk Actions */
+        .elxamail-bulk-actions {
+            background: #f0f0f0;
+            border: 1px solid #999;
+            padding: 5px;
+            margin-bottom: 5px;
+            display: none;
+        }
+        
+        .elxamail-bulk-actions.active {
+            display: block;
+        }
+        
+        .elxamail-bulk-select {
+            margin-right: 10px;
+        }
+        
+        /* Compose Window */
+        .elxamail-compose {
+            background: #f0f0f0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .elxamail-compose-header {
+            background: #0066cc;
+            color: white;
+            padding: 4px 8px;
+            font-weight: bold;
+            margin: -10px -10px 10px -10px;
+            font-size: 11px;
+        }
+        
+        .elxamail-compose-field {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .elxamail-compose-field label {
+            width: 60px;
+            font-weight: bold;
+            font-size: 10px;
+        }
+        
+        .elxamail-compose-field input {
+            flex: 1;
+            padding: 2px;
+            border: 1px inset #c0c0c0;
+            font-size: 11px;
+        }
+        
+        .elxamail-compose-body {
+            width: 100%;
+            height: 200px;
+            border: 1px inset #c0c0c0;
+            padding: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        .elxamail-compose-actions {
+            margin-top: 10px;
+            text-align: left;
+        }
+        
+        /* Welcome Screen */
+        .elxamail-welcome {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .elxamail-welcome-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        /* Messages */
+        .elxamail-error {
+            background: #ffe6e6;
+            border: 1px solid #ff9999;
+            color: #cc0000;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 11px;
+        }
+        
+        .elxamail-success {
+            background: #e6ffe6;
+            border: 1px solid #99ff99;
+            color: #006600;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 11px;
+        }
+        
+        .elxamail-info {
+            background: #e6f3ff;
+            border: 1px solid #99ccff;
+            color: #0066cc;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 11px;
+        }
+        
+        /* Context Menu */
+        .elxamail-context-menu {
+            position: absolute;
+            background: #f0f0f0;
+            border: 2px outset #c0c0c0;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            z-index: 1000;
+            min-width: 120px;
+        }
+        
+        .elxamail-context-item {
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 11px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .elxamail-context-item:hover {
+            background: #0066cc;
+            color: white;
+        }
+        
+        .elxamail-context-separator {
+            height: 1px;
+            background: #999;
+            margin: 2px 0;
+        }
+        
+        /* Security Notice */
+        .elxamail-security-notice {
+            background: #ffffcc;
+            border: 1px solid #ffcc00;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 10px;
+            border-left: 4px solid #ffcc00;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Footer */
+        .elxamail-footer {
+            background: #e6e6e6;
+            border-top: 1px solid #999;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        @media (max-width: 600px) {
+            .elxamail-content {
+                flex-direction: column;
+            }
+            .elxamail-sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #999;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="elxamail-website-root">
+        <div class="elxamail-container">
+            <div class="elxamail-header">
+                <div>
+                    <div class="elxamail-logo">📧 ElxaMail</div>
+                    <div class="elxamail-tagline">Your Gateway to the ExWeb</div>
+                </div>
+                <div class="elxamail-user-info" id="elxamailUserInfo">
+                    <!-- User info will be populated here -->
+                </div>
+            </div>
+            
+            <div class="elxamail-nav">
+                <a href="javascript:void(0)" onclick="elxaMailSystem.showLogin()">Sign In</a>
+                <a href="javascript:void(0)" onclick="elxaMailSystem.showRegister()">Sign Up</a>
+                <a href="javascript:void(0)" onclick="elxaMailSystem.showHelp()">Help</a>
+                <span id="loggedInNav" class="hidden">
+                    | <a href="javascript:void(0)" onclick="elxaMailSystem.logout()">Sign Out</a>
+                </span>
+            </div>
+            
+            <div class="elxamail-content">
+                <!-- Login Form -->
+                <div id="loginSection" class="elxamail-login-form">
+                    <div class="elxamail-form-title">📧 Sign In to ElxaMail</div>
+                    <div class="elxamail-security-notice">
+                        <strong>Welcome to ElxaMail!</strong> The most trusted email service in Snakesia since 1997.
+                    </div>
+                    
+                    <div class="elxamail-form-group">
+                        <label for="loginUsername">Email Address:</label>
+                        <input type="text" id="loginUsername" placeholder="your.name@elxamail.ex">
+                    </div>
+                    
+                    <div class="elxamail-form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword">
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="elxamail-btn elxamail-btn-primary" onclick="elxaMailSystem.login()">Sign In</button>
+                        <button class="elxamail-btn" onclick="elxaMailSystem.showRegister()">New User</button>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px; font-size: 10px;">
+                        <a href="javascript:void(0)" style="color: #0066cc;">Forgot Password?</a> | 
+                        <a href="javascript:void(0)" style="color: #0066cc;">Email Help</a>
+                    </div>
+                </div>
+                
+                <!-- Registration Form -->
+                <div id="registerSection" class="elxamail-register-form hidden">
+                    <div class="elxamail-form-title">🆕 Create Your ElxaMail Account</div>
+                    <div style="text-align: center; margin-bottom: 15px; font-size: 11px; color: #666;">
+                        Join millions of Snakesians using ElxaMail!
+                    </div>
+                    
+                    <div class="elxamail-form-group">
+                        <label for="regDisplayName">Your Name:</label>
+                        <input type="text" id="regDisplayName" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="elxamail-form-group">
+                        <label for="regUsername">Choose Email Address:</label>
+                        <input type="text" id="regUsername" placeholder="yourname" 
+                               style="width: 60%; display: inline-block;">
+                        <span style="font-size: 11px; color: #666;">@elxamail.ex</span>
+                    </div>
+                    
+                    <div class="elxamail-form-group">
+                        <label for="regPassword">Choose Password:</label>
+                        <input type="password" id="regPassword" placeholder="At least 6 characters">
+                    </div>
+                    
+                    <div class="elxamail-form-group">
+                        <label for="regConfirmPassword">Confirm Password:</label>
+                        <input type="password" id="regConfirmPassword">
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="elxamail-btn elxamail-btn-primary" onclick="elxaMailSystem.register()">Create Account</button>
+                        <button class="elxamail-btn" onclick="elxaMailSystem.showLogin()">Back to Sign In</button>
+                    </div>
+                </div>
+                
+                <!-- Main Email Interface -->
+                <div id="emailInterface" class="hidden" style="width: 100%; display: flex;">
+                    <!-- Sidebar -->
+                    <div class="elxamail-sidebar">
+                        <div style="margin-bottom: 15px;">
+                            <button class="elxamail-btn elxamail-btn-primary" onclick="elxaMailSystem.showCompose()" style="width: 100%;">
+                                ✉️ Compose
+                            </button>
+                        </div>
+                        
+                        <div style="font-weight: bold; font-size: 10px; margin-bottom: 5px; color: #666;">FOLDERS</div>
+                        <a href="javascript:void(0)" class="elxamail-folder active" data-folder="inbox" onclick="elxaMailSystem.selectFolder('inbox')">
+                            <span class="elxamail-folder-icon">📥</span>Inbox (<span id="inboxCount">0</span>)
+                        </a>
+                        <a href="javascript:void(0)" class="elxamail-folder" data-folder="sent" onclick="elxaMailSystem.selectFolder('sent')">
+                            <span class="elxamail-folder-icon">📤</span>Sent
+                        </a>
+                        <a href="javascript:void(0)" class="elxamail-folder" data-folder="drafts" onclick="elxaMailSystem.selectFolder('drafts')">
+                            <span class="elxamail-folder-icon">📝</span>Drafts
+                        </a>
+                        <a href="javascript:void(0)" class="elxamail-folder" data-folder="trash" onclick="elxaMailSystem.selectFolder('trash')">
+                            <span class="elxamail-folder-icon">🗑️</span>Trash
+                        </a>
+                        
+                        <div style="margin-top: 20px; font-weight: bold; font-size: 10px; margin-bottom: 5px; color: #666;">CONTACTS</div>
+                        <div id="contactsList">
+                            <!-- Contacts will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Main Area -->
+                    <div class="elxamail-main">
+                        <!-- Bulk Actions Bar -->
+                        <div class="elxamail-bulk-actions" id="elxamailBulkActions">
+                            <label class="elxamail-bulk-select">
+                                <input type="checkbox" id="selectAllEmails" onchange="elxaMailSystem.toggleSelectAll()">
+                                Select All
+                            </label>
+                            <button class="elxamail-btn" onclick="elxaMailSystem.bulkMarkRead()">📖 Mark Read</button>
+                            <button class="elxamail-btn" onclick="elxaMailSystem.bulkMarkUnread()">📩 Mark Unread</button>
+                            <button class="elxamail-btn" onclick="elxaMailSystem.bulkDelete()" id="bulkDeleteBtn">🗑️ Delete</button>
+                            <button class="elxamail-btn elxamail-btn-danger hidden" onclick="elxaMailSystem.bulkDeletePermanently()" id="bulkDeletePermanentBtn">💀 Delete Forever</button>
+                        </div>
+                        
+                        <!-- Toolbar -->
+                        <div class="elxamail-toolbar">
+                            <button class="elxamail-btn" onclick="elxaMailSystem.refreshEmails()">🔄 Refresh</button>
+                            <button class="elxamail-btn" onclick="elxaMailSystem.deleteSelected()">🗑️ Delete</button>
+                            <button class="elxamail-btn" onclick="elxaMailSystem.markAsRead()">✅ Mark Read</button>
+                            <button class="elxamail-btn" onclick="elxaMailSystem.markAsUnread()">📩 Mark Unread</button>
+                            <span style="margin-left: auto; font-size: 10px; color: #666;" id="emailStatus">
+                                Loading...
+                            </span>
+                        </div>
+
+                        <!-- Email List -->
+                        <div id="emailListContainer">
+                            <div class="elxamail-email-list" id="emailList">
+                                <!-- Emails will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Email Viewer -->
+                        <div id="emailViewer" class="hidden" style="border: 2px inset #c0c0c0; background: white; margin-top: 10px;">
+                            <div style="background: #0066cc; color: white; padding: 6px 10px; font-weight: bold; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Email Message</span>
+                                <button class="elxamail-btn" onclick="elxaMailSystem.closeEmailViewer()" style="font-size: 10px; padding: 2px 6px;">✖ Close</button>
+                            </div>
+                            <div id="emailViewerContent" style="padding: 15px;">
+                                <!-- Email content will be shown here -->
+                            </div>
+                        </div>
+
+                        <!-- Compose Window -->
+                        <div id="composeWindow" class="elxamail-compose hidden">
+                            <div class="elxamail-compose-header">Compose New Message</div>
+                            
+                            <div class="elxamail-compose-field">
+                                <label>To:</label>
+                                <input type="text" id="composeTo" placeholder="recipient@elxamail.ex">
+                            </div>
+                            
+                            <div class="elxamail-compose-field">
+                                <label>Subject:</label>
+                                <input type="text" id="composeSubject" placeholder="Enter subject">
+                            </div>
+                            
+                            <textarea id="composeBody" class="elxamail-compose-body" 
+                                      placeholder="Type your message here..."></textarea>
+                            
+                            <div class="elxamail-compose-actions">
+                                <button class="elxamail-btn elxamail-btn-primary" onclick="elxaMailSystem.sendEmail()">
+                                    📤 Send
+                                </button>
+                                <button class="elxamail-btn" onclick="elxaMailSystem.saveDraft()">
+                                    💾 Save Draft
+                                </button>
+                                <button class="elxamail-btn" onclick="elxaMailSystem.cancelCompose()">
+                                    ❌ Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Welcome Screen for non-logged-in users -->
+                <div id="welcomeScreen" class="elxamail-welcome">
+                    <div class="elxamail-welcome-icon">📧✨</div>
+                    <h2 style="color: #0066cc; margin-bottom: 16px;">Welcome to ElxaMail!</h2>
+                    <p style="max-width: 500px; margin: 0 auto 20px auto; color: #666;">
+                        The most trusted email service in Snakesia. Connect with friends, family, 
+                        and colleagues across the ExWeb. Over 2.3 million Snakesians use ElxaMail daily!
+                    </p>
+                    <p style="font-size: 10px; color: #999;">
+                        Established 1997 • Serving Snakesia with reliable email service
+                    </p>
+                </div>
+            </div>
+            
+            <div class="elxamail-footer">
+                <p>© 1999 ElxaCorp Communications. All rights reserved. | Member NSPA (Snakesian Privacy Alliance)<br>
+                Terms of Service | Privacy Policy | ElxaMail Help Center</p>
+                <p style="margin-top: 5px;">ElxaMail is available 24/7. Technical support: help@elxacorp.ex</p>
+            </div>
+        </div>
+
+        <!-- Context Menu for emails -->
+        <div class="elxamail-context-menu hidden" id="emailContextMenu">
+            <div class="elxamail-context-item" data-action="reply">
+                📧 Reply
+            </div>
+            <div class="elxamail-context-item" data-action="forward">
+                📨 Forward
+            </div>
+            <div class="elxamail-context-separator"></div>
+            <div class="elxamail-context-item" data-action="markRead">
+                ✅ Mark as Read
+            </div>
+            <div class="elxamail-context-item" data-action="markUnread">
+                📩 Mark as Unread
+            </div>
+            <div class="elxamail-context-separator"></div>
+            <div class="elxamail-context-item" data-action="moveToTrash">
+                🗑️ Move to Trash
+            </div>
+            <div class="elxamail-context-item" data-action="delete">
+                ❌ Delete Permanently
+            </div>
+        </div>
+    </div>
+
+    <!-- ElxaMail System JavaScript -->
+    <script src="../../../js/services/conversation-history.js"></script>
+    <script src="../../../js/services/email-llm-service.js"></script>
+    <script src="../../../js/services/email-system.js"></script>
+    <script>
+        // Initialize the email system when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            elxaMailSystem.init();
+        });
+    </script>
+</body>
+</html>

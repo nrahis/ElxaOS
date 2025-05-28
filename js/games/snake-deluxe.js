@@ -1,6 +1,7 @@
 // =================================
-// SNAKE DELUXE - Mr. Snake-e's Epic Adventure in Snakesia! (CUTE & FIXED)
-// A magical journey through ElxaCorp's headquarters and beyond!
+// SNAKE DELUXE - Mr. Snake-e's Epic Corporate Adventure! (IMPROVED MECHANICS)
+// A professional journey through ElxaCorp's headquarters and beyond!
+// NOW WITH CORPORATE SPLASH SCREEN!
 // =================================
 
 class SnakeDeluxe {
@@ -18,18 +19,23 @@ class SnakeDeluxe {
         this.achievements = JSON.parse(localStorage.getItem('elxaOS-snake-deluxe-achievements') || '[]');
         this.unlockedLevels = JSON.parse(localStorage.getItem('elxaOS-snake-deluxe-levels') || '[1]');
         
+        // Splash screen state
+        this.showingSplash = true;
+        this.splashTimer = null;
+        
         // Difficulty settings
-        this.difficulty = gameData.difficulty || 'normal';
+        this.difficulty = gameData.difficulty || 'employee';
         this.baseSpeed = this.getDifficultySpeed();
         this.currentSpeed = this.baseSpeed;
         
-        // Game board - responsive sizing
-        this.boardSize = 20; // Smaller board for better fit
+        // Game board - progressive sizing based on level
+        this.baseBoardSize = 15; // Start smaller for easier gameplay
+        this.boardSize = this.getBoardSizeForLevel(this.currentLevel); 
         this.cellSize = 16; // Base cell size
         this.actualCellSize = this.cellSize; // Will be updated based on responsive sizing
         
         // Snake state
-        this.snake = [{ x: 10, y: 10 }];
+        this.snake = [{ x: Math.floor(this.boardSize/2), y: Math.floor(this.boardSize/2) }];
         this.direction = { x: 1, y: 0 };
         this.nextDirection = { x: 1, y: 0 };
         
@@ -52,6 +58,7 @@ class SnakeDeluxe {
         
         // Input handling
         this.keyHandler = this.handleKeyPress.bind(this);
+        this.splashKeyHandler = this.handleSplashKeyPress.bind(this);
         
         // Level system
         this.levels = this.createLevelData();
@@ -70,12 +77,17 @@ class SnakeDeluxe {
 
     getDifficultySpeed() {
         switch (this.difficulty) {
-            case 'easy': return 200;
-            case 'normal': return 150;
-            case 'hard': return 110;
-            case 'snakesia_master': return 90;
-            default: return 150;
+            case 'intern': return 350;     // Much slower for beginners
+            case 'employee': return 220;   // Reasonable pace
+            case 'manager': return 140;    // Getting challenging
+            case 'executive': return 90;   // Expert level
+            default: return 220;
         }
+    }
+
+    getBoardSizeForLevel(level) {
+        // Progressive board size: starts at 15x15, grows to 25x25
+        return Math.min(25, this.baseBoardSize + Math.floor((level - 1) / 2));
     }
 
     createLevelData() {
@@ -87,10 +99,10 @@ class SnakeDeluxe {
                 theme: "office",
                 bgColor: "#1a1a2e",
                 accentColor: "#ff69b4",
-                foods: [{ type: "coffee", count: 5, points: 10 }],
+                foods: [{ type: "coffee", count: 3, points: 10 }],
                 obstacles: [], // No obstacles in tutorial level
                 powerUps: ["speed"],
-                targetScore: 50,
+                targetScore: 30,
                 cats: 1
             },
             {
@@ -106,7 +118,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["server_rack", "cable"],
                 powerUps: ["speed", "invincible"],
-                targetScore: 120,
+                targetScore: 80,
                 cats: 2
             },
             {
@@ -122,7 +134,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["flower_bed", "garden_tool"],
                 powerUps: ["magnetism", "double_score"],
-                targetScore: 200,
+                targetScore: 140,
                 cats: 3
             },
             {
@@ -138,7 +150,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["car_part", "tool_box", "oil_spill"],
                 powerUps: ["speed", "invincible", "double_score"],
-                targetScore: 300,
+                targetScore: 200,
                 cats: 2
             },
             {
@@ -154,7 +166,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["building", "traffic_cone", "street_lamp"],
                 powerUps: ["speed", "magnetism", "double_score", "invincible"],
-                targetScore: 450,
+                targetScore: 300,
                 cats: 4
             },
             {
@@ -170,7 +182,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["blackboard", "desk", "computer"],
                 powerUps: ["speed", "double_score", "invincible"],
-                targetScore: 600,
+                targetScore: 400,
                 cats: 3
             },
             {
@@ -186,7 +198,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["monitor", "keyboard", "server", "cable_mess"],
                 powerUps: ["magnetism", "invincible", "double_score"],
-                targetScore: 800,
+                targetScore: 500,
                 cats: 5
             },
             {
@@ -202,7 +214,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["cat_tree", "litter_box", "scratching_post"],
                 powerUps: ["speed", "magnetism", "double_score", "invincible"],
-                targetScore: 1000,
+                targetScore: 650,
                 cats: 8
             },
             {
@@ -218,7 +230,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["conference_table", "chair", "projector", "whiteboard"],
                 powerUps: ["speed", "magnetism", "double_score", "invincible"],
-                targetScore: 1200,
+                targetScore: 800,
                 cats: 6
             },
             {
@@ -235,7 +247,7 @@ class SnakeDeluxe {
                 ],
                 obstacles: ["throne", "pillar", "statue", "treasure_chest"],
                 powerUps: ["speed", "magnetism", "double_score", "invincible"],
-                targetScore: 1500,
+                targetScore: 1000,
                 cats: 10
             }
         ];
@@ -243,6 +255,7 @@ class SnakeDeluxe {
 
     initializeLevel() {
         this.currentLevelData = this.levels[this.currentLevel - 1];
+        this.boardSize = this.getBoardSizeForLevel(this.currentLevel);
         this.generateLevelElements();
     }
 
@@ -262,8 +275,11 @@ class SnakeDeluxe {
             }
         });
         
-        // Generate obstacles
-        const numObstacles = Math.min(levelData.obstacles.length * 2, 8);
+        // Generate obstacles - scaled with board size and level
+        const baseObstacles = Math.min(levelData.obstacles.length * 2, 6);
+        const levelMultiplier = Math.floor((this.currentLevel - 1) / 3) + 1;
+        const numObstacles = Math.min(baseObstacles + levelMultiplier, 12);
+        
         for (let i = 0; i < numObstacles; i++) {
             const obstacleType = levelData.obstacles[Math.floor(Math.random() * levelData.obstacles.length)];
             if (obstacleType) {
@@ -291,17 +307,43 @@ class SnakeDeluxe {
 
     launch(programInfo) {
         const windowId = `snake-deluxe-${programInfo.id}-${Date.now()}`;
-        const windowContent = this.createGameInterface();
+        const windowContent = this.createSplashScreen();
         
         const window = this.windowManager.createWindow(
             windowId,
-            `🐍✨ ${programInfo.name}`,
+            `🐍💼 ${programInfo.name}`,
             windowContent,
             { width: '700px', height: '600px', x: '100px', y: '30px' }
         );
         
-        this.setupGameEvents(windowId);
+        this.setupSplashEvents(windowId);
         return windowId;
+    }
+
+    createSplashScreen() {
+        return `
+            <div class="sd-splash-container">
+                <div class="sd-splash-content">
+                    <div class="sd-splash-image-container">
+                        <img src="assets/games/snake-deluxe/splash.png" 
+                             alt="Snake Deluxe Splash" 
+                             class="sd-splash-image"
+                             width="400" 
+                             height="300">
+                        <div class="sd-splash-loading">
+                            <div class="sd-loading-bar">
+                                <div class="sd-loading-fill"></div>
+                            </div>
+                            <div class="sd-loading-text">Loading ElxaCorp Systems...</div>
+                        </div>
+                    </div>
+                    <div class="sd-splash-footer">
+                        <div class="sd-splash-copyright">© 2024 ElxaCorp Industries • Snake Deluxe v2.0</div>
+                        <div class="sd-splash-hint">Press SPACE or click to continue...</div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 
     createGameInterface() {
@@ -314,7 +356,11 @@ class SnakeDeluxe {
             <div class="sd-game-container">
                 <div class="sd-game-header">
                     <div class="sd-game-logo">
-                        <span class="sd-logo-icon">🐍✨</span>
+                        <img src="assets/games/snake-deluxe/logo.png" 
+                             alt="ElxaCorp Logo" 
+                             class="sd-logo-image"
+                             width="50" 
+                             height="50">
                         <span class="sd-logo-text">Snake Deluxe</span>
                     </div>
                     <div class="sd-game-stats">
@@ -324,11 +370,11 @@ class SnakeDeluxe {
                                 <span class="sd-stat-value sd-score-value">0</span>
                             </div>
                             <div class="sd-stat-bubble">
-                                <span class="sd-stat-icon">🪙</span>
+                                <span class="sd-stat-icon">💰</span>
                                 <span class="sd-stat-value sd-coins-value">${this.coins}</span>
                             </div>
                             <div class="sd-stat-bubble">
-                                <span class="sd-stat-icon">🌟</span>
+                                <span class="sd-stat-icon">📊</span>
                                 <span class="sd-stat-value sd-level-value">1</span>
                             </div>
                         </div>
@@ -337,10 +383,9 @@ class SnakeDeluxe {
 
                 <div class="sd-story-banner">
                     <div class="sd-story-content">
-                        <div class="sd-story-character">🐍</div>
+                        <div class="sd-story-character"></div>
                         <div class="sd-story-text">
-                            <div class="sd-story-title">Mr. Snake-e's Magical Adventure</div>
-                            <div class="sd-story-description">Help the sweet CEO of ElxaCorp explore the dreamy kingdom of Snakesia! 💖</div>
+                            <div class="sd-story-description">Help the CEO of ElxaCorp navigate the corporate world of Snakesia!</div>
                         </div>
                     </div>
                 </div>
@@ -348,29 +393,35 @@ class SnakeDeluxe {
                 <div class="sd-game-area">
                     <div class="sd-level-selector">
                         <div class="sd-level-content">
-                            <h2>🌸 Choose Your Magical Adventure! 🌸</h2>
+                            <h2>Choose Your Corporate Adventure!</h2>
                             <div class="sd-character-intro">
-                                <div class="sd-character-avatar">🐍</div>
+                                <div class="sd-character-avatar">
+                                    <img src="assets/games/snake-deluxe/snake_avatar.png" 
+                                         alt="CEO Avatar" 
+                                         class="sd-avatar-image"
+                                         width="50" 
+                                         height="50">
+                                </div>
                                 <div class="sd-character-speech">
-                                    <p>Hi there, sweet friend! I'm Mr. Snake-e, CEO of ElxaCorp! 💕</p>
-                                    <p>My lovely wife Mrs. Snake-e and I would love your help! 🌺</p>
-                                    <p>Come explore our magical kingdom of Snakesia with us! ✨</p>
+                                    <p>Greetings, esteemed colleague! I'm Mr. Snake-e, CEO of ElxaCorp!</p>
+                                    <p>My lovely wife Mrs. Snake-e and I need your professional assistance!</p>
+                                    <p>Come help us navigate the corporate empire of Snakesia!</p>
                                 </div>
                             </div>
                             <div class="sd-difficulty-selector">
-                                <h3>💫 Choose Your Adventure Level:</h3>
+                                <h3>Choose Your Corporate Level:</h3>
                                 <div class="sd-difficulty-buttons">
-                                    <button class="sd-difficulty-btn ${this.difficulty === 'easy' ? 'sd-selected' : ''}" data-difficulty="easy">
-                                        🌸 Gentle Explorer<br><small>Perfect for beginners!</small>
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'intern' ? 'sd-selected' : ''}" data-difficulty="intern">
+                                        📋 Intern<br><small>Learning the ropes!</small>
                                     </button>
-                                    <button class="sd-difficulty-btn ${this.difficulty === 'normal' ? 'sd-selected' : ''}" data-difficulty="normal">
-                                        🌺 Sweet Adventurer<br><small>Just right!</small>
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'employee' ? 'sd-selected' : ''}" data-difficulty="employee">
+                                        💻 Employee<br><small>Standard pace!</small>
                                     </button>
-                                    <button class="sd-difficulty-btn ${this.difficulty === 'hard' ? 'sd-selected' : ''}" data-difficulty="hard">
-                                        🌟 Magical Expert<br><small>For brave hearts!</small>
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'manager' ? 'sd-selected' : ''}" data-difficulty="manager">
+                                        📊 Manager<br><small>Fast-paced!</small>
                                     </button>
-                                    <button class="sd-difficulty-btn ${this.difficulty === 'snakesia_master' ? 'sd-selected' : ''}" data-difficulty="snakesia_master">
-                                        ✨ Snakesia Princess<br><small>Ultimate magic!</small>
+                                    <button class="sd-difficulty-btn ${this.difficulty === 'executive' ? 'sd-selected' : ''}" data-difficulty="executive">
+                                        👔 Executive<br><small>CEO speed!</small>
                                     </button>
                                 </div>
                             </div>
@@ -378,7 +429,7 @@ class SnakeDeluxe {
                                 ${this.createLevelButtons()}
                             </div>
                             <div class="sd-achievements-preview">
-                                <h3>🏅 Your Magical Achievements: ${this.achievements.length}/20</h3>
+                                <h3>🏅 Your Corporate Achievements: ${this.achievements.length}/20</h3>
                                 <div class="sd-achievement-icons">
                                     ${this.achievements.slice(0, 5).map(achievement => `<span class="sd-achievement-icon" title="${achievement.name}">${achievement.icon}</span>`).join('')}
                                     ${this.achievements.length > 5 ? '<span class="sd-more-achievements">+' + (this.achievements.length - 5) + '</span>' : ''}
@@ -406,19 +457,19 @@ class SnakeDeluxe {
                             <div class="sd-power-effects">
                                 <div class="sd-effect-bubble sd-speed-effect" style="display: none;">
                                     <span class="sd-effect-icon">⚡</span>
-                                    <span class="sd-effect-text">SPEED MAGIC!</span>
+                                    <span class="sd-effect-text">EFFICIENCY BOOST!</span>
                                 </div>
                                 <div class="sd-effect-bubble sd-invincible-effect" style="display: none;">
                                     <span class="sd-effect-icon">🛡️</span>
-                                    <span class="sd-effect-text">PROTECTED!</span>
+                                    <span class="sd-effect-text">EXECUTIVE IMMUNITY!</span>
                                 </div>
                                 <div class="sd-effect-bubble sd-magnetism-effect" style="display: none;">
                                     <span class="sd-effect-icon">🧲</span>
-                                    <span class="sd-effect-text">MAGNET POWER!</span>
+                                    <span class="sd-effect-text">CORPORATE MAGNETISM!</span>
                                 </div>
                                 <div class="sd-effect-bubble sd-double-score-effect" style="display: none;">
                                     <span class="sd-effect-icon">💰</span>
-                                    <span class="sd-effect-text">BONUS MAGIC!</span>
+                                    <span class="sd-effect-text">PROFIT MULTIPLIER!</span>
                                 </div>
                             </div>
                         </div>
@@ -426,7 +477,7 @@ class SnakeDeluxe {
                         <div class="sd-game-controls">
                             <button class="sd-control-btn sd-pause-btn">⏸️ Pause</button>
                             <button class="sd-control-btn sd-resume-btn" style="display: none;">▶️ Resume</button>
-                            <button class="sd-control-btn sd-back-to-levels-btn">🌸 Levels</button>
+                            <button class="sd-control-btn sd-back-to-levels-btn">💼 Levels</button>
                             <div class="sd-controls-hint">
                                 <span>Arrow Keys: Move</span>
                                 <span>Space: Pause</span>
@@ -438,10 +489,10 @@ class SnakeDeluxe {
                     <div class="sd-level-complete" style="display: none;">
                         <div class="sd-modal-content">
                             <div class="sd-modal-icon">🎉</div>
-                            <h2>Level Complete! 🌟</h2>
+                            <h2>Objective Complete! 📊</h2>
                             <div class="sd-character-message">
                                 <div class="sd-character-avatar">🐍</div>
-                                <div class="sd-message-speech">Wonderful work, dear friend! You're absolutely magical! 💖</div>
+                                <div class="sd-message-speech">Excellent work, valued employee! That's the ElxaCorp way! 💼</div>
                             </div>
                             <div class="sd-results-grid">
                                 <div class="sd-result-item">
@@ -451,7 +502,7 @@ class SnakeDeluxe {
                                 </div>
                                 <div class="sd-result-item">
                                     <span class="sd-result-icon">🪙</span>
-                                    <span class="sd-result-label">Coins Earned:</span>
+                                    <span class="sd-result-label">Profits Earned:</span>
                                     <span class="sd-result-value sd-coins-earned">0</span>
                                 </div>
                                 <div class="sd-result-item">
@@ -461,13 +512,13 @@ class SnakeDeluxe {
                                 </div>
                             </div>
                             <div class="sd-new-achievements" style="display: none;">
-                                <h3>🏅 New Magical Achievements!</h3>
+                                <h3>🏅 New Corporate Achievements!</h3>
                                 <div class="sd-new-achievement-list"></div>
                             </div>
                             <div class="sd-modal-actions">
-                                <button class="sd-action-btn sd-next-level-btn">➡️ Next Adventure</button>
-                                <button class="sd-action-btn sd-replay-level-btn">🔄 Play Again</button>
-                                <button class="sd-action-btn sd-back-to-levels-btn">🌸 Level Select</button>
+                                <button class="sd-action-btn sd-next-level-btn">➡️ Next Department</button>
+                                <button class="sd-action-btn sd-replay-level-btn">🔄 Retry</button>
+                                <button class="sd-action-btn sd-back-to-levels-btn">💼 Level Select</button>
                             </div>
                         </div>
                     </div>
@@ -475,10 +526,10 @@ class SnakeDeluxe {
                     <div class="sd-game-over" style="display: none;">
                         <div class="sd-modal-content">
                             <div class="sd-modal-icon">🐍</div>
-                            <h2>Oops! Let's try again! 💕</h2>
+                            <h2>Mission Failed! Let's regroup! 💼</h2>
                             <div class="sd-character-message">
                                 <div class="sd-character-avatar">🐍</div>
-                                <div class="sd-message-speech">Don't worry, sweetie! Mrs. Snake-e and I believe in you! 🌺</div>
+                                <div class="sd-message-speech">No worries! Mrs. Snake-e and I believe every failure is a learning opportunity! 📊</div>
                             </div>
                             <div class="sd-results-grid">
                                 <div class="sd-result-item">
@@ -492,7 +543,7 @@ class SnakeDeluxe {
                             </div>
                             <div class="sd-modal-actions">
                                 <button class="sd-action-btn sd-try-again-btn">🔄 Try Again</button>
-                                <button class="sd-action-btn sd-back-to-levels-btn">🌸 Level Select</button>
+                                <button class="sd-action-btn sd-back-to-levels-btn">💼 Level Select</button>
                             </div>
                         </div>
                     </div>
@@ -513,6 +564,7 @@ class SnakeDeluxe {
                     <div class="sd-level-number">${level.id}</div>
                     <div class="sd-level-name">${level.name}</div>
                     <div class="sd-level-theme-icon">${this.getLevelThemeIcon(level.theme)}</div>
+                    <div class="sd-board-size">Board: ${this.getBoardSizeForLevel(level.id)}x${this.getBoardSizeForLevel(level.id)}</div>
                     ${isCompleted ? '<div class="sd-completion-star">⭐</div>' : ''}
                     ${!isUnlocked ? '<div class="sd-lock-icon">🔒</div>' : ''}
                 </div>
@@ -534,6 +586,157 @@ class SnakeDeluxe {
             throne: '👑'
         };
         return icons[theme] || '🎮';
+    }
+
+    setupSplashEvents(windowId) {
+        const window = document.getElementById(`window-${windowId}`);
+        const container = window.querySelector('.sd-splash-container');
+        
+        console.log('Setting up splash events for window:', windowId);
+        console.log('Found container:', container);
+        
+        // Store windowId for later use
+        this.windowId = windowId;
+        
+        // Add splash screen event listeners
+        document.addEventListener('keydown', this.splashKeyHandler);
+        
+        // Make entire splash clickable
+        container.addEventListener('click', (e) => {
+            console.log('Splash clicked');
+            e.preventDefault();
+            e.stopPropagation();
+            this.hideSplash();
+        });
+        
+        // Also add mousedown for better responsiveness
+        container.addEventListener('mousedown', (e) => {
+            console.log('Splash mouse down');
+            e.preventDefault();
+            e.stopPropagation();
+            this.hideSplash();
+        });
+        
+        // Start loading animation
+        this.startLoadingAnimation(container);
+        
+        // Auto-proceed after 4 seconds
+        this.splashTimer = setTimeout(() => {
+            console.log('Auto-proceeding from splash after timeout');
+            if (this.showingSplash) {
+                this.hideSplash();
+            }
+        }, 4000);
+        
+        // Focus the container to ensure it can receive events
+        container.focus();
+        container.setAttribute('tabindex', '0');
+        console.log('Splash setup complete');
+    }
+
+    startLoadingAnimation(container) {
+        const loadingFill = container.querySelector('.sd-loading-fill');
+        const loadingText = container.querySelector('.sd-loading-text');
+        
+        let progress = 0;
+        const loadingMessages = [
+            'Initializing ElxaCorp Systems...',
+            'Loading Corporate Assets...',
+            'Connecting to Snakesia Database...',
+            'Preparing Executive Dashboard...',
+            'Ready for Business!'
+        ];
+        
+        const loadingInterval = setInterval(() => {
+            progress += Math.random() * 20 + 5; // Faster progress, less random
+            if (progress > 100) progress = 100;
+            
+            loadingFill.style.width = `${progress}%`;
+            
+            const messageIndex = Math.floor((progress / 100) * (loadingMessages.length - 1));
+            loadingText.textContent = loadingMessages[messageIndex];
+            
+            if (progress >= 100) {
+                clearInterval(loadingInterval);
+                loadingText.textContent = 'Ready for Business!';
+                
+                // Show continue hint
+                const hint = container.querySelector('.sd-splash-hint');
+                if (hint) {
+                    hint.style.animation = 'sd-splash-blink 1s ease-in-out infinite';
+                }
+                console.log('Loading animation complete');
+            }
+        }, 80); // Slightly faster interval
+    }
+
+    handleSplashKeyPress(event) {
+        if (this.showingSplash) {
+            console.log('Splash key pressed:', event.key, event.code);
+            event.preventDefault();
+            event.stopPropagation();
+            if (event.code === 'Space' || event.key === 'Enter' || event.key === 'Escape' || event.key === ' ') {
+                console.log('Valid key pressed, hiding splash');
+                this.hideSplash();
+            }
+        }
+    }
+
+    hideSplash() {
+        if (!this.showingSplash) return;
+        
+        console.log('Hiding splash screen...');
+        this.showingSplash = false;
+        
+        // Clear splash timer
+        if (this.splashTimer) {
+            clearTimeout(this.splashTimer);
+            this.splashTimer = null;
+        }
+        
+        // Remove splash event listeners
+        document.removeEventListener('keydown', this.splashKeyHandler);
+        
+        // Replace splash screen with game interface
+        const window = document.getElementById(`window-${this.windowId}`);
+        console.log('Found window:', window);
+        
+        if (window) {
+            // Try multiple possible selectors for the window content area
+            let windowContent = window.querySelector('.window-body') || 
+                               window.querySelector('.window-content') || 
+                               window.querySelector('.content') ||
+                               window.querySelector('[class*="body"]') ||
+                               window.querySelector('[class*="content"]');
+                               
+            console.log('Found window content:', windowContent);
+            
+            if (windowContent) {
+                windowContent.innerHTML = this.createGameInterface();
+                this.setupGameEvents(this.windowId);
+                console.log('Successfully replaced splash with game interface');
+            } else {
+                console.log('Using fallback method - replacing splash container directly');
+                // More aggressive fallback: find the splash container and replace it
+                const splashContainer = window.querySelector('.sd-splash-container');
+                if (splashContainer) {
+                    splashContainer.outerHTML = this.createGameInterface();
+                    this.setupGameEvents(this.windowId);
+                    console.log('Successfully replaced splash container');
+                } else {
+                    console.error('Could not find splash container or window content');
+                    // Last resort: replace entire window inner content
+                    const windowInner = window.querySelector('*:not(.window-title):not(.window-controls)') || window.children[window.children.length - 1];
+                    if (windowInner) {
+                        windowInner.innerHTML = this.createGameInterface();
+                        this.setupGameEvents(this.windowId);
+                        console.log('Used last resort replacement');
+                    }
+                }
+            }
+        } else {
+            console.error('Could not find window element with ID:', `window-${this.windowId}`);
+        }
     }
 
     setupGameEvents(windowId) {
@@ -600,8 +803,10 @@ class SnakeDeluxe {
         this.currentLevel = levelId;
         this.initializeLevel();
         
-        // Reset game state
-        this.snake = [{ x: Math.floor(this.boardSize/2), y: Math.floor(this.boardSize/2) }];
+        // Reset game state with properly centered snake
+        const centerX = Math.floor(this.boardSize/2);
+        const centerY = Math.floor(this.boardSize/2);
+        this.snake = [{ x: centerX, y: centerY }];
         this.direction = { x: 1, y: 0 };
         this.nextDirection = { x: 1, y: 0 };
         this.score = 0;
@@ -616,6 +821,15 @@ class SnakeDeluxe {
         Object.keys(this.powerUpEffects).forEach(key => {
             this.powerUpEffects[key] = 0;
         });
+        
+        // Update canvas size for new board size
+        const maxCanvasSize = Math.min(380, window.innerWidth - 100);
+        const actualCellSize = Math.floor(maxCanvasSize / this.boardSize);
+        const boardPixelSize = this.boardSize * actualCellSize;
+        
+        this.canvas.width = boardPixelSize;
+        this.canvas.height = boardPixelSize;
+        this.actualCellSize = actualCellSize;
         
         // Update UI
         this.updateLevelInfo(container);
@@ -641,7 +855,7 @@ class SnakeDeluxe {
         const levelDescEl = container.querySelector('.sd-level-description');
         const progressText = container.querySelector('.sd-progress-text');
         
-        if (levelNameEl) levelNameEl.textContent = levelData.name;
+        if (levelNameEl) levelNameEl.textContent = `${levelData.name} (${this.boardSize}x${this.boardSize})`;
         if (levelDescEl) levelDescEl.textContent = levelData.description;
         if (progressText) progressText.textContent = `${this.score} / ${levelData.targetScore}`;
         
@@ -661,21 +875,25 @@ class SnakeDeluxe {
 
     generateFood(type, points) {
         let pos;
+        let attempts = 0;
         do {
             pos = {
                 x: Math.floor(Math.random() * this.boardSize),
                 y: Math.floor(Math.random() * this.boardSize)
             };
-        } while (this.isPositionOccupied(pos));
+            attempts++;
+        } while (this.isPositionOccupied(pos) && attempts < 50);
         
-        this.foods.push({
-            x: pos.x,
-            y: pos.y,
-            type: type,
-            points: points,
-            emoji: this.getFoodEmoji(type),
-            animation: 0
-        });
+        if (attempts < 50) {
+            this.foods.push({
+                x: pos.x,
+                y: pos.y,
+                type: type,
+                points: points,
+                emoji: this.getFoodEmoji(type),
+                animation: 0
+            });
+        }
     }
 
     getFoodEmoji(type) {
@@ -704,19 +922,23 @@ class SnakeDeluxe {
 
     generateObstacle(type) {
         let pos;
+        let attempts = 0;
         do {
             pos = {
                 x: Math.floor(Math.random() * this.boardSize),
                 y: Math.floor(Math.random() * this.boardSize)
             };
-        } while (this.isPositionOccupied(pos));
+            attempts++;
+        } while (this.isPositionOccupied(pos) && attempts < 50);
         
-        this.obstacles.push({
-            x: pos.x,
-            y: pos.y,
-            type: type,
-            emoji: this.getObstacleEmoji(type)
-        });
+        if (attempts < 50) {
+            this.obstacles.push({
+                x: pos.x,
+                y: pos.y,
+                type: type,
+                emoji: this.getObstacleEmoji(type)
+            });
+        }
     }
 
     getObstacleEmoji(type) {
@@ -755,20 +977,24 @@ class SnakeDeluxe {
 
     generatePowerUp(type) {
         let pos;
+        let attempts = 0;
         do {
             pos = {
                 x: Math.floor(Math.random() * this.boardSize),
                 y: Math.floor(Math.random() * this.boardSize)
             };
-        } while (this.isPositionOccupied(pos));
+            attempts++;
+        } while (this.isPositionOccupied(pos) && attempts < 50);
         
-        this.powerUps.push({
-            x: pos.x,
-            y: pos.y,
-            type: type,
-            emoji: this.getPowerUpEmoji(type),
-            animation: 0
-        });
+        if (attempts < 50) {
+            this.powerUps.push({
+                x: pos.x,
+                y: pos.y,
+                type: type,
+                emoji: this.getPowerUpEmoji(type),
+                animation: 0
+            });
+        }
     }
 
     getPowerUpEmoji(type) {
@@ -783,36 +1009,44 @@ class SnakeDeluxe {
 
     generateCat() {
         let pos;
+        let attempts = 0;
         do {
             pos = {
                 x: Math.floor(Math.random() * this.boardSize),
                 y: Math.floor(Math.random() * this.boardSize)
             };
-        } while (this.isPositionOccupied(pos));
+            attempts++;
+        } while (this.isPositionOccupied(pos) && attempts < 50);
         
-        this.cats.push({
-            x: pos.x,
-            y: pos.y,
-            emoji: '🐱',
-            animation: 0,
-            petted: false
-        });
+        if (attempts < 50) {
+            this.cats.push({
+                x: pos.x,
+                y: pos.y,
+                emoji: '🐱',
+                animation: 0,
+                petted: false
+            });
+        }
     }
 
     generateCoin() {
         let pos;
+        let attempts = 0;
         do {
             pos = {
                 x: Math.floor(Math.random() * this.boardSize),
                 y: Math.floor(Math.random() * this.boardSize)
             };
-        } while (this.isPositionOccupied(pos));
+            attempts++;
+        } while (this.isPositionOccupied(pos) && attempts < 50);
         
-        this.coins_on_board.push({
-            x: pos.x,
-            y: pos.y,
-            animation: 0
-        });
+        if (attempts < 50) {
+            this.coins_on_board.push({
+                x: pos.x,
+                y: pos.y,
+                animation: 0
+            });
+        }
     }
 
     isPositionOccupied(pos) {
@@ -1541,24 +1775,24 @@ class SnakeDeluxe {
         const achievementChecks = [
             { id: 'first_level', name: 'Welcome to ElxaCorp!', icon: '🏢', condition: () => this.currentLevel >= 1 },
             { id: 'cat_lover', name: 'Cat Whisperer', icon: '🐱', condition: () => this.levelCatsPetted >= 3 },
-            { id: 'coin_collector', name: 'Coin Collector', icon: '🪙', condition: () => this.coins >= 50 },
-            { id: 'speed_demon', name: 'Speed Demon', icon: '⚡', condition: () => this.powerUpEffects.speed > 0 },
-            { id: 'invincible_warrior', name: 'Invincible Warrior', icon: '🛡️', condition: () => this.powerUpEffects.invincible > 0 },
-            { id: 'magnet_master', name: 'Magnet Master', icon: '🧲', condition: () => this.powerUpEffects.magnetism > 0 },
-            { id: 'score_doubler', name: 'Score Doubler', icon: '💰', condition: () => this.powerUpEffects.double_score > 0 },
+            { id: 'coin_collector', name: 'Profit Collector', icon: '🪙', condition: () => this.coins >= 50 },
+            { id: 'speed_demon', name: 'Efficiency Expert', icon: '⚡', condition: () => this.powerUpEffects.speed > 0 },
+            { id: 'invincible_warrior', name: 'Executive Immunity', icon: '🛡️', condition: () => this.powerUpEffects.invincible > 0 },
+            { id: 'magnet_master', name: 'Corporate Magnetism', icon: '🧲', condition: () => this.powerUpEffects.magnetism > 0 },
+            { id: 'score_doubler', name: 'Profit Multiplier', icon: '💰', condition: () => this.powerUpEffects.double_score > 0 },
             { id: 'garden_visitor', name: 'Garden Visitor', icon: '🌸', condition: () => this.currentLevel >= 3 },
             { id: 'denali_driver', name: 'Denali Driver', icon: '🚗', condition: () => this.currentLevel >= 4 },
             { id: 'snakesia_citizen', name: 'Snakesia Citizen', icon: '🏙️', condition: () => this.currentLevel >= 5 },
-            { id: 'math_genius', name: 'Math Genius', icon: '📐', condition: () => this.currentLevel >= 6 },
-            { id: 'hacker_elite', name: 'Hacker Elite', icon: '💻', condition: () => this.currentLevel >= 7 },
+            { id: 'math_genius', name: 'Numbers Genius', icon: '📐', condition: () => this.currentLevel >= 6 },
+            { id: 'hacker_elite', name: 'Tech Elite', icon: '💻', condition: () => this.currentLevel >= 7 },
             { id: 'cat_sanctuary_hero', name: 'Cat Sanctuary Hero', icon: '😸', condition: () => this.currentLevel >= 8 },
             { id: 'boardroom_boss', name: 'Boardroom Boss', icon: '💼', condition: () => this.currentLevel >= 9 },
-            { id: 'snakesia_king', name: 'Princess of Snakesia!', icon: '👑', condition: () => this.currentLevel >= 10 },
-            { id: 'high_scorer', name: 'High Scorer', icon: '🏆', condition: () => this.score >= 500 },
-            { id: 'perfectionist', name: 'Perfectionist', icon: '⭐', condition: () => this.score >= this.currentLevelData.targetScore * 2 },
+            { id: 'snakesia_king', name: 'CEO of Snakesia!', icon: '👑', condition: () => this.currentLevel >= 10 },
+            { id: 'high_scorer', name: 'High Performer', icon: '🏆', condition: () => this.score >= 500 },
+            { id: 'perfectionist', name: 'Overachiever', icon: '⭐', condition: () => this.score >= this.currentLevelData.targetScore * 2 },
             { id: 'mrs_snake_proud', name: 'Mrs. Snake-e is Proud!', icon: '🐍', condition: () => this.levelCatsPetted >= 5 },
-            { id: 'elxacorp_employee', name: 'ElxaCorp Employee of the Month', icon: '🏅', condition: () => this.score >= 1000 },
-            { id: 'snake_legend', name: 'Snake Legend', icon: '🐍', condition: () => this.score >= 2000 }
+            { id: 'elxacorp_employee', name: 'Employee of the Month', icon: '🏅', condition: () => this.score >= 1000 },
+            { id: 'snake_legend', name: 'Corporate Legend', icon: '🐍', condition: () => this.score >= 2000 }
         ];
         
         achievementChecks.forEach(check => {
@@ -1617,6 +1851,14 @@ class SnakeDeluxe {
 
     destroy() {
         this.cleanup();
+        
+        // Clear splash timer if still running
+        if (this.splashTimer) {
+            clearTimeout(this.splashTimer);
+            this.splashTimer = null;
+        }
+        
         document.removeEventListener('keydown', this.keyHandler);
+        document.removeEventListener('keydown', this.splashKeyHandler);
     }
 }

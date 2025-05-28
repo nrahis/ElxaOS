@@ -472,6 +472,17 @@ class SimpleGame {
                     alert('Snake Game not available. Please check if the game files are loaded.');
                     return null;
                 }
+
+            case 'mail_room_mayhem':
+                // Launch Mail Room Mayhem game
+                if (typeof MailRoomMayhem !== 'undefined') {
+                    const mailRoomMayhemGame = new MailRoomMayhem(this.windowManager, this.gameData); // Assuming this.gameData is relevant or can be adapted
+                    return mailRoomMayhemGame.launch(programInfo);
+                } else {
+                    console.error('MailRoomMayhem class not found! Make sure mail-room-mayhem.js is loaded.');
+                    alert('Mail Room Mayhem not available. Please check if the game files are loaded.');
+                    return null;
+                }
             
             case 'sussy_cat_game':
                 // Launch Sussy Cat Adventure game

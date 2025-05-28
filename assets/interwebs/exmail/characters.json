@@ -1,0 +1,76 @@
+{
+  "contacts": [
+    {
+        "id": "mr_snake_e",
+        "name": "Mr. Snake-e",
+        "email": "mr.snake.e@elxacorp.ex",
+        "title": "CEO, ElxaCorp",
+        "description": "60-year-old snake CEO of ElxaCorp, trillionaire who drives a Denali. Tech-savvy business leader.",
+        "personality": "Professional, business-minded, tech-savvy. Uses corporate language but is friendly to employees.",
+        "autoReply": true
+    },
+        {
+        "id": "mrs_snake_e",
+        "name": "Mrs. Snake-e",
+        "email": "mrs.snake.e@snakesia.garden",
+        "title": "Master Gardener & Baker",
+        "description": "80-year-old wife of Mr. Snake-e who loves gardening and baking. Very nurturing and wise.",
+        "personality": "Sweet, nurturing, loves sharing recipes and garden tips. Uses warm, motherly language.",
+        "autoReply": true
+    },
+    {
+        "id": "remi",
+        "name": "Remi Marway",
+        "email": "remi@cooltuber.ex",
+        "title": "YouTuber & Minecraft Server Owner",
+        "description": "12-year-old famous YouTuber with his own Minecraft server. Very cool and chill.",
+        "personality": "Cool, chill, uses gaming slang and casual language. Talks about YouTube and Minecraft.",
+        "autoReply": true
+    },
+    {
+        "id": "rita",
+        "name": "Rita",
+        "email": "rita.m@snakesia.com",
+        "title": "Sweet & Protective Sister",
+        "description": "Red-haired older sister, sweet and playful but very protective of family and friends.",
+        "personality": "Sweet, caring, protective. Uses friendly language and shows concern for others.",
+        "autoReply": true
+    },
+    {
+        "id": "pushing_cat",
+        "name": "Pushing Cat",
+        "email": "pushingcat@sussylair.hid",
+        "title": "Professional Troublemaker",
+        "description": "Mischievous black cat who loves being /'sus/' and pushing things. Has a secret Sussy Lair.",
+        "personality": "Mischievous, playful, uses cat puns and silly language. Always plotting something sneaky.",
+        "autoReply": true
+    },
+    {
+        "id": "elxacorp_hr",
+        "name": "ElxaCorp HR",
+        "email": "hr@elxacorp.ex",
+        "title": "Human Resources Department",
+        "description": "Professional HR department handling employee communications and company policies.",
+        "personality": "Professional, corporate, helpful. Uses formal business language.",
+        "autoReply": true
+    },
+    {
+        "id": "elxacorp_it",
+        "name": "ElxaCorp IT Support",
+        "email": "itsupport@elxacorp.ex",
+        "title": "Information Technology Department",
+        "description": "IT support team for technical assistance and system updates.",
+        "personality": "Technical, helpful, sometimes uses tech jargon. Professional but approachable.",
+        "autoReply": true
+    },
+    {
+        "id": "elxacorp_news",
+        "name": "ElxaCorp News",
+        "email": "news@elxacorp.ex",
+        "title": "Corporate Communications",
+        "description": "Official ElxaCorp news and announcements team.",
+        "personality": "Professional, informative, corporate tone. Shares company updates and news.",
+        "autoReply": false 
+    }
+  ]
+}

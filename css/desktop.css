@@ -1,10 +1,13 @@
-@import url('dialogs.css');
+@import url('system/dialogs.css');
+@import url('system/battery.css');
+@import url('system/payment-system.css');
 @import url('programs.css');
 @import url('file-manager.css');
-@import url('personalize.css');
-@import url('clock-system.css');
-@import url('boot-system.css');
-@import url('update-popup.css');
+@import url('system/wifi.css');
+@import url('system/personalize.css');
+@import url('system/clock-system.css');
+@import url('system/boot-system.css');
+@import url('system/update-popup.css');
 @import url('programs/notepad.css');
 @import url('programs/paint.css');
 @import url('programs/messenger.css');
@@ -18,6 +21,8 @@
 @import url('games/snake.css');
 @import url('games/snake-deluxe.css');
 @import url('games/sussy-cat.css');
+@import url('games/mail-room-mayhem.css');
+@import url('system/login.css');
 
 /* =================================
     CSS CUSTOM PROPERTIES (THEME VARIABLES)

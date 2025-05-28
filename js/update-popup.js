@@ -4,7 +4,7 @@
 class UpdatePopup {
     constructor() {
         // VERSION CONTROL - Manually increment this to trigger the popup
-        this.currentVersion = '4.0.1';
+        this.currentVersion = '4.1.0';
         
         this.isVisible = false;
         this.contentLoaded = false;
