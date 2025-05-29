@@ -1,5 +1,5 @@
 // =================================
-// BOOT SYSTEM - ElxaOS Boot Sequence & BIOS
+// BOOT SYSTEM - ElxaOS Boot Sequence & BIOS (Enhanced with Startup Sound)
 // =================================
 class BootSystem {
     constructor() {
@@ -50,7 +50,8 @@ class BootSystem {
             fastBoot: false,
             bootOrder: ['HDD', 'USB', 'Network'],
             dateTime: new Date().toISOString(),
-            colorScheme: 'blue'
+            colorScheme: 'blue',
+            startupSoundEnabled: true  // NEW: Control startup sound
         };
     }
 
@@ -82,6 +83,55 @@ class BootSystem {
             // Any other key continues boot
             this.bootKeyPressed = true;
             this.continueBoot();
+        }
+    }
+
+    // NEW: Play ElxaOS startup sound
+    async playStartupSound() {
+        if (!this.biosSettings.soundEnabled || !this.biosSettings.startupSoundEnabled) {
+            console.log('🔇 Startup sound disabled');
+            return;
+        }
+
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create a pleasant startup sound sequence
+            const notes = [
+                { freq: 523.25, start: 0.0, duration: 0.3 },    // C5
+                { freq: 659.25, start: 0.2, duration: 0.3 },    // E5
+                { freq: 783.99, start: 0.4, duration: 0.4 },    // G5
+                { freq: 1046.50, start: 0.6, duration: 0.6 }    // C6
+            ];
+
+            const masterGain = audioContext.createGain();
+            masterGain.connect(audioContext.destination);
+            masterGain.gain.setValueAtTime(0.3, audioContext.currentTime);
+
+            notes.forEach(note => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(masterGain);
+                
+                oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime);
+                oscillator.type = 'sine';
+                
+                // Smooth attack and release
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime + note.start);
+                gainNode.gain.linearRampToValueAtTime(0.8, audioContext.currentTime + note.start + 0.05);
+                gainNode.gain.setValueAtTime(0.8, audioContext.currentTime + note.start + note.duration - 0.1);
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + note.start + note.duration);
+                
+                oscillator.start(audioContext.currentTime + note.start);
+                oscillator.stop(audioContext.currentTime + note.start + note.duration);
+            });
+
+            console.log('🔊 ElxaOS startup sound played');
+            
+        } catch (error) {
+            console.warn('⚠️ Could not play startup sound:', error);
         }
     }
 
@@ -182,7 +232,7 @@ class BootSystem {
         }
     }
 
-    // Show ElxaOS logo
+    // Show ElxaOS logo with startup sound
     async showElxaOSLogo() {
         const bootScreen = document.getElementById('bootScreen');
         if (!bootScreen) return;
@@ -199,6 +249,9 @@ class BootSystem {
                 </div>
             </div>
         `;
+        
+        // Play the startup sound as logo appears
+        this.playStartupSound();
         
         // Animate loading bar
         const loadingFill = document.querySelector('.loading-fill');
@@ -217,9 +270,8 @@ class BootSystem {
     }
 
     // Complete the boot and show login
-    // Complete the boot and show login (or updates first)
     completeBoot() {
-        console.log('✅ Boot sequence complete, checking for updates...');
+        console.log('✅ Boot sequence complete, checking for setup...');
         this.isBooting = false;
         document.removeEventListener('keydown', this.boundKeyHandler);
         
@@ -229,7 +281,13 @@ class BootSystem {
             bootScreen.remove();
         }
         
-        // Check for updates before showing login
+        // Check if we need to run setup first
+        if (window.checkAndRunSetup && window.checkAndRunSetup()) {
+            // Setup wizard will handle showing the desktop when complete
+            return;
+        }
+        
+        // Otherwise proceed normally
         this.checkForUpdates();
     }
 
@@ -280,7 +338,7 @@ class BootSystem {
         this.showBiosInterface();
     }
 
-    // Show BIOS interface
+    // Show BIOS interface (Updated to include startup sound option)
     showBiosInterface() {
         const biosScreen = document.createElement('div');
         biosScreen.id = 'biosScreen';
@@ -339,6 +397,13 @@ class BootSystem {
                                     <select class="bios-select" id="soundEnabled">
                                         <option value="true" ${this.biosSettings.soundEnabled ? 'selected' : ''}>Enabled</option>
                                         <option value="false" ${!this.biosSettings.soundEnabled ? 'selected' : ''}>Disabled</option>
+                                    </select>
+                                </div>
+                                <div class="bios-item">
+                                    <span class="item-label">Startup Sound:</span>
+                                    <select class="bios-select" id="startupSoundEnabled">
+                                        <option value="true" ${this.biosSettings.startupSoundEnabled !== false ? 'selected' : ''}>Enabled</option>
+                                        <option value="false" ${this.biosSettings.startupSoundEnabled === false ? 'selected' : ''}>Disabled</option>
                                     </select>
                                 </div>
                                 <div class="bios-item">
@@ -414,6 +479,10 @@ class BootSystem {
                                     <span class="fun-description">Play the classic computer beep!</span>
                                 </div>
                                 <div class="bios-item">
+                                    <button class="fun-button" onclick="elxaOS.bootSystem.testStartupSound()">🎵 Test Startup Sound</button>
+                                    <span class="fun-description">Preview the ElxaOS startup sound!</span>
+                                </div>
+                                <div class="bios-item">
                                     <button class="fun-button" onclick="elxaOS.bootSystem.showEasterEgg()">🥚 Secret Easter Egg</button>
                                     <span class="fun-description">Find the hidden surprise!</span>
                                 </div>
@@ -435,6 +504,12 @@ class BootSystem {
         document.body.appendChild(biosScreen);
         this.setupBiosEvents();
         this.applyBiosColorScheme();
+    }
+
+    // NEW: Test startup sound function for BIOS
+    testStartupSound() {
+        this.playStartupSound();
+        this.showMessage('🎵 Playing ElxaOS startup sound!', 'success');
     }
 
     // Set up BIOS event listeners
@@ -600,7 +675,9 @@ class BootSystem {
             '🎮 Achievement unlocked: BIOS Master!',
             '🌟 Fun fact: The first computer was as big as a room!',
             '🤖 Beep boop! I am a friendly computer robot!',
-            '🎯 Did you know? ElxaOS was designed by someone who loves math and cats!'
+            '🎯 Did you know? ElxaOS was designed by someone who loves math and cats!',
+            '🐍 Greetings from the land of Snakesia! Mr. Snake-e says hello!',
+            '😸 Pushing Cat is hiding in the BIOS! Very sus indeed...'
         ];
         
         const randomEgg = easterEggs[Math.floor(Math.random() * easterEggs.length)];
@@ -642,7 +719,7 @@ class BootSystem {
         setTimeout(showNextResult, 500);
     }
 
-    // Save BIOS settings and exit
+    // Save BIOS settings and exit (Updated to include startup sound)
     saveBiosAndExit() {
         // Collect all settings from the form
         const systemName = document.getElementById('systemName')?.value || this.biosSettings.systemName;
@@ -650,6 +727,7 @@ class BootSystem {
         const ramAmount = document.getElementById('ramAmount')?.value || this.biosSettings.ramAmount;
         const dateTime = document.getElementById('dateTime')?.value || this.biosSettings.dateTime;
         const soundEnabled = document.getElementById('soundEnabled')?.value === 'true';
+        const startupSoundEnabled = document.getElementById('startupSoundEnabled')?.value === 'true';
         const networkEnabled = document.getElementById('networkEnabled')?.value === 'true';
         const biosPassword = document.getElementById('biosPassword')?.value || this.biosSettings.biosPassword;
         const colorScheme = document.getElementById('colorScheme')?.value || this.biosSettings.colorScheme;
@@ -663,6 +741,7 @@ class BootSystem {
             ramAmount,
             dateTime,
             soundEnabled,
+            startupSoundEnabled,
             networkEnabled,
             biosPassword,
             colorScheme,
@@ -687,7 +766,7 @@ class BootSystem {
         this.exitBiosAndContinue();
     }
 
-    // Reset BIOS to defaults
+    // Reset BIOS to defaults (Updated to include startup sound)
     resetBiosDefaults() {
         if (confirm('Reset all BIOS settings to defaults?')) {
             this.biosSettings = {
@@ -697,6 +776,7 @@ class BootSystem {
                 bootDelay: '3',
                 biosPassword: '',
                 soundEnabled: true,
+                startupSoundEnabled: true,
                 networkEnabled: true,
                 fastBoot: false,
                 bootOrder: ['HDD', 'USB', 'Network'],

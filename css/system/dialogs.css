@@ -519,3 +519,360 @@
    DARK THEME ADJUSTMENTS
 ================================= */
 /* Login screen maintains original colors regardless of theme */
+
+/* =================================
+   SHUT DOWN
+================================= */
+
+.elxa-shutdown-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.elxa-shutdown-dialog {
+    background: #c0c0c0;
+    border: 2px outset #c0c0c0;
+    border-radius: 4px;
+    min-width: 320px;
+    max-width: 400px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    animation: elxaShutdownDialogSlide 0.2s ease-out;
+}
+
+@keyframes elxaShutdownDialogSlide {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.elxa-shutdown-dialog-header {
+    background: linear-gradient(to bottom, #0052cc, #003d99);
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 2px 2px 0 0;
+}
+
+.elxa-shutdown-dialog-icon {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.elxa-shutdown-dialog-content {
+    padding: 16px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.elxa-shutdown-dialog-content p {
+    margin: 0 0 8px 0;
+}
+
+.elxa-shutdown-dialog-content p:last-child {
+    margin-bottom: 0;
+}
+
+.elxa-shutdown-dialog-buttons {
+    padding: 0 16px 16px 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.elxa-shutdown-btn {
+    padding: 4px 12px;
+    font-size: 11px;
+    border: 1px outset #c0c0c0;
+    background: #c0c0c0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.elxa-shutdown-btn:hover {
+    background: #d0d0d0;
+}
+
+.elxa-shutdown-btn:active {
+    border: 1px inset #c0c0c0;
+    background: #b0b0b0;
+}
+
+.elxa-shutdown-btn-confirm {
+    font-weight: bold;
+}
+
+.elxa-btn-icon {
+    font-size: 10px;
+}
+
+.elxa-shutdown-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10001;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+.elxa-shutdown-content {
+    text-align: center;
+    animation: elxaShutdownFadeIn 1s ease-out;
+}
+
+@keyframes elxaShutdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.elxa-shutdown-logo {
+    margin-bottom: 40px;
+}
+
+.elxa-shutdown-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: elxaShutdownPulse 2s ease-in-out infinite;
+}
+
+@keyframes elxaShutdownPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.elxa-shutdown-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #87ceeb;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.elxa-shutdown-message {
+    margin-bottom: 40px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.elxa-shutdown-message p {
+    margin: 8px 0;
+}
+
+.elxa-shutdown-progress {
+    margin-bottom: 40px;
+}
+
+.elxa-shutdown-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.elxa-dot {
+    font-size: 12px;
+    color: #87ceeb;
+    animation: elxaShutdownBlink 1.5s ease-in-out infinite;
+}
+
+.elxa-dot-1 {
+    animation-delay: 0s;
+}
+
+.elxa-dot-2 {
+    animation-delay: 0.3s;
+}
+
+.elxa-dot-3 {
+    animation-delay: 0.6s;
+}
+
+@keyframes elxaShutdownBlink {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.elxa-power-off-btn {
+    background: linear-gradient(to bottom, #ff6b6b, #ee5a52);
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: elxaPowerButtonGlow 2s ease-in-out infinite;
+}
+
+@keyframes elxaPowerButtonGlow {
+    0%, 100% {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(255, 107, 107, 0.5);
+    }
+}
+
+.elxa-power-off-btn:hover {
+    background: linear-gradient(to bottom, #ff7b7b, #fe6a62);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.elxa-power-off-btn:active {
+    transform: translateY(0);
+    background: linear-gradient(to bottom, #ee5a52, #dd4b42);
+}
+
+.elxa-power-icon {
+    font-size: 18px;
+}
+
+.elxa-power-text {
+    font-family: inherit;
+}
+
+.elxa-logout-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.elxa-logout-dialog {
+    background: #c0c0c0;
+    border: 2px outset #c0c0c0;
+    border-radius: 4px;
+    min-width: 320px;
+    max-width: 400px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    animation: elxaLogoutDialogSlide 0.2s ease-out;
+}
+
+@keyframes elxaLogoutDialogSlide {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.elxa-logout-dialog-header {
+    background: linear-gradient(to bottom, #cc7a00, #b36600);
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 2px 2px 0 0;
+}
+
+.elxa-logout-dialog-icon {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.elxa-logout-dialog-content {
+    padding: 16px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.elxa-logout-dialog-content p {
+    margin: 0 0 8px 0;
+}
+
+.elxa-logout-dialog-content p:last-child {
+    margin-bottom: 0;
+}
+
+.elxa-logout-dialog-buttons {
+    padding: 0 16px 16px 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.elxa-logout-btn {
+    padding: 4px 12px;
+    font-size: 11px;
+    border: 1px outset #c0c0c0;
+    background: #c0c0c0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.elxa-logout-btn:hover {
+    background: #d0d0d0;
+}
+
+.elxa-logout-btn:active {
+    border: 1px inset #c0c0c0;
+    background: #b0b0b0;
+}
+
+.elxa-logout-btn-confirm {
+    font-weight: bold;
+}

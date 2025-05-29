@@ -11,13 +11,13 @@ class ElxaTaskManager {
         this.currentTab = 'processes';
         
         this.setupKeyboardShortcut();
-        console.log('🔧 ElxaOS Task Manager initialized (Shift+D to open)');
+        console.log('🔧 ElxaOS Task Manager initialized (Ctrl+Alt+T to open)');
     }
 
     setupKeyboardShortcut() {
         document.addEventListener('keydown', (e) => {
-            // Shift + D to open Task Manager
-            if (e.shiftKey && e.key.toLowerCase() === 'd') {
+            // Ctrl + Alt + T to open Task Manager
+            if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 't') {
                 e.preventDefault();
                 this.toggle();
             }
@@ -604,11 +604,25 @@ class ElxaTaskManager {
                 break;
 
             case 'clearStorage':
-                if (confirm('⚠️ This will delete ALL ElxaOS data. Continue?')) {
+                if (confirm('⚠️ This will delete ALL ElxaOS data and restart setup. Continue?')) {
                     if (window.debugElxaOS) {
                         const cleared = window.debugElxaOS.clearAllStorage();
                         this.addDebugOutput(`✅ Cleared ${cleared} storage items`);
-                        this.addDebugOutput('🔄 Refresh page to reinitialize');
+                        this.addDebugOutput('🚀 Restarting setup wizard...');
+                        
+                        // Close task manager and start setup
+                        setTimeout(() => {
+                            if (this.windowManager) {
+                                this.windowManager.closeWindow(this.windowId);
+                            }
+                            
+                            // Use the integrated setup trigger
+                            if (window.triggerElxaOSSetup) {
+                                window.triggerElxaOSSetup();
+                            } else if (window.elxaOSSetup) {
+                                window.elxaOSSetup.startSetup();
+                            }
+                        }, 1000);
                     } else {
                         this.addDebugOutput('❌ Debug tools not available');
                     }
@@ -758,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const initTaskManager = () => {
         if (typeof elxaOS !== 'undefined' && elxaOS.windowManager && elxaOS.eventBus) {
             elxaOS.taskManager = new ElxaTaskManager(elxaOS.windowManager, elxaOS.eventBus);
-            console.log('✅ ElxaOS Task Manager ready! Press Shift+D to open.');
+            console.log('✅ ElxaOS Task Manager ready! Press Ctrl+Alt+T to open.');
         } else {
             setTimeout(initTaskManager, 500);
         }

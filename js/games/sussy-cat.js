@@ -15,6 +15,12 @@ class SussyCatGame {
         this.currentLevel = 1;
         this.maxLevel = 6;
         
+        // Background music setup
+        this.backgroundMusic = null;
+        this.musicPath = '../../assets/games/sussycat/magicdustbin.mp3';
+        this.musicLoaded = false;
+        this.musicEnabled = true; // Player can toggle this
+        
         // Level configurations
         this.levelConfig = {
             1: {
@@ -122,6 +128,9 @@ class SussyCatGame {
         this.logoImagePath = '../../assets/games/sussycat/ui/cat-logo.png';
         this.timeoutImagePath = '../../assets/games/sussycat/cat/pushing-cat-timeout.png';
         
+        // Initialize background music
+        this.initializeBackgroundMusic();
+        
         // Funny timeout messages
         this.timeoutMessages = [
             "Oh no! Pushing Cat got REAL cocky and was way too sus!! His family came home and caught him red pawed, and now you know what time it is... TIME OUT! 😾",
@@ -131,6 +140,94 @@ class SussyCatGame {
             "Oops! Pushing Cat got so excited about being sus that he knocked his food bowl off the counter! Guess who's in timeout now? 🥣💥",
             "Yikes! Pushing Cat was being TOO sus and accidentally activated the robot vacuum! The chaos was too much - timeout it is! 🤖"
         ];
+    }
+
+    // Initialize background music
+    initializeBackgroundMusic() {
+        try {
+            this.backgroundMusic = new Audio(this.musicPath);
+            this.backgroundMusic.loop = true;
+            this.backgroundMusic.volume = 0.3; // Nice gentle volume for kids
+            this.backgroundMusic.preload = 'auto';
+            
+            // Music loaded successfully
+            this.backgroundMusic.addEventListener('canplaythrough', () => {
+                this.musicLoaded = true;
+                console.log('🎵 Background music loaded successfully!');
+            });
+            
+            // Handle music loading errors gracefully
+            this.backgroundMusic.addEventListener('error', (e) => {
+                console.log('🎵 Background music failed to load, continuing without music');
+                this.musicLoaded = false;
+                this.backgroundMusic = null;
+            });
+            
+        } catch (error) {
+            console.log('🎵 Background music initialization failed, continuing without music');
+            this.musicLoaded = false;
+            this.backgroundMusic = null;
+        }
+    }
+
+    // Play background music
+    playBackgroundMusic() {
+        if (this.backgroundMusic && this.musicLoaded && this.musicEnabled) {
+            try {
+                // Reset to beginning and play
+                this.backgroundMusic.currentTime = 0;
+                const playPromise = this.backgroundMusic.play();
+                
+                // Handle modern browser play restrictions
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('🎵 Background music started playing!');
+                    }).catch(error => {
+                        console.log('🎵 Background music autoplay prevented by browser, music will start on first user interaction');
+                        // Music will start when user interacts with the game
+                    });
+                }
+            } catch (error) {
+                console.log('🎵 Error playing background music:', error);
+            }
+        }
+    }
+
+    // Stop background music
+    stopBackgroundMusic() {
+        if (this.backgroundMusic && !this.backgroundMusic.paused) {
+            try {
+                this.backgroundMusic.pause();
+                this.backgroundMusic.currentTime = 0;
+                console.log('🎵 Background music stopped');
+            } catch (error) {
+                console.log('🎵 Error stopping background music:', error);
+            }
+        }
+    }
+
+    // Toggle music on/off
+    toggleBackgroundMusic() {
+        this.musicEnabled = !this.musicEnabled;
+        
+        if (this.musicEnabled && this.gameActive) {
+            this.playBackgroundMusic();
+            this.showMessage("🎵 Music enabled! Sussy vibes activated! 😈");
+        } else {
+            this.stopBackgroundMusic();
+            this.showMessage("🔇 Music disabled. Silent sus mode! 🤫");
+        }
+        
+        // Update music button text
+        this.updateMusicButton();
+    }
+
+    // Update music button text
+    updateMusicButton() {
+        const musicBtn = this.container?.querySelector('.sussy-music-toggle');
+        if (musicBtn) {
+            musicBtn.textContent = this.musicEnabled ? '🔇 Mute Music' : '🎵 Enable Music';
+        }
     }
 
     launch(programInfo) {
@@ -163,6 +260,7 @@ class SussyCatGame {
                                 <div class="sussy-detection-fill"></div>
                             </div>
                         </div>
+                        <button class="sussy-music-toggle">🔇 Mute Music</button>
                     </div>
                 </div>
                 
@@ -226,6 +324,7 @@ class SussyCatGame {
                                     <li>🕳️ Press H to hide in the Sussy Lair (bedroom only)!</li>
                                     <li>⚡ Collect items quickly but stay sneaky!</li>
                                     <li>🌟 NEW: Walk into plot points for special powers! (Levels 4+)</li>
+                                    <li>🎵 Press M to toggle background music!</li>
                                     <li>👀 Higher levels = less time, more rooms, more sus!</li>
                                 </ul>
                             </div>
@@ -243,7 +342,7 @@ class SussyCatGame {
                     <div class="sussy-cat-play-area" style="display: none;">
                         <div class="sussy-room-info">
                             <span class="sussy-current-room">Living Room</span>
-                            <span class="sussy-room-hint">Press SPACE to change rooms • Press H to hide in bedroom</span>
+                            <span class="sussy-room-hint">Press SPACE to change rooms • Press H to hide in bedroom • Press M for music</span>
                         </div>
                         
                         <div class="sussy-game-world">
@@ -330,6 +429,7 @@ class SussyCatGame {
         const tryAgainBtn = container.querySelector('.sussy-try-again-btn');
         const mainMenuBtn = container.querySelector('.sussy-main-menu-btn');
         const tutorialOkBtn = container.querySelector('.sussy-tutorial-ok');
+        const musicToggleBtn = container.querySelector('.sussy-music-toggle');
 
         // Initial screen click/key to continue
         const continueToLevelSelect = () => {
@@ -359,6 +459,11 @@ class SussyCatGame {
         // Tutorial popup
         tutorialOkBtn.addEventListener('click', () => {
             this.startGame(container);
+        });
+
+        // Music toggle button
+        musicToggleBtn.addEventListener('click', () => {
+            this.toggleBackgroundMusic();
         });
 
         playAgainBtn.addEventListener('click', () => {
@@ -441,6 +546,10 @@ class SussyCatGame {
                 case 'h':
                 case 'H':
                     this.toggleHiding();
+                    break;
+                case 'm':
+                case 'M':
+                    this.toggleBackgroundMusic();
                     break;
             }
         });
@@ -533,6 +642,9 @@ class SussyCatGame {
         // NOW SHOW THE HEADER - Game has started!
         this.toggleHeader(true);
         
+        // Start background music when game starts
+        this.playBackgroundMusic();
+        
         // Get current level config
         const levelConfig = this.levelConfig[this.currentLevel];
         
@@ -574,6 +686,7 @@ class SussyCatGame {
         // Update UI with level info
         this.updateUI();
         this.updateLevelDisplay();
+        this.updateMusicButton();
         
         // Start game timer
         this.gameTimer = setInterval(() => {
@@ -732,9 +845,9 @@ class SussyCatGame {
         // Update room hint based on available rooms
         const hintEl = container.querySelector('.sussy-room-hint');
         if (levelConfig.availableRooms.includes('bedroom')) {
-            hintEl.textContent = 'Press SPACE to change rooms • Press H to hide in bedroom';
+            hintEl.textContent = 'Press SPACE to change rooms • Press H to hide in bedroom • Press M for music';
         } else {
-            hintEl.textContent = 'Press SPACE to change rooms';
+            hintEl.textContent = 'Press SPACE to change rooms • Press M for music';
         }
     }
 
@@ -1124,6 +1237,9 @@ class SussyCatGame {
         clearInterval(this.gameTimer);
         clearInterval(this.gameLoop);
         
+        // Stop background music on timeout
+        this.stopBackgroundMusic();
+        
         const playArea = this.container.querySelector('.sussy-cat-play-area');
         const timeoutScreen = this.container.querySelector('.sussy-cat-timeout-screen');
         const timeoutIcon = this.container.querySelector('.sussy-timeout-icon');
@@ -1157,6 +1273,9 @@ class SussyCatGame {
         this.gameActive = false;
         clearInterval(this.gameTimer);
         clearInterval(this.gameLoop);
+        
+        // Stop background music when game ends
+        this.stopBackgroundMusic();
         
         const playArea = this.container.querySelector('.sussy-cat-play-area');
         const endScreen = this.container.querySelector('.sussy-cat-end-screen');
@@ -1239,6 +1358,9 @@ class SussyCatGame {
     }
 
     resetGame(container) {
+        // Stop background music when resetting
+        this.stopBackgroundMusic();
+        
         const initialScreen = container.querySelector('.sussy-cat-initial-screen');
         const startScreen = container.querySelector('.sussy-cat-start-screen');
         const endScreen = container.querySelector('.sussy-cat-end-screen');
@@ -1260,6 +1382,9 @@ class SussyCatGame {
         container.querySelector('.sussy-score-value').textContent = '0/12';
         container.querySelector('.sussy-timer-value').textContent = '2:00';
         container.querySelector('.sussy-detection-fill').style.width = '0%';
+        
+        // Update music button
+        this.updateMusicButton();
         
         // Clear any existing items
         document.querySelectorAll('.sussy-item').forEach(item => item.remove());

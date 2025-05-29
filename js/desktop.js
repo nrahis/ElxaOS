@@ -694,17 +694,30 @@ class ElxaOS {
         }
     }
 
-    shutdown() {
-        if (confirm('Are you sure you want to shut down ElxaOS?')) {
-            console.log('🔌 Shutting down ElxaOS...');
-            document.body.style.background = 'black';
-            document.body.innerHTML = '<div style="color: white; text-align: center; padding-top: 200px; font-size: 24px;">ElxaOS is shutting down...</div>';
+    async shutdown() {
+        console.log('🔌 Initiating ElxaOS shutdown...');
+        
+        // Initialize shutdown manager if not exists
+        if (!this.shutdownManager) {
+            this.shutdownManager = new ShutdownManager();
+        }
+        
+        // Show custom confirmation dialog (no more browser alerts!)
+        const confirmed = await this.shutdownManager.showShutdownConfirmation();
+        
+        if (confirmed) {
+            console.log('🔌 Shutdown confirmed, proceeding...');
             
-            if (this.bootSystem && typeof this.bootSystem.startFromShutdown === 'function') {
-                this.bootSystem.startFromShutdown();
-            } else {
-                setTimeout(() => location.reload(), 2000);
-            }
+            // Hide main UI
+            const desktop = document.getElementById('desktop');
+            const taskbar = document.querySelector('.taskbar');
+            if (desktop) desktop.style.display = 'none';
+            if (taskbar) taskbar.style.display = 'none';
+            
+            // Show shutdown screen with power button
+            this.shutdownManager.showShutdownScreen();
+        } else {
+            console.log('🔌 Shutdown cancelled by user');
         }
     }
 
@@ -837,63 +850,6 @@ class ElxaOS {
             this.fileSystem.createFile(['root', 'Programs'], 'Snake Game.abby', JSON.stringify(snakeGameInstaller));
         }
 
-        /*if (!programsContents.some(file => file.name === 'Mail Room Mayhem.abby')) {
-            const mailRoomMayhemInstaller = {
-                id: 'mail_room_mayhem',
-                name: 'Mail Room Mayhem',
-                description: "Step into the fast-paced ElxaCorp Mail Room! Sort letters and packages for Mr. Snake-e, Remi, Rita, and the rest of Snakesia before the mail piles up. Watch out for Pushing Cat's 'help'!",
-                icon: '📬',
-                version: '1.0',
-                author: 'ElxaCorp Game Studios',
-                gameData: { // These are initial/default game settings if needed by the game class
-                    type: 'mail_room_mayhem', // Matches the case in your launcher
-                    initialSpeed: 3000, // Example: initial delay for mail generation in ms
-                    difficulty: 'employee' // Example difficulty setting
-                }
-            };
-            
-            this.fileSystem.createFile(['root', 'Programs'], 'Mail Room Mayhem.abby', JSON.stringify(mailRoomMayhemInstaller));
-        }*/
-
-        /*// Snake Deluxe installer - The Epic Adventure!
-        if (!programsContents.some(file => file.name === 'Snake Deluxe.abby')) {
-            const snakeDeluxeInstaller = {
-                id: 'snake_deluxe',
-                name: 'Snake Deluxe',
-                description: 'Join Mr. Snake-e, the 60-year-old billionaire CEO of ElxaCorp, on his epic adventures through Snakesia! Navigate through 10 magical levels with his 82-year-old wife Mrs. Snake-e!',
-                icon: '🐍',
-                version: '2.0',
-                author: 'ElxaCorp Game Studios',
-                gameData: {
-                    type: 'snake_deluxe',
-                    difficulty: 'normal',
-                    boardSize: 24
-                }
-            };
-            
-            this.fileSystem.createFile(['root', 'Programs'], 'Snake Deluxe.abby', JSON.stringify(snakeDeluxeInstaller));
-        }*/
-
-        // Sussy Cat Adventure installer - The silly stealth game!
-        /* if (!programsContents.some(file => file.name === 'Sussy Cat Adventure.abby')) {
-            const sussyCatInstaller = {
-                id: 'sussy_cat_adventure',
-                name: 'Sussy Cat Adventure',
-                description: 'Help Pushing Cat collect all the sussy items around the house before the family comes home! A silly stealth-adventure game where you sneak through different rooms, avoid detection, and hide in the Sussy Lair when things get too suspicious. Perfect for young adventurers who love being a little bit naughty! 😼',
-                icon: '😼',
-                version: '1.0',
-                author: 'ElxaOS Family Games',
-                gameData: {
-                    type: 'sussy_cat_game',
-                    difficulty: 'kid_friendly',
-                    rooms: 4,
-                    timeLimit: 120
-                }
-            };
-            
-            this.fileSystem.createFile(['root', 'Programs'], 'Sussy Cat Adventure.abby', JSON.stringify(sussyCatInstaller));
-        } */
-
         if (!documentsContents.some(file => file.name === 'My First Code.elxa')) {
             this.fileSystem.createFile(['root', 'Documents'], 'My First Code.elxa', `// My First ElxaCode Program! 🚀
     // Double-click this file or open it with ElxaCode!
@@ -958,3 +914,390 @@ let elxaOS;
 document.addEventListener('DOMContentLoaded', () => {
     elxaOS = new ElxaOS();
 });
+
+// =================================
+// ENHANCED SHUTDOWN SYSTEM - ElxaOS Shutdown with Sound & Power Button
+// =================================
+
+class ShutdownManager {
+    constructor() {
+        this.isShuttingDown = false;
+        this.shutdownSoundEnabled = true;
+    }
+
+    // Play shutdown sound
+    async playShutdownSound() {
+        if (!this.shutdownSoundEnabled) {
+            console.log('🔇 Shutdown sound disabled');
+            return;
+        }
+
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create a gentle descending shutdown sound (opposite of startup)
+            const notes = [
+                { freq: 1046.50, start: 0.0, duration: 0.4 },    // C6
+                { freq: 783.99, start: 0.3, duration: 0.4 },     // G5
+                { freq: 659.25, start: 0.6, duration: 0.4 },     // E5
+                { freq: 523.25, start: 0.9, duration: 0.6 }      // C5
+            ];
+
+            const masterGain = audioContext.createGain();
+            masterGain.connect(audioContext.destination);
+            masterGain.gain.setValueAtTime(0.25, audioContext.currentTime);
+
+            notes.forEach(note => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(masterGain);
+                
+                oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime);
+                oscillator.type = 'sine';
+                
+                // Smooth attack and release
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime + note.start);
+                gainNode.gain.linearRampToValueAtTime(0.7, audioContext.currentTime + note.start + 0.05);
+                gainNode.gain.setValueAtTime(0.7, audioContext.currentTime + note.start + note.duration - 0.15);
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + note.start + note.duration);
+                
+                oscillator.start(audioContext.currentTime + note.start);
+                oscillator.stop(audioContext.currentTime + note.start + note.duration);
+            });
+
+            console.log('🔊 ElxaOS shutdown sound played');
+            
+        } catch (error) {
+            console.warn('⚠️ Could not play shutdown sound:', error);
+        }
+    }
+
+    // Show ElxaOS-styled confirmation dialog
+    showShutdownConfirmation() {
+        return new Promise((resolve) => {
+            // Create custom dialog
+            const elxaShutdownDialog = document.createElement('div');
+            elxaShutdownDialog.className = 'elxa-shutdown-dialog-overlay';
+            elxaShutdownDialog.innerHTML = `
+                <div class="elxa-shutdown-dialog">
+                    <div class="elxa-shutdown-dialog-header">
+                        <span class="elxa-shutdown-dialog-icon">⚡</span>
+                        <span class="elxa-shutdown-dialog-title">Shut Down ElxaOS</span>
+                    </div>
+                    <div class="elxa-shutdown-dialog-content">
+                        <p>Are you sure you want to shut down your computer?</p>
+                        <p>Make sure to save any work before shutting down.</p>
+                    </div>
+                    <div class="elxa-shutdown-dialog-buttons">
+                        <button class="elxa-shutdown-btn elxa-shutdown-btn-cancel" id="elxaShutdownCancel">
+                            <span class="elxa-btn-icon">❌</span>
+                            Cancel
+                        </button>
+                        <button class="elxa-shutdown-btn elxa-shutdown-btn-confirm" id="elxaShutdownConfirm">
+                            <span class="elxa-btn-icon">🔌</span>
+                            Shut Down
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(elxaShutdownDialog);
+
+            // Handle button clicks
+            document.getElementById('elxaShutdownCancel').addEventListener('click', () => {
+                elxaShutdownDialog.remove();
+                resolve(false);
+            });
+
+            document.getElementById('elxaShutdownConfirm').addEventListener('click', () => {
+                elxaShutdownDialog.remove();
+                resolve(true);
+            });
+
+            // Handle escape key
+            const handleEscape = (e) => {
+                if (e.key === 'Escape') {
+                    elxaShutdownDialog.remove();
+                    document.removeEventListener('keydown', handleEscape);
+                    resolve(false);
+                }
+            };
+            document.addEventListener('keydown', handleEscape);
+        });
+    }
+
+    // Show shutdown screen with power off button
+    showShutdownScreen() {
+        // Play shutdown sound first
+        this.playShutdownSound();
+
+        // Create shutdown screen
+        const elxaShutdownScreen = document.createElement('div');
+        elxaShutdownScreen.className = 'elxa-shutdown-screen';
+        elxaShutdownScreen.innerHTML = `
+            <div class="elxa-shutdown-content">
+                <div class="elxa-shutdown-logo">
+                    <div class="elxa-shutdown-icon">🔌</div>
+                    <div class="elxa-shutdown-title">ElxaOS</div>
+                </div>
+                <div class="elxa-shutdown-message">
+                    <p>ElxaOS is shutting down...</p>
+                    <p>It's now safe to turn off your computer.</p>
+                </div>
+                <div class="elxa-shutdown-progress">
+                    <div class="elxa-shutdown-dots">
+                        <span class="elxa-dot elxa-dot-1">●</span>
+                        <span class="elxa-dot elxa-dot-2">●</span>
+                        <span class="elxa-dot elxa-dot-3">●</span>
+                    </div>
+                </div>
+                <button class="elxa-power-off-btn" id="elxaPowerOffBtn">
+                    <span class="elxa-power-icon">⏻</span>
+                    <span class="elxa-power-text">Power Off</span>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(elxaShutdownScreen);
+
+        // Handle power off button click
+        document.getElementById('elxaPowerOffBtn').addEventListener('click', () => {
+            // Add clicking animation
+            const btn = document.getElementById('elxaPowerOffBtn');
+            btn.style.transform = 'scale(0.95)';
+            btn.innerHTML = `
+                <span class="elxa-power-icon">⚡</span>
+                <span class="elxa-power-text">Powering Off...</span>
+            `;
+            
+            // Brief delay then reload
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        });
+    }
+
+    // Show logout confirmation (ElxaOS styled)
+// AGGRESSIVE LOGOUT DIALOG FIX
+// Replace the showLogoutConfirmation method in ShutdownManager class
+
+showLogoutConfirmation() {
+    return new Promise((resolve) => {
+        console.log('🚪 Creating logout confirmation dialog...');
+        
+        // AGGRESSIVE CLEANUP: Remove ALL possible logout dialogs
+        const allLogoutDialogs = document.querySelectorAll('.elxa-logout-dialog-overlay, #logoutConfirmationDialog, [class*="logout"]');
+        allLogoutDialogs.forEach(dialog => {
+            console.log('🗑️ Removing existing logout dialog:', dialog.className);
+            dialog.remove();
+        });
+
+        // Create the dialog
+        const dialogId = 'logoutDialog_' + Date.now(); // Unique ID to prevent conflicts
+        const elxaLogoutDialog = document.createElement('div');
+        elxaLogoutDialog.id = dialogId;
+        elxaLogoutDialog.className = 'elxa-logout-dialog-overlay';
+        elxaLogoutDialog.style.cssText = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            z-index: 99999 !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        `;
+
+        elxaLogoutDialog.innerHTML = `
+            <div class="elxa-logout-dialog" style="
+                background: #c0c0c0 !important;
+                border: 2px outset #c0c0c0 !important;
+                border-radius: 4px !important;
+                min-width: 320px !important;
+                max-width: 400px !important;
+                box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3) !important;
+            ">
+                <div class="elxa-logout-dialog-header" style="
+                    background: linear-gradient(to bottom, #cc7a00, #b36600) !important;
+                    color: white !important;
+                    padding: 8px 12px !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    font-weight: bold !important;
+                    font-size: 12px !important;
+                    border-radius: 2px 2px 0 0 !important;
+                ">
+                    <span class="elxa-logout-dialog-icon" style="margin-right: 8px; font-size: 14px;">👋</span>
+                    <span class="elxa-logout-dialog-title">Log Out</span>
+                </div>
+                <div class="elxa-logout-dialog-content" style="
+                    padding: 16px !important;
+                    font-size: 11px !important;
+                    line-height: 1.4 !important;
+                ">
+                    <p style="margin: 0 0 8px 0;">Are you sure you want to log out?</p>
+                    <p style="margin: 0;">Make sure to save your work first!</p>
+                </div>
+                <div class="elxa-logout-dialog-buttons" style="
+                    padding: 0 16px 16px 16px !important;
+                    display: flex !important;
+                    justify-content: flex-end !important;
+                    gap: 8px !important;
+                ">
+                    <button class="elxa-logout-btn-cancel" style="
+                        padding: 4px 12px !important;
+                        font-size: 11px !important;
+                        border: 1px outset #c0c0c0 !important;
+                        background: #c0c0c0 !important;
+                        cursor: pointer !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        gap: 4px !important;
+                        min-width: 80px !important;
+                        justify-content: center !important;
+                    ">
+                        <span style="font-size: 10px;">❌</span>
+                        Cancel
+                    </button>
+                    <button class="elxa-logout-btn-confirm" style="
+                        padding: 4px 12px !important;
+                        font-size: 11px !important;
+                        border: 1px outset #c0c0c0 !important;
+                        background: #c0c0c0 !important;
+                        cursor: pointer !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        gap: 4px !important;
+                        min-width: 80px !important;
+                        justify-content: center !important;
+                        font-weight: bold !important;
+                    ">
+                        <span style="font-size: 10px;">👋</span>
+                        Log Out
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(elxaLogoutDialog);
+        console.log('✅ Logout dialog created with ID:', dialogId);
+
+        // Track resolution state
+        let hasResolved = false;
+
+        // NUCLEAR CLEANUP FUNCTION
+        const nuclearCleanup = () => {
+            console.log('💥 NUCLEAR CLEANUP: Removing logout dialog');
+            
+            // Method 1: Remove by ID
+            const dialogById = document.getElementById(dialogId);
+            if (dialogById) {
+                dialogById.remove();
+                console.log('🗑️ Removed dialog by ID');
+            }
+            
+            // Method 2: Remove by class
+            const dialogsByClass = document.querySelectorAll('.elxa-logout-dialog-overlay');
+            dialogsByClass.forEach((dialog, index) => {
+                dialog.remove();
+                console.log(`🗑️ Removed dialog by class #${index + 1}`);
+            });
+            
+            // Method 3: Remove anything with logout in the class name
+            const anyLogoutElements = document.querySelectorAll('[class*="logout"]');
+            anyLogoutElements.forEach((element, index) => {
+                if (element.style.position === 'fixed' && element.style.zIndex) {
+                    element.remove();
+                    console.log(`🗑️ Removed suspicious logout element #${index + 1}`);
+                }
+            });
+
+            // Method 4: Remove high z-index overlays (just in case)
+            const highZElements = document.querySelectorAll('[style*="z-index"]');
+            highZElements.forEach(element => {
+                const zIndex = parseInt(element.style.zIndex);
+                if (zIndex > 50000 && element.className.includes('logout')) {
+                    element.remove();
+                    console.log('🗑️ Removed high z-index logout element');
+                }
+            });
+        };
+
+        // Safe resolve with nuclear cleanup
+        const resolveAndDestroy = (result) => {
+            if (hasResolved) {
+                console.log('⚠️ Already resolved, ignoring');
+                return;
+            }
+            
+            hasResolved = true;
+            console.log('🎯 Resolving logout dialog with result:', result);
+            
+            // Use immediate cleanup
+            nuclearCleanup();
+            
+            // Also schedule cleanup for next tick (just in case)
+            setTimeout(nuclearCleanup, 0);
+            
+            // And one more for good measure
+            setTimeout(nuclearCleanup, 100);
+            
+            resolve(result);
+        };
+
+        // Button event handlers
+        const cancelBtn = elxaLogoutDialog.querySelector('.elxa-logout-btn-cancel');
+        const confirmBtn = elxaLogoutDialog.querySelector('.elxa-logout-btn-confirm');
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('❌ User clicked Cancel');
+                resolveAndDestroy(false);
+            });
+        }
+
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('✅ User clicked Log Out');
+                resolveAndDestroy(true);
+            });
+        }
+
+        // Escape key handler
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape' && !hasResolved) {
+                e.preventDefault();
+                console.log('⏭️ User pressed Escape');
+                document.removeEventListener('keydown', escapeHandler);
+                resolveAndDestroy(false);
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+
+        // Click outside handler
+        elxaLogoutDialog.addEventListener('click', (e) => {
+            if (e.target === elxaLogoutDialog && !hasResolved) {
+                console.log('🖱️ User clicked outside dialog');
+                resolveAndDestroy(false);
+            }
+        });
+
+        // Emergency timeout
+        setTimeout(() => {
+            if (!hasResolved) {
+                console.warn('⏰ Emergency timeout: Force closing logout dialog');
+                resolveAndDestroy(false);
+            }
+        }, 15000);
+
+        console.log('🎬 Logout dialog setup complete');
+    });
+}
+}

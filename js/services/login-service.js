@@ -89,18 +89,18 @@ class LoginService {
                 
                 <div class="login-form">
                     <div class="user-selection">
-                        ${Object.values(this.users).map(user => `
-                            <div class="user-tile ${user.username === 'kitkat' ? 'selected' : ''}" data-username="${user.username}">
-                                <div class="user-avatar">${user.avatar}</div>
-                                <div class="user-name">${user.displayName}</div>
-                            </div>
-                        `).join('')}
+                    ${Object.values(this.users).filter(user => user.isActive !== false).map(user => `
+                        <div class="user-tile ${user.username === this.getPrimaryUser() ? 'selected' : ''}" data-username="${user.username}">
+                            <div class="user-avatar">${user.avatar}</div>
+                            <div class="user-name">${user.displayName}</div>
+                        </div>
+                    `).join('')}
                     </div>
                     
                     <div class="login-input-section">
                         <div class="selected-user">
-                            <div class="selected-avatar">${this.users.kitkat.avatar}</div>
-                            <div class="selected-name">${this.users.kitkat.displayName}</div>
+                            <div class="selected-avatar">${this.users[this.getPrimaryUser()].avatar}</div>
+                            <div class="selected-name">${this.users[this.getPrimaryUser()].displayName}</div>
                         </div>
                         
                         <div class="password-section">
@@ -339,8 +339,19 @@ class LoginService {
         this.eventBus.emit('login.guest');
     }
 
-    logout() {
-        if (confirm('Are you sure you want to log out?')) {
+    async logout() {
+        console.log('👋 Initiating logout...');
+        
+        // Initialize shutdown manager if not exists (we reuse it for logout dialogs)
+        if (!elxaOS.shutdownManager) {
+            elxaOS.shutdownManager = new ShutdownManager();
+        }
+        
+        // Show custom logout confirmation
+        const confirmed = await elxaOS.shutdownManager.showLogoutConfirmation();
+        
+        if (confirmed) {
+            console.log('👋 Logout confirmed');
             this.isLoggedIn = false;
             this.currentUser = null;
             this.loginAttempts = 0;
@@ -349,6 +360,8 @@ class LoginService {
             this.showLoginScreen();
             
             this.eventBus.emit('login.logout');
+        } else {
+            console.log('👋 Logout cancelled');
         }
     }
 
@@ -1407,6 +1420,18 @@ class LoginService {
         } catch (error) {
             console.error('❌ Failed to clear version data:', error);
         }
+    }
+
+    // Add this method to detect the primary user after setup
+    getPrimaryUser() {
+        const setupUser = localStorage.getItem('elxaOS-primary-user');
+        if (setupUser && this.users[setupUser]) {
+            return setupUser;
+        }
+        // Fallback to first non-default user, then 'user'
+        const usernames = Object.keys(this.users);
+        const nonDefaultUser = usernames.find(username => !this.users[username].isDefault && this.users[username].isSetupUser);
+        return nonDefaultUser || 'user';
     }
 
     // NEW METHOD: Get current version info

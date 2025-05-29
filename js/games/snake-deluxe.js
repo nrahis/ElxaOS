@@ -1,7 +1,7 @@
 // =================================
-// SNAKE DELUXE - Mr. Snake-e's Epic Corporate Adventure! (IMPROVED MECHANICS)
+// SNAKE DELUXE - Mr. Snake-e's Epic Corporate Adventure! (WITH BACKGROUND MUSIC!)
 // A professional journey through ElxaCorp's headquarters and beyond!
-// NOW WITH CORPORATE SPLASH SCREEN!
+// NOW WITH CORPORATE SPLASH SCREEN AND BOARDROOM BEATS!
 // =================================
 
 class SnakeDeluxe {
@@ -18,6 +18,13 @@ class SnakeDeluxe {
         this.highScore = parseInt(localStorage.getItem('elxaOS-snake-deluxe-highscore') || '0');
         this.achievements = JSON.parse(localStorage.getItem('elxaOS-snake-deluxe-achievements') || '[]');
         this.unlockedLevels = JSON.parse(localStorage.getItem('elxaOS-snake-deluxe-levels') || '[1]');
+        
+        // Audio system
+        this.backgroundMusic = null;
+        this.musicVolume = parseFloat(localStorage.getItem('elxaOS-snake-deluxe-volume') || '0.4');
+        this.musicEnabled = JSON.parse(localStorage.getItem('elxaOS-snake-deluxe-music-enabled') || 'true');
+        this.musicLoaded = false;
+        this.userInteracted = false;
         
         // Splash screen state
         this.showingSplash = true;
@@ -73,6 +80,108 @@ class SnakeDeluxe {
         };
         
         this.initializeLevel();
+        this.initializeAudio();
+    }
+
+    initializeAudio() {
+        try {
+            this.backgroundMusic = new Audio('assets/games/snake-deluxe/boardroomwriggle.ogg');
+            this.backgroundMusic.loop = true;
+            this.backgroundMusic.volume = this.musicVolume;
+            this.backgroundMusic.preload = 'auto';
+            
+            // Handle loading events
+            this.backgroundMusic.addEventListener('canplaythrough', () => {
+                this.musicLoaded = true;
+                console.log('Snake Deluxe: Background music loaded successfully');
+            });
+            
+            this.backgroundMusic.addEventListener('error', (e) => {
+                console.warn('Snake Deluxe: Could not load background music:', e);
+                this.musicEnabled = false;
+            });
+            
+            // Handle audio context suspension (browser autoplay policy)
+            this.backgroundMusic.addEventListener('play', () => {
+                console.log('Snake Deluxe: Background music started');
+            });
+            
+            this.backgroundMusic.addEventListener('pause', () => {
+                console.log('Snake Deluxe: Background music paused');
+            });
+            
+        } catch (error) {
+            console.warn('Snake Deluxe: Audio initialization failed:', error);
+            this.musicEnabled = false;
+        }
+    }
+
+    async startBackgroundMusic() {
+        if (!this.backgroundMusic || !this.musicEnabled || !this.musicLoaded) {
+            return;
+        }
+        
+        try {
+            // Reset to beginning
+            this.backgroundMusic.currentTime = 0;
+            await this.backgroundMusic.play();
+        } catch (error) {
+            console.warn('Snake Deluxe: Could not start background music:', error);
+            // Autoplay might be blocked, that's okay
+        }
+    }
+
+    pauseBackgroundMusic() {
+        if (this.backgroundMusic && !this.backgroundMusic.paused) {
+            this.backgroundMusic.pause();
+        }
+    }
+
+    resumeBackgroundMusic() {
+        if (this.backgroundMusic && this.musicEnabled && this.userInteracted) {
+            this.backgroundMusic.play().catch(e => {
+                console.warn('Snake Deluxe: Could not resume background music:', e);
+            });
+        }
+    }
+
+    setMusicVolume(volume) {
+        this.musicVolume = Math.max(0, Math.min(1, volume));
+        if (this.backgroundMusic) {
+            this.backgroundMusic.volume = this.musicVolume;
+        }
+        localStorage.setItem('elxaOS-snake-deluxe-volume', this.musicVolume.toString());
+    }
+
+    toggleMusic() {
+        this.musicEnabled = !this.musicEnabled;
+        localStorage.setItem('elxaOS-snake-deluxe-music-enabled', JSON.stringify(this.musicEnabled));
+        
+        if (this.musicEnabled && this.userInteracted) {
+            this.resumeBackgroundMusic();
+        } else {
+            this.pauseBackgroundMusic();
+        }
+        
+        // Update UI if music controls are visible
+        this.updateMusicControls();
+    }
+
+    updateMusicControls() {
+        const container = document.querySelector('.sd-game-container');
+        if (container) {
+            const musicToggle = container.querySelector('.sd-music-toggle');
+            const volumeSlider = container.querySelector('.sd-volume-slider');
+            
+            if (musicToggle) {
+                musicToggle.textContent = this.musicEnabled ? '🔊' : '🔇';
+                musicToggle.title = this.musicEnabled ? 'Mute Music' : 'Enable Music';
+            }
+            
+            if (volumeSlider) {
+                volumeSlider.value = this.musicVolume;
+            }
+        }
     }
 
     getDifficultySpeed() {
@@ -378,6 +487,10 @@ class SnakeDeluxe {
                                 <span class="sd-stat-value sd-level-value">1</span>
                             </div>
                         </div>
+                        <div class="sd-music-controls">
+                            <button class="sd-music-toggle" title="${this.musicEnabled ? 'Mute Music' : 'Enable Music'}">${this.musicEnabled ? '🔊' : '🔇'}</button>
+                            <input type="range" class="sd-volume-slider" min="0" max="1" step="0.1" value="${this.musicVolume}" title="Volume">
+                        </div>
                     </div>
                 </div>
 
@@ -482,6 +595,7 @@ class SnakeDeluxe {
                                 <span>Arrow Keys: Move</span>
                                 <span>Space: Pause</span>
                                 <span>R: Restart</span>
+                                <span>M: Toggle Music</span>
                             </div>
                         </div>
                     </div>
@@ -606,6 +720,7 @@ class SnakeDeluxe {
             console.log('Splash clicked');
             e.preventDefault();
             e.stopPropagation();
+            this.userInteracted = true;
             this.hideSplash();
         });
         
@@ -614,6 +729,7 @@ class SnakeDeluxe {
             console.log('Splash mouse down');
             e.preventDefault();
             e.stopPropagation();
+            this.userInteracted = true;
             this.hideSplash();
         });
         
@@ -624,6 +740,7 @@ class SnakeDeluxe {
         this.splashTimer = setTimeout(() => {
             console.log('Auto-proceeding from splash after timeout');
             if (this.showingSplash) {
+                this.userInteracted = true;
                 this.hideSplash();
             }
         }, 4000);
@@ -644,6 +761,7 @@ class SnakeDeluxe {
             'Loading Corporate Assets...',
             'Connecting to Snakesia Database...',
             'Preparing Executive Dashboard...',
+            'Loading Boardroom Beats...',
             'Ready for Business!'
         ];
         
@@ -677,6 +795,7 @@ class SnakeDeluxe {
             event.stopPropagation();
             if (event.code === 'Space' || event.key === 'Enter' || event.key === 'Escape' || event.key === ' ') {
                 console.log('Valid key pressed, hiding splash');
+                this.userInteracted = true;
                 this.hideSplash();
             }
         }
@@ -750,10 +869,25 @@ class SnakeDeluxe {
         const canvasWidth = this.canvas.width;
         this.actualCellSize = canvasWidth / this.boardSize;
         
+        // Music controls
+        const musicToggle = container.querySelector('.sd-music-toggle');
+        const volumeSlider = container.querySelector('.sd-volume-slider');
+        
+        musicToggle?.addEventListener('click', () => {
+            this.userInteracted = true;
+            this.toggleMusic();
+        });
+        
+        volumeSlider?.addEventListener('input', (e) => {
+            this.userInteracted = true;
+            this.setMusicVolume(parseFloat(e.target.value));
+        });
+        
         // Difficulty selection
         const difficultyButtons = container.querySelectorAll('.sd-difficulty-btn');
         difficultyButtons.forEach(btn => {
             btn.addEventListener('click', () => {
+                this.userInteracted = true;
                 difficultyButtons.forEach(b => b.classList.remove('sd-selected'));
                 btn.classList.add('sd-selected');
                 this.difficulty = btn.dataset.difficulty;
@@ -766,6 +900,7 @@ class SnakeDeluxe {
         const levelButtons = container.querySelectorAll('.sd-level-bubble.sd-unlocked');
         levelButtons.forEach(btn => {
             btn.addEventListener('click', () => {
+                this.userInteracted = true;
                 const levelId = parseInt(btn.dataset.level);
                 this.startLevel(container, levelId);
             });
@@ -797,6 +932,11 @@ class SnakeDeluxe {
         // Cleanup
         window.addEventListener('beforeunload', () => this.cleanup());
         window.focus();
+        
+        // Start background music if user has interacted
+        if (this.userInteracted) {
+            this.startBackgroundMusic();
+        }
     }
 
     startLevel(container, levelId) {
@@ -840,6 +980,11 @@ class SnakeDeluxe {
         container.querySelector('.sd-level-complete').style.display = 'none';
         container.querySelector('.sd-game-over').style.display = 'none';
         container.querySelector('.sd-game-play').style.display = 'block';
+        
+        // Start background music when level starts
+        if (this.userInteracted) {
+            this.startBackgroundMusic();
+        }
         
         // Start game loop
         this.startGameLoop();
@@ -1587,10 +1732,10 @@ class SnakeDeluxe {
         if (!this.gameStarted || !this.gameActive) return;
         
         event.preventDefault();
-        const key = event.key;
+        const key = event.key.toLowerCase();
         
         // Movement controls
-        switch (key) {
+        switch (event.key) {
             case 'ArrowUp':
                 if (this.direction.y !== 1) this.nextDirection = { x: 0, y: -1 };
                 break;
@@ -1610,11 +1755,18 @@ class SnakeDeluxe {
             case 'R':
                 this.replayLevel();
                 break;
+            case 'm':
+            case 'M':
+                this.userInteracted = true;
+                this.toggleMusic();
+                break;
         }
     }
 
     pauseGame(container) {
         this.gameActive = false;
+        this.pauseBackgroundMusic();
+        
         if (!container) {
             container = document.querySelector('.sd-game-container');
         }
@@ -1630,6 +1782,10 @@ class SnakeDeluxe {
 
     resumeGame(container) {
         this.gameActive = true;
+        if (this.userInteracted) {
+            this.resumeBackgroundMusic();
+        }
+        
         if (!container) {
             container = document.querySelector('.sd-game-container');
         }
@@ -1662,6 +1818,11 @@ class SnakeDeluxe {
         this.cleanup();
         this.gameStarted = false;
         
+        // Keep music playing in menu
+        if (this.userInteracted && this.musicEnabled) {
+            this.resumeBackgroundMusic();
+        }
+        
         // Refresh level buttons
         const levelGrid = container.querySelector('.sd-level-grid');
         if (levelGrid) {
@@ -1671,6 +1832,7 @@ class SnakeDeluxe {
             const levelButtons = container.querySelectorAll('.sd-level-bubble.sd-unlocked');
             levelButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    this.userInteracted = true;
                     const levelId = parseInt(btn.dataset.level);
                     this.startLevel(container, levelId);
                 });
@@ -1690,6 +1852,8 @@ class SnakeDeluxe {
     levelComplete() {
         this.gameActive = false;
         this.gameStarted = false;
+        
+        // Keep music playing for celebration
         
         // Unlock next level
         const nextLevel = this.currentLevel + 1;
@@ -1753,6 +1917,9 @@ class SnakeDeluxe {
     gameOver() {
         this.gameActive = false;
         this.gameStarted = false;
+        
+        // Pause music on game over
+        this.pauseBackgroundMusic();
         
         const container = document.querySelector('.sd-game-container');
         const gameOverScreen = container.querySelector('.sd-game-over');
@@ -1851,6 +2018,9 @@ class SnakeDeluxe {
 
     destroy() {
         this.cleanup();
+        
+        // Stop background music
+        this.pauseBackgroundMusic();
         
         // Clear splash timer if still running
         if (this.splashTimer) {
