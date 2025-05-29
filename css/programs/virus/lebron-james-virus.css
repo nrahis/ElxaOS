@@ -1,0 +1,241 @@
+/* =================================
+   LEBRON JAMES VIRUS STYLING
+   Created by: Colten's chaotic energy
+================================= */
+
+/* Lebron James Popup Styling */
+.lebron-popup {
+    min-width: 350px;
+    max-width: 400px;
+    z-index: 2500;
+    animation: bounce-in 0.5s ease-out;
+    border: 3px solid #FFA500; /* Lakers gold */
+    box-shadow: 0 8px 24px rgba(255, 165, 0, 0.4);
+}
+
+.lebron-popup .dialog-content {
+    background: linear-gradient(135deg, #552583, #FFA500); /* Lakers colors */
+    color: white;
+    border-radius: 8px;
+}
+
+.lebron-popup .dialog-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-bottom: 2px solid #FFA500;
+}
+
+.lebron-popup .dialog-title {
+    font-weight: bold;
+    font-size: 14px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.lebron-content {
+    padding: 16px;
+    text-align: center;
+}
+
+.lebron-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    animation: rotate-basketball 2s linear infinite;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px auto;
+}
+
+.lebron-icon img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #FFA500;
+    object-fit: cover;
+    animation: rotate-basketball 2s linear infinite;
+}
+
+.lebron-message {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.lebron-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+    font-size: 11px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 165, 0, 0.5);
+}
+
+.lebron-stats div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.lebron-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.ok-lebron-btn,
+.no-lebron-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.ok-lebron-btn {
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    border: 2px outset #FFA500;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.ok-lebron-btn:hover {
+    background: linear-gradient(135deg, #FF8C00, #FF7F00);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 165, 0, 0.3);
+}
+
+.no-lebron-btn {
+    background: linear-gradient(135deg, #8B0000, #660000);
+    border: 2px outset #8B0000;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.no-lebron-btn:hover {
+    background: linear-gradient(135deg, #660000, #440000);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
+}
+
+/* Animations */
+@keyframes bounce-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-10deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05) rotate(5deg);
+    }
+    70% {
+        transform: scale(0.9) rotate(-2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes rotate-basketball {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Text scrambling effects */
+.lebron-scrambled-text {
+    background: linear-gradient(45deg, #FFA500, #FF8C00);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    animation: text-glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes text-glow {
+    from {
+        text-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
+        filter: brightness(1);
+    }
+    to {
+        text-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
+        filter: brightness(1.2);
+    }
+}
+
+/* Popup positioning randomization */
+.lebron-popup:nth-child(even) {
+    animation: bounce-in 0.5s ease-out, wiggle 3s ease-in-out infinite 2s;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    75% { transform: rotate(-1deg); }
+}
+
+/* Special effects for heavily infected text */
+.lebron-infected {
+    position: relative;
+}
+
+.lebron-infected::before {
+    content: "🏀";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    animation: bounce-basketball 2s ease-in-out infinite;
+}
+
+@keyframes bounce-basketball {
+    0%, 100% { transform: translateY(-50%) scale(1); }
+    50% { transform: translateY(-70%) scale(1.2); }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 500px) {
+    .lebron-popup {
+        min-width: 280px;
+        max-width: 320px;
+    }
+    
+    .lebron-message {
+        font-size: 12px;
+    }
+    
+    .lebron-stats {
+        font-size: 10px;
+    }
+    
+    .lebron-actions {
+        flex-direction: column;
+    }
+    
+    .ok-lebron-btn,
+    .no-lebron-btn {
+        width: 100%;
+    }
+}
+
+/* Easter egg: If too many popups appear */
+.lebron-overload {
+    animation: rainbow-chaos 1s linear infinite;
+}
+
+@keyframes rainbow-chaos {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}

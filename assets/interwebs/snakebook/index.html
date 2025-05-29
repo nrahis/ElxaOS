@@ -1,348 +1,807 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snakebook - Connect with Snakesia</title>
     <style>
-        .sb-container {
-            max-width: 800px;
-            margin: 0 auto;
-            font-family: Arial, sans-serif;
-            background: #1a1a2e;
-            min-height: 100vh;
-            color: #e6e6e6;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .sb-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #f0f2f5;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Header */
         .sb-header {
-            background: #0f3460;
-            padding: 10px 20px;
-            border-bottom: 3px solid #e94560;
+            background: linear-gradient(90deg, #4267B2, #365899);
+            padding: 12px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
+            z-index: 100;
+        }
+
+        .sb-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .sb-logo {
-            color: #e94560;
-            font-size: 24px;
+            color: white;
+            font-size: 28px;
             font-weight: bold;
-            text-shadow: 2px 2px #16213e;
-        }
-
-        .sb-profile {
-            background: #16213e;
-            padding: 20px;
-            margin: 20px;
-            border-radius: 8px;
-            border: 1px solid #e94560;
-        }
-
-        .sb-profile-header {
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 15px;
+            gap: 8px;
+        }
+
+        .sb-logo::before {
+            content: '🐍';
+            font-size: 32px;
+        }
+
+        .sb-status {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sb-online-indicator {
+            width: 8px;
+            height: 8px;
+            background: #42b883;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Profile Section */
+        .sb-profile {
+            background: white;
+            margin: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .sb-profile-cover {
+            height: 120px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            position: relative;
+        }
+
+        .sb-profile-info {
+            padding: 20px;
+            position: relative;
+            margin-top: -40px;
         }
 
         .sb-avatar {
-            width: 100px;
-            height: 100px;
-            background: #0f3460;
-            border: 3px solid #e94560;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border: 4px solid white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            margin-bottom: 12px;
         }
 
-        .sb-profile-info h2 {
-            color: #e94560;
-            margin: 0;
+        .sb-profile-details h2 {
+            color: #1c1e21;
+            margin-bottom: 4px;
+            font-size: 24px;
         }
 
-        .sb-profile-info p {
-            margin: 5px 0;
-            color: #888;
+        .sb-profile-details p {
+            color: #65676b;
+            margin-bottom: 2px;
+            font-size: 15px;
         }
 
+        .sb-profile-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #dadde1;
+        }
+
+        .sb-stat {
+            text-align: center;
+        }
+
+        .sb-stat-number {
+            font-weight: bold;
+            font-size: 18px;
+            color: #4267B2;
+        }
+
+        .sb-stat-label {
+            font-size: 12px;
+            color: #65676b;
+            text-transform: uppercase;
+        }
+
+        /* Feed */
         .sb-feed {
-            padding: 20px;
+            padding: 0 16px 20px;
         }
 
-        .sb-post {
-            background: #16213e;
-            margin-bottom: 20px;
-            padding: 15px;
+        .sb-feed-header {
+            background: white;
             border-radius: 8px;
-            border: 1px solid #333;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .sb-feed-title {
+            font-size: 20px;
+            color: #1c1e21;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sb-feed-subtitle {
+            color: #65676b;
+            font-size: 14px;
+        }
+
+        .sb-loading {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 16px;
+        }
+
+        .sb-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e4e6ea;
+            border-top: 4px solid #4267B2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Posts */
+        .sb-post {
+            background: white;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .sb-post:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .sb-post-header {
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
         }
 
         .sb-post-avatar {
-            width: 40px;
-            height: 40px;
-            background: #0f3460;
-            border: 2px solid #e94560;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .sb-post-info {
+            flex: 1;
         }
 
         .sb-post-author {
-            font-weight: bold;
-            color: #e94560;
-        }
-
-        .sb-post-time {
-            color: #666;
-            font-size: 0.8em;
-        }
-
-        .sb-post-content {
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .sb-post-actions {
+            font-weight: 600;
+            color: #1c1e21;
+            font-size: 15px;
             display: flex;
-            gap: 20px;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .sb-post-actions span {
-            cursor: pointer;
-        }
-
-        .sb-post-actions span:hover {
-            color: #e94560;
+            align-items: center;
+            gap: 6px;
         }
 
         .sb-verified {
-            color: #e94560;
-            margin-left: 5px;
+            color: #4267B2;
+            font-size: 16px;
+        }
+
+        .sb-post-time {
+            color: #65676b;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .sb-post-content {
+            padding: 0 16px 16px;
+            color: #1c1e21;
+            font-size: 15px;
+            line-height: 1.33;
+        }
+
+        .sb-post-actions {
+            border-top: 1px solid #dadde1;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .sb-post-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 15px;
+            color: #65676b;
+            font-weight: 500;
+        }
+
+        .sb-post-action:hover {
+            background: #f0f2f5;
+        }
+
+        .sb-post-action.liked {
+            color: #e41e3f;
+        }
+
+        .sb-post-action.liked:hover {
+            background: #fce8ec;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .sb-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .sb-profile {
+                margin: 12px;
+            }
+            
+            .sb-feed {
+                padding: 0 12px 20px;
+            }
+            
+            .sb-post {
+                margin-bottom: 12px;
+            }
+        }
+
+        /* Animations */
+        .sb-post {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sb-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
     <div class="sb-container">
+        <!-- Header -->
         <div class="sb-header">
-            <div class="sb-logo">Snakebook</div>
-        </div>
-
-        <div class="sb-profile">
-            <div class="sb-profile-header">
-                <div class="sb-avatar">👨‍💻</div>
-                <div class="sb-profile-info">
-                    <h2>ElxaTechie</h2>
-                    <p>IT Specialist at Elxa Corporation</p>
-                    <p>Personal Assistant to Mr. Snake-e 🐍</p>
-                    <p>Location: Snakesia (West of Tennessee)</p>
+            <div class="sb-header-content">
+                <div class="sb-logo">Snakebook</div>
+                <div class="sb-status">
+                    <div class="sb-online-indicator"></div>
+                    <span id="connectionStatus">Connected to Snakesia</span>
                 </div>
             </div>
         </div>
 
-        <div class="sb-feed" id="snakebookFeed">
-            <!-- Posts will be dynamically inserted here -->
+        <!-- Profile Section -->
+        <div class="sb-profile">
+            <div class="sb-profile-cover"></div>
+            <div class="sb-profile-info">
+                <div class="sb-avatar">👨‍💻</div>
+                <div class="sb-profile-details">
+                    <h2>ElxaTechie</h2>
+                    <p>🏢 IT Specialist at Elxa Corporation</p>
+                    <p>🐍 Personal Assistant to Mr. Snake-e</p>
+                    <p>📍 Snakesia (West of Tennessee)</p>
+                </div>
+                <div class="sb-profile-stats">
+                    <div class="sb-stat">
+                        <div class="sb-stat-number" id="friendCount">247</div>
+                        <div class="sb-stat-label">Friends</div>
+                    </div>
+                    <div class="sb-stat">
+                        <div class="sb-stat-number" id="postCount">0</div>
+                        <div class="sb-stat-label">Posts Seen</div>
+                    </div>
+                    <div class="sb-stat">
+                        <div class="sb-stat-number" id="likeCount">1.2K</div>
+                        <div class="sb-stat-label">Likes Given</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feed Header -->
+        <div class="sb-feed">
+            <div class="sb-feed-header">
+                <div class="sb-feed-title">
+                    <span>📰</span>
+                    Latest from Snakesia
+                    <span>🐍</span>
+                </div>
+                <div class="sb-feed-subtitle">Stay connected with your Snakesian community</div>
+            </div>
+
+            <!-- Loading State -->
+            <div class="sb-loading" id="loadingIndicator">
+                <div class="sb-loading-spinner"></div>
+                <div>Loading posts from Snakesia...</div>
+            </div>
+
+            <!-- Posts Container -->
+            <div id="postsContainer">
+                <!-- Posts will be dynamically inserted here -->
+            </div>
         </div>
     </div>
 
     <script>
-        // Post templates
-        const posts = [
-            {
-                author: "Mr_Snake_e",
-                avatar: "🐍",
-                verified: true,
-                content: "Just approved another raise for my fantastic IT assistant! Keep up the great work! 💼💰",
-                likes: 2854,
-                comments: 342
-            },
-            {
-                author: "Mrs_Snake_e",
-                avatar: "👵",
-                verified: true,
-                content: "Made my famous snake-shaped cookies today! Come by the mansion to get some! 🍪",
-                likes: 1423,
-                comments: 156
-            },
-            {
-                author: "RemiMarway",
-                avatar: "🎮",
-                verified: true,
-                content: "New Minecraft server update! Check out remicraft.ex for details! 🎯",
-                likes: 892,
-                comments: 234
-            },
-            {
-                author: "ElxaTechie",
-                avatar: "👨‍💻",
-                content: "Just updated Mr. Snake-e's Denali with the latest ElxaOS! Voice commands now support Snakesian! 🚙",
-                likes: 445,
-                comments: 89
-            },
-            {
-                author: "ElxaTechie",
-                avatar: "👨‍💻",
-                content: "Working on some cool new features for ElxaOS! Can't wait to show everyone! 💻✨",
-                likes: 367,
-                comments: 52
-            },
-            {
-                author: "DenaliDriver",
-                avatar: "🚗",
-                content: "Another smooth drive in the Snake-e mobile! These ElxaOS updates are amazing!",
-                likes: 234,
-                comments: 45
-            },
-            {
-                author: "ElxaNews",
-                avatar: "📰",
-                verified: true,
-                content: "Breaking: Elxa Corporation stock reaches new high! Mr. Snake-e announces more IT positions opening soon! 📈",
-                likes: 1756,
-                comments: 289
-            },
-            {
-                author: "SnakesiaMath",
-                avatar: "🔢",
-                verified: true,
-                content: "Today's exchange rate: 1 Snake = $0.50! Perfect for calculations! 🐍💰",
-                likes: 567,
-                comments: 123
-            },
-            {
-                author: "SnakesiaChem",
-                avatar: "🧪",
-                verified: true,
-                content: "Today in the lab: Teaching kids how to safely mix colors! Join us at the Snake-e Science Center! 🔬",
-                likes: 445,
-                comments: 67
-            },
-            {
-                author: "ElxaTechie",
-                avatar: "👨‍💻",
-                content: "Found the coolest retro arcade machine in the mansion basement! Mr. Snake-e says I can restore it! 🕹️",
-                likes: 783,
-                comments: 134
-            },
-            {
-                author: "Mr_Snake_e",
-                avatar: "🐍",
-                verified: true,
-                content: "Just approved installation of a new supercomputer at HQ. My IT assistant says it's 'epic'. Must be good! 💻",
-                likes: 3201,
-                comments: 445
-            },
-            {
-                author: "ArcadeChamp",
-                avatar: "🎮",
-                content: "HIGH SCORE ALERT at Snake-e Mansion Arcade! ElxaTechie just beat Mr. Snake-e's Pac-Man record! 👾",
-                likes: 902,
-                comments: 156
-            },
-            {
-                author: "ElxaTechie",
-                avatar: "👨‍💻",
-                content: "Just updated the phone firmware for everyone at Elxa Corp! Android 15.2 and iOS 18.3 running smooth! 📱",
-                likes: 567,
-                comments: 89
-            },
-            {
-                author: "MansionChef",
-                avatar: "👨‍🍳",
-                verified: true,
-                content: "Mrs. Snake-e helping in the kitchen today! Her special snake-shaped pancakes are a hit! 🥞",
-                likes: 1234,
-                comments: 178
-            },
-            {
-                author: "RemiMarway",
-                avatar: "🎮",
-                verified: true,
-                content: "Teaching Mr. Snake-e how to play Minecraft! He keeps trying to make the snakes bigger 😂",
-                likes: 2341,
-                comments: 445
-            },
-            {
-                author: "ElxaArcade",
-                avatar: "🕹️",
-                verified: true,
-                content: "New high score tables installed! Now displaying scores in both $ and 🐍! Come check your ranking!",
-                likes: 892,
-                comments: 145
-            },
-            {
-                author: "Mrs_Snake_e",
-                avatar: "👵",
-                verified: true,
-                content: "Found old photos of when Mr. Snake-e started Elxa Corp! He was just a tiny garden snake with big dreams! 📸",
-                likes: 4567,
-                comments: 892
-            },
-            {
-                author: "ElxaTechie",
-                avatar: "👨‍💻",
-                content: "Mr. Snake-e just asked me to upgrade the mansion's calculator to handle Snakesian math. Challenge accepted! 🔢",
-                likes: 678,
-                comments: 91
+        console.log('🐍 Snakebook: Starting initialization...');
+
+        class SnakebookApp {
+            constructor() {
+                this.posts = [];
+                this.postTemplates = [];
+                this.postVariables = {};
+                this.maxPosts = 15; // Limit to prevent memory buildup
+                this.updateInterval = null;
+                this.isVisible = true;
+                this.postCount = 0;
+                this.likeCount = 1200;
+                
+                this.initialize();
             }
-        ];
 
-        // Function to get random posts
-        function getRandomPosts(count) {
-            const shuffled = [...posts].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
+            async initialize() {
+                try {
+                    console.log('🐍 Loading Snakebook data...');
+                    await this.loadData();
+                    
+                    console.log('🐍 Setting up event handlers...');
+                    this.setupEventHandlers();
+                    
+                    console.log('🐍 Generating initial posts...');
+                    this.generateInitialPosts();
+                    
+                    console.log('🐍 Starting update cycle...');
+                    this.startUpdateCycle();
+                    
+                    console.log('✅ Snakebook initialized successfully!');
+                } catch (error) {
+                    console.error('❌ Snakebook initialization failed:', error);
+                    this.showError('Failed to load Snakebook data: ' + error.message);
+                }
+            }
 
-        // Function to format time
-        function getRandomTime() {
-            const minutes = Math.floor(Math.random() * 59);
-            return `${minutes}m ago`;
-        }
+            async loadData() {
+                const possiblePaths = [
+                    'snakebook-data.json',
+                    './snakebook-data.json',
+                    './assets/interwebs/snakebook/snakebook-data.json',
+                    'assets/interwebs/snakebook/snakebook-data.json'
+                ];
 
-        // Function to create post HTML
-        function createPostHTML(post) {
-            return `
-                <div class="sb-post">
-                    <div class="sb-post-header">
-                        <div class="sb-post-avatar">${post.avatar}</div>
-                        <div>
-                            <span class="sb-post-author">${post.author}</span>
-                            ${post.verified ? '<span class="sb-verified">✓</span>' : ''}
-                            <div class="sb-post-time">${getRandomTime()}</div>
+                // Try ElxaOS file system first
+                if (window.fs && window.fs.readFile) {
+                    console.log('🐍 Using ElxaOS file system...');
+                    for (const path of possiblePaths.slice(0, 2)) {
+                        try {
+                            console.log(`🐍 Trying ElxaOS path: ${path}`);
+                            const fileData = await window.fs.readFile(path, { encoding: 'utf8' });
+                            const data = JSON.parse(fileData);
+                            console.log(`✅ Loaded data from ElxaOS: ${path}`);
+                            this.postTemplates = data.postTemplates;
+                            this.postVariables = data.postVariables;
+                            return;
+                        } catch (error) {
+                            console.log(`⚠️ ElxaOS path failed: ${path} - ${error.message}`);
+                            continue;
+                        }
+                    }
+                }
+
+                // Fallback to fetch API
+                console.log('🐍 Using fetch API...');
+                for (const path of possiblePaths.slice(2)) {
+                    try {
+                        console.log(`🐍 Trying fetch path: ${path}`);
+                        const response = await fetch(path);
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log(`✅ Loaded data from fetch: ${path}`);
+                            this.postTemplates = data.postTemplates;
+                            this.postVariables = data.postVariables;
+                            return;
+                        }
+                    } catch (error) {
+                        console.log(`⚠️ Fetch path failed: ${path} - ${error.message}`);
+                        continue;
+                    }
+                }
+
+                throw new Error('Could not find snakebook-data.json in any expected location');
+            }
+
+            setupEventHandlers() {
+                // Page visibility API to pause updates when not visible
+                document.addEventListener('visibilitychange', () => {
+                    this.isVisible = !document.hidden;
+                    if (this.isVisible) {
+                        console.log('🐍 Page visible, resuming updates');
+                        this.startUpdateCycle();
+                    } else {
+                        console.log('🐍 Page hidden, pausing updates');
+                        this.stopUpdateCycle();
+                    }
+                });
+
+                // Cleanup on page unload
+                window.addEventListener('beforeunload', () => {
+                    this.stopUpdateCycle();
+                });
+            }
+
+            generateInitialPosts() {
+                console.log('🐍 Generating initial posts...');
+                
+                // Generate 3-5 initial posts
+                const initialCount = Math.floor(Math.random() * 3) + 3;
+                
+                for (let i = 0; i < initialCount; i++) {
+                    const post = this.createRandomPost();
+                    if (post) {
+                        // Make initial posts look older (last few hours)
+                        const hoursAgo = Math.random() * 6; // 0-6 hours ago
+                        post.timestamp = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
+                        post.id = Date.now() + Math.random() + i; // Ensure unique IDs
+                        this.addPost(post);
+                        console.log(`✅ Generated initial post ${i+1}/${initialCount}: ${post.author}`);
+                    }
+                }
+
+                this.hideLoading();
+                this.updateDisplay();
+                console.log(`🐍 Initial posts complete: ${this.posts.length} posts loaded`);
+            }
+
+            createRandomPost() {
+                if (!this.postTemplates || this.postTemplates.length === 0) {
+                    console.error('❌ No post templates available');
+                    return null;
+                }
+
+                // Weighted random selection
+                const totalWeight = this.postTemplates.reduce((sum, template) => sum + template.weight, 0);
+                let random = Math.random() * totalWeight;
+
+                let selectedTemplate = null;
+                for (const template of this.postTemplates) {
+                    random -= template.weight;
+                    if (random <= 0) {
+                        selectedTemplate = template;
+                        break;
+                    }
+                }
+
+                if (!selectedTemplate) {
+                    selectedTemplate = this.postTemplates[0];
+                }
+
+                // Replace variables in template
+                const content = this.replaceVariables(selectedTemplate.template);
+                
+                // Generate random engagement numbers
+                const likes = Math.floor(Math.random() * 5000) + 50;
+                const comments = Math.floor(Math.random() * 200) + 5;
+
+                return {
+                    id: Date.now() + Math.random(),
+                    author: selectedTemplate.author,
+                    avatar: selectedTemplate.avatar,
+                    verified: selectedTemplate.verified,
+                    content: content,
+                    timestamp: new Date(),
+                    likes: likes,
+                    comments: comments,
+                    liked: false
+                };
+            }
+
+            replaceVariables(template) {
+                return template.replace(/\{\{([^}]+)\}\}/g, (match, variableName) => {
+                    const values = this.postVariables[variableName];
+                    if (values && values.length > 0) {
+                        return values[Math.floor(Math.random() * values.length)];
+                    }
+                    return match; // Return original if variable not found
+                });
+            }
+
+            addPost(post) {
+                // Add to beginning of array (newest first)
+                this.posts.unshift(post);
+                
+                // Limit posts to prevent memory buildup
+                if (this.posts.length > this.maxPosts) {
+                    this.posts = this.posts.slice(0, this.maxPosts);
+                }
+
+                this.postCount++;
+                this.updateStats();
+            }
+
+            updateDisplay() {
+                const container = document.getElementById('postsContainer');
+                
+                if (this.posts.length === 0) {
+                    container.innerHTML = `
+                        <div class="sb-loading">
+                            <div>No posts available yet...</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const postsHtml = this.posts.map(post => this.createPostHTML(post)).join('');
+                container.innerHTML = postsHtml;
+
+                // Add click handlers for post actions
+                this.attachPostHandlers();
+            }
+
+            createPostHTML(post) {
+                const timeAgo = this.formatTimeAgo(post.timestamp);
+                const likeClass = post.liked ? 'liked' : '';
+                const likeIcon = post.liked ? '❤️' : '👍';
+
+                return `
+                    <div class="sb-post" data-post-id="${post.id}">
+                        <div class="sb-post-header">
+                            <div class="sb-post-avatar">${post.avatar}</div>
+                            <div class="sb-post-info">
+                                <div class="sb-post-author">
+                                    ${post.author}
+                                    ${post.verified ? '<span class="sb-verified">✓</span>' : ''}
+                                </div>
+                                <div class="sb-post-time">${timeAgo}</div>
+                            </div>
+                        </div>
+                        <div class="sb-post-content">${post.content}</div>
+                        <div class="sb-post-actions">
+                            <div class="sb-post-action ${likeClass}" data-action="like">
+                                <span>${likeIcon}</span>
+                                <span>${post.likes}</span>
+                            </div>
+                            <div class="sb-post-action" data-action="comment">
+                                <span>💬</span>
+                                <span>${post.comments}</span>
+                            </div>
+                            <div class="sb-post-action" data-action="share">
+                                <span>↗️</span>
+                                <span>Share</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="sb-post-content">
-                        ${post.content}
+                `;
+            }
+
+            attachPostHandlers() {
+                document.querySelectorAll('.sb-post-action[data-action="like"]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const postId = e.target.closest('.sb-post').dataset.postId;
+                        this.toggleLike(postId);
+                    });
+                });
+            }
+
+            toggleLike(postId) {
+                const post = this.posts.find(p => p.id == postId);
+                if (post) {
+                    post.liked = !post.liked;
+                    if (post.liked) {
+                        post.likes++;
+                        this.likeCount++;
+                    } else {
+                        post.likes--;
+                        this.likeCount--;
+                    }
+                    
+                    this.updateDisplay();
+                    this.updateStats();
+                    
+                    // Show a subtle animation
+                    const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+                    if (postElement) {
+                        postElement.style.transform = 'scale(1.02)';
+                        setTimeout(() => {
+                            postElement.style.transform = 'scale(1)';
+                        }, 150);
+                    }
+                }
+            }
+
+            formatTimeAgo(timestamp) {
+                const now = new Date();
+                const diff = now - timestamp;
+                
+                if (diff < 60000) { // Less than 1 minute
+                    return 'just now';
+                } else if (diff < 3600000) { // Less than 1 hour
+                    const minutes = Math.floor(diff / 60000);
+                    return `${minutes}m`;
+                } else if (diff < 86400000) { // Less than 1 day
+                    const hours = Math.floor(diff / 3600000);
+                    return `${hours}h`;
+                } else if (diff < 604800000) { // Less than 1 week
+                    const days = Math.floor(diff / 86400000);
+                    return `${days}d`;
+                } else {
+                    return timestamp.toLocaleDateString();
+                }
+            }
+
+            updateStats() {
+                document.getElementById('postCount').textContent = this.postCount;
+                document.getElementById('likeCount').textContent = this.formatNumber(this.likeCount);
+            }
+
+            formatNumber(num) {
+                if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1) + 'M';
+                } else if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'K';
+                } else {
+                    return num.toString();
+                }
+            }
+
+            startUpdateCycle() {
+                this.stopUpdateCycle(); // Clear any existing interval
+                
+                if (!this.isVisible) return;
+
+                // Generate new post every 2-5 minutes
+                const updateDelay = Math.random() * (300000 - 120000) + 120000; // 2-5 minutes
+                console.log(`🐍 Next post in ${Math.round(updateDelay/1000)} seconds`);
+                
+                this.updateInterval = setTimeout(() => {
+                    if (this.isVisible) {
+                        console.log('🐍 Generating new post...');
+                        const newPost = this.createRandomPost();
+                        if (newPost) {
+                            this.addPost(newPost);
+                            this.updateDisplay();
+                            console.log('✅ New post added:', newPost.author);
+                        }
+                    }
+                    this.startUpdateCycle(); // Schedule next update
+                }, updateDelay);
+            }
+
+            stopUpdateCycle() {
+                if (this.updateInterval) {
+                    clearTimeout(this.updateInterval);
+                    this.updateInterval = null;
+                    console.log('⏹️ Update cycle stopped');
+                }
+            }
+
+            hideLoading() {
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+            }
+
+            showError(message) {
+                const container = document.getElementById('postsContainer');
+                container.innerHTML = `
+                    <div class="sb-loading" style="color: #e41e3f;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">❌</div>
+                        <div>${message}</div>
                     </div>
-                    <div class="sb-post-actions">
-                        <span>❤️ ${post.likes}</span>
-                        <span>💬 ${post.comments}</span>
-                        <span>↗️ Share</span>
-                    </div>
-                </div>
-            `;
+                `;
+                this.hideLoading();
+            }
         }
 
-        // Initialize feed
-        function initializeFeed() {
-            const feed = document.getElementById('snakebookFeed');
-            const randomPosts = getRandomPosts(6); // Show 6 random posts
-            feed.innerHTML = randomPosts.map(post => createPostHTML(post)).join('');
+        // Initialize when DOM is ready
+        function initSnakebook() {
+            console.log('🐍 DOM ready, initializing Snakebook...');
+            window.snakebookApp = new SnakebookApp();
         }
 
-        // Initialize when page loads
-        initializeFeed();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSnakebook);
+        } else {
+            initSnakebook();
+        }
 
-        // Refresh feed every 5 minutes
-        setInterval(initializeFeed, 300000);
+        // Fallback initialization
+        setTimeout(() => {
+            if (!window.snakebookApp) {
+                console.log('🐍 Fallback initialization...');
+                initSnakebook();
+            }
+        }, 1000);
     </script>
 </body>
 </html>

@@ -1184,3 +1184,70 @@ input:checked + .toggle-slider:before {
     transition: width 0.2s ease;
     border-radius: 7px;
 }
+
+/* Restart Recommendation Popup */
+.restart-recommendation {
+    min-width: 400px;
+    max-width: 500px;
+}
+
+.restart-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.restart-icon {
+    font-size: 48px;
+}
+
+.restart-message h3 {
+    margin: 0 0 8px 0;
+    color: #28a745;
+    font-size: 16px;
+}
+
+.restart-message p {
+    margin: 8px 0;
+    font-size: 12px;
+    color: #495057;
+    line-height: 1.4;
+}
+
+.restart-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.restart-now-btn,
+.restart-later-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.restart-now-btn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: 2px outset #007bff;
+    color: white;
+}
+
+.restart-now-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-1px);
+}
+
+.restart-later-btn {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: 2px outset #6c757d;
+    color: white;
+}
+
+.restart-later-btn:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+}

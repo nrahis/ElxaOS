@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>ElxaTech - Your Source for Tech News in Snakesia</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="extech-container">
@@ -11,60 +12,388 @@
         </header>
 
         <nav class="extech-nav">
-            <a href="elxatech.ex">Home</a>
-            <a href="elxatech.ex/phones">Phone OS</a>
-            <a href="elxatech.ex/retro">Retro Tech</a>
-            <a href="elxatech.ex/chemistry">Chemistry Corner</a>
-            <a href="elxatech.ex/math">Math Zone</a>
-            <a href="elxatech.ex/about">About</a>
+            <button onclick="showPage('home')" id="nav-home" class="extech-nav-button extech-nav-active">Home</button>
+            <button onclick="showPage('phones')" id="nav-phones" class="extech-nav-button">Phone OS</button>
+            <button onclick="showPage('retro')" id="nav-retro" class="extech-nav-button">Retro Tech</button>
+            <button onclick="showPage('chemistry')" id="nav-chemistry" class="extech-nav-button">Chemistry Lab</button>
+            <button onclick="showPage('math')" id="nav-math" class="extech-nav-button">Math Zone</button>
+            <button onclick="showPage('about')" id="nav-about" class="extech-nav-button">About</button>
         </nav>
 
-        <main class="extech-content">
-            <article class="extech-article">
-                <h2 class="extech-article-title">
-                    ElxaOS 3.0 Released
-                    <span class="extech-new-badge">NEW!</span>
-                </h2>
-                <div class="extech-article-meta">
-                    Posted by TechEditor | January 24, 2025
-                </div>
-                <div class="extech-article-content">
-                    Mr. Snake-e unveiled the latest version of ElxaOS today from Elxa Corporation headquarters in Snakesia. The update brings several new features including improved retro game compatibility and a new file system...
-                </div>
-            </article>
+        <!-- HOME PAGE -->
+        <div id="page-home" class="extech-page extech-page-active">
+            <main class="extech-content">
+                <article class="extech-article">
+                    <h2 class="extech-article-title">
+                        ElxaOS 3.0 Released
+                        <span class="extech-new-badge">NEW!</span>
+                    </h2>
+                    <div class="extech-article-meta">
+                        Posted by TechEditor | January 24, 2025
+                    </div>
+                    <div class="extech-article-content">
+                        Mr. Snake-e unveiled the latest version of ElxaOS today from Elxa Corporation headquarters in Snakesia. The update brings several new features including improved retro game compatibility, enhanced Snake-e AI integration, and a new file system optimized for both gaming and productivity. The update is free for all existing ElxaOS users and can be downloaded through the ElxaStore.
+                    </div>
+                </article>
 
-            <article class="extech-article">
-                <h2 class="extech-article-title">Android vs iOS: 2025 Edition</h2>
-                <div class="extech-article-meta">
-                    Posted by OSExpert | January 23, 2025
-                </div>
-                <div class="extech-article-content">
-                    Our comprehensive comparison of the latest mobile operating systems. From Android 15's new features to iOS 18's redesign, we cover everything you need to know...
-                </div>
-            </article>
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Android vs iOS: 2025 Edition</h2>
+                    <div class="extech-article-meta">
+                        Posted by OSExpert | January 23, 2025
+                    </div>
+                    <div class="extech-article-content">
+                        Our comprehensive comparison of the latest mobile operating systems. From Android 15's new features to iOS 18's redesign, we cover everything you need to know. Plus: How does ElxaOS Mobile stack up against the competition? Spoiler alert: Mr. Snake-e thinks it's the best thing since sliced bread (and Mrs. Snake-e's homemade cookies).
+                    </div>
+                </article>
 
-            <article class="extech-article">
-                <h2 class="extech-article-title">
-                    RetroTech: The CRT Monitor Revival
-                </h2>
-                <div class="extech-article-meta">
-                    Posted by RetroFan | January 22, 2025
-                </div>
-                <div class="extech-article-content">
-                    Why are tech enthusiasts in Snakesia returning to CRT monitors? We investigate the growing trend and its connection to the classic arcade scene...
-                </div>
-            </article>
-        </main>
+                <article class="extech-article">
+                    <h2 class="extech-article-title">RetroTech: The CRT Monitor Revival</h2>
+                    <div class="extech-article-meta">
+                        Posted by RetroFan | January 22, 2025
+                    </div>
+                    <div class="extech-article-content">
+                        Why are tech enthusiasts in Snakesia returning to CRT monitors? We investigate the growing trend and its connection to the classic arcade scene. From Mr. Snake-e's personal collection to the community-driven restoration projects, CRT monitors are making a comeback in the most unexpected way.
+                    </div>
+                </article>
+            </main>
 
-        <aside class="extech-sidebar">
-            <div class="extech-sidebar-title">Trending Topics</div>
-            <ul>
-                <li>Latest Phone OS Updates</li>
-                <li>Retro Gaming News</li>
-                <li>Chemistry Lab Results</li>
-                <li>Math Challenge of the Week</li>
-            </ul>
-        </aside>
+            <aside class="extech-sidebar">
+                <div class="extech-sidebar-title">Trending Topics</div>
+                <ul>
+                    <li>Latest Phone OS Updates</li>
+                    <li>Retro Gaming High Scores</li>
+                    <li>Chemistry Lab Results</li>
+                    <li>Math Challenge Winners</li>
+                    <li>Snakesian Currency Exchange</li>
+                </ul>
+            </aside>
+        </div>
+
+        <!-- PHONES PAGE -->
+        <div id="page-phones" class="extech-page">
+            <main class="extech-content">
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Latest OS Versions</h2>
+                    <div class="extech-comparison-table">
+                        <table>
+                            <tr>
+                                <th>OS</th>
+                                <th>Version</th>
+                                <th>Release Date</th>
+                                <th>Key Features</th>
+                            </tr>
+                            <tr>
+                                <td>Android</td>
+                                <td>15.0</td>
+                                <td>Oct 2024</td>
+                                <td>AI Assistant, New Material You themes</td>
+                            </tr>
+                            <tr>
+                                <td>iOS</td>
+                                <td>18.2</td>
+                                <td>Dec 2024</td>
+                                <td>Enhanced widgets, Better privacy controls</td>
+                            </tr>
+                            <tr>
+                                <td>ElxaOS Mobile</td>
+                                <td>3.0</td>
+                                <td>Jan 2025</td>
+                                <td>Snake-e AI, Snakesian language support</td>
+                            </tr>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Version History Database</h2>
+                    <div class="extech-feature-box">
+                        <h3>Android Timeline</h3>
+                        <ul>
+                            <li>Android 15 (2024) - Vanilla Ice Cream</li>
+                            <li>Android 14 (2023) - Upside Down Cake</li>
+                            <li>Android 13 (2022) - Tiramisu</li>
+                            <li>Android 12 (2021) - Snow Cone</li>
+                            <li>Android 11 (2020) - Red Velvet Cake</li>
+                        </ul>
+                    </div>
+
+                    <div class="extech-feature-box">
+                        <h3>iOS Timeline</h3>
+                        <ul>
+                            <li>iOS 18 (2024) - Current</li>
+                            <li>iOS 17 (2023)</li>
+                            <li>iOS 16 (2022)</li>
+                            <li>iOS 15 (2021)</li>
+                            <li>iOS 14 (2020)</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Phone OS Quiz Challenge</h2>
+                    <div class="extech-quiz">
+                        <h3>Can you identify the OS version?</h3>
+                        <p>What's the current version of Android?</p>
+                        <button onclick="showQuizResult('Correct! Android 15.0 (Vanilla Ice Cream)')">15.0</button>
+                        <button onclick="showQuizResult('Nope! That was last year.')">14.0</button>
+                        <button onclick="showQuizResult('Not yet! Maybe next year.')">16.0</button>
+                        <div id="quiz-result" class="extech-result"></div>
+                    </div>
+                </article>
+            </main>
+        </div>
+
+        <!-- RETRO PAGE -->
+        <div id="page-retro" class="extech-page">
+            <main class="extech-content">
+                <article class="extech-article">
+                    <h2 class="extech-article-title">
+                        Snakesia Arcade News
+                        <span class="extech-new-badge">HOT!</span>
+                    </h2>
+                    <div class="extech-article-meta">
+                        Updated Daily by RetroFan
+                    </div>
+                    <div class="extech-feature-box">
+                        <h3>Today's High Scores</h3>
+                        <table class="extech-comparison-table">
+                            <tr>
+                                <th>Game</th>
+                                <th>Player</th>
+                                <th>Score</th>
+                                <th>Location</th>
+                            </tr>
+                            <tr>
+                                <td>Snake-Man</td>
+                                <td>Mr_Snake_E</td>
+                                <td>999,999</td>
+                                <td>Mansion Arcade</td>
+                            </tr>
+                            <tr>
+                                <td>Block Miner</td>
+                                <td>RemiMarway</td>
+                                <td>888,888</td>
+                                <td>ElxaCorp HQ</td>
+                            </tr>
+                            <tr>
+                                <td>Math Blaster</td>
+                                <td>ElxaTechie</td>
+                                <td>777,777</td>
+                                <td>IT Department</td>
+                            </tr>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Mr. Snake-e's Personal Collection</h2>
+                    <div class="extech-article-content">
+                        Get a rare peek into the famous retro tech collection housed in the Snake-e mansion! Mrs. Snake-e even lets visitors have homemade cookies while touring. Features include:
+                        <ul>
+                            <li>Original Snake-Man arcade cabinet (Serial #001)</li>
+                            <li>Every ElxaOS version ever released (even the buggy beta ones!)</li>
+                            <li>Complete collection of Snake-e brand CRT monitors</li>
+                            <li>Prototype of the first ElxaPhone (it was HUGE!)</li>
+                            <li>Pushing Cat's favorite gaming chair (very sus setup)</li>
+                        </ul>
+                    </div>
+                    <div class="extech-construction">
+                        🚧 Virtual Tour Coming Soon! 🚧
+                        <br>Featured: Tour guide Rita explains each exhibit!
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Arcade Locations in Snakesia</h2>
+                    <div class="extech-feature-box">
+                        <ul>
+                            <li>🏰 Snake-e Mansion Arcade Room (Private - but Rita gives tours!)</li>
+                            <li>🏢 ElxaCorp HQ Gaming Center (Employees Only)</li>
+                            <li>🎮 Retro Gaming Museum (Public - Remi volunteers there)</li>
+                            <li>🕹️ Downtown Arcade Center (Public - best pizza in Snakesia)</li>
+                            <li>🐱 Pushing Cat's Sussy Lair (Secret location - very sus)</li>
+                        </ul>
+                    </div>
+                </article>
+            </main>
+        </div>
+
+        <!-- CHEMISTRY PAGE -->
+        <div id="page-chemistry" class="extech-page">
+            <main class="extech-content">
+                <article class="extech-article">
+                    <h2 class="extech-article-title">
+                        Welcome to NileRed's Corner!
+                        <span class="extech-new-badge">FEATURED</span>
+                    </h2>
+                    <div class="extech-article-meta">
+                        Guest Editor: NileRed | Hosted by ElxaTech
+                    </div>
+                    <div class="extech-feature-box">
+                        <h3>This Week's Experiments:</h3>
+                        <ul>
+                            <li>Creating Rainbow Flames 🌈 (Mrs. Snake-e approved!)</li>
+                            <li>Elephant Toothpaste Reaction 🐘 (Bigger than Pushing Cat!)</li>
+                            <li>Growing Crystals 💎 (Prettier than snake scales)</li>
+                            <li>Color-Changing Solutions 🔄 (Like Snakesian mood rings)</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Periodic Table Adventures</h2>
+                    <div class="extech-feature-box">
+                        <h3>Element of the Day: Au (Gold)</h3>
+                        <ul>
+                            <li>Atomic Number: 79</li>
+                            <li>Atomic Mass: 196.97</li>
+                            <li>Fun Fact: The Snake-e mansion has gold-plated lab equipment!</li>
+                            <li>Snakesian Fact: Worth 2 snakes per gram 🐍</li>
+                        </ul>
+                        <div class="extech-construction">
+                            🧪 Interactive Periodic Table Coming Soon! 🧪
+                        </div>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Chemical Reaction Calculator</h2>
+                    <div class="extech-calculator">
+                        <h3>Balance Chemical Equations</h3>
+                        <p>Enter a simple reaction (e.g., "H2 + O2 -> H2O"):</p>
+                        <input type="text" id="equation-input" placeholder="Enter equation">
+                        <button onclick="balanceEquation()">Balance It!</button>
+                        <div id="equation-result" class="extech-result"></div>
+                    </div>
+                </article>
+            </main>
+        </div>
+
+        <!-- MATH PAGE -->
+        <div id="page-math" class="extech-page">
+            <main class="extech-content">
+                <article class="extech-article">
+                    <h2 class="extech-article-title">
+                        Currency Conversion Challenge
+                        <span class="extech-new-badge">NEW!</span>
+                    </h2>
+                    <div class="extech-calculator">
+                        <h3>Dollar to Snake Converter</h3>
+                        <p>Exchange Rate: 1 USD ($) = 2 Snakes (🐍)</p>
+                        <input type="number" id="dollar-input" placeholder="Enter dollars">
+                        <button onclick="convertCurrency()">Convert!</button>
+                        <div id="conversion-result" class="extech-result"></div>
+                        
+                        <h4>Quick Challenge:</h4>
+                        <p>How many snakes is $42,042?</p>
+                        <button onclick="showChallengeAnswer()">Show Answer</button>
+                        <div id="challenge-result" class="extech-result"></div>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Time Zone Mathematics</h2>
+                    <div class="extech-feature-box">
+                        <h3>Current Time Calculator:</h3>
+                        <p>Snakesia is exactly 2 hours and 1 minute ahead of Eastern Time!</p>
+                        <button onclick="calculateTime()">Calculate Snakesian Time</button>
+                        <div id="time-result" class="extech-result"></div>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">ElxaCorp Math Tournament</h2>
+                    <div class="extech-feature-box">
+                        <h3>Current Standings:</h3>
+                        <table class="extech-comparison-table">
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                <th>Score</th>
+                                <th>Division</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>ElxaTechie</td>
+                                <td>42,042</td>
+                                <td>IT Department</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Snake_E_CEO</td>
+                                <td>41,337</td>
+                                <td>Executive</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Rita_Helper</td>
+                                <td>39,999</td>
+                                <td>Guest</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>RemiMarway</td>
+                                <td>38,888</td>
+                                <td>YouTube Division</td>
+                            </tr>
+                        </table>
+                    </div>
+                </article>
+            </main>
+        </div>
+
+        <!-- ABOUT PAGE -->
+        <div id="page-about" class="extech-page">
+            <main class="extech-content">
+                <article class="extech-article">
+                    <h2 class="extech-article-title">About ElxaTech</h2>
+                    <div class="extech-article-content">
+                        ElxaTech is the premier technology news source in Snakesia, operating as the official tech journalism division of Elxa Corporation. Founded by Mr. Snake-e himself (age 60, drives a Denali), we bring you the latest in operating systems, retro gaming, and scientific computing. Mrs. Snake-e (age 80, loves gardening) provides our office with the best homemade cookies in all of Snakesia!
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Our Team</h2>
+                    <div class="extech-feature-box">
+                        <h3>Editorial Staff</h3>
+                        <ul>
+                            <li><strong>Editor-in-Chief:</strong> Mr. Snake-e (CEO, Elxa Corporation)</li>
+                            <li><strong>Senior Tech Editor:</strong> ElxaTechie (IT Department Lead)</li>
+                            <li><strong>Gaming Correspondent:</strong> Remi Marway (YouTube star & Minecraft server owner)</li>
+                            <li><strong>Culinary Tech Reviewer:</strong> Mrs. Snake-e (expert baker & gardener)</li>
+                            <li><strong>Special Contributor:</strong> Rita (curly red hair, very patient with tech questions)</li>
+                            <li><strong>Mascot & Security:</strong> Pushing Cat (very sus, belly button inspector)</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Fun Facts</h2>
+                    <div class="extech-feature-box">
+                        <ul>
+                            <li>Every article is tested on authentic Snake-e brand CRT monitors</li>
+                            <li>Mrs. Snake-e bakes cookies for our weekly tech meetings</li>
+                            <li>Our office arcade has every version of Snake-Man ever made</li>
+                            <li>Remi's Minecraft server runs on our backup systems</li>
+                            <li>Rita helps translate our articles into perfect Snakesian</li>
+                            <li>Pushing Cat has been banned from 3 different server rooms (too sus)</li>
+                            <li>We're located on the 42nd floor of Elxa Tower in downtown Snakesia</li>
+                            <li>Snakesia is exactly 2 hours and 1 minute ahead of Eastern Time</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="extech-article">
+                    <h2 class="extech-article-title">Contact Us</h2>
+                    <div class="extech-feature-box">
+                        <p>📧 Email: tech@snake-e.corp.ex</p>
+                        <p>📱 Phone: (42) SNAKE-TECH</p>
+                        <p>🏢 Address: Floor 42, Elxa Tower, Snakesia (West of TN)</p>
+                        <p>🐱 Emergency Sus Reports: pushing.cat@sussy-lair.ex</p>
+                    </div>
+                </article>
+            </main>
+        </div>
 
         <div class="extech-stats">
             <div class="extech-counter">Visitors: 31,337 ($)</div>
@@ -74,8 +403,61 @@
         <footer class="extech-footer">
             <p>© 2025 ElxaTech - A division of Elxa Corporation</p>
             <p>Best viewed in Snoogle Browser at 800x600</p>
-            <p>Last updated: 01/24/2025</p>
+            <p>Last updated: 01/24/2025 by ElxaTechie</p>
+            <p class="extech-blink">💼 Now hiring in IT! 💼</p>
         </footer>
     </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            var pages = document.querySelectorAll('.extech-page');
+            for (var i = 0; i < pages.length; i++) {
+                pages[i].classList.remove('extech-page-active');
+            }
+            
+            // Show selected page
+            document.getElementById('page-' + pageId).classList.add('extech-page-active');
+            
+            // Update navigation
+            var navButtons = document.querySelectorAll('.extech-nav-button');
+            for (var i = 0; i < navButtons.length; i++) {
+                navButtons[i].classList.remove('extech-nav-active');
+            }
+            document.getElementById('nav-' + pageId).classList.add('extech-nav-active');
+        }
+        
+        function showQuizResult(result) {
+            document.getElementById('quiz-result').innerHTML = result;
+            document.getElementById('quiz-result').style.display = 'block';
+        }
+        
+        function convertCurrency() {
+            var dollars = document.getElementById('dollar-input').value;
+            var snakes = dollars * 2;
+            document.getElementById('conversion-result').innerHTML = '$' + dollars + ' = ' + snakes + ' snakes! 🐍';
+            document.getElementById('conversion-result').style.display = 'block';
+        }
+        
+        function showChallengeAnswer() {
+            document.getElementById('challenge-result').innerHTML = '84,084 snakes! 🐍🐍';
+            document.getElementById('challenge-result').style.display = 'block';
+        }
+        
+        function calculateTime() {
+            document.getElementById('time-result').innerHTML = 'If it\'s 3:00 PM in Tennessee, it\'s 5:01 PM in Snakesia! 🐍⏰';
+            document.getElementById('time-result').style.display = 'block';
+        }
+        
+        function balanceEquation() {
+            var equation = document.getElementById('equation-input').value;
+            if (equation.toLowerCase().includes('h2') && equation.toLowerCase().includes('o2')) {
+                document.getElementById('equation-result').innerHTML = 'Balanced: 2H₂ + O₂ → 2H₂O<br>That\'s how we make water! 💧';
+            } else {
+                document.getElementById('equation-result').innerHTML = 'Chemical equation received! The Snake-e AI Chemistry Engine is processing... 🧪<br>Result: ' + equation + ' (analyzed by NileRed\'s algorithms!)';
+            }
+            document.getElementById('equation-result').style.display = 'block';
+        }
+    </script>
 </body>
 </html>

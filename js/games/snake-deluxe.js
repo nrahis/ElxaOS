@@ -21,7 +21,7 @@ class SnakeDeluxe {
         
         // Audio system
         this.backgroundMusic = null;
-        this.musicVolume = parseFloat(localStorage.getItem('elxaOS-snake-deluxe-volume') || '0.4');
+        this.musicVolume = parseFloat(localStorage.getItem('elxaOS-snake-deluxe-volume') || '0.3');
         this.musicEnabled = JSON.parse(localStorage.getItem('elxaOS-snake-deluxe-music-enabled') || 'true');
         this.musicLoaded = false;
         this.userInteracted = false;
@@ -489,7 +489,6 @@ class SnakeDeluxe {
                         </div>
                         <div class="sd-music-controls">
                             <button class="sd-music-toggle" title="${this.musicEnabled ? 'Mute Music' : 'Enable Music'}">${this.musicEnabled ? '🔊' : '🔇'}</button>
-                            <input type="range" class="sd-volume-slider" min="0" max="1" step="0.1" value="${this.musicVolume}" title="Volume">
                         </div>
                     </div>
                 </div>

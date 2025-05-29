@@ -158,6 +158,10 @@ class DuckConsoleProgram {
     executeCommand(command, windowId) {
         // Echo the command
         this.outputToConsole(`${this.getPrompt()}${command}`, 'command', windowId);
+
+        // ADD THIS LINE FOR SYSTEM 0 DETECTION
+        console.log('🦆 Duck Console emitting command:', command.trim());
+        this.eventBus.emit('console.command', { command: command.trim() });
         
         const args = command.toLowerCase().trim().split(/\s+/);
         const cmd = args[0];
@@ -240,6 +244,19 @@ class DuckConsoleProgram {
                 break;
             case 'fortune':
                 this.fortuneCommand(windowId);
+                break;
+            // ADD THESE SPECIAL SYSTEM 0 COMMANDS:
+            case 'duck':
+                this.outputToConsole('🦆 Quack! Duck command acknowledged.', 'accent', windowId);
+                break;
+            case 'snake':
+                this.outputToConsole('🐍 Hissss! Snake command acknowledged.', 'accent', windowId);
+                break;
+            case 'cat':
+                this.outputToConsole('🐱 Meow! Cat command acknowledged.', 'accent', windowId);
+                break;
+            case 'zero':
+                this.outputToConsole('0️⃣ Zero command acknowledged.', 'accent', windowId);
                 break;
             default:
                 this.outputToConsole(`❌ Command not recognized: ${cmd}`, 'error', windowId);

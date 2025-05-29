@@ -1,92 +1,1016 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Snake-E Corporation - Innovation Through Excellence™</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<div class="elxacorp-body">
-    <div class="elxacorp-container">
-        <div class="elxacorp-header">
-            <h1 class="company-name">SNAKE-E CORPORATION</h1>
-            <div class="tagline">Innovation Through Excellence™</div>
-        </div>
+<body>
+    <div class="snakee-container">
+        <header class="snakee-header">
+            <h1 class="snakee-company-name">SNAKE-E CORPORATION</h1>
+            <div class="snakee-tagline">Innovation Through Excellence™</div>
+        </header>
 
-        <div class="elxacorp-navigation">
-            <a href="snake-e.corp.ex" class="nav-link">Home</a>
-            <a href="snake-e.corp.ex/about" class="nav-link">About Us</a>
-            <a href="snake-e.corp.ex/products" class="nav-link">Products</a>
-            <a href="snake-e.corp.ex/careers" class="nav-link">Careers</a>
-            <a href="snake-e.corp.ex/investors" class="nav-link">Investors</a>
-            <a href="snake-e.corp.ex/contact" class="nav-link">Contact</a>
-        </div>
+        <nav class="snakee-navigation">
+            <button onclick="showPage('home')" id="nav-home" class="snakee-nav-button snakee-nav-active">Home</button>
+            <button onclick="showPage('about')" id="nav-about" class="snakee-nav-button">About Us</button>
+            <button onclick="showPage('products')" id="nav-products" class="snakee-nav-button">Products</button>
+            <button onclick="showPage('careers')" id="nav-careers" class="snakee-nav-button">Careers</button>
+            <button onclick="showPage('investors')" id="nav-investors" class="snakee-nav-button">Investors</button>
+            <button onclick="showPage('contact')" id="nav-contact" class="snakee-nav-button">Contact</button>
+            <button onclick="showPage('apply')" id="nav-apply" class="snakee-nav-button snakee-nav-special">Apply Now!</button>
+            <button onclick="showPage('portal')" id="nav-portal" class="snakee-nav-button snakee-nav-employee">Employee Portal</button>
+        </nav>
 
-        <div class="stock-ticker">
-            SNKE: $2,025.00 ▲ 42.00 (2.1%) | ELXA: $1,337.00 ▲ 89.00 (6.7%)
-        </div>
-
-        <div class="elxacorp-content">
-            <div class="elxacorp-welcome-message">
-                <strong>Welcome to the Snake-E Corporation Website!</strong>
-                <p>As CEO and founder, I'm proud to lead Snakesia's most innovative technology company. From our humble beginnings in my garage to our current position as a global leader in operating systems and IT solutions, Snake-E Corporation continues to push the boundaries of what's possible.</p>
-                <p style="text-align: right;">- Mr. Snake-E, CEO</p>
+        <!-- HOME PAGE -->
+        <div id="page-home" class="snakee-page snakee-page-active">
+            <div class="snakee-stock-ticker">
+                <div id="stock-display">SNKE: $2,025.00 ▲ 42.00 (2.1%) | ELXA: $1,337.00 ▲ 89.00 (6.7%)</div>
             </div>
 
-            <div class="news-item">
-                <h3>Latest News</h3>
-                <div class="news-date">January 24, 2025</div>
-                <p>ElxaOS 11.0 announced! Revolutionary new features include enhanced retro game compatibility and improved arcade machine support.</p>
-            </div>
-
-            <div class="news-item">
-                <div class="news-date">January 15, 2025</div>
-                <p>Mrs. Snake-E's Annual Technology Charity Gala raises record 2 million snakes for youth computer education!</p>
-            </div>
-
-            <div class="news-item">
-                <div class="news-date">January 1, 2025</div>
-                <p>Snake-E Corporation acquires RetroTech Industries. CEO arrives at announcement in signature Denali.</p>
-            </div>
-
-            <div class="marquee">
-                <marquee>NOW HIRING: IT Positions Always Available! — Visit our Careers page for more information — Breaking: Q4 profits up 42%!</marquee>
-            </div>
-
-            <div class="awards">
-                <div class="award-badge">
-                    <img src="/api/placeholder/88/31" alt="Best Place to Work 2024">
-                    <div>Best Place to Work<br>2024</div>
+            <div class="snakee-content">
+                <div class="snakee-welcome-message">
+                    <strong>Welcome to the Snake-E Corporation Website!</strong>
+                    <p>As CEO and founder, I'm proud to lead Snakesia's most innovative technology company. From our humble beginnings in my garage to our current position as a global leader in operating systems and IT solutions, Snake-E Corporation continues to push the boundaries of what's possible.</p>
+                    <p style="text-align: right;">- Mr. Snake-E, CEO (Age 60, Denali Driver Extraordinaire)</p>
                 </div>
-                <div class="award-badge">
-                    <img src="/api/placeholder/88/31" alt="Innovation Award">
-                    <div>Snakesian Innovation<br>Award 2024</div>
+
+                <article class="snakee-news-item">
+                    <h3>Latest News</h3>
+                    <div class="snakee-news-date">January 24, 2025</div>
+                    <p>ElxaOS 11.0 announced! Revolutionary new features include enhanced retro game compatibility and improved arcade machine support. Mrs. Snake-E tested it personally and gives it "two green thumbs up from the garden!"</p>
+                </article>
+
+                <article class="snakee-news-item">
+                    <div class="snakee-news-date">January 15, 2025</div>
+                    <p>Mrs. Snake-E's Annual Technology Charity Gala raises record 2 million snakes for youth computer education! Rita helped organize the event, while Remi livestreamed it on his YouTube channel.</p>
+                </article>
+
+                <article class="snakee-news-item">
+                    <div class="snakee-news-date">January 1, 2025</div>
+                    <p>Snake-E Corporation acquires RetroTech Industries. CEO arrives at announcement in signature Denali. Pushing Cat was found in the trunk (very sus).</p>
+                </article>
+
+                <div class="snakee-marquee">
+                    <marquee>NOW HIRING: IT Positions Always Available! — Visit our Careers page for more information — Breaking: Q4 profits up 42%! — Mrs. Snake-E's cookies now available in company cafeteria!</marquee>
+                </div>
+
+                <div class="snakee-awards">
+                    <div class="snakee-award-badge">
+                        <div>Best Place to Work<br>2024<br>🏆</div>
+                    </div>
+                    <div class="snakee-award-badge">
+                        <div>Snakesian Innovation<br>Award 2024<br>🐍</div>
+                    </div>
+                    <div class="snakee-award-badge">
+                        <div>Pushing Cat Approved<br>Workplace<br>🐱</div>
+                    </div>
                 </div>
             </div>
-
-            <a href="snake-e.corp.ex/contact" class="email-ceo">📧 Email Mr. Snake-E</a>
         </div>
 
-        <div class="elxacorp-footer">
+        <!-- ABOUT PAGE -->
+        <div id="page-about" class="snakee-page">
+            <div class="snakee-content">
+                <h2>About Snake-E Corporation</h2>
+                
+                <div class="snakee-profile-section">
+                    <div class="snakee-profile-info">
+                        <h3>Meet Our CEO</h3>
+                        <p>Mr. Snake-E (age 60) founded Snake-E Corporation from his garage in Snakesia City. His vision? To create the world's most innovative operating system. Today, that vision has become reality with ElxaOS, used by millions worldwide.</p>
+                        <p>When not revolutionizing the tech industry, Mr. Snake-E can be found driving his beloved Denali around Snakesia or mentoring young IT professionals alongside his wife, Mrs. Snake-E (age 80, expert gardener and baker).</p>
+                    </div>
+                </div>
+
+                <div class="snakee-quote-box">
+                    "In technology, as in life, it's not just about where you're going... it's about remembering to bring your favorite snacks for the journey. And watching out for sus cats." - Mr. Snake-E
+                </div>
+
+                <h3>Our Journey</h3>
+                
+                <div class="snakee-timeline">
+                    <div class="snakee-milestone">
+                        <div class="snakee-milestone-year">2015</div>
+                        <p>Snake-E Corporation founded in a Snakesia City garage. First employee: Pushing Cat (immediately deemed sus).</p>
+                    </div>
+
+                    <div class="snakee-milestone">
+                        <div class="snakee-milestone-year">2018</div>
+                        <p>First version of ElxaOS released. Rita helped with beta testing, Remi streamed the launch on his channel.</p>
+                    </div>
+
+                    <div class="snakee-milestone">
+                        <div class="snakee-milestone-year">2020</div>
+                        <p>Moved to current headquarters at 1 Snake-E Boulevard. Mrs. Snake-E designed the executive garden.</p>
+                    </div>
+
+                    <div class="snakee-milestone">
+                        <div class="snakee-milestone-year">2024</div>
+                        <p>Reached 1 million ElxaOS users worldwide. Pushing Cat takes credit (still sus).</p>
+                    </div>
+                </div>
+
+                <h3>Leadership Team</h3>
+                <div class="snakee-leadership-grid">
+                    <div class="snakee-leader-card">
+                        <h4>Mr. Snake-E</h4>
+                        <div>CEO & Founder</div>
+                        <div>Age: 60 | Vehicle: Denali</div>
+                    </div>
+                    <div class="snakee-leader-card">
+                        <h4>Mrs. Snake-E</h4>
+                        <div>Chief Innovation Officer</div>
+                        <div>Age: 80 | Specialty: Gardens & Cookies</div>
+                    </div>
+                    <div class="snakee-leader-card">
+                        <h4>Remi Marway</h4>
+                        <div>Head of Gaming Division</div>
+                        <div>YouTube Star | Minecraft Server Owner</div>
+                    </div>
+                    <div class="snakee-leader-card">
+                        <h4>Rita</h4>
+                        <div>Director of Customer Relations</div>
+                        <div>Curly Red Hair | Very Patient</div>
+                    </div>
+                    <div class="snakee-leader-card">
+                        <h4>Your Name Here</h4>
+                        <div>IT Position (Always Open!)</div>
+                        <div>Must be Sus-Resistant</div>
+                    </div>
+                    <div class="snakee-leader-card">
+                        <h4>Pushing Cat</h4>
+                        <div>Chief Mischief Officer</div>
+                        <div>Status: Very Sus | Location: Sussy Lair</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS PAGE -->
+        <div id="page-products" class="snakee-page">
+            <div class="snakee-content">
+                <h2>ElxaCorp Products</h2>
+                <p style="font-style: italic;">"Tomorrow's Technology, Available Today!"</p>
+
+                <div class="snakee-product-category">
+                    <h3 class="snakee-product-heading">ElxaOS Family</h3>
+                    <div class="snakee-product-item">
+                        <div class="snakee-product-details">
+                            <div class="snakee-product-name">ElxaOS 11.0 <span class="snakee-new-badge snakee-blink">NEW!</span></div>
+                            <p>The world's most innovative operating system, now with enhanced retro gaming support!</p>
+                            <div class="snakee-features-list">
+                                <div>✨ Advanced Arcade Compatibility Layer</div>
+                                <div>🎮 Retro Game Preservation Technology</div>
+                                <div>🚀 Lightning-fast Performance</div>
+                                <div>🔒 Snake-E Security™</div>
+                                <div>🐱 Pushing Cat Intrusion Detection</div>
+                            </div>
+                            <div class="snakee-product-price">Price: $249.99 / 499.98🐍</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="snakee-product-category">
+                    <h3 class="snakee-product-heading">Hardware</h3>
+                    <div class="snakee-product-item">
+                        <div class="snakee-product-details">
+                            <div class="snakee-product-name">ElxaPhone 15 Pro Max</div>
+                            <p>The ultimate mobile device, now with Sussy Lair detection technology!</p>
+                            <div class="snakee-features-list">
+                                <div>📱 6.7" Retro-Optimized Display</div>
+                                <div>🎮 Built-in Game Controls</div>
+                                <div>🔋 Infinite Battery Life*</div>
+                                <div>🐍 Native Snakesian Language Support</div>
+                            </div>
+                            <div class="snakee-product-price">From $699.99 / 1,399.98🐍</div>
+                            <div style="font-size: 0.8em; color: #666;">*Results may vary, especially during Pushing Cat encounters</div>
+                        </div>
+                    </div>
+
+                    <div class="snakee-product-item">
+                        <div class="snakee-product-details">
+                            <div class="snakee-product-name">ElxaBook Pro Denali Edition</div>
+                            <p>Professional laptop inspired by Mr. Snake-E's favorite vehicle!</p>
+                            <div class="snakee-features-list">
+                                <div>💻 17" Rugged Display</div>
+                                <div>🚗 Denali-grade Durability</div>
+                                <div>🎵 Premium Audio System</div>
+                                <div>🔧 ElxaOS Developer Tools</div>
+                            </div>
+                            <div class="snakee-product-price">From $1,999.99 / 3,999.98🐍</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="snakee-coming-soon">
+                    <div style="font-size: 1.2em;">🚀 COMING SOON 🚀</div>
+                    <div>ElxaArcade Home Edition - Your Personal Arcade Cabinet!</div>
+                    <div>Featuring: Mrs. Snake-E's Cookie Dispenser & Pushing Cat Containment System</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CAREERS PAGE -->
+        <div id="page-careers" class="snakee-page">
+            <div class="snakee-content">
+                <h2>Careers at Snake-E Corporation</h2>
+                
+                <div class="snakee-ticker">
+                    <marquee>NOW HIRING: Join the team that's revolutionizing technology in Snakesia! — Competitive salary paid in $ or 🐍 — Free snacks in all break rooms! — Sus-resistance training provided!</marquee>
+                </div>
+
+                <div class="snakee-featured-position">
+                    <div class="snakee-job-title">
+                        IT Position
+                        <span class="snakee-job-status snakee-status-open snakee-blink">ALWAYS OPEN</span>
+                    </div>
+                    <p><strong>Location:</strong> Snake-E HQ, Snakesia City</p>
+                    <p><strong>Department:</strong> Information Technology</p>
+                    <p><strong>Report to:</strong> Mr. Snake-E directly</p>
+                    <p><strong>Job Description:</strong> Join our elite IT team! Must be proficient in ElxaOS, retro gaming systems, and arcade machine maintenance. Knowledge of Minecraft server administration a plus (Remi will love you)!</p>
+                    <p><strong>Requirements:</strong></p>
+                    <ul>
+                        <li>Passion for technology and snacks</li>
+                        <li>Ability to drive a Denali (for emergencies)</li>
+                        <li>Understanding of both USD ($) and Snakesian Snakes (🐍)</li>
+                        <li>Sus-detection skills (Pushing Cat management)</li>
+                        <li>Excellent problem-solving skills</li>
+                        <li>Patience with Mrs. Snake-E's gardening questions</li>
+                    </ul>
+                    <button onclick="showPage('apply')" class="snakee-apply-button">Apply Now!</button>
+                </div>
+
+                <h3>Other Open Positions</h3>
+
+                <div class="snakee-job-listing">
+                    <div class="snakee-job-title">
+                        Retro Arcade Technician
+                        <span class="snakee-job-status snakee-status-open">OPEN</span>
+                    </div>
+                    <p>Maintain and repair classic arcade machines. Must love Snake-Man and not be afraid of sus cats.</p>
+                    <button onclick="showPage('apply')" class="snakee-apply-button">Apply</button>
+                </div>
+
+                <div class="snakee-job-listing">
+                    <div class="snakee-job-title">
+                        Executive Assistant to Mrs. Snake-E
+                        <span class="snakee-job-status snakee-status-open">OPEN</span>
+                    </div>
+                    <p>Help manage Mrs. Snake-E's busy schedule. Gardening knowledge helpful, cookie testing required.</p>
+                    <button onclick="showPage('apply')" class="snakee-apply-button">Apply</button>
+                </div>
+
+                <div class="snakee-job-listing">
+                    <div class="snakee-job-title">
+                        Snake Currency Exchange Specialist
+                        <span class="snakee-job-status snakee-status-filled">FILLED</span>
+                    </div>
+                    <p>Monitor and manage the 2:1 exchange rate between USD and Snakes.</p>
+                </div>
+
+                <h3>Benefits Package</h3>
+                <div class="snakee-benefits-list">
+                    <div class="snakee-benefit-item">✨ Competitive salary ($ or 🐍)</div>
+                    <div class="snakee-benefit-item">🚗 Company Denali access</div>
+                    <div class="snakee-benefit-item">🎮 Free arcade access</div>
+                    <div class="snakee-benefit-item">⌨️ Latest ElxaOS builds</div>
+                    <div class="snakee-benefit-item">🏰 Luxurious office space</div>
+                    <div class="snakee-benefit-item">🍪 Mrs. Snake-E's homemade cookies</div>
+                    <div class="snakee-benefit-item">🎯 Minecraft breaks with Remi</div>
+                    <div class="snakee-benefit-item">📱 Latest tech gadgets</div>
+                    <div class="snakee-benefit-item">🐱 Sus-resistance training</div>
+                    <div class="snakee-benefit-item">🌱 Garden tours with Mrs. Snake-E</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INVESTORS PAGE -->
+        <div id="page-investors" class="snakee-page">
+            <div class="snakee-content">
+                <h2>Investor Relations</h2>
+
+                <div class="snakee-investor-alert">
+                    <strong>🎉 Latest Update:</strong> Snake-E Corporation reports record Q4 earnings, driven by strong ElxaOS adoption and retro gaming initiatives. Quarterly dividend increased by 42%. Mrs. Snake-E's cookies now contributing 3% to overall revenue.
+                </div>
+
+                <div class="snakee-stock-dashboard">
+                    <div id="detailed-stock">SNKE: $2,025.00 ▲ 42.00 (2.1%)</div>
+                    <div>Exchange: Snakesia Stock Exchange (SNX)</div>
+                    <div>Market Cap: 42B snakes ($21B USD)</div>
+                    <div>52-Week Range: $1,337.00 - $2,042.00</div>
+                    <div>Pushing Cat Sus Rating: 9.5/10</div>
+                </div>
+
+                <h3>Financial Highlights</h3>
+                <table class="snakee-financial-table">
+                    <tr>
+                        <th>Metric</th>
+                        <th>2024</th>
+                        <th>2023</th>
+                        <th>2022</th>
+                    </tr>
+                    <tr>
+                        <td>Revenue</td>
+                        <td class="snakee-profit">🐍 84.2B</td>
+                        <td class="snakee-profit">🐍 72.4B</td>
+                        <td class="snakee-profit">🐍 65.8B</td>
+                    </tr>
+                    <tr>
+                        <td>Operating Income</td>
+                        <td class="snakee-profit">🐍 42.0B</td>
+                        <td class="snakee-profit">🐍 36.2B</td>
+                        <td class="snakee-profit">🐍 32.9B</td>
+                    </tr>
+                    <tr>
+                        <td>R&D Investment</td>
+                        <td>🐍 13.37B</td>
+                        <td>🐍 11.42B</td>
+                        <td>🐍 10.01B</td>
+                    </tr>
+                    <tr>
+                        <td>Denali Maintenance</td>
+                        <td class="snakee-profit">🐍 2.5M</td>
+                        <td class="snakee-profit">🐍 2.3M</td>
+                        <td class="snakee-profit">🐍 2.1M</td>
+                    </tr>
+                    <tr>
+                        <td>Sus Incident Management</td>
+                        <td>🐍 1.2M</td>
+                        <td>🐍 980K</td>
+                        <td>🐍 750K</td>
+                    </tr>
+                </table>
+
+                <div class="snakee-currency-note">
+                    * All figures in Snakesian Currency (🐍). For USD, divide by 2.
+                </div>
+
+                <h3>Investment Highlights</h3>
+                <ul>
+                    <li>Market leader in retro-compatible operating systems</li>
+                    <li>42% year-over-year growth in ElxaOS installations</li>
+                    <li>Strong presence in arcade machine software market</li>
+                    <li>Zero debt (Mr. Snake-E doesn't believe in loans)</li>
+                    <li>Consistent dividend growth (paid in both $ and 🐍)</li>
+                    <li>Proprietary sus-detection technology</li>
+                    <li>Exclusive partnership with Mrs. Snake-E's Garden Fresh Cookies™</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CONTACT PAGE -->
+        <div id="page-contact" class="snakee-page">
+            <div class="snakee-content">
+                <h2>Contact Us</h2>
+                
+                <div class="snakee-contact-grid">
+                    <div class="snakee-contact-form">
+                        <h3>Send us a Message</h3>
+                        <form id="contactForm" onsubmit="return handleContactSubmit(event)">
+                            <div class="snakee-form-group">
+                                <label for="contact-name">Your Name:</label>
+                                <input type="text" id="contact-name" required>
+                            </div>
+                            
+                            <div class="snakee-form-group">
+                                <label for="contact-department">Department:</label>
+                                <select id="contact-department" required>
+                                    <option value="">Select Department</option>
+                                    <option value="it">IT Department (We're Hiring!)</option>
+                                    <option value="ceo">Mr. Snake-E's Office</option>
+                                    <option value="mrs">Mrs. Snake-E's Garden Desk</option>
+                                    <option value="remi">Gaming Division (Remi)</option>
+                                    <option value="rita">Customer Relations (Rita)</option>
+                                    <option value="support">Technical Support</option>
+                                    <option value="snacks">CEO's Snack Recommendations</option>
+                                    <option value="sus">Sus Activity Reports (Pushing Cat)</option>
+                                </select>
+                            </div>
+
+                            <div class="snakee-form-group">
+                                <label for="contact-subject">Subject:</label>
+                                <input type="text" id="contact-subject" required>
+                            </div>
+
+                            <div class="snakee-form-group">
+                                <label for="contact-message">Message:</label>
+                                <textarea id="contact-message" rows="5" required></textarea>
+                            </div>
+
+                            <button type="submit" class="snakee-submit-button">Send Message</button>
+                        </form>
+                        <div id="contact-status" class="snakee-status-message"></div>
+                    </div>
+
+                    <div class="snakee-contact-info">
+                        <h3>Contact Information</h3>
+                        
+                        <div class="snakee-contact-method">
+                            <strong>Address:</strong><br>
+                            Snake-E Corporation<br>
+                            1 Snake-E Boulevard<br>
+                            Snakesia City, Snakesia
+                        </div>
+
+                        <div class="snakee-contact-method">
+                            <strong>Phone:</strong><br>
+                            📞 (555) SNAKE-IT
+                        </div>
+
+                        <div class="snakee-contact-method">
+                            <strong>Email:</strong><br>
+                            📧 mr.snake-e@snake-e.corp.ex
+                        </div>
+
+                        <div class="snakee-office-hours">
+                            <h4>Office Hours</h4>
+                            Monday - Friday: 9 AM - 5 PM (Snakesia Time)<br>
+                            IT Department: <span class="snakee-blink">Always Open!</span><br>
+                            Mrs. Snake-E's Garden: Dawn - Dusk<br>
+                            Pushing Cat's Sussy Lair: 24/7 (Very Sus)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JOB APPLICATION PAGE -->
+        <div id="page-apply" class="snakee-page">
+            <div class="snakee-content">
+                <h2>Join the Snake-E Team!</h2>
+                
+                <div class="snakee-application-intro">
+                    <h3>Ready to become part of Snakesia's most innovative company?</h3>
+                    <p>Fill out the application below and join our amazing team! We're always looking for talented individuals who share our passion for technology, snacks, and sus-detection.</p>
+                </div>
+
+                <form id="jobApplication" onsubmit="return handleJobApplication(event)" class="snakee-job-form">
+                    <div class="snakee-form-section">
+                        <h3>Personal Information</h3>
+                        
+                        <div class="snakee-form-group">
+                            <label for="app-name">Full Name:</label>
+                            <input type="text" id="app-name" required>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-age">Age:</label>
+                            <input type="number" id="app-age" min="1" max="120" required>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-location">Current Location:</label>
+                            <select id="app-location" required>
+                                <option value="">Select Location</option>
+                                <option value="snakesia">Snakesia (Local Hire!)</option>
+                                <option value="tennessee">Tennessee (Neighbor!)</option>
+                                <option value="usa">Other US State</option>
+                                <option value="international">International (Visa Required)</option>
+                                <option value="sus-lair">Pushing Cat's Sussy Lair (Very Sus)</option>
+                            </select>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-email">ElxaMail Address:</label>
+                            <input type="email" id="app-email" placeholder="your.name@elxamail.ex">
+                            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                                💡 <strong>Tip:</strong> If you're logged into ElxaMail, we'll automatically use that address!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="snakee-form-section">
+                        <h3>Position Interest</h3>
+                        
+                        <div class="snakee-form-group">
+                            <label for="app-position">Desired Position:</label>
+                            <select id="app-position" required>
+                                <option value="">Select Position</option>
+                                <option value="it">IT Specialist (Always Available!)</option>
+                                <option value="arcade">Retro Arcade Technician</option>
+                                <option value="assistant-mrs">Executive Assistant to Mrs. Snake-E</option>
+                                <option value="gaming">Gaming Division (Work with Remi!)</option>
+                                <option value="customer">Customer Relations (Work with Rita!)</option>
+                                <option value="security">Sus Security Specialist</option>
+                                <option value="denali">Denali Maintenance Technician</option>
+                                <option value="cookie">Cookie Quality Tester</option>
+                                <option value="other">Other (Specify Below)</option>
+                            </select>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-salary">Preferred Salary Currency:</label>
+                            <select id="app-salary" required>
+                                <option value="">Select Currency</option>
+                                <option value="usd">US Dollars ($)</option>
+                                <option value="snakes">Snakesian Snakes (🐍)</option>
+                                <option value="mixed">50/50 Mix (Diversified!)</option>
+                                <option value="cookies">Mrs. Snake-E's Cookies (Bold Choice!)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="snakee-form-section">
+                        <h3>Skills & Experience</h3>
+                        
+                        <div class="snakee-form-group">
+                            <label for="app-elxaos">ElxaOS Experience:</label>
+                            <select id="app-elxaos" required>
+                                <option value="">Select Experience Level</option>
+                                <option value="expert">Expert (I helped develop it!)</option>
+                                <option value="advanced">Advanced User</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="none">What's ElxaOS? (We'll train you!)</option>
+                            </select>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-denali">Can you drive a Denali?</label>
+                            <select id="app-denali" required>
+                                <option value="">Select Option</option>
+                                <option value="yes">Yes (Like a pro!)</option>
+                                <option value="learning">Learning (Mr. Snake-E will teach)</option>
+                                <option value="no">No (We have training programs)</option>
+                                <option value="better">I have something better than a Denali (Impressive!)</option>
+                            </select>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-sus">Sus Detection Skills:</label>
+                            <select id="app-sus" required>
+                                <option value="">Rate Your Sus-Detection</option>
+                                <option value="expert">Expert (I can spot Pushing Cat anywhere)</option>
+                                <option value="good">Good (Usually notice sus activity)</option>
+                                <option value="average">Average (50/50 chance)</option>
+                                <option value="poor">Poor (Very gullible)</option>
+                                <option value="sus">I AM the sus (Concerning...)</option>
+                            </select>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-skills">Additional Skills:</label>
+                            <textarea id="app-skills" rows="4" placeholder="Tell us about your special talents, hobbies, or anything that makes you awesome!"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="snakee-form-section">
+                        <h3>Fun Questions</h3>
+                        
+                        <div class="snakee-form-group">
+                            <label for="app-cookie">Favorite Cookie Type:</label>
+                            <select id="app-cookie">
+                                <option value="">Select (Optional but Important!)</option>
+                                <option value="chocolate-chip">Chocolate Chip (Classic!)</option>
+                                <option value="oatmeal">Oatmeal Raisin (Mrs. Snake-E's Specialty)</option>
+                                <option value="snickerdoodle">Snickerdoodle (Fancy!)</option>
+                                <option value="sugar">Sugar Cookie (Simple & Sweet)</option>
+                                <option value="all">I love all cookies! (Correct Answer!)</option>
+                                <option value="none">I don't like cookies (We can work with this)</option>
+                            </select>
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-gaming">Favorite Retro Game:</label>
+                            <input type="text" id="app-gaming" placeholder="Snake-Man? Pac-Man? Tetris? (Optional)">
+                        </div>
+
+                        <div class="snakee-form-group">
+                            <label for="app-why">Why do you want to work at Snake-E Corp?</label>
+                            <textarea id="app-why" rows="4" placeholder="Tell us what excites you about joining our team!" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="snakee-form-agreement">
+                        <label>
+                            <input type="checkbox" id="app-agree" required>
+                            I understand that working at Snake-E Corporation may involve exposure to sus activities, cookie testing, Denali maintenance, and occasional garden tours with Mrs. Snake-E. I am prepared for this level of awesome.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="snakee-submit-button">Submit Application</button>
+                </form>
+
+                <div id="application-status" class="snakee-status-message"></div>
+            </div>
+        </div>
+
+        <!-- EMPLOYEE PORTAL -->
+        <div id="page-portal" class="snakee-page">
+            <div class="snakee-content">
+                <div class="snakee-portal-header">
+                    <h2>🏢 Snake-E Corporation Employee Portal</h2>
+                    <div class="snakee-portal-welcome">Welcome back, ElxaTechie! | Today: <span id="portal-date"></span> | Snakesia Time: <span id="portal-time"></span></div>
+                </div>
+
+                <div class="snakee-portal-grid">
+                    <div class="snakee-portal-card">
+                        <h3>📊 Quick Stats</h3>
+                        <div class="snakee-portal-stat">
+                            <div class="snakee-stat-label">Your IT Tickets Today:</div>
+                            <div class="snakee-stat-value">42</div>
+                        </div>
+                        <div class="snakee-portal-stat">
+                            <div class="snakee-stat-label">Sus Incidents Detected:</div>
+                            <div class="snakee-stat-value">7 🐱</div>
+                        </div>
+                        <div class="snakee-portal-stat">
+                            <div class="snakee-stat-label">Cookies Earned:</div>
+                            <div class="snakee-stat-value">12 🍪</div>
+                        </div>
+                    </div>
+
+                    <div class="snakee-portal-card">
+                        <h3>📅 Today's Schedule</h3>
+                        <div class="snakee-schedule-item">
+                            <div class="snakee-schedule-time">9:00 AM</div>
+                            <div>Daily Stand-up with Mr. Snake-E</div>
+                        </div>
+                        <div class="snakee-schedule-item">
+                            <div class="snakee-schedule-time">10:30 AM</div>
+                            <div>ElxaOS Bug Testing</div>
+                        </div>
+                        <div class="snakee-schedule-item">
+                            <div class="snakee-schedule-time">12:00 PM</div>
+                            <div>Lunch & Cookie Break</div>
+                        </div>
+                        <div class="snakee-schedule-item">
+                            <div class="snakee-schedule-time">2:00 PM</div>
+                            <div>Minecraft Server Maintenance (with Remi)</div>
+                        </div>
+                        <div class="snakee-schedule-item">
+                            <div class="snakee-schedule-time">4:00 PM</div>
+                            <div>Sus Activity Patrol</div>
+                        </div>
+                    </div>
+
+                    <div class="snakee-portal-card">
+                        <h3>🎯 IT Support Queue</h3>
+                        <div class="snakee-ticket-item snakee-priority-high">
+                            <div><strong>URGENT:</strong> Mrs. Snake-E's garden computer won't start</div>
+                            <div class="snakee-ticket-meta">Submitted 5 min ago</div>
+                        </div>
+                        <div class="snakee-ticket-item snakee-priority-medium">
+                            <div>Remi's streaming setup needs ElxaOS update</div>
+                            <div class="snakee-ticket-meta">Submitted 1 hour ago</div>
+                        </div>
+                        <div class="snakee-ticket-item snakee-priority-low">
+                            <div>Office printer is making weird noises</div>
+                            <div class="snakee-ticket-meta">Submitted yesterday</div>
+                        </div>
+                        <div class="snakee-ticket-item snakee-priority-sus">
+                            <div>🐱 Pushing Cat found inside server room again</div>
+                            <div class="snakee-ticket-meta">Submitted 2 min ago (VERY SUS)</div>
+                        </div>
+                    </div>
+
+                    <div class="snakee-portal-card">
+                        <h3>💰 Payroll & Benefits</h3>
+                        <div class="snakee-payroll-info">
+                            <div>Next Payday: Friday, Jan 31st</div>
+                            <div>Current Balance: $2,500 / 5,000🐍</div>
+                            <div>Cookie Credits: 47 🍪</div>
+                            <div>Vacation Days: 15 remaining</div>
+                            <div>Sus Bonus: +$200 (Great work!)</div>
+                        </div>
+                        <button class="snakee-portal-button">View Full Pay Stub</button>
+                    </div>
+
+                    <div class="snakee-portal-card">
+                        <h3>📢 Company Announcements</h3>
+                        <div class="snakee-announcement">
+                            <div class="snakee-announcement-date">Today</div>
+                            <div>Mrs. Snake-E's new batch of cookies available in break room!</div>
+                        </div>
+                        <div class="snakee-announcement">
+                            <div class="snakee-announcement-date">Yesterday</div>
+                            <div>ElxaOS 11.1 security patch deployed successfully</div>
+                        </div>
+                        <div class="snakee-announcement">
+                            <div class="snakee-announcement-date">This Week</div>
+                            <div>Remi's YouTube channel hit 1M subscribers! 🎉</div>
+                        </div>
+                    </div>
+
+                    <div class="snakee-portal-card">
+                        <h3>🏢 Employee Directory</h3>
+                        <div class="snakee-directory-item">
+                            <div><strong>Mr. Snake-E</strong> - CEO</div>
+                            <div>📞 Ext: 001 | 🚗 Denali Bay 1</div>
+                        </div>
+                        <div class="snakee-directory-item">
+                            <div><strong>Mrs. Snake-E</strong> - CIO</div>
+                            <div>📞 Ext: 002 | 🌱 Executive Garden</div>
+                        </div>
+                        <div class="snakee-directory-item">
+                            <div><strong>Remi Marway</strong> - Gaming Division</div>
+                            <div>📞 Ext: 404 | 🎮 Streaming Studio</div>
+                        </div>
+                        <div class="snakee-directory-item">
+                            <div><strong>Rita</strong> - Customer Relations</div>
+                            <div>📞 Ext: 123 | 💬 Front Desk</div>
+                        </div>
+                        <div class="snakee-directory-item">
+                            <div><strong>Pushing Cat</strong> - CMO (Chief Mischief Officer)</div>
+                            <div>📞 Ext: SUS | 🏠 Sussy Lair (Location Unknown)</div>
+                        </div>
+                    </div>
+
+                    <div class="snakee-portal-card">
+                        <h3>🛠️ IT Tools & Resources</h3>
+                        <button class="snakee-portal-button">ElxaOS Admin Panel</button>
+                        <button class="snakee-portal-button">Server Monitoring</button>
+                        <button class="snakee-portal-button">Ticket System</button>
+                        <button class="snakee-portal-button">Sus Detection Dashboard</button>
+                        <button class="snakee-portal-button">Denali Maintenance Log</button>
+                        <button class="snakee-portal-button">Cookie Inventory</button>
+                    </div>
+
+                    <div class="snakee-portal-card">
+                        <h3>🎮 Break Time</h3>
+                        <div>Arcade Room Status: <span style="color: #00ff00;">AVAILABLE</span></div>
+                        <div>High Score Today: 999,999 (Mr. Snake-E)</div>
+                        <div>Remi's Minecraft Server: <span style="color: #00ff00;">ONLINE</span></div>
+                        <div>Current Players: 1,337</div>
+                        <button class="snakee-portal-button">Join Minecraft Server</button>
+                        <button class="snakee-portal-button">Challenge High Score</button>
+                    </div>
+                </div>
+
+                <div class="snakee-portal-footer">
+                    <div>🚨 Emergency: Call (555) SNAKE-911 | 🐱 Sus Activity: Report immediately to Security</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="snakee-stats">
+            <div class="snakee-counter">Visitors: 2,042,025 ($)</div>
+            <div class="snakee-counter">Visitors: 4,084,050 (🐍)</div>
+            <div class="snakee-counter">Sus Level: <span class="snakee-blink">ORANGE</span></div>
+        </div>
+
+        <footer class="snakee-footer">
             <p>© 2025 Snake-E Corporation. All rights reserved.</p>
             <p>Headquarters: 1 Snake-E Boulevard, Snakesia City, Snakesia</p>
             <p>Best viewed in Snoogle Browser at 800x600</p>
-            <div style="font-family: monospace;">
-                Visitors: 2,042,025 ($) | 4,084,050 (🐍)
-            </div>
-        </div>
+            <p class="snakee-blink">💼 Now hiring in IT! 💼</p>
+        </footer>
     </div>
 
     <script>
-        // Animate stock prices
-        setInterval(() => {
-            const snakePrice = 2025 + Math.random() * 10 - 5;
-            const elxaPrice = 1337 + Math.random() * 10 - 5;
-            const snakeChange = (snakePrice - 2025).toFixed(2);
-            const elxaChange = (elxaPrice - 1337).toFixed(2);
-            const snakePercent = (snakeChange / 2025 * 100).toFixed(1);
-            const elxaPercent = (elxaChange / 1337 * 100).toFixed(1);
+        function showPage(pageId) {
+            // Hide all pages
+            var pages = document.querySelectorAll('.snakee-page');
+            for (var i = 0; i < pages.length; i++) {
+                pages[i].classList.remove('snakee-page-active');
+            }
             
-            document.querySelector('.stock-ticker').textContent = 
-                `SNKE: $${snakePrice.toFixed(2)} ${snakeChange >= 0 ? '▲' : '▼'} ${Math.abs(snakeChange)} (${snakePercent}%) | ` +
-                `ELXA: $${elxaPrice.toFixed(2)} ${elxaChange >= 0 ? '▲' : '▼'} ${Math.abs(elxaChange)} (${elxaPercent}%)`;
+            // Show selected page
+            document.getElementById('page-' + pageId).classList.add('snakee-page-active');
+            
+            // Update navigation
+            var navButtons = document.querySelectorAll('.snakee-nav-button');
+            for (var i = 0; i < navButtons.length; i++) {
+                navButtons[i].classList.remove('snakee-nav-active');
+            }
+            document.getElementById('nav-' + pageId).classList.add('snakee-nav-active');
+
+            // Update portal date/time when portal is opened
+            if (pageId === 'portal') {
+                updatePortalDateTime();
+            }
+        }
+
+        function updatePortalDateTime() {
+            var now = new Date();
+            var snakesiaTime = new Date(now.getTime() + (2 * 60 + 1) * 60000); // +2:01 ahead
+            
+            document.getElementById('portal-date').textContent = snakesiaTime.toDateString();
+            document.getElementById('portal-time').textContent = snakesiaTime.toLocaleTimeString();
+        }
+
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            var status = document.getElementById('contact-status');
+            var department = document.getElementById('contact-department').value;
+            
+            status.style.display = 'block';
+            
+            if (department === 'it') {
+                status.innerHTML = "Thanks for your interest in IT! Your position is already approved - when can you start? 😊 (Just kidding... or are we? 🤔)";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else if (department === 'snacks') {
+                status.innerHTML = "Mr. Snake-E will personally review your snack suggestions! 🍪 Mrs. Snake-E is also very interested!";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else if (department === 'sus') {
+                status.innerHTML = "🚨 SUS REPORT RECEIVED! Pushing Cat containment team has been notified. Thank you for your vigilance! 🐱";
+                status.className = 'snakee-status-message snakee-status-warning';
+            } else if (department === 'mrs') {
+                status.innerHTML = "Mrs. Snake-E appreciates your message! She'll respond after tending to her garden. 🌱";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else if (department === 'remi') {
+                status.innerHTML = "Remi got your message! He might even mention you in his next YouTube video! 🎮";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else if (department === 'rita') {
+                status.innerHTML = "Rita will get back to you soon - she's the most patient person at Snake-E Corp! 💝";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else {
+                status.innerHTML = "Message sent! Someone will contact you soon via Snake-E Mail™";
+                status.className = 'snakee-status-message snakee-status-success';
+            }
+            
+            document.getElementById('contactForm').reset();
+            setTimeout(function() {
+                status.style.display = 'none';
+            }, 8000);
+        }
+
+        function handleJobApplication(event) {
+            event.preventDefault();
+            var status = document.getElementById('application-status');
+            var name = document.getElementById('app-name').value;
+            var position = document.getElementById('app-position').value;
+            var location = document.getElementById('app-location').value;
+            var susSkill = document.getElementById('app-sus').value;
+            
+            status.style.display = 'block';
+            
+            if (position === 'it') {
+                status.innerHTML = "🎉 CONGRATULATIONS " + name + "! Your IT application has been AUTO-APPROVED! Mr. Snake-E says 'Welcome to the team!' Please report to Snake-E HQ on Monday with your favorite debugging snacks. 🖥️";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else if (location === 'sus-lair') {
+                status.innerHTML = "🚨 ALERT: Application from Sus Lair detected! " + name + ", we need to talk... This is either very impressive or very concerning. Pushing Cat, is this you? 🐱";
+                status.className = 'snakee-status-message snakee-status-warning';
+            } else if (susSkill === 'sus') {
+                status.innerHTML = "🤔 " + name + ", your honesty about being sus is... suspicious. But we respect the honesty! Application under review by our Sus Detection Team. Please standby. 🕵️";
+                status.className = 'snakee-status-message snakee-status-warning';
+            } else if (position === 'cookie') {
+                status.innerHTML = "🍪 WOW! " + name + ", Mrs. Snake-E is THRILLED about your cookie tester application! She says 'Finally, someone with proper priorities!' You start immediately! 👵";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else if (position === 'assistant-mrs') {
+                status.innerHTML = "🌱 " + name + ", Mrs. Snake-E reviewed your application from her garden and says 'This one seems lovely!' You're hired! She'll teach you everything about both technology AND gardening! 🌺";
+                status.className = 'snakee-status-message snakee-status-success';
+            } else {
+                status.innerHTML = "📝 Thank you " + name + "! Your application for " + position + " has been received and is being reviewed by our amazing HR team (Rita says hi!). We'll be in touch within 2-3 business days. 💼";
+                status.className = 'snakee-status-message snakee-status-success';
+            }
+            
+            document.getElementById('jobApplication').reset();
+            setTimeout(function() {
+                status.style.display = 'none';
+            }, 15000);
+        }
+
+        // Animate stock prices
+        setInterval(function() {
+            var snakePrice = 2025 + Math.random() * 10 - 5;
+            var elxaPrice = 1337 + Math.random() * 10 - 5;
+            var snakeChange = (snakePrice - 2025).toFixed(2);
+            var elxaChange = (elxaPrice - 1337).toFixed(2);
+            var snakePercent = (snakeChange / 2025 * 100).toFixed(1);
+            var elxaPercent = (elxaChange / 1337 * 100).toFixed(1);
+            
+            var stockText = 'SNKE: $' + snakePrice.toFixed(2) + ' ' + (snakeChange >= 0 ? '▲' : '▼') + ' ' + Math.abs(snakeChange) + ' (' + Math.abs(snakePercent) + '%) | ' +
+                          'ELXA: $' + elxaPrice.toFixed(2) + ' ' + (elxaChange >= 0 ? '▲' : '▼') + ' ' + Math.abs(elxaChange) + ' (' + Math.abs(elxaPercent) + '%)';
+            
+            document.getElementById('stock-display').textContent = stockText;
+            
+            var detailedStock = document.getElementById('detailed-stock');
+            if (detailedStock) {
+                detailedStock.textContent = 'SNKE: $' + snakePrice.toFixed(2) + ' ' + (snakeChange >= 0 ? '▲' : '▼') + ' ' + Math.abs(snakeChange) + ' (' + Math.abs(snakePercent) + '%)';
+            }
         }, 3000);
+
+        // Initialize portal time on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePortalDateTime();
+            setInterval(updatePortalDateTime, 1000); // Update every second
+        });
     </script>
-</div>
+    <!-- Add this script tag to your ElxaCorp website HTML, just before the closing </body> tag -->
+
+    <script src="./assets/interwebs/snake-e-corp/elxacorp-job-integration.js"></script>
+    <script>
+    // Enhanced job application handler
+    window.handleJobApplicationNew = async function(event) {
+        event.preventDefault();
+        console.log('Processing job application...');
+        
+        const status = document.getElementById('application-status');
+        const form = document.getElementById('jobApplication');
+        
+        // Show loading
+        status.style.display = 'block';
+        status.className = 'snakee-status-message';
+        status.innerHTML = '⏳ Processing your application...';
+        
+        // Get form data
+        const formData = {
+            name: document.getElementById('app-name').value.trim(),
+            age: parseInt(document.getElementById('app-age').value),
+            location: document.getElementById('app-location').value,
+            position: document.getElementById('app-position').value,
+            salary: document.getElementById('app-salary').value,
+            elxaos: document.getElementById('app-elxaos').value,
+            denali: document.getElementById('app-denali').value,
+            sus: document.getElementById('app-sus').value,
+            skills: document.getElementById('app-skills').value.trim(),
+            cookie: document.getElementById('app-cookie').value,
+            gaming: document.getElementById('app-gaming').value.trim(),
+            why: document.getElementById('app-why').value.trim(),
+            // Try to get email from form or ElxaMail system
+            email: getApplicantEmail()
+        }
+    }
+
+    // Get applicant's email address
+    function getApplicantEmail() {
+        // Option 1: Check if there's an email field in the form
+        const emailField = document.getElementById('app-email');
+        if (emailField && emailField.value.trim()) {
+            return emailField.value.trim();
+        }
+        
+        // Option 2: Try to get from ElxaMail system if user is logged in
+        if (typeof elxaMailSystem !== 'undefined' && elxaMailSystem.isLoggedIn && elxaMailSystem.currentUser) {
+            console.log('📧 Getting email from ElxaMail user:', elxaMailSystem.currentUser.email);
+            return elxaMailSystem.currentUser.email;
+        }
+        
+        // Option 3: Default fallback
+        console.log('📧 Using default email address');
+        return 'user@elxamail.ex';
+    };
+        
+        try {
+            // Check if job system is available
+            if (typeof elxaCorpJobSystem !== 'undefined') {
+                console.log('Using job system...');
+                
+                // Set the email address for the job system to use
+                if (formData.email) {
+                    elxaCorpJobSystem.setApplicationEmail(formData.email);
+                }
+                
+                const application = await elxaCorpJobSystem.submitApplication(formData);
+                
+                status.className = 'snakee-status-message snakee-status-success';
+                status.innerHTML = `🎉 SUCCESS! Application ${application.id} submitted!<br><br>📧 Check your ElxaMail (${formData.email || 'your account'}) for confirmation and hiring emails!<br><br>Welcome to ElxaCorp, ${formData.name}! 🏢`;
+                
+            } else {
+                console.log('Using fallback handler...');
+                handleApplicationFallback(formData, status);
+            }
+            
+            form.reset();
+            setTimeout(() => { status.style.display = 'none'; }, 15000);
+            
+        } catch (error) {
+            console.error('Application error:', error);
+            status.className = 'snakee-status-message snakee-status-warning';
+            status.innerHTML = '⚠️ Application saved but email system unavailable. Check ElxaMail later!';
+            setTimeout(() => { status.style.display = 'none'; }, 10000);
+        }
+    };
+
+    // Fallback handler
+    function handleApplicationFallback(formData, status) {
+        const positionTitles = {
+            'it': 'IT Specialist',
+            'arcade': 'Retro Arcade Technician',
+            'assistant-mrs': 'Executive Assistant to Mrs. Snake-E',
+            'gaming': 'Gaming Division Specialist',
+            'customer': 'Customer Relations Representative',
+            'security': 'Sus Security Specialist',
+            'denali': 'Denali Maintenance Technician',
+            'cookie': 'Cookie Quality Assurance Tester',
+            'other': 'Technology Specialist'
+        };
+        
+        const positionTitle = positionTitles[formData.position] || 'Team Member';
+        
+        if (formData.position === 'it') {
+            status.className = 'snakee-status-message snakee-status-success';
+            status.innerHTML = `🎉 IT POSITION AUTO-APPROVED!<br><br>Congratulations ${formData.name}! Mr. Snake-E says "We need all the IT help we can get!"<br><br>📧 Check ElxaMail for your welcome package!`;
+        } else if (formData.position === 'cookie') {
+            status.className = 'snakee-status-message snakee-status-success';
+            status.innerHTML = `🍪 COOKIE TESTER APPROVED!<br><br>${formData.name}, Mrs. Snake-E is THRILLED! She says "Finally, someone with proper priorities!"<br><br>You start immediately!`;
+        } else if (formData.sus === 'sus') {
+            status.className = 'snakee-status-message snakee-status-warning';
+            status.innerHTML = `🤔 SUS APPLICATION DETECTED!<br><br>${formData.name}, your honesty is suspicious but respected!<br><br>Pushing Cat has been notified. 🐱`;
+        } else {
+            status.className = 'snakee-status-message snakee-status-success';
+            status.innerHTML = `📝 APPLICATION RECEIVED!<br><br>Thank you ${formData.name}! Your ${positionTitle} application is being reviewed.<br><br>Rita says hi! 💝`;
+        }
+    }
+
+    // Override the original handler
+    if (typeof handleJobApplication !== 'undefined') {
+        console.log('Overriding job application handler...');
+        window.handleJobApplication = window.handleJobApplicationNew;
+    }
+
+    console.log('🏢 ElxaCorp integration loaded!');
+    </script>
+</body>
 </html>

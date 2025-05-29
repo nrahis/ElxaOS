@@ -1,13 +1,26 @@
-/* Corporate 90s vibes */
-:root {
-    --corporate-blue: #003366;
-    --corporate-gold: #FFD700;
-    --link-blue: #0000EE;
-    --visited-purple: #551A8B;
-    --elxacorp-menu-bg: #E8E8E8;
+/* Snake-E Corporation Styles - Consolidated with unique class names */
+
+/* Essential page navigation - MUST BE FIRST */
+.snakee-page {
+    display: none !important;
 }
 
-.elxacorp-body {
+.snakee-page-active {
+    display: block !important;
+}
+
+/* Corporate 90s vibes */
+:root {
+    --snakee-corporate-blue: #003366;
+    --snakee-corporate-gold: #FFD700;
+    --snakee-link-blue: #0000EE;
+    --snakee-visited-purple: #551A8B;
+    --snakee-menu-bg: #E8E8E8;
+    --snakee-profit-green: #006400;
+    --snakee-loss-red: #8B0000;
+}
+
+body {
     margin: 0;
     padding: 0;
     background: #FFF url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkYGD4z8DAwMgABXAGNgYGBkcGBgYGAAkEAYGJCYQnAAAAAElFTkSuQmCC') repeat;
@@ -15,279 +28,952 @@
     color: #000;
 }
 
-.elxacorp-container {
-    max-width: 800px;
+.snakee-container {
+    max-width: 900px;
     margin: 0 auto;
     background: white;
-    border: 2px solid var(--corporate-blue);
+    border: 2px solid var(--snakee-corporate-blue);
     box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    min-height: 100vh;
 }
 
-.elxacorp-header {
-    background: var(--corporate-blue);
+/* Header */
+.snakee-header {
+    background: var(--snakee-corporate-blue);
     color: white;
     padding: 20px;
     text-align: center;
-    border-bottom: 5px solid var(--corporate-gold);
+    border-bottom: 5px solid var(--snakee-corporate-gold);
 }
 
-.company-name {
+.snakee-company-name {
     font-size: 36px;
     margin: 0;
     text-shadow: 2px 2px #000;
+    animation: snakee-glow 3s ease-in-out infinite alternate;
 }
 
-.tagline {
+@keyframes snakee-glow {
+    from { text-shadow: 2px 2px #000; }
+    to { text-shadow: 2px 2px #000, 0 0 20px var(--snakee-corporate-gold); }
+}
+
+.snakee-tagline {
     font-style: italic;
     margin: 10px 0;
+    font-size: 14px;
 }
 
-.elxacorp-navigation {
-    background: var(--elxacorp-menu-bg);
+/* Navigation */
+.snakee-navigation {
+    background: var(--snakee-menu-bg);
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #999;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
-.nav-link {
-    display: inline-block;
-    padding: 5px 15px;
-    color: var(--link-blue);
-    text-decoration: none;
+.snakee-nav-button {
+    background: none;
     border: 1px solid transparent;
+    padding: 8px 15px;
+    color: var(--snakee-link-blue);
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 3px;
 }
 
-.nav-link:hover {
-    border: 1px solid var(--corporate-blue);
+.snakee-nav-button:hover {
+    border: 1px solid var(--snakee-corporate-blue);
     background: #FFF;
+    transform: translateY(-2px);
 }
 
-.nav-link:visited {
-    color: var(--visited-purple);
+.snakee-nav-button.snakee-nav-active {
+    background: var(--snakee-corporate-blue);
+    color: white;
+    border: 1px solid var(--snakee-corporate-blue);
 }
 
-.elxacorp-content {
+.snakee-nav-button.snakee-nav-special {
+    background: var(--snakee-corporate-gold);
+    color: var(--snakee-corporate-blue);
+    font-weight: bold;
+    animation: snakee-pulse 2s ease-in-out infinite;
+}
+
+.snakee-nav-button.snakee-nav-employee {
+    background: #004488;
+    color: white;
+    border: 1px solid #004488;
+}
+
+@keyframes snakee-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Stock ticker */
+.snakee-stock-ticker {
+    background: #000;
+    color: #0F0;
+    padding: 8px;
+    font-family: monospace;
+    text-align: center;
+    margin: 0;
+    animation: snakee-ticker-scroll 30s linear infinite;
+}
+
+@keyframes snakee-ticker-scroll {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+/* Content areas */
+.snakee-content {
     padding: 20px;
     line-height: 1.6;
 }
 
-.elxacorp-welcome-message {
+.snakee-welcome-message {
     border: 1px solid #CCC;
-    padding: 15px;
+    padding: 20px;
     margin: 20px 0;
     background: #F8F8F8;
+    border-radius: 5px;
 }
 
-.stock-ticker {
-    background: #000;
-    color: #0F0;
-    padding: 5px;
-    font-family: monospace;
-    text-align: center;
+/* News items */
+.snakee-news-item {
     margin: 20px 0;
-}
-
-.news-item {
-    margin: 15px 0;
-    padding-bottom: 15px;
+    padding: 15px;
     border-bottom: 1px dotted #999;
 }
 
-.news-date {
+.snakee-news-item:last-of-type {
+    border-bottom: none;
+}
+
+.snakee-news-item h3 {
+    color: var(--snakee-corporate-blue);
+    margin-bottom: 10px;
+}
+
+.snakee-news-date {
     color: #666;
     font-size: 0.9em;
+    margin-bottom: 10px;
 }
 
-.elxacorp-footer {
-    text-align: center;
-    padding: 20px;
-    background: var(--elxacorp-menu-bg);
-    border-top: 1px solid #999;
-    font-size: 0.8em;
-}
-
-.awards {
-    text-align: center;
+/* Marquee */
+.snakee-marquee {
+    background: var(--snakee-corporate-blue);
+    color: white;
+    padding: 8px;
     margin: 20px 0;
 }
 
-.award-badge {
-    display: inline-block;
-    margin: 0 10px;
-    padding: 5px;
-    border: 1px solid #CCC;
+/* Awards */
+.snakee-awards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+    flex-wrap: wrap;
 }
 
-/* Marquee styling */
-.marquee {
-    background: var(--corporate-blue);
-    color: white;
-    padding: 5px;
-    margin: 10px 0;
-}
-
-/* New email button */
-.email-ceo {
-    display: block;
-    width: 200px;
-    margin: 20px auto;
-    padding: 10px;
-    background: var(--corporate-blue);
-    color: white;
+.snakee-award-badge {
+    background: #F8F8F8;
+    border: 2px solid var(--snakee-corporate-gold);
+    padding: 15px;
     text-align: center;
-    text-decoration: none;
-    border: 2px outset #666;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    min-width: 120px;
 }
 
-.email-ceo:hover {
-    background: var(--corporate-gold);
-    color: var(--corporate-blue);
-}
-
-/* About page specific styles */
-.profile-section {
+/* Profile section */
+.snakee-profile-section {
     display: flex;
     gap: 20px;
     margin: 20px 0;
-    padding: 15px;
+    padding: 20px;
     background: #F8F8F8;
     border: 1px solid #CCC;
+    border-radius: 5px;
 }
 
-.profile-image {
-    border: 2px solid var(--corporate-blue);
-    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+.snakee-profile-info {
+    flex: 1;
 }
 
-.milestone {
-    margin: 20px 0;
-    padding: 10px;
-    border-left: 3px solid var(--corporate-gold);
-}
-
-.milestone-year {
-    font-weight: bold;
-    color: var(--corporate-blue);
-}
-
-.quote-box {
-    background: var(--corporate-blue);
+/* Quote box */
+.snakee-quote-box {
+    background: var(--snakee-corporate-blue);
     color: white;
     padding: 20px;
     margin: 20px 0;
     font-style: italic;
     text-align: center;
+    border-radius: 5px;
+    border-left: 5px solid var(--snakee-corporate-gold);
 }
 
-.leadership-grid {
+/* Timeline */
+.snakee-timeline {
+    margin: 20px 0;
+}
+
+.snakee-milestone {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    padding: 15px;
+    border-left: 3px solid var(--snakee-corporate-gold);
+    background: #F8F8F8;
+}
+
+.snakee-milestone-year {
+    font-weight: bold;
+    color: var(--snakee-corporate-blue);
+    font-size: 18px;
+    min-width: 60px;
+}
+
+/* Leadership grid */
+.snakee-leadership-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     margin: 20px 0;
 }
 
-.leader-card {
-    border: 1px solid #CCC;
-    padding: 10px;
-    text-align: center;
-}
-
-.mansion-image {
-    text-align: center;
-    margin: 20px 0;
-}
-
-/* Careers */
-
-/* Careers page specific styles */
-.featured-position {
-    border: 3px solid var(--corporate-gold);
-    padding: 20px;
-    margin: 20px 0;
-    background: #FFF8DC;
-    animation: glow 2s infinite;
-}
-
-@keyframes glow {
-    0% { box-shadow: 0 0 5px var(--corporate-gold); }
-    50% { box-shadow: 0 0 20px var(--corporate-gold); }
-    100% { box-shadow: 0 0 5px var(--corporate-gold); }
-}
-
-.job-listing {
+.snakee-leader-card {
     border: 1px solid #CCC;
     padding: 15px;
-    margin: 15px 0;
+    text-align: center;
     background: #F8F8F8;
+    border-radius: 5px;
+    transition: all 0.3s ease;
 }
 
-.job-title {
-    font-size: 1.2em;
-    color: var(--corporate-blue);
+.snakee-leader-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.snakee-leader-card h4 {
+    color: var(--snakee-corporate-blue);
     margin-bottom: 10px;
 }
 
-.job-status {
-    float: right;
-    padding: 5px 10px;
-    border-radius: 3px;
+/* Product categories */
+.snakee-product-category {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-.status-open {
+.snakee-product-heading {
+    color: var(--snakee-corporate-blue);
+    border-bottom: 2px solid var(--snakee-corporate-gold);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.snakee-product-item {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.snakee-product-name {
+    color: var(--snakee-corporate-blue);
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.snakee-features-list {
+    margin: 15px 0;
+    padding: 0;
+}
+
+.snakee-features-list div {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.snakee-product-price {
+    font-weight: bold;
+    color: var(--snakee-profit-green);
+    font-size: 1.1em;
+    margin-top: 15px;
+}
+
+.snakee-coming-soon {
+    text-align: center;
+    padding: 30px;
+    background: var(--snakee-corporate-gold);
+    color: var(--snakee-corporate-blue);
+    margin: 30px 0;
+    font-weight: bold;
+    border: 2px dashed var(--snakee-corporate-blue);
+    border-radius: 10px;
+    animation: snakee-construction-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes snakee-construction-glow {
+    from { border-color: var(--snakee-corporate-blue); }
+    to { border-color: #0066CC; }
+}
+
+/* Careers section */
+.snakee-ticker {
+    background: #000;
+    color: #0F0;
+    padding: 8px;
+    font-family: monospace;
+    margin: 20px 0;
+}
+
+.snakee-featured-position {
+    border: 3px solid var(--snakee-corporate-gold);
+    padding: 25px;
+    margin: 25px 0;
+    background: #FFFDF0;
+    border-radius: 10px;
+    animation: snakee-feature-glow 2s infinite;
+}
+
+@keyframes snakee-feature-glow {
+    0% { box-shadow: 0 0 5px var(--snakee-corporate-gold); }
+    50% { box-shadow: 0 0 20px var(--snakee-corporate-gold); }
+    100% { box-shadow: 0 0 5px var(--snakee-corporate-gold); }
+}
+
+.snakee-job-listing {
+    border: 1px solid #CCC;
+    padding: 20px;
+    margin: 20px 0;
+    background: #F8F8F8;
+    border-radius: 5px;
+}
+
+.snakee-job-title {
+    font-size: 1.2em;
+    color: var(--snakee-corporate-blue);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.snakee-job-status {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.snakee-status-open {
     background: #90EE90;
-    color: #006400;
+    color: var(--snakee-profit-green);
 }
 
-.status-closed {
+.snakee-status-filled {
     background: #FFB6C1;
-    color: #8B0000;
+    color: var(--snakee-loss-red);
 }
 
-.benefits-list {
+.snakee-benefits-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 15px;
     margin: 20px 0;
     padding: 20px;
-    background: var(--menu-bg);
+    background: var(--snakee-menu-bg);
     border: 1px solid #CCC;
+    border-radius: 5px;
 }
 
-.benefit-item {
+.snakee-benefit-item {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 8px;
 }
 
-.apply-button {
-    display: block;
-    width: 200px;
-    margin: 15px 0;
-    padding: 10px;
-    background: var(--corporate-blue);
+.snakee-apply-button {
+    background: var(--snakee-corporate-blue);
     color: white;
-    text-align: center;
-    text-decoration: none;
     border: 2px outset #666;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Times New Roman', serif;
+    border-radius: 5px;
+    transition: all 0.3s ease;
 }
 
-.apply-button:hover {
-    background: var(--corporate-gold);
-    color: var(--corporate-blue);
+.snakee-apply-button:hover {
+    background: var(--snakee-corporate-gold);
+    color: var(--snakee-corporate-blue);
+    transform: translateY(-2px);
 }
 
-.blink {
-    animation: blink 1s step-end infinite;
+/* Investor section */
+.snakee-investor-alert {
+    border: 2px solid var(--snakee-corporate-gold);
+    padding: 20px;
+    margin: 20px 0;
+    background: #FFFDF0;
+    border-radius: 5px;
 }
 
-@keyframes blink {
+.snakee-stock-dashboard {
+    background: #000;
+    color: #0F0;
+    padding: 20px;
+    font-family: monospace;
+    margin: 20px 0;
+    border-radius: 5px;
+    border: 2px solid #333;
+}
+
+.snakee-stock-dashboard div {
+    margin: 8px 0;
+}
+
+.snakee-financial-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+}
+
+.snakee-financial-table th,
+.snakee-financial-table td {
+    border: 1px solid #CCC;
+    padding: 12px;
+    text-align: left;
+}
+
+.snakee-financial-table th {
+    background: var(--snakee-corporate-blue);
+    color: white;
+    font-weight: bold;
+}
+
+.snakee-financial-table tr:nth-child(even) {
+    background: #F8F8F8;
+}
+
+.snakee-profit {
+    color: var(--snakee-profit-green);
+    font-weight: bold;
+}
+
+.snakee-currency-note {
+    font-style: italic;
+    color: #666;
+    margin: 15px 0;
+    font-size: 0.9em;
+}
+
+/* Contact section */
+.snakee-contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.snakee-contact-form {
+    background: #F8F8F8;
+    border: 1px solid #CCC;
+    padding: 25px;
+    border-radius: 5px;
+}
+
+.snakee-contact-info {
+    background: var(--snakee-corporate-blue);
+    color: white;
+    padding: 25px;
+    border-radius: 5px;
+}
+
+.snakee-contact-method {
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.snakee-office-hours {
+    background: #F8F8F8;
+    color: var(--snakee-corporate-blue);
+    border: 1px solid #CCC;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+/* Forms */
+.snakee-form-group {
+    margin-bottom: 20px;
+}
+
+.snakee-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--snakee-corporate-blue);
+}
+
+.snakee-form-group input,
+.snakee-form-group textarea,
+.snakee-form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px inset #CCC;
+    background: white;
+    font-family: 'Times New Roman', serif;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.snakee-form-group input:focus,
+.snakee-form-group textarea:focus,
+.snakee-form-group select:focus {
+    outline: none;
+    border-color: var(--snakee-corporate-blue);
+    box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+}
+
+.snakee-submit-button {
+    background: var(--snakee-corporate-blue);
+    color: white;
+    padding: 12px 25px;
+    border: 2px outset #666;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Times New Roman', serif;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.snakee-submit-button:hover {
+    background: var(--snakee-corporate-gold);
+    color: var(--snakee-corporate-blue);
+    transform: translateY(-2px);
+}
+
+/* Job application form */
+.snakee-application-intro {
+    background: #F0F8FF;
+    border: 1px solid var(--snakee-corporate-blue);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.snakee-job-form {
+    background: #FAFAFA;
+    padding: 30px;
+    border: 1px solid #DDD;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.snakee-form-section {
+    margin-bottom: 35px;
+    padding-bottom: 25px;
+    border-bottom: 2px solid #E0E0E0;
+}
+
+.snakee-form-section:last-of-type {
+    border-bottom: none;
+}
+
+.snakee-form-section h3 {
+    color: var(--snakee-corporate-blue);
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--snakee-corporate-gold);
+    padding-bottom: 10px;
+}
+
+.snakee-form-agreement {
+    background: #FFF8DC;
+    border: 1px solid var(--snakee-corporate-gold);
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.snakee-form-agreement label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.snakee-form-agreement input[type="checkbox"] {
+    width: auto;
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+/* Employee Portal */
+.snakee-portal-header {
+    background: linear-gradient(135deg, var(--snakee-corporate-blue), #004488);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.snakee-portal-header h2 {
+    margin: 0 0 10px 0;
+}
+
+.snakee-portal-welcome {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.snakee-portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.snakee-portal-card {
+    background: white;
+    border: 1px solid #DDD;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.snakee-portal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.snakee-portal-card h3 {
+    color: var(--snakee-corporate-blue);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--snakee-corporate-gold);
+    padding-bottom: 8px;
+}
+
+.snakee-portal-stat {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+    padding: 8px;
+    background: #F8F8F8;
+    border-radius: 5px;
+}
+
+.snakee-stat-label {
+    font-weight: bold;
+}
+
+.snakee-stat-value {
+    color: var(--snakee-corporate-blue);
+    font-weight: bold;
+}
+
+.snakee-schedule-item {
+    display: flex;
+    gap: 15px;
+    margin: 12px 0;
+    padding: 10px;
+    background: #F0F8FF;
+    border-left: 3px solid var(--snakee-corporate-blue);
+    border-radius: 3px;
+}
+
+.snakee-schedule-time {
+    font-weight: bold;
+    color: var(--snakee-corporate-blue);
+    min-width: 80px;
+}
+
+.snakee-ticket-item {
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 5px;
+    border-left: 4px solid #DDD;
+}
+
+.snakee-priority-high {
+    background: #FFE4E1;
+    border-left-color: #FF0000;
+}
+
+.snakee-priority-medium {
+    background: #FFF8DC;
+    border-left-color: #FFA500;
+}
+
+.snakee-priority-low {
+    background: #F0FFF0;
+    border-left-color: #008000;
+}
+
+.snakee-priority-sus {
+    background: #F5F5DC;
+    border-left-color: #8B4513;
+    animation: snakee-sus-pulse 2s ease-in-out infinite;
+}
+
+@keyframes snakee-sus-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.snakee-ticket-meta {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.snakee-payroll-info {
+    background: #F0F8FF;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.snakee-payroll-info div {
+    margin: 8px 0;
+}
+
+.snakee-portal-button {
+    background: var(--snakee-corporate-blue);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Times New Roman', serif;
+    transition: all 0.3s ease;
+}
+
+.snakee-portal-button:hover {
+    background: var(--snakee-corporate-gold);
+    color: var(--snakee-corporate-blue);
+    transform: translateY(-2px);
+}
+
+.snakee-announcement {
+    margin: 12px 0;
+    padding: 10px;
+    background: #F8F8F8;
+    border-left: 3px solid var(--snakee-corporate-gold);
+    border-radius: 3px;
+}
+
+.snakee-announcement-date {
+    font-weight: bold;
+    color: var(--snakee-corporate-blue);
+    font-size: 0.9em;
+}
+
+.snakee-directory-item {
+    margin: 10px 0;
+    padding: 10px;
+    background: #F8F8F8;
+    border-radius: 5px;
+}
+
+.snakee-directory-item div:first-child {
+    font-weight: bold;
+    color: var(--snakee-corporate-blue);
+}
+
+.snakee-directory-item div:last-child {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.snakee-portal-footer {
+    background: #FFE4E1;
+    border: 1px solid #FF6B6B;
+    padding: 15px;
+    text-align: center;
+    margin-top: 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #8B0000;
+}
+
+/* Status messages */
+.snakee-status-message {
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+    display: none;
+    animation: snakee-status-appear 0.5s ease-out;
+}
+
+@keyframes snakee-status-appear {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.snakee-status-success {
+    background: #DFF0D8;
+    border: 1px solid #D6E9C6;
+    color: #3C763D;
+}
+
+.snakee-status-warning {
+    background: #FCF8E3;
+    border: 1px solid #FAEBCC;
+    color: #8A6D3B;
+}
+
+/* Stats and footer */
+.snakee-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+    padding: 20px;
+    background: var(--snakee-menu-bg);
+    flex-wrap: wrap;
+}
+
+.snakee-counter {
+    background: var(--snakee-corporate-blue);
+    color: white;
+    padding: 10px 20px;
+    font-family: monospace;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    animation: snakee-counter-pulse 3s ease-in-out infinite;
+}
+
+@keyframes snakee-counter-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.snakee-footer {
+    text-align: center;
+    padding: 25px;
+    background: var(--snakee-menu-bg);
+    border-top: 1px solid #999;
+    font-size: 0.9em;
+    line-height: 1.8;
+}
+
+/* Special effects */
+.snakee-blink {
+    animation: snakee-blink 1s step-end infinite;
+}
+
+@keyframes snakee-blink {
     50% { opacity: 0; }
 }
 
-.ticker {
-    background: #000;
-    color: #0F0;
-    padding: 5px;
-    font-family: monospace;
-    margin: 10px 0;
+.snakee-new-badge {
+    background: linear-gradient(45deg, #ff0000, #ff3333);
+    color: white;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 3px;
+    margin-left: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    animation: snakee-badge-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes snakee-badge-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .snakee-container {
+        margin: 0;
+        border: none;
+        border-radius: 0;
+    }
+    
+    .snakee-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .snakee-nav-button {
+        width: 100%;
+    }
+    
+    .snakee-contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .snakee-leadership-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .snakee-portal-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .snakee-benefits-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .snakee-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .snakee-job-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .snakee-navigation,
+    .snakee-stock-ticker,
+    .snakee-marquee,
+    .snakee-stats,
+    .snakee-blink,
+    .snakee-portal-card {
+        display: none !important;
+    }
+    
+    .snakee-container {
+        box-shadow: none;
+        border: none;
+    }
+    
+    .snakee-page {
+        display: block !important;
+    }
 }

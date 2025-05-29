@@ -7,6 +7,7 @@ class VirusSystem {
         this.infections = new Map();
         this.quarantine = new Map();
         this.virusDefinitions = new Map();
+        this.activeVirusInstances = new Map(); // Track active virus class instances
         this.isScanning = false;
         this.systemHealth = 100;
         this.lastScanTime = null;
@@ -72,6 +73,60 @@ class VirusSystem {
                 popupInterval: 3000 // 3 seconds between malicious popups
             }
         });
+
+        // Lebron James Word Scrambler Virus
+        this.virusDefinitions.set('lebron-james-scrambler', {
+            id: 'lebron-james-scrambler',
+            name: 'Lebron James Word Scrambler Supreme',
+            type: 'text_scrambler',
+            severity: 'medium',
+            description: 'Randomly injects "LEBRON JAMES" into text and scrambles words with sus energy',
+            author: 'Colten (age 10)',
+            discovered: new Date().toLocaleDateString(),
+            symptoms: ['Text replaced with LEBRON JAMES', 'Sus and Among Us references', 'Basketball popups', 'Typing interference'],
+            reinfectionTime: 20000, // 20 seconds (because Colten is persistent)
+            images: [
+                'lebron-face.jpg', 'lebron-dunking.gif', 'basketball.png', 'lakers-logo.png'
+            ],
+            behavior: {
+                scrambleText: true,
+                showPopups: true,
+                interceptTyping: true,
+                popupInterval: 15000, // 15-30 seconds between popups
+                lebronPhrases: [
+                    "LEBRON JAMES",
+                    "THE KING LEBRON JAMES", 
+                    "LEBRON JAMES IS HERE",
+                    "LEBRON JAMES SAYS HI",
+                    "LEBRON JAMES APPROVED",
+                    "LEBRON JAMES MOMENT",
+                    "LEBRON JAMES ENTERED THE CHAT"
+                ]
+            }
+        });
+
+        // Roblox Horror Jumpscare Virus  
+        this.virusDefinitions.set('roblox-horror-jumpscare', {
+            id: 'roblox-horror-jumpscare',
+            name: 'Roblox Horror Jumpscare',
+            type: 'horror_jumpscare',
+            severity: 'medium',
+            description: 'Displays scary Roblox-themed jumpscares and death screens',
+            author: 'Buggy (age 14)',
+            discovered: new Date().toLocaleDateString(),
+            symptoms: ['Random horror jumpscares', 'Fake death screens', 'OOF sound effects', 'Spooky popups'],
+            reinfectionTime: 25000, // 25 seconds (Buggy loves to scare!)
+            images: [
+                'jumpscare1.png', 'jumpscare2.png', 'jumpscare3.png', 'youdied.png'
+            ],
+            behavior: {
+                showJumpscares: true,
+                showDeathScreens: true,
+                playOofSounds: true,
+                jumpscareInterval: 15000, // 10-25 seconds between scares
+                deathScreenInterval: 45000 // 30-60 seconds between deaths
+            }
+        });
     }
 
     setupEventHandlers() {
@@ -114,7 +169,7 @@ class VirusSystem {
         }
         
         // Randomly start with one of the viruses
-        const viruses = ['buggyworm', 'veryfungame'];
+        const viruses = ['buggyworm', 'veryfungame', 'lebron-james-scrambler', 'roblox-horror-jumpscare'];
         const randomVirus = viruses[Math.floor(Math.random() * viruses.length)];
         
         setTimeout(() => {
@@ -173,6 +228,38 @@ class VirusSystem {
             case 'fake_installer':
                 this.showFakeInstaller();
                 break;
+            case 'text_scrambler':
+                this.activateLebronJamesVirus();
+                break;
+            case 'horror_jumpscare':
+                this.activateRobloxHorrorVirus();
+                break;
+        }
+    }
+
+    // NEW: Activate Lebron James virus
+    activateLebronJamesVirus() {
+        // Import and create the Lebron James virus instance
+        // You'll need to make sure lebron-james-virus.js is loaded
+        if (typeof LebronJamesWordScramblerVirus !== 'undefined') {
+            const lebronVirus = new LebronJamesWordScramblerVirus();
+            lebronVirus.activate();
+            this.activeVirusInstances.set('lebron-james-scrambler', lebronVirus);
+            console.log('🏀 LEBRON JAMES VIRUS ACTIVATED! 🏀');
+        } else {
+            console.error('LebronJamesWordScramblerVirus class not found - make sure lebron-james-virus.js is loaded');
+        }
+    }
+
+    activateRobloxHorrorVirus() {
+        // Import and create the Roblox Horror virus instance
+        if (typeof RobloxHorrorJumpscareVirus !== 'undefined') {
+            const horrorVirus = new RobloxHorrorJumpscareVirus();
+            horrorVirus.activate();
+            this.activeVirusInstances.set('roblox-horror-jumpscare', horrorVirus);
+            console.log('👻 ROBLOX HORROR VIRUS ACTIVATED BY BUGGY! 👻');
+        } else {
+            console.error('RobloxHorrorJumpscareVirus class not found - make sure roblox-jumpscare-virus.js is loaded');
         }
     }
 
@@ -434,6 +521,15 @@ class VirusSystem {
 
         console.log(`🔒 Quarantining ${infection.definition.name}`);
         
+        // Deactivate virus-specific instances
+        if (this.activeVirusInstances.has(virusId)) {
+            const virusInstance = this.activeVirusInstances.get(virusId);
+            if (typeof virusInstance.deactivate === 'function') {
+                virusInstance.deactivate();
+            }
+            this.activeVirusInstances.delete(virusId);
+        }
+        
         // Move to quarantine
         this.quarantine.set(virusId, {
             ...infection,
@@ -454,6 +550,12 @@ class VirusSystem {
             
             // Clean up malicious popups
             document.querySelectorAll('.malicious-popup').forEach(popup => popup.remove());
+        } else if (virusId === 'lebron-james-scrambler') {
+            // Clean up Lebron James effects
+            document.querySelectorAll('.lebron-popup').forEach(popup => popup.remove());
+        } else if (virusId === 'roblox-horror-jumpscare') {
+        // Clean up horror effects
+        document.querySelectorAll('.roblox-jumpscare, .roblox-death-screen').forEach(el => el.remove());
         }
 
         // Improve system health
@@ -474,7 +576,13 @@ class VirusSystem {
             'C:\\Users\\Public\\Documents\\temp\\suspicious.dll',
             'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\badfile.exe',
             'C:\\Windows\\Temp\\downloaded_fun_game.exe',
-            'C:\\Users\\Default\\AppData\\Local\\Temp\\virus.tmp'
+            'C:\\Users\\Default\\AppData\\Local\\Temp\\virus.tmp',
+            'C:\\System32\\lebron_james_infiltrator.exe',
+            'C:\\Users\\Kit\\Documents\\sus_among_us.dll',
+            'C:\\Games\\RobloxPlayerBeta.exe',
+            'C:\\Users\\Kit\\Desktop\\ScaryGame.rbxl',
+            'C:\\Temp\\jumpscare_loader.dll',
+            'C:\\System32\\oof_sound_hijacker.exe'
         ];
         return locations[Math.floor(Math.random() * locations.length)];
     }
@@ -483,7 +591,8 @@ class VirusSystem {
         const names = [
             'kernel32.dll', 'user32.dll', 'ntdll.dll', 'system.exe', 'explorer.exe',
             'notepad.exe', 'calc.exe', 'mspaint.exe', 'cmd.exe', 'powershell.exe',
-            'chrome.exe', 'firefox.exe', 'steam.exe', 'discord.exe', 'game.exe'
+            'chrome.exe', 'firefox.exe', 'steam.exe', 'discord.exe', 'game.exe',
+            'lebron_james.exe', 'basketball.dll', 'sus_imposter.exe'
         ];
         return names[Math.floor(Math.random() * names.length)];
     }
@@ -506,11 +615,19 @@ class VirusSystem {
 
     // Method to clear all infections (for testing)
     debugClearAll() {
+        // Deactivate all active virus instances
+        this.activeVirusInstances.forEach((virusInstance, virusId) => {
+            if (typeof virusInstance.deactivate === 'function') {
+                virusInstance.deactivate();
+            }
+        });
+        this.activeVirusInstances.clear();
+        
         this.infections.clear();
         this.quarantine.clear();
         this.systemHealth = 100;
         
         // Clean up UI elements
-        document.querySelectorAll('.buggyworm-overlay, .fake-installer, .malicious-popup').forEach(el => el.remove());
+        document.querySelectorAll('.buggyworm-overlay, .fake-installer, .malicious-popup, .lebron-popup, .roblox-jumpscare, .roblox-death-screen').forEach(el => el.remove());
     }
 }

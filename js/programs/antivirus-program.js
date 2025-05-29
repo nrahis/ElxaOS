@@ -270,6 +270,12 @@ class AntivirusProgram {
                                         <button class="debug-btn" id="debug-infect-game-${windowId}">
                                             🎮 Test VeryFunGame
                                         </button>
+                                        <button class="debug-btn" id="debug-infect-lebron-${windowId}">
+                                            🏀 Test Lebron James
+                                        </button>
+                                        <button class="debug-btn" id="debug-infect-horror-${windowId}">
+                                            👻 Test Roblox Horror
+                                        </button>
                                         <button class="debug-btn" id="debug-clear-${windowId}">
                                             🧹 Clear All Infections
                                         </button>
@@ -331,6 +337,14 @@ class AntivirusProgram {
             } else if (id.includes('debug-infect-game')) {
                 if (elxaOS.virusSystem) {
                     elxaOS.virusSystem.debugInfect('veryfungame');
+                }
+            } else if (id.includes('debug-infect-lebron')) {
+                if (elxaOS.virusSystem) {
+                    elxaOS.virusSystem.debugInfect('lebron-james-scrambler');
+                }
+            } else if (id.includes('debug-infect-horror')) {
+                if (elxaOS.virusSystem) {
+                    elxaOS.virusSystem.debugInfect('roblox-horror-jumpscare');
                 }
             } else if (id.includes('debug-clear')) {
                 if (elxaOS.virusSystem) {
@@ -612,10 +626,74 @@ class AntivirusProgram {
         this.eventBus.emit('antivirus.quarantine', { virusId });
     }
 
+    // In the handleVirusQuarantined method, add this after the existing code:
     handleVirusQuarantined(data) {
         this.showSystemMessage(`Threat quarantined: ${data.virusName}`, 'success');
         this.updateSystemStatus();
         this.updateQuarantineList(this.currentWindowId);
+        
+        // NEW: Check if it was a text-scrambling virus
+        if (data.virusId === 'lebron-james-scrambler') {
+            this.showRestartRecommendation(data.virusName);
+        }
+    }
+
+    // NEW: Add this method to the AntivirusProgram class
+    showRestartRecommendation(virusName) {
+        const popup = document.createElement('div');
+        popup.className = 'restart-recommendation system-dialog';
+        popup.innerHTML = `
+            <div class="dialog-content info">
+                <div class="dialog-header">
+                    <div class="dialog-title">🔄 System Recovery</div>
+                    <div class="dialog-close">×</div>
+                </div>
+                <div class="dialog-body">
+                    <div class="restart-content">
+                        <div class="restart-icon">🛡️</div>
+                        <div class="restart-message">
+                            <h3>Threat Successfully Quarantined!</h3>
+                            <p><strong>${virusName}</strong> has been removed from your system.</p>
+                            <p>Due to text modifications made by this virus, a system restart is recommended to fully restore normal operation.</p>
+                        </div>
+                    </div>
+                    <div class="restart-actions">
+                        <button class="restart-now-btn">🔄 Restart System</button>
+                        <button class="restart-later-btn">Restart Later</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Position in center of screen
+        popup.style.position = 'fixed';
+        popup.style.left = '50%';
+        popup.style.top = '50%';
+        popup.style.transform = 'translate(-50%, -50%)';
+        popup.style.zIndex = '3000';
+
+        document.body.appendChild(popup);
+
+        // Event handlers
+        popup.querySelector('.dialog-close').addEventListener('click', () => popup.remove());
+        popup.querySelector('.restart-later-btn').addEventListener('click', () => popup.remove());
+        
+        popup.querySelector('.restart-now-btn').addEventListener('click', () => {
+            // Show a brief "restarting" message then refresh
+            popup.innerHTML = `
+                <div class="dialog-content info">
+                    <div class="dialog-body" style="text-align: center; padding: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 12px;">🔄</div>
+                        <div style="font-weight: bold;">Restarting ElxaOS...</div>
+                        <div style="font-size: 11px; color: #666; margin-top: 8px;">Please wait...</div>
+                    </div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        });
     }
 
     updateRealTimeProtectionUI(enabled) {

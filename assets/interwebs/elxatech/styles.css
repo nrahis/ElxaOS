@@ -1,17 +1,34 @@
-/* elxatech-styles.css */
+/* elxatech-styles.css - Enhanced version with unique class names */
+
+/* Essential page navigation - MUST BE FIRST */
+.extech-page {
+    display: none !important;
+}
+
+.extech-page-active {
+    display: block !important;
+}
+
+/* Main container and layout */
 .extech-container {
     background: #001122;
     color: #00ff88;
     font-family: 'Courier New', monospace;
     padding: 20px;
     min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 204, 255, 0.1) 0%, transparent 50%);
 }
 
+/* Header styling */
 .extech-header {
     background: linear-gradient(90deg, #001133, #002244);
     border: 2px solid #00ff88;
     padding: 20px;
     margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
 }
 
 .extech-logo {
@@ -20,6 +37,12 @@
     text-align: center;
     color: #00ff88;
     text-shadow: 2px 2px #000000, 4px 4px #003366;
+    animation: extech-logo-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes extech-logo-glow {
+    from { text-shadow: 2px 2px #000000, 4px 4px #003366; }
+    to { text-shadow: 2px 2px #000000, 4px 4px #003366, 0 0 20px #00ff88; }
 }
 
 .extech-tagline {
@@ -27,8 +50,18 @@
     color: #00ccff;
     font-size: 14px;
     margin-top: 10px;
+    font-style: italic;
 }
 
+/* Navigation active state */
+.extech-nav a.extech-nav-active,
+.extech-nav-button.extech-nav-active {
+    background: #003366 !important;
+    color: #00ffcc !important;
+    border: 1px solid #00ff88 !important;
+}
+
+/* Navigation styling */
 .extech-nav {
     background: #002244;
     border: 1px solid #00ff88;
@@ -37,23 +70,39 @@
     display: flex;
     justify-content: center;
     gap: 20px;
+    border-radius: 3px;
+    flex-wrap: wrap;
 }
 
-.extech-nav a {
+.extech-nav a,
+.extech-nav-button {
     color: #00ff88;
     text-decoration: none;
-    padding: 5px 10px;
+    padding: 8px 15px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    background: none;
+    font-family: 'Courier New', monospace;
+    font-size: inherit;
+    cursor: pointer;
 }
 
-.extech-nav a:hover {
+.extech-nav a:hover,
+.extech-nav-button:hover {
     background: #003366;
+    border: 1px solid #00ff88;
+    transform: translateY(-2px);
 }
 
+/* Content areas */
 .extech-content {
     background: rgba(0, 17, 34, 0.8);
     border: 1px solid #00ff88;
     padding: 20px;
     margin: 20px 0;
+    border-radius: 5px;
+    backdrop-filter: blur(5px);
 }
 
 .extech-article {
@@ -62,27 +111,47 @@
     border-bottom: 1px solid #003366;
 }
 
+.extech-article:last-child {
+    border-bottom: none;
+}
+
 .extech-article-title {
     color: #00ffcc;
     font-size: 24px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .extech-article-meta {
     color: #0088cc;
     font-size: 12px;
     margin-bottom: 10px;
+    font-style: italic;
 }
 
 .extech-article-content {
     line-height: 1.6;
+    margin-top: 15px;
 }
 
+.extech-article-content ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.extech-article-content li {
+    margin: 5px 0;
+}
+
+/* Sidebar styling */
 .extech-sidebar {
     background: #001833;
     border: 1px solid #00ff88;
     padding: 15px;
     margin-top: 20px;
+    border-radius: 5px;
 }
 
 .extech-sidebar-title {
@@ -93,41 +162,105 @@
     padding-bottom: 5px;
 }
 
+.extech-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.extech-sidebar li {
+    padding: 5px 0;
+    border-bottom: 1px solid #002244;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.extech-sidebar li:hover {
+    color: #00ffcc;
+}
+
+/* Tables */
 .extech-comparison-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
+    background: rgba(0, 24, 51, 0.5);
 }
 
 .extech-comparison-table th,
 .extech-comparison-table td {
     border: 1px solid #003366;
-    padding: 10px;
+    padding: 12px;
     text-align: left;
 }
 
 .extech-comparison-table th {
     background: #002244;
     color: #00ffcc;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
 }
 
 .extech-comparison-table tr:nth-child(even) {
     background: #001833;
 }
 
+.extech-comparison-table tr:hover {
+    background: #002244;
+}
+
+/* Feature boxes */
 .extech-feature-box {
     background: #001833;
     border: 1px solid #00ff88;
     padding: 15px;
-    margin: 10px 0;
+    margin: 15px 0;
+    border-radius: 5px;
+    box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.1);
 }
 
-.extech-feature-title {
+.extech-feature-box h3 {
     color: #00ffcc;
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 10px;
+    border-bottom: 1px solid #003366;
+    padding-bottom: 5px;
 }
 
+.extech-feature-box ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.extech-feature-box li {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+/* Stats display */
+.extech-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.extech-counter {
+    background: #001833;
+    border: 1px solid #00ff88;
+    padding: 8px 15px;
+    font-family: monospace;
+    border-radius: 3px;
+    animation: extech-counter-pulse 2s ease-in-out infinite;
+}
+
+@keyframes extech-counter-pulse {
+    0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+    50% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.6); }
+}
+
+/* Footer */
 .extech-footer {
     text-align: center;
     margin-top: 40px;
@@ -135,38 +268,34 @@
     border-top: 1px solid #003366;
     font-size: 12px;
     color: #0088cc;
+    line-height: 1.6;
 }
 
-.extech-stats {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 10px 0;
-}
-
-.extech-counter {
-    background: #001833;
-    border: 1px solid #00ff88;
-    padding: 5px 10px;
-    font-family: monospace;
-}
-
-/* Retro elements */
+/* Special effects */
 .extech-blink {
-    animation: extechBlink 1s step-end infinite;
+    animation: extech-blink 1s step-end infinite;
 }
 
-@keyframes extechBlink {
+@keyframes extech-blink {
     50% { opacity: 0; }
 }
 
 .extech-new-badge {
-    background: #ff0000;
+    background: linear-gradient(45deg, #ff0000, #ff3333);
     color: white;
-    padding: 2px 6px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 11px;
     border-radius: 3px;
     margin-left: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    animation: extech-badge-pulse 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes extech-badge-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
 }
 
 .extech-construction {
@@ -174,4 +303,176 @@
     padding: 20px;
     border: 2px dashed #00ff88;
     margin: 20px 0;
+    border-radius: 5px;
+    background: rgba(0, 255, 136, 0.05);
+    font-style: italic;
+    animation: extech-construction-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes extech-construction-glow {
+    from { border-color: #00ff88; }
+    to { border-color: #00ccff; }
+}
+
+/* Interactive elements - specific to the consolidated version */
+.elxatech-calculator {
+    background: linear-gradient(135deg, #001833, #002244);
+    border: 2px solid #00ff88;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.elxatech-calculator h3 {
+    color: #00ffcc;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.elxatech-calculator input {
+    background: #002244;
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    border-radius: 3px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.elxatech-calculator input:focus {
+    outline: none;
+    border-color: #00ffcc;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.elxatech-calculator button {
+    background: linear-gradient(135deg, #003366, #004477);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    border-radius: 3px;
+    margin: 5px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.elxatech-calculator button:hover {
+    background: linear-gradient(135deg, #004477, #005588);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 255, 136, 0.3);
+}
+
+.elxatech-quiz {
+    background: linear-gradient(135deg, #001833, #002244);
+    border: 2px solid #00ff88;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.elxatech-quiz h3 {
+    color: #00ffcc;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.elxatech-quiz button {
+    background: linear-gradient(135deg, #002244, #003366);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    padding: 10px 20px;
+    margin: 8px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.elxatech-quiz button:hover {
+    background: linear-gradient(135deg, #003366, #004477);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 255, 136, 0.3);
+}
+
+.elxatech-result {
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #00ffcc;
+    background: linear-gradient(135deg, #001122, #001833);
+    border-radius: 5px;
+    animation: elxatech-result-appear 0.5s ease-out;
+}
+
+@keyframes elxatech-result-appear {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .extech-container {
+        padding: 10px;
+    }
+    
+    .extech-logo {
+        font-size: 28px;
+    }
+    
+    .extech-nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .extech-nav a {
+        text-align: center;
+    }
+    
+    .extech-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .extech-comparison-table {
+        font-size: 12px;
+    }
+    
+    .extech-comparison-table th,
+    .extech-comparison-table td {
+        padding: 8px;
+    }
+    
+    .elxatech-calculator input {
+        width: 90%;
+        margin: 5px 0;
+    }
+    
+    .elxatech-quiz button {
+        display: block;
+        width: 90%;
+        margin: 8px auto;
+    }
+}
+
+/* Print styles */
+@media print {
+    .extech-container {
+        background: white;
+        color: black;
+    }
+    
+    .extech-nav,
+    .extech-stats,
+    .extech-blink,
+    .elxatech-calculator,
+    .elxatech-quiz {
+        display: none;
+    }
 }

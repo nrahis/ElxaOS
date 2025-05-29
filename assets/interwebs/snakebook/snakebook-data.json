@@ -1,0 +1,542 @@
+{
+  "postTemplates": [
+    {
+      "author": "Mr_Snake_e",
+      "avatar": "🐍",
+      "verified": true,
+      "template": "{{business_update}} {{elxa_achievement}} {{ceo_pride}}",
+      "weight": 1
+    },
+    {
+      "author": "Mr_Snake_e", 
+      "avatar": "🐍",
+      "verified": true,
+      "template": "{{mansion_life}} {{denali_mention}} {{luxury_lifestyle}}",
+      "weight": 2
+    },
+    {
+      "author": "Mr_Snake_e", 
+      "avatar": "🐍",
+      "verified": true,
+      "template": "{{ceo_reflection}} {{weird_fact}} {{executive_mystery}}",
+      "weight": 3
+    },
+    {
+      "author": "Mr_Snake_e", 
+      "avatar": "🐍",
+      "verified": true,
+      "template": "{{elxacorp_dramas}} {{corporate_strength}} {{cryptic_statement}}",
+      "weight": 2
+    },
+    {
+      "author": "Mrs_Snake_e",
+      "avatar": "👵", 
+      "verified": true,
+      "template": "{{cooking_update}} {{garden_mention}} {{grandmotherly_care}}",
+      "weight": 3
+    },
+    {
+      "author": "Mrs_Snake_e",
+      "avatar": "👵",
+      "verified": true, 
+      "template": "{{garden_update}} {{plant_activity}} {{nature_joy}}",
+      "weight": 1
+    },
+    {
+      "author": "Mrs_Snake_e",
+      "avatar": "👵",
+      "verified": true, 
+      "template": "{{tea_time}} {{elderly_gossip}} {{sassy_comment}}",
+      "weight": 2
+    },
+    {
+      "author": "Rita",
+      "avatar": "👩‍🦰",
+      "verified": false,
+      "template": "{{sisterly_support}} {{kind_activity}} {{caring_message}}",
+      "weight": 2
+    },
+    {
+      "author": "Rita",
+      "avatar": "👩‍🦰",
+      "verified": false,
+      "template": "{{hair_care}} {{beauty_tips}} {{gentle_advice}}",
+      "weight": 1
+    },
+    {
+      "author": "PushingCat",
+      "avatar": "😼",
+      "verified": false,
+      "template": "{{cat_mischief}} {{sussy_activity}} {{cat_sounds}}",
+      "weight": 2
+    },
+    {
+      "author": "PushingCat",
+      "avatar": "😼",
+      "verified": false,
+      "template": "{{sus_alert}} {{feline_revenge}} {{mystery_log}}",
+      "weight": 1
+    },
+    {
+      "author": "ElxaTechie",
+      "avatar": "👨‍💻",
+      "verified": false,
+      "template": "{{tech_update}} {{work_progress}} {{it_enthusiasm}}",
+      "weight": 3
+    },
+    {
+      "author": "ElxaTechie",
+      "avatar": "👨‍💻", 
+      "verified": false,
+      "template": "{{mansion_tech}} {{boss_interaction}} {{grateful_employee}}",
+      "weight": 2
+    },
+    {
+      "author": "ElxaNews",
+      "avatar": "📰",
+      "verified": true,
+      "template": "{{breaking_news}} {{business_milestone}} {{economic_impact}}",
+      "weight": 2
+    },
+    {
+      "author": "SnakesiaMath",
+      "avatar": "🔢",
+      "verified": true,
+      "template": "{{math_lesson}} {{currency_exchange}} {{educational_fun}}",
+      "weight": 1
+    },
+    {
+      "author": "SnakesiaChem",
+      "avatar": "🧪",
+      "verified": true,
+      "template": "{{science_experiment}} {{educational_activity}} {{safety_reminder}}",
+      "weight": 1
+    },
+    {
+      "author": "MansionChef",
+      "avatar": "👨‍🍳",
+      "verified": true,
+      "template": "{{cooking_collaboration}} {{menu_update}} {{culinary_pride}}",
+      "weight": 1
+    },
+    {
+      "author": "ElxaArcade",
+      "avatar": "🕹️",
+      "verified": true,
+      "template": "{{arcade_update}} {{high_score}} {{gaming_community}}",
+      "weight": 1
+    },
+    {
+      "author": "DenaliDriver",
+      "avatar": "🚗",
+      "verified": false,
+      "template": "{{driving_experience}} {{car_tech}} {{smooth_ride}}",
+      "weight": 1
+    },
+    {
+      "author": "SnakesiaWeather",
+      "avatar": "🌤️",
+      "verified": true,
+      "template": "{{weather_report}} {{seasonal_activity}} {{outdoor_plans}}",
+      "weight": 1
+    }
+  ],
+  "postVariables": {
+    "ceo_reflection": [
+        "Sometimes I just stare out over Snakesia and think about how far we've come.",
+        "Leadership is about decisions... and having the best snacks in your desk.",
+        "They said a snake couldn’t become a CEO. Look at me now!"
+    ],
+    "weird_fact": [
+        "Did you know snakes can yawn? I yawned in a board meeting once—caused a panic.",
+        "Denali horns play the Snakesian anthem when I reverse.",
+        "My shoes are made from anti-slip platinum scales."
+    ],
+    "executive_mystery": [
+        "Something BIG is coming. That’s all I can say. 🐍",
+        "The vault under my office just hissed. We’re looking into it.",
+        "ElxaOS just detected a presence. Not saying what kind... yet."
+    ],
+    "elxacorp_dramas": [
+        "Someone replaced my ergonomic chair with a whoopee cushion.",
+        "HR found glitter in the ventilation system again. Thanks, Pushing Cat.",
+        "There was a brief power outage today. ElxaMail sent everyone an apology haiku."
+    ],
+    "corporate_strength": [
+        "We bounce back harder than a rubber snake!",
+        "At ElxaCorp, resilience is coded in our DNA!",
+        "The Snakesian economy moves when we do!"
+    ],
+    "cryptic_statement": [
+        "The Snake coils tighter. 🐍",
+        "They don’t know what’s hidden in the backup drive.",
+        "All according to the plan..."
+    ],
+    "business_update": [
+      "Just approved another round of bonuses for all ElxaCorp employees!",
+      "ElxaCorp stock hits new record high today!",
+      "Proud to announce our expansion into 12 new countries!",
+      "Just signed a major deal with Snakesian government!",
+      "Our quarterly profits exceeded expectations again!"
+    ],
+    "elxa_achievement": [
+      "ElxaOS now runs on over 50 million devices!",
+      "ElxaPhone sales just hit 25 million units!",
+      "Our customer satisfaction rating is now 99.8%!",
+      "ElxaOS voice commands now support 47 languages!",
+      "Just launched our new ElxaCloud service!"
+    ],
+    "ceo_pride": [
+      "Couldn't be prouder of our team! 💼",
+      "Innovation never stops at ElxaCorp! 🚀",
+      "The future is bright for Snakesia! ✨",
+      "Hard work pays off! 💪",
+      "Leading by example! 🏆"
+    ],
+    "mansion_life": [
+      "Beautiful morning view from the mansion terrace!",
+      "Mrs. Snake-e made the most amazing breakfast today!",
+      "Found a rare vintage wine in the mansion cellar!",
+      "The mansion gardens are looking spectacular!",
+      "Just finished a relaxing swim in our private pool!"
+    ],
+    "denali_mention": [
+      "Taking the Denali for a scenic drive today!",
+      "Just upgraded the Denali with new ElxaOS features!",
+      "The Denali's autopilot is getting smoother every day!",
+      "Perfect weather for a Denali road trip!",
+      "Love the new sound system in the Denali!"
+    ],
+    "luxury_lifestyle": [
+      "Living the dream! 🏰",
+      "Grateful for all the blessings! 🙏",
+      "Life is good when you're surrounded by family! ❤️",
+      "Success tastes even better when shared! 🥂",
+      "Every day is a gift! 🎁"
+    ],
+    "tea_time": [
+        "Brewed my strongest mint tea for Mr. Snake-e—he napped for 5 hours.",
+        "Hosting tea in the garden for my book club today!",
+        "Added cinnamon to the tea... Remi said it tasted like hugs!"
+    ],
+    "elderly_gossip": [
+        "That new neighbor? Suspiciously tidy lawn. No one is *that* tidy.",
+        "The mansion ghost borrowed my knitting needles again.",
+        "I think the garden gnomes have been moving on their own."
+    ],
+    "sassy_comment": [
+        "Back in *my* day, Denalis had manual steering and character.",
+        "I may be 82, but I can still out-bake any young whippersnapper!",
+        "My snake lilies look better than most influencers’ selfies."
+    ],
+    "cooking_update": [
+      "Made my famous snake-shaped cookies today!",
+      "Baking fresh bread for the whole mansion!",
+      "Trying a new recipe for snake-apple pie!",
+      "Just finished making 200 snickerdoodles!",
+      "Cooking up a storm in the mansion kitchen!"
+    ],
+    "garden_mention": [
+      "The rose garden is blooming beautifully!",
+      "Harvested fresh vegetables from the garden!",
+      "Planted new herbs in the kitchen garden!",
+      "The snake lilies are my pride and joy!",
+      "Teaching the grandkids about gardening!"
+    ],
+    "grandmotherly_care": [
+      "Come by for cookies and milk anytime! 🍪",
+      "Don't forget to eat your vegetables, dears! 🥕",
+      "Stay warm and cozy, sweethearts! 🧣",
+      "Remember to call your grandmother! 📞",
+      "Love and hugs to everyone! 🤗"
+    ],
+    "garden_update": [
+      "The tomatoes are finally ripening!",
+      "My prize-winning roses won first place again!",
+      "Started a new herb spiral in the east garden!",
+      "The butterfly garden is attracting so many visitors!",
+      "Composting is going wonderfully this year!"
+    ],
+    "plant_activity": [
+      "Watering the snake plants with love!",
+      "Pruning the fruit trees today!",
+      "Planting bulbs for next spring!",
+      "Dividing perennials to share with neighbors!",
+      "Harvesting seeds for next year's garden!"
+    ],
+    "nature_joy": [
+      "Nothing beats the peace of a garden! 🌸",
+      "Nature is the best therapy! 🦋",
+      "Every flower is a soul blossoming! 🌺",
+      "Gardens teach us patience and love! 🌱",
+      "Dirt under my nails means a good day! 🌿"
+    ],
+    "sisterly_support": [
+      "Always here if anyone needs to talk!",
+      "Sending love and positive vibes!",
+      "You're all amazing and don't forget it!",
+      "Big sister energy for everyone!",
+      "Proud of all my Snakesia family!"
+    ],
+    "kind_activity": [
+      "Volunteering at the animal shelter today!",
+      "Helping Mrs. Snake-e with her garden!",
+      "Reading to kids at the library!",
+      "Making care packages for neighbors!",
+      "Teaching art classes at the community center!"
+    ],
+    "caring_message": [
+      "Kindness costs nothing but means everything! 💕",
+      "Every act of love makes the world brighter! ☀️",
+      "Together we can make a difference! 🤝",
+      "Spread joy wherever you go! 🌈",
+      "Love wins every time! ❤️"
+    ],
+    "hair_care": [
+      "Trying a new curl cream for my red hair!",
+      "Deep conditioning treatment day!",
+      "Found the perfect hair tie that doesn't break!",
+      "Natural oils are the best for curly hair!",
+      "Embracing the curly hair journey!"
+    ],
+    "beauty_tips": [
+      "Self-care Sunday is the best day!",
+      "Remember: you're beautiful just as you are!",
+      "Hydration is key for healthy skin!",
+      "A smile is the best accessory!",
+      "Confidence is the most beautiful thing!"
+    ],
+    "gentle_advice": [
+      "Take time to breathe and relax today! 🌸",
+      "Be gentle with yourself, dear! 🦋",
+      "Progress is progress, no matter how small! 🌱",
+      "You're stronger than you know! 💪",
+      "Trust the process! ✨"
+    ],
+    "cat_mischief": [
+      "*pushes important papers off Mr. Snake-e's desk*",
+      "*hides in the mansion's secret passages*",
+      "*steals all the socks from the laundry*",
+      "*knocks over the water bowl... again*",
+      "*plots world domination from under the blanket*"
+    ],
+    "sussy_activity": [
+      "Being extra sus today! 😼",
+      "Belly button invasion protocol activated!",
+      "Sussy Lair headquarters reporting in!",
+      "Operation Chaos is a success!",
+      "Maximum mischief mode: ENABLED!"
+    ],
+    "cat_sounds": [
+      "*suspicious purring* 😼",
+      "*evil cat laugh* 😹",
+      "*sneaky meowing*",
+      "*mischievous hissing*",
+      "*plotting purrs*"
+    ],
+    "sus_alert": [
+        "Initiating Operation Meowximum Overdrive!",
+        "Suspicion levels rising... need more snacks.",
+        "I found the secret snack vault. I'm not sharing."
+    ],
+    "feline_revenge": [
+        "*sits on laptop keyboard* ‘Oops.’",
+        "*sleeps on freshly folded laundry* I regret nothing.",
+        "*stares at camera intensely for no reason*"
+    ],
+    "mystery_log": [
+        "Sussy Lair status: cozy, crumb-filled, possibly haunted.",
+        "Latest bellybutton infiltration: successful. Mission complete.",
+        "Stealth level: 10/10. Camouflage: active."
+    ],
+    "tech_update": [
+      "Just updated all mansion systems to ElxaOS 12.5!",
+      "Fixed the smart home bugs - everything's running smooth!",
+      "Installed new security cameras around the property!",
+      "The mansion's Wi-Fi is now faster than ever!",
+      "Programmed the robotic vacuum to avoid Pushing Cat!"
+    ],
+    "work_progress": [
+      "ElxaCorp's new server farm is 95% complete!",
+      "Working on exciting new ElxaPhone features!",
+      "Database optimization project finished ahead of schedule!",
+      "Training the new IT interns this week!",
+      "Code review session went perfectly!"
+    ],
+    "it_enthusiasm": [
+      "Technology makes life amazing! 💻",
+      "Problem solved = happy day! ✅",
+      "Innovation never sleeps! 🚀",
+      "Coding is my favorite puzzle! 🧩",
+      "Every bug is just a feature in disguise! 😄"
+    ],
+    "mansion_tech": [
+      "Updated Mr. Snake-e's office computer setup!",
+      "The mansion's smart lighting system is incredible!",
+      "Programmed Mrs. Snake-e's garden sprinklers!",
+      "Set up the new home theater system!",
+      "The Denali's tech integration is seamless!"
+    ],
+    "boss_interaction": [
+      "Mr. Snake-e gave me another raise! Best boss ever!",
+      "Had a great tech brainstorming session with the CEO!",
+      "Mr. Snake-e actually understood my programming joke!",
+      "Boss approved my proposal for the new data center!",
+      "Working for a visionary like Mr. Snake-e is inspiring!"
+    ],
+    "grateful_employee": [
+      "Living the dream at ElxaCorp! 🙏",
+      "Grateful for this amazing opportunity! ✨",
+      "Best job in all of Snakesia! 💼",
+      "Technology + great leadership = success! 🎯",
+      "Proud to be part of the ElxaCorp family! 👨‍💻"
+    ],
+    "breaking_news": [
+      "BREAKING: ElxaCorp announces new research facility!",
+      "URGENT: Snake exchange rate hits historic high!",
+      "EXCLUSIVE: Mr. Snake-e donates to local schools!",
+      "DEVELOPING: New ElxaOS features revolutionize industry!",
+      "ALERT: Snakesia unemployment rate drops to 0.1%!"
+    ],
+    "business_milestone": [
+      "ElxaCorp becomes first trillion-snake company!",
+      "Record-breaking quarter for ElxaPhone sales!",
+      "ElxaOS now powers 3 billion devices worldwide!",
+      "Customer satisfaction reaches unprecedented 99.9%!",
+      "ElxaCorp creates 10,000 new jobs this month!"
+    ],
+    "economic_impact": [
+      "Snakesia's economy stronger than ever! 📈",
+      "Innovation drives prosperity for all! 💰",
+      "Technology sector leads economic growth! 🚀",
+      "Employment opportunities at all-time high! 📊",
+      "Snakesian standard of living continues to rise! 🏆"
+    ],
+    "math_lesson": [
+      "Today's lesson: Converting dollars to snakes!",
+      "Fun fact: 1 snake = $0.50 exactly!",
+      "Practice problem: 100 snakes = ? dollars",
+      "Percentage problems are snake-solutely fun!",
+      "Geometry with snake-shaped examples!"
+    ],
+    "currency_exchange": [
+      "Current rate: $1 = 2 snakes! 🐍💰",
+      "Snake currency remains stable and strong!",
+      "Perfect 2:1 ratio makes math easy!",
+      "Calculator updated with snake conversion!",
+      "Economics made simple with snakes!"
+    ],
+    "educational_fun": [
+      "Math is ssss-pecial! 🐍📚",
+      "Learning + snakes = success! ✏️",
+      "Education slithers into every lesson! 🎓",
+      "Knowledge is power... and snakes! 🧠",
+      "Study hard, earn those snakes! 💪"
+    ],
+    "science_experiment": [
+      "Today we mixed safe, colorful reactions!",
+      "Volcano experiments are always a hit!",
+      "Learning about chemical bonds with candy!",
+      "Crystal growing project starts next week!",
+      "Physics demonstrations with bouncing balls!"
+    ],
+    "educational_activity": [
+      "Kids love hands-on science learning!",
+      "Safety goggles make everyone feel professional!",
+      "Science fair projects are due next month!",
+      "After-school lab program expanding!",
+      "Young scientists are our future!"
+    ],
+    "safety_reminder": [
+      "Always wear your safety equipment! 🥽",
+      "Science is fun when we stay safe! ⚗️",
+      "Adult supervision required for all experiments! 👨‍🔬",
+      "Read instructions twice, experiment once! 📋",
+      "Safety first, discovery second! 🛡️"
+    ],
+    "cooking_collaboration": [
+      "Mrs. Snake-e shared her secret cookie recipe!",
+      "Working together on tonight's dinner menu!",
+      "Her gardening tips improve our fresh ingredients!",
+      "Learning traditional Snakesian cooking techniques!",
+      "Two chefs are better than one!"
+    ],
+    "menu_update": [
+      "Tonight's special: Snake-shaped pasta!",
+      "Fresh herbs from Mrs. Snake-e's garden!",
+      "New dessert recipe tested and approved!",
+      "Gluten-free options now available daily!",
+      "Sunday brunch menu expanded!"
+    ],
+    "culinary_pride": [
+      "Cooking brings people together! 👨‍🍳",
+      "Every meal is made with love! ❤️",
+      "Fresh ingredients make all the difference! 🌿",
+      "Presentation is part of the experience! 🎨",
+      "Good food creates good memories! 📸"
+    ],
+    "arcade_update": [
+      "New retro arcade machines installed!",
+      "High score leaderboard updated daily!",
+      "Classic games tournament this weekend!",
+      "Quarter-free gaming all month long!",
+      "Multiplayer competitions every Friday!"
+    ],
+    "high_score": [
+      "NEW RECORD: ElxaTechie dominates Pac-Man!",
+      "Mr. Snake-e sets new Tetris high score!",
+      "Remi Marway crushes Street Fighter competition!",
+      "Rita achieves perfect score in Ms. Pac-Man!",
+      "Pushing Cat somehow beats everyone at Pong!"
+    ],
+    "gaming_community": [
+      "Gamers of all ages welcome! 🕹️",
+      "Friendly competition makes it fun! 🏆",
+      "Every generation has their champion! 👾",
+      "Gaming brings families together! 👨‍👩‍👧‍👦",
+      "Old school arcade vibes never die! ⚡"
+    ],
+    "driving_experience": [
+      "Another smooth ride in the Snake-e mobile!",
+      "ElxaOS makes every drive comfortable!",
+      "The Denali handles like a dream!",
+      "Traffic navigation system works perfectly!",
+      "Voice commands respond instantly!"
+    ],
+    "car_tech": [
+      "Auto-pilot engaged for highway cruising!",
+      "Climate control maintains perfect temperature!",
+      "Bluetooth connectivity seamless!",
+      "GPS knows every snake path in Snakesia!",
+      "Fuel efficiency better than ever!"
+    ],
+    "smooth_ride": [
+      "Luxury and technology in perfect harmony! 🚗",
+      "Every journey is a pleasure! ✨",
+      "Engineering excellence on four wheels! ⚙️",
+      "The future of transportation is here! 🚀",
+      "Driving innovation forward! 🛣️"
+    ],
+    "weather_report": [
+      "Sunny and 75°F in beautiful Snakesia today!",
+      "Perfect weather for outdoor activities!",
+      "Light breeze with clear blue skies!",
+      "Chance of afternoon showers, then clearing!",
+      "Ideal temperature for snake sunbathing!"
+    ],
+    "seasonal_activity": [
+      "Great day for hiking the snake trails!",
+      "Beach weather at Lake Serpentine!",
+      "Perfect for Mrs. Snake-e's garden work!",
+      "Outdoor concerts in the park tonight!",
+      "Picnic weather at Snake Valley!"
+    ],
+    "outdoor_plans": [
+      "Don't forget sunscreen! ☀️",
+      "Great day to be outside! 🌳",
+      "Windows down, music up! 🎵",
+      "Nature is calling! 🏞️",
+      "Adventure awaits! 🥾"
+    ]
+  }
+}

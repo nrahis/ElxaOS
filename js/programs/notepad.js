@@ -69,7 +69,8 @@ class NotepadProgram {
             filename: filename,
             content: content,
             saved: filename ? true : false,
-            cursorPosition: 0
+            cursorPosition: 0,
+            hasUserFormatting: false // Track if user has actually applied formatting
         };
         
         this.documents.set(documentId, document);
@@ -112,6 +113,10 @@ class NotepadProgram {
         const selectedText = selection.toString();
         
         if (selectedText.length > 0) {
+            // Mark that user has applied formatting
+            const doc = this.documents.get(documentId);
+            doc.hasUserFormatting = true;
+            
             // Apply only the specific formatting command
             if (command === 'bold' || command === 'italic' || command === 'underline') {
                 document.execCommand(command, false, value);
@@ -124,56 +129,9 @@ class NotepadProgram {
             } else if (command === 'hiliteColor' || command === 'backColor') {
                 document.execCommand(command, false, value);
             }
-        } else {
-            // No text selected - set up formatting for next text
-            const currentFormat = this.getCurrentFormat(documentId);
-            this.setupFormattingForNewText(documentId, currentFormat);
         }
         
         setTimeout(() => this.updateToolbarFromSelection(documentId), 10);
-    }
-
-    setupFormattingForNewText(documentId, format) {
-        const selection = window.getSelection();
-        if (selection.rangeCount === 0) return;
-        
-        const range = selection.getRangeAt(0);
-        const textArea = document.querySelector(`[data-document-id="${documentId}"] .text-area`);
-        
-        // Create a span with current formatting at cursor position
-        if (range.startContainer === textArea || 
-            (range.startContainer.nodeType === Node.TEXT_NODE && 
-             range.startContainer.parentElement === textArea)) {
-            
-            const span = document.createElement('span');
-            this.applyFormatToElement(span, format);
-            span.innerHTML = '&nbsp;'; // Non-breaking space to hold formatting
-            
-            range.deleteContents();
-            range.insertNode(span);
-            
-            // Position cursor in the span
-            range.setStart(span.firstChild, 1);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    }
-
-    applyFormatToElement(element, format) {
-        element.style.fontFamily = format.fontFamily;
-        element.style.fontSize = format.fontSize + 'px';
-        element.style.color = format.color;
-        element.style.fontWeight = format.bold ? 'bold' : 'normal';
-        element.style.fontStyle = format.italic ? 'italic' : 'normal';
-        element.style.textDecoration = format.underline ? 'underline' : 'none';
-        element.style.lineHeight = '1.5';
-        
-        if (format.backgroundColor !== 'transparent') {
-            element.style.backgroundColor = format.backgroundColor;
-        } else {
-            element.style.backgroundColor = '';
-        }
     }
 
     createNotepadInterface(documentId) {
@@ -289,14 +247,11 @@ class NotepadProgram {
         // Color pickers
         this.setupColorPickers(container, documentId);
         
-        // Text area events - Use simpler approach
+        // Text area events - SIMPLIFIED AND FIXED
         textArea.addEventListener('input', (e) => {
-            // Apply current formatting to new text
-            setTimeout(() => {
-                this.ensureFormattingOnNewText(documentId);
-                this.updateWordCount(documentId);
-                this.markUnsaved(documentId);
-            }, 10);
+            // Don't apply automatic formatting - just update counters and save state
+            this.updateWordCount(documentId);
+            this.markUnsaved(documentId);
         });
         
         textArea.addEventListener('keydown', (e) => {
@@ -373,6 +328,24 @@ class NotepadProgram {
     }
 
     handleKeyDown(e, documentId) {
+        // Handle TAB key
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            // Insert 4 spaces for tab
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const tabText = document.createTextNode('    '); // 4 spaces
+                range.deleteContents();
+                range.insertNode(tabText);
+                range.setStartAfter(tabText);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            return;
+        }
+        
         if (e.ctrlKey) {
             switch(e.key) {
                 case 'b':
@@ -402,10 +375,8 @@ class NotepadProgram {
         // Use browser's built-in command to insert text
         document.execCommand('insertText', false, text);
         
-        // Apply current formatting to the pasted text
-        setTimeout(() => {
-            this.applyFormattingToSelection(documentId);
-        }, 10);
+        // Mark as unsaved
+        this.markUnsaved(documentId);
     }
 
     toggleFormat(type, documentId) {
@@ -415,50 +386,6 @@ class NotepadProgram {
         
         // Apply only the specific formatting that was toggled
         this.applySpecificFormatting(documentId, type, currentFormat[type]);
-        this.updateToolbarState(documentId);
-    }
-
-    ensureFormattingOnNewText(documentId) {
-        const selection = window.getSelection();
-        if (selection.rangeCount === 0) return;
-        
-        const range = selection.getRangeAt(0);
-        const currentFormat = this.getCurrentFormat(documentId);
-        
-        // Check if we're in a text node that needs formatting
-        let container = range.startContainer;
-        if (container.nodeType === Node.TEXT_NODE) {
-            container = container.parentElement;
-        }
-        
-        const textArea = document.querySelector(`[data-document-id="${documentId}"] .text-area`);
-        
-        // If we're directly in the text area or in an unformatted element
-        if (container === textArea || !container.style.fontFamily) {
-            // Find the text node that was just modified
-            const textNode = range.startContainer;
-            if (textNode.nodeType === Node.TEXT_NODE && textNode.textContent.length > 0) {
-                // Wrap the text in a formatted span
-                const span = document.createElement('span');
-                this.applyFormatToElement(span, currentFormat);
-                
-                // Move the text content to the span
-                span.textContent = textNode.textContent;
-                textNode.parentElement.replaceChild(span, textNode);
-                
-                // Restore cursor position
-                const newRange = document.createRange();
-                newRange.setStart(span.firstChild || span, range.startOffset);
-                newRange.collapse(true);
-                selection.removeAllRanges();
-                selection.addRange(newRange);
-            }
-        }
-    }
-
-    // Simplified - no longer forces all formatting at once
-    applyFormattingToSelection(documentId) {
-        // This method is now mainly used for toolbar updates
         this.updateToolbarState(documentId);
     }
 
@@ -553,7 +480,7 @@ class NotepadProgram {
         
         if (doc.content) {
             // Check if content is HTML or plain text
-            if (this.hasFormatting(doc.content)) {
+            if (this.hasUserFormatting(doc.content)) {
                 textArea.innerHTML = doc.content;
             } else {
                 textArea.textContent = doc.content;
@@ -690,8 +617,12 @@ class NotepadProgram {
         }
         
         const content = file.content;
-        this.createNewDocument(content, filename);
-        this.documentPaths.set(this.activeDocumentId, [...filePath]);
+        const newDocumentId = this.createNewDocument(content, filename);
+        this.documentPaths.set(newDocumentId, [...filePath]);
+        
+        // Check if the loaded content has user formatting
+        const doc = this.documents.get(newDocumentId);
+        doc.hasUserFormatting = this.hasUserFormatting(content);
         
         this.showMessage(`Opened ${filename}`, 'success');
     }
@@ -706,13 +637,19 @@ class NotepadProgram {
             let contentToSave;
             let fileExtension = this.getFileExtension(doc.filename);
             
-            if (this.hasFormatting(textArea.innerHTML)) {
+            // FIXED: Only save as HTML if user has actually applied formatting
+            if (doc.hasUserFormatting && this.hasUserFormatting(textArea.innerHTML)) {
                 contentToSave = textArea.innerHTML;
                 if (fileExtension === '.txt') {
                     doc.filename = doc.filename.replace('.txt', '.html');
                 }
             } else {
+                // Save as plain text
                 contentToSave = textArea.textContent || '';
+                if (fileExtension === '.html' && !doc.hasUserFormatting) {
+                    // If it was HTML but has no user formatting, save as txt
+                    doc.filename = doc.filename.replace('.html', '.txt');
+                }
             }
             
             const savePath = this.documentPaths.get(documentId) || ['root', 'Documents'];
@@ -738,7 +675,9 @@ class NotepadProgram {
         const doc = this.documents.get(documentId);
         const container = document.querySelector(`[data-document-id="${documentId}"]`);
         const textArea = container.querySelector('.text-area');
-        const hasFormatting = this.hasFormatting(textArea.innerHTML);
+        
+        // FIXED: Check if user has actually applied formatting
+        const hasFormatting = doc.hasUserFormatting && this.hasUserFormatting(textArea.innerHTML);
         const defaultExt = hasFormatting ? '.html' : '.txt';
         
         const currentPath = this.documentPaths.get(documentId) || ['root', 'Documents'];
@@ -794,7 +733,9 @@ class NotepadProgram {
         const doc = this.documents.get(documentId);
         const container = document.querySelector(`[data-document-id="${documentId}"]`);
         const textArea = container.querySelector('.text-area');
-        const hasFormatting = this.hasFormatting(textArea.innerHTML);
+        
+        // FIXED: Check if user has actually applied formatting
+        const hasFormatting = doc.hasUserFormatting && this.hasUserFormatting(textArea.innerHTML);
         
         let finalFilename = filename;
         let contentToSave;
@@ -834,18 +775,53 @@ class NotepadProgram {
         this.showMessage(`Saved as ${finalFilename}`, 'success');
     }
 
-    hasFormatting(htmlContent) {
+    // IMPROVED: Better detection of actual user formatting vs automatic spans
+    hasUserFormatting(htmlContent) {
         if (!htmlContent) return false;
         
-        const formattingTags = /<(b|i|u|strong|em|span|font|div|p)\b[^>]*>/i;
-        const hasStyles = /style\s*=\s*["'][^"']*["']/i;
-        const hasColors = /(color|background-color|font-family|font-size):/i;
+        // Remove any simple spans that might be from automatic wrapping
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
         
-        return formattingTags.test(htmlContent) || 
-               hasStyles.test(htmlContent) || 
-               hasColors.test(htmlContent) ||
-               htmlContent.includes('<ul>') || 
-               htmlContent.includes('<ol>');
+        // Look for actual formatting elements
+        const formattingElements = tempDiv.querySelectorAll('b, i, u, strong, em, font');
+        if (formattingElements.length > 0) return true;
+        
+        // Look for spans with actual styling (not just font family/size)
+        const spans = tempDiv.querySelectorAll('span');
+        for (let span of spans) {
+            const style = span.getAttribute('style') || '';
+            // Check for color, background, or weight changes
+            if (style.includes('color:') && !style.includes('color: rgb(0, 0, 0)') && !style.includes('color: #000000')) return true;
+            if (style.includes('background') && !style.includes('transparent')) return true;
+            if (style.includes('font-weight: bold')) return true;
+            if (style.includes('font-style: italic')) return true;
+            if (style.includes('text-decoration: underline')) return true;
+        }
+        
+        return false;
+    }
+
+    // IMPROVED: Better detection that considers user actions
+    hasUserFormatting(htmlContent) {
+        if (!htmlContent) return false;
+        
+        // Look for obvious formatting tags
+        const formattingTags = /<(b|i|u|strong|em|font|span[^>]*style|div[^>]*style|p[^>]*style)\b[^>]*>/i;
+        if (formattingTags.test(htmlContent)) {
+            // Further check if it's meaningful formatting
+            const hasColors = /(color|background-color):\s*(?!rgb\(0,\s*0,\s*0\)|#000000|black|transparent)/i;
+            const hasWeights = /font-weight:\s*bold/i;
+            const hasStyles = /font-style:\s*italic/i;
+            const hasDecoration = /text-decoration:\s*underline/i;
+            
+            return hasColors.test(htmlContent) || 
+                   hasWeights.test(htmlContent) || 
+                   hasStyles.test(htmlContent) || 
+                   hasDecoration.test(htmlContent);
+        }
+        
+        return false;
     }
 
     getFileExtension(filename) {
@@ -1241,6 +1217,18 @@ const notepadStyles = `
 .dialog-button:active {
     border: 1px inset #c0c0c0;
     background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+}
+
+.input-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0f0f0;
+    border: 2px outset #c0c0c0;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    z-index: 2000;
+    min-width: 300px;
 }
 
 /* Animation for messages */

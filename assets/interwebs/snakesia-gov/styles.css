@@ -1,3 +1,174 @@
+/* snakesia-consolidated-styles.css - Enhanced version */
+
+/* Essential page navigation - MUST BE FIRST */
+.snakesia-page {
+    display: none !important;
+}
+
+.snakesia-page-active {
+    display: block !important;
+}
+
+/* Navigation button styling */
+.snakesia-nav-button {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 5px 15px;
+    margin: 0 5px;
+    border: 1px solid #ffffff;
+    background: #0000a0;
+    display: inline-block;
+    font-family: Arial, sans-serif;
+    font-size: inherit;
+    cursor: pointer;
+}
+
+.snakesia-nav-button:hover {
+    background: #000060;
+}
+
+.snakesia-nav-button.snakesia-nav-active {
+    background: #003366 !important;
+    color: #00ffcc !important;
+}
+
+/* Breadcrumb button styling */
+.snakesia-breadcrumb-link {
+    background: none;
+    border: none;
+    color: #000080;
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: inherit;
+}
+
+.snakesia-breadcrumb-link:hover {
+    color: #0000a0;
+}
+
+/* Quick link buttons */
+.snakesia-quick-button {
+    display: block;
+    width: 100%;
+    color: #000080;
+    text-decoration: none;
+    padding: 5px 0;
+    border: none;
+    border-bottom: 1px dotted #ccc;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+}
+
+.snakesia-quick-button:hover {
+    background: #f0f0f0;
+}
+
+/* Enhanced time display */
+.snakesia-time-display {
+    background: #fffff0;
+    border: 2px solid #000080;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.snakesia-digital-clock {
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    background: #000;
+    color: #0f0;
+    padding: 10px;
+    border: 2px solid #666;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.snakesia-timezone-info {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Character spotlight */
+.snakesia-character-spotlight {
+    background: #fff7f7;
+    border: 2px dotted #800000;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.snakesia-character-card {
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Info panel overlay */
+.snakesia-info-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.snakesia-info-content {
+    background: #fff;
+    padding: 20px;
+    border: 2px solid #000080;
+    border-radius: 5px;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.snakesia-info-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #800000;
+    color: white;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
+
+.snakesia-info-close:hover {
+    background: #a00000;
+}
+
+/* Sus warning box */
+.pushing-cat-warning {
+    background: #ffeeee;
+    border: 2px solid #ff0000;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.pushing-cat-warning h3 {
+    color: #ff0000;
+    margin-top: 0;
+}
+
+/* Original Snakesia Government Styles Below */
+
 .snakesia-gov {
     background: #f0f0f0;
     font-family: Arial, sans-serif;
@@ -31,6 +202,10 @@
     padding: 10px;
     margin: 20px 0;
     border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .snakesia-nav a {
@@ -88,6 +263,19 @@
     width: 100px;
     padding: 5px;
     margin: 5px 0;
+}
+
+.snakesia-calculator button {
+    background: #000080;
+    color: white;
+    border: 1px solid #000080;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.snakesia-calculator button:hover {
+    background: #0000a0;
 }
 
 .snakesia-footer {
@@ -570,7 +758,7 @@
 
 .snakesia-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin: 20px 0;
 }
@@ -648,4 +836,48 @@
     padding: 10px;
     margin: 20px 0;
     font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .snakesia-content {
+        display: block;
+    }
+    
+    .snakesia-main,
+    .snakesia-sidebar {
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .snakesia-attractions {
+        grid-template-columns: 1fr;
+    }
+    
+    .snakesia-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .ticket-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .snakesia-nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .snakesia-nav-button {
+        display: block;
+        text-align: center;
+        margin: 5px 0;
+    }
+    
+    .snakesia-digital-clock {
+        font-size: 18px;
+    }
+    
+    .snakesia-map-controls {
+        flex-wrap: wrap;
+    }
 }

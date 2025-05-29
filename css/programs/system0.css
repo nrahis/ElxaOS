@@ -1,0 +1,472 @@
+/* =================================
+   SYSTEM 0 - CURSED MODE STYLING
+================================= */
+
+/* Base overlay when System 0 is active */
+.sys0-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    mix-blend-mode: multiply;
+}
+
+/* TV static effect */
+.sys0-static {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-radial-gradient(circle at 50% 50%, 
+            transparent 0, 
+            rgba(255, 255, 255, 0.05) 1px, 
+            transparent 2px);
+    animation: sys0-static-move 0.1s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes sys0-static-move {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(1px, 1px); }
+    50% { transform: translate(-1px, 1px); }
+    75% { transform: translate(1px, -1px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Scanlines effect */
+.sys0-scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+    );
+    animation: sys0-scanlines-move 8s linear infinite;
+}
+
+@keyframes sys0-scanlines-move {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(10px); }
+}
+
+/* Main body effects when System 0 is active */
+body.sys0-active {
+    position: relative;
+    overflow: hidden;
+}
+
+body.sys0-active::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 0, 0, 0.2);
+    pointer-events: none;
+    z-index: 9997;
+    animation: sys0-red-pulse 3s ease-in-out infinite;
+}
+
+@keyframes sys0-red-pulse {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.3; }
+}
+
+/* Corruption indicator */
+.sys0-corruption-indicator {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #ff0000;
+    padding: 10px 20px;
+    z-index: 9999;
+    pointer-events: all;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.sys0-corruption-text {
+    color: #ff0000;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 0 0 5px #ff0000;
+    display: block;
+    margin-bottom: 5px;
+    animation: sys0-text-glitch 2s infinite;
+}
+
+@keyframes sys0-text-glitch {
+    0%, 100% { text-shadow: 0 0 5px #ff0000; }
+    25% { text-shadow: -2px 0 5px #00ff00, 2px 0 5px #ff00ff; }
+    50% { text-shadow: 2px 0 5px #00ffff, -2px 0 5px #ffff00; }
+    75% { text-shadow: 0 0 10px #ff0000; }
+}
+
+.sys0-corruption-bar {
+    width: 200px;
+    height: 10px;
+    background: #000;
+    border: 1px solid #ff0000;
+    position: relative;
+    overflow: hidden;
+}
+
+.sys0-corruption-fill {
+    height: 100%;
+    background: #00ff00;
+    width: 0%;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.sys0-corruption-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        transparent 100%);
+    animation: sys0-shine 2s infinite;
+}
+
+@keyframes sys0-shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+/* Exit hint */
+.sys0-exit-hint {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ff00;
+    padding: 5px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    border: 1px solid #00ff00;
+    z-index: 9999;
+    animation: sys0-blink 2s infinite;
+}
+
+@keyframes sys0-blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.3; }
+}
+
+/* Glitch effects */
+body.sys0-flicker {
+    animation: sys0-flicker 0.1s linear;
+}
+
+@keyframes sys0-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+body.sys0-invert {
+    filter: invert(1);
+}
+
+body.sys0-shake {
+    animation: sys0-shake 0.5s linear;
+}
+
+@keyframes sys0-shake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-2px, -2px); }
+    20%, 40%, 60%, 80% { transform: translate(2px, 2px); }
+}
+
+/* Window distortion */
+.window.sys0-distort {
+    animation: sys0-window-distort 1s ease-in-out;
+}
+
+@keyframes sys0-window-distort {
+    0%, 100% { transform: skew(0deg, 0deg) scale(1); }
+    25% { transform: skew(2deg, 1deg) scale(1.02); }
+    50% { transform: skew(-1deg, -2deg) scale(0.98); }
+    75% { transform: skew(1deg, -1deg) scale(1.01); }
+}
+
+/* Corrupted elements */
+.sys0-glitched {
+    animation: sys0-text-corrupt 0.5s infinite;
+}
+
+@keyframes sys0-text-corrupt {
+    0%, 100% { 
+        filter: none; 
+        transform: none;
+    }
+    20% { 
+        filter: blur(1px); 
+        transform: translateX(-1px);
+    }
+    40% { 
+        filter: blur(0); 
+        transform: translateX(1px);
+    }
+    60% { 
+        filter: contrast(2); 
+        transform: translateY(1px);
+    }
+    80% { 
+        filter: brightness(2); 
+        transform: translateY(-1px);
+    }
+}
+
+/* Corrupted desktop icons */
+.desktop-icon.sys0-corrupt-icon {
+    animation: sys0-icon-corrupt 2s infinite;
+}
+
+@keyframes sys0-icon-corrupt {
+    0%, 100% { 
+        transform: rotate(0deg) scale(1);
+        filter: hue-rotate(0deg);
+    }
+    25% { 
+        transform: rotate(-5deg) scale(1.1);
+        filter: hue-rotate(180deg);
+    }
+    50% { 
+        transform: rotate(5deg) scale(0.9);
+        filter: hue-rotate(90deg) saturate(2);
+    }
+    75% { 
+        transform: rotate(-3deg) scale(1.05);
+        filter: hue-rotate(270deg) contrast(2);
+    }
+}
+
+/* Corrupted taskbar */
+.taskbar.sys0-corrupt-taskbar {
+    animation: sys0-taskbar-glitch 0.8s linear;
+}
+
+@keyframes sys0-taskbar-glitch {
+    0%, 100% { 
+        transform: translateY(0);
+        filter: none;
+    }
+    20% { 
+        transform: translateY(30px);
+        filter: blur(2px);
+    }
+    40% { 
+        transform: translateY(-30px);
+        filter: hue-rotate(90deg);
+    }
+    60% { 
+        transform: translateY(15px);
+        filter: invert(1);
+    }
+    80% { 
+        transform: translateY(-15px);
+        filter: contrast(3);
+    }
+}
+
+/* Cursed messages */
+.sys0-message {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    color: #ff0000;
+    padding: 10px 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #ff0000;
+    z-index: 10000;
+    animation: sys0-message-appear 0.5s ease-out;
+    text-shadow: 0 0 5px currentColor;
+    pointer-events: none;
+}
+
+.sys0-message.sys0-important {
+    background: #ff0000;
+    color: #000;
+    font-size: 18px;
+    border: 3px solid #000;
+    animation: sys0-important-message 0.5s ease-out;
+}
+
+@keyframes sys0-message-appear {
+    0% { 
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+    100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes sys0-important-message {
+    0% { 
+        transform: scale(3) rotate(360deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* Floating eyes */
+.sys0-floating-eye {
+    position: fixed;
+    font-size: 24px;
+    z-index: 9996;
+    animation: sys0-float 10s infinite ease-in-out;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.sys0-floating-eye:hover {
+    transform: scale(2) rotate(360deg);
+}
+
+@keyframes sys0-float {
+    0%, 100% { 
+        transform: translateY(0) translateX(0);
+    }
+    25% { 
+        transform: translateY(-30px) translateX(20px);
+    }
+    50% { 
+        transform: translateY(20px) translateX(-30px);
+    }
+    75% { 
+        transform: translateY(-20px) translateX(-20px);
+    }
+}
+
+/* Sussy Lair entrance */
+.sys0-sussy-lair {
+    position: fixed;
+    bottom: 100px;
+    left: 50px;
+    font-size: 32px;
+    z-index: 9995;
+    cursor: pointer;
+    animation: sys0-lair-pulse 2s infinite;
+    filter: drop-shadow(0 0 10px purple);
+}
+
+@keyframes sys0-lair-pulse {
+    0%, 100% { 
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px purple);
+    }
+    50% { 
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 20px red);
+    }
+}
+
+/* Sussy mode */
+body.sys0-sussy-mode {
+    animation: sys0-sussy-colors 5s linear;
+}
+
+@keyframes sys0-sussy-colors {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+/* Pushing Cat appearances */
+.sys0-pushing-cat {
+    position: fixed;
+    font-size: 32px;
+    z-index: 10001;
+    cursor: pointer;
+    animation: sys0-cat-move 3s infinite alternate ease-in-out;
+    transition: transform 0.5s ease;
+}
+
+@keyframes sys0-cat-move {
+    0% { 
+        transform: rotate(-10deg);
+    }
+    100% { 
+        transform: rotate(10deg);
+    }
+}
+
+/* Time glitch effect */
+#clock.sys0-time-glitch {
+    animation: sys0-time-distort 0.5s infinite;
+    color: #ff0000 !important;
+}
+
+@keyframes sys0-time-distort {
+    0%, 100% { 
+        text-shadow: none;
+        transform: none;
+    }
+    25% { 
+        text-shadow: -2px 0 #00ff00, 2px 0 #ff00ff;
+        transform: skewX(5deg);
+    }
+    50% { 
+        text-shadow: 2px 0 #00ffff, -2px 0 #ffff00;
+        transform: skewX(-5deg);
+    }
+    75% { 
+        text-shadow: 0 0 5px #ff0000;
+        transform: scale(1.1);
+    }
+}
+
+/* Corrupted cursor for specific elements */
+body.sys0-active * {
+    cursor: crosshair !important;
+}
+
+body.sys0-active .sys0-floating-eye,
+body.sys0-active .sys0-sussy-lair,
+body.sys0-active .sys0-pushing-cat {
+    cursor: pointer !important;
+}
+
+/* Chrome/Webkit specific effects */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .sys0-corruption-text {
+        background: linear-gradient(45deg, #ff0000, #ff00ff, #00ff00, #00ffff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: sys0-gradient-shift 2s linear infinite;
+    }
+    
+    @keyframes sys0-gradient-shift {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+}

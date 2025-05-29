@@ -1,3 +1,4 @@
+@import url('programs/system0.css');
 @import url('system/task-manager.css');
 @import url('system/setup-wizard.css');
 @import url('system/dialogs.css');
@@ -17,6 +18,8 @@
 @import url('programs/calculator.css');
 @import url('programs/elxacode.css');
 @import url('programs/elxabooks.css');
+@import url('programs/virus/lebron-james-virus.css');
+@import url('programs/virus/roblox-jumpscare-virus.css');
 @import url('programs/antivirus.css');
 @import url('programs/virus-lab.css');
 @import url('programs/browser.css');

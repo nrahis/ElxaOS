@@ -581,6 +581,10 @@ class ElxaOS {
 
         // Initialize installed programs storage
         this.installedPrograms = {};
+
+        // Initialize System 0 AFTER everything else is set up
+        this.system0 = new System0(this.eventBus);
+        console.log('🔴 System 0 initialized and listening for commands...');
         
         this.setupEventHandlers();
         this.initialize();

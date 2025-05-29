@@ -1,0 +1,885 @@
+/* =================================
+   ROBLOX HORROR JUMPSCARE VIRUS STYLING
+   Created by: Buggy's spooky imagination
+   Updated: Now with authentic Roblox UI styling!
+================================= */
+
+/* Base Roblox UI Styling */
+.roblox-jumpscare {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: fixed;
+    z-index: 2600;
+    min-width: 280px;
+    max-width: 400px;
+    user-select: none;
+}
+
+/* Roblox Button Styling */
+.roblox-btn {
+    padding: 8px 16px;
+    border: 2px solid;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-family: inherit;
+}
+
+.roblox-btn-green {
+    background: linear-gradient(180deg, #00A2E8 0%, #0082C6 100%);
+    border-color: #0082C6;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.roblox-btn-green:hover {
+    background: linear-gradient(180deg, #0082C6 0%, #006AA8 100%);
+    transform: translateY(-1px);
+}
+
+.roblox-btn-red {
+    background: linear-gradient(180deg, #FF4C4C 0%, #E53E3E 100%);
+    border-color: #E53E3E;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.roblox-btn-red:hover {
+    background: linear-gradient(180deg, #E53E3E 0%, #C53030 100%);
+    transform: translateY(-1px);
+}
+
+.roblox-btn-gray {
+    background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+    border-color: #808080;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.roblox-btn-gray:hover {
+    background: linear-gradient(180deg, #808080 0%, #606060 100%);
+    transform: translateY(-1px);
+}
+
+/* Close Button Styling */
+.roblox-close {
+    color: #666;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.roblox-close:hover {
+    color: #ff4444;
+}
+
+/* Chat Bubble Styling */
+.roblox-chat-bubble {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #393B3D;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    animation: spooky-glow 2s ease-in-out infinite alternate;
+}
+
+.roblox-chat-header {
+    background: linear-gradient(180deg, #393B3D 0%, #2A2D30 100%);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #555;
+}
+
+.roblox-avatar {
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 68, 68, 0.2);
+    border-radius: 50%;
+    border: 1px solid #ff4444;
+    overflow: hidden;
+}
+
+.roblox-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.roblox-username {
+    flex: 1;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff6666;
+}
+
+.roblox-chat-message {
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #ffcccc;
+}
+
+.roblox-chat-actions {
+    padding: 8px 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Notification Styling */
+.roblox-notification {
+    background: linear-gradient(180deg, #00A2E8 0%, #0082C6 100%);
+    border: 2px solid #0082C6;
+    border-radius: 8px;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 162, 232, 0.4);
+    animation: notification-pulse 2s ease-in-out infinite;
+}
+
+.roblox-notif-icon {
+    font-size: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.roblox-notif-image {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.roblox-notif-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.roblox-notif-content {
+    flex: 1;
+}
+
+.roblox-notif-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.roblox-notif-message {
+    font-size: 11px;
+    opacity: 0.9;
+}
+
+.roblox-notif-close {
+    padding: 4px;
+}
+
+/* Server Message Styling */
+.roblox-server-msg {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #ff6b35;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.roblox-server-header {
+    background: linear-gradient(180deg, #ff6b35 0%, #e55a2b 100%);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.roblox-server-icon {
+    font-size: 16px;
+}
+
+.roblox-server-name {
+    flex: 1;
+}
+
+.roblox-server-content {
+    padding: 12px;
+}
+
+.roblox-system-msg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #ffaa88;
+}
+
+.roblox-system-icon {
+    font-size: 16px;
+    color: #ff6b35;
+}
+
+/* Friend Request Styling */
+.roblox-friend-request {
+    background: white;
+    border: 2px solid #393B3D;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: friend-req-shake 3s ease-in-out infinite;
+}
+
+.roblox-friend-header {
+    background: linear-gradient(180deg, #393B3D 0%, #2A2D30 100%);
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.roblox-friend-icon {
+    font-size: 16px;
+    color: #00A2E8;
+}
+
+.roblox-friend-content {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.roblox-friend-avatar {
+    font-size: 32px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 68, 68, 0.1);
+    border-radius: 8px;
+    border: 2px solid #ff4444;
+    animation: avatar-throb 1.5s ease-in-out infinite;
+    overflow: hidden;
+}
+
+.roblox-friend-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.roblox-friend-info {
+    flex: 1;
+}
+
+.roblox-friend-username {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.roblox-friend-message {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+.roblox-friend-actions {
+    padding: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    background: #f8f8f8;
+}
+
+/* Game Invite Styling */
+.roblox-game-invite {
+    background: white;
+    border: 2px solid #00A2E8;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 162, 232, 0.3);
+    overflow: hidden;
+    animation: game-invite-glow 2s ease-in-out infinite alternate;
+}
+
+.roblox-invite-header {
+    background: linear-gradient(180deg, #00A2E8 0%, #0082C6 100%);
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.roblox-game-icon {
+    font-size: 16px;
+}
+
+.roblox-invite-content {
+    padding: 16px;
+    text-align: center;
+}
+
+.roblox-game-thumbnail {
+    width: 120px;
+    height: 80px;
+    margin: 0 auto 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 2px solid #0082C6;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Image Popup Styling */
+.roblox-image-popup {
+    background: white;
+    border: 2px solid #393B3D;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    animation: image-popup-shake 4s ease-in-out infinite;
+}
+
+.roblox-popup-header {
+    background: linear-gradient(180deg, #393B3D 0%, #2A2D30 100%);
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.roblox-popup-icon {
+    font-size: 16px;
+    color: #ff6666;
+}
+
+.roblox-popup-content {
+    padding: 16px;
+    text-align: center;
+}
+
+.roblox-popup-image {
+    width: 200px;
+    height: 150px;
+    margin: 0 auto 12px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 2px solid #ff4444;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scary-image-glow 2s ease-in-out infinite alternate;
+}
+
+.roblox-popup-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fallback-scary {
+    font-size: 24px;
+    color: #ff4444;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.roblox-popup-message {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.roblox-popup-user {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 16px;
+}
+
+.roblox-popup-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.roblox-game-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fallback-game-icon {
+    font-size: 32px;
+    color: #0082C6;
+}
+
+.roblox-invite-user {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.roblox-invite-text {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.roblox-invite-game {
+    font-size: 16px;
+    font-weight: bold;
+    color: #00A2E8;
+    margin-bottom: 8px;
+    padding: 8px;
+    background: rgba(0, 162, 232, 0.1);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 162, 232, 0.3);
+}
+
+.roblox-invite-message {
+    font-size: 11px;
+    color: #999;
+    font-style: italic;
+    margin-bottom: 12px;
+}
+
+.roblox-invite-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Trade Request Styling */
+.roblox-trade-request {
+    background: white;
+    border: 2px solid #FF8C00;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+    overflow: hidden;
+    animation: trade-shimmer 3s ease-in-out infinite;
+}
+
+.roblox-trade-header {
+    background: linear-gradient(180deg, #FF8C00 0%, #FF7700 100%);
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.roblox-trade-icon {
+    font-size: 16px;
+}
+
+.roblox-trade-content {
+    padding: 16px;
+}
+
+.roblox-trader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.roblox-trader-avatar {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 68, 68, 0.1);
+    border-radius: 50%;
+    border: 2px solid #ff4444;
+    overflow: hidden;
+}
+
+.roblox-trader-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.roblox-trader-name {
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+}
+
+.roblox-trade-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.roblox-trade-offering,
+.roblox-trade-wanting {
+    flex: 1;
+}
+
+.roblox-trade-label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.roblox-trade-item {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 8px;
+    background: rgba(255, 140, 0, 0.1);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    color: #333;
+}
+
+.roblox-trade-arrow {
+    font-size: 18px;
+    color: #FF8C00;
+    font-weight: bold;
+}
+
+.roblox-trade-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Death Screen Styling (Keep Original) */
+.roblox-death-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2700;
+    pointer-events: all;
+    animation: death-screen-appear 0.8s ease-out;
+}
+
+.death-overlay {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, 
+        rgba(0, 0, 0, 0.9) 0%, 
+        rgba(139, 0, 0, 0.8) 50%, 
+        rgba(0, 0, 0, 0.9) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+}
+
+.death-content {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 40px;
+    border-radius: 12px;
+    border: 3px solid #ff0000;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    max-width: 500px;
+    animation: death-float 3s ease-in-out infinite;
+}
+
+.death-image img {
+    max-width: 300px;
+    max-height: 200px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 2px solid #ff4444;
+}
+
+.fallback-death {
+    font-size: 24px;
+    color: #ff4444;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.death-message {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff4444;
+    margin-bottom: 20px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    animation: death-pulse 2s ease-in-out infinite;
+}
+
+.death-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.death-stats div {
+    background: rgba(255, 68, 68, 0.2);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ff4444;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.respawn-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.respawn-btn,
+.quit-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.respawn-btn {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    border: 3px outset #00b894;
+    color: white;
+}
+
+.respawn-btn:hover {
+    background: linear-gradient(135deg, #00cec9, #74b9ff);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 184, 148, 0.4);
+}
+
+.quit-btn {
+    background: linear-gradient(135deg, #d63031, #e17055);
+    border: 3px outset #d63031;
+    color: white;
+}
+
+.quit-btn:hover {
+    background: linear-gradient(135deg, #e17055, #fdcb6e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(214, 48, 49, 0.4);
+}
+
+/* Animations */
+@keyframes roblox-slide-in {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes roblox-slide-out {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+    }
+}
+
+@keyframes spooky-glow {
+    from {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+    to {
+        box-shadow: 0 4px 20px rgba(255, 68, 68, 0.6);
+    }
+}
+
+@keyframes notification-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes friend-req-shake {
+    0%, 100% { transform: translateX(0); }
+    10% { transform: translateX(-1px); }
+    20% { transform: translateX(1px); }
+    30% { transform: translateX(-1px); }
+    40% { transform: translateX(1px); }
+    50% { transform: translateX(0); }
+}
+
+@keyframes avatar-throb {
+    0%, 100% {
+        transform: scale(1);
+        border-color: #ff4444;
+    }
+    50% {
+        transform: scale(1.05);
+        border-color: #ff6666;
+    }
+}
+
+@keyframes game-invite-glow {
+    from {
+        box-shadow: 0 4px 12px rgba(0, 162, 232, 0.3);
+    }
+    to {
+        box-shadow: 0 4px 16px rgba(0, 162, 232, 0.6);
+    }
+}
+
+@keyframes trade-shimmer {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(255, 140, 0, 0.6);
+    }
+}
+
+@keyframes image-popup-shake {
+    0%, 100% { transform: translateX(0); }
+    5% { transform: translateX(-1px) rotate(-0.5deg); }
+    10% { transform: translateX(1px) rotate(0.5deg); }
+    15% { transform: translateX(-1px) rotate(-0.5deg); }
+    20% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes scary-image-glow {
+    from {
+        box-shadow: 0 4px 12px rgba(255, 68, 68, 0.4);
+        border-color: #ff4444;
+    }
+    to {
+        box-shadow: 0 4px 20px rgba(255, 68, 68, 0.8);
+        border-color: #ff6666;
+    }
+}
+
+@keyframes death-screen-appear {
+    0% {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+    100% {
+        opacity: 1;
+        backdrop-filter: blur(3px);
+    }
+}
+
+@keyframes death-float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes death-pulse {
+    0%, 100% {
+        transform: scale(1);
+        color: #ff4444;
+    }
+    50% {
+        transform: scale(1.1);
+        color: #ff6666;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .roblox-jumpscare {
+        min-width: 260px;
+        max-width: 300px;
+    }
+    
+    .death-content {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .death-message {
+        font-size: 20px;
+    }
+    
+    .death-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .respawn-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .respawn-btn,
+    .quit-btn {
+        width: 200px;
+    }
+    
+    .roblox-trade-details {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .roblox-trade-arrow {
+        transform: rotate(90deg);
+    }
+}

@@ -821,10 +821,26 @@
         // Snake Deluxe specific purchase function
         function purchaseSnakeDeluxe() {
             if (typeof purchaseProduct === 'function') {
+                // Create the same installer data as the demo
+                const installerData = {
+                    id: 'snake_deluxe',
+                    name: 'Snake Deluxe',
+                    description: 'Join Mr. Snake-e, the 60-year-old billionaire CEO of ElxaCorp, on his epic adventures through Snakesia! Navigate through 10 magical levels with his 82-year-old wife Mrs. Snake-e!',
+                    icon: '🐍',
+                    version: '2.0',
+                    author: 'ElxaCorp Game Studios',
+                    gameData: {
+                        type: 'snake_deluxe',
+                        difficulty: 'normal',
+                        boardSize: 24
+                    }
+                };
+                
                 purchaseProduct({
                     name: 'Snake Deluxe Executive Training Suite',
                     price: '$39.99',
-                    description: 'Professional Executive Development Platform'
+                    description: 'Professional Executive Development Platform',
+                    installerData: installerData  // Include the installer data
                 });
             } else {
                 alert('Payment system not available. Please ensure the payment system is loaded.');
