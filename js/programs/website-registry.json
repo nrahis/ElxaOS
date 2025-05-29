@@ -120,8 +120,18 @@
         "type": "file",
         "path": "./assets/interwebs/sussy-cat/index.html",
         "searchData": {
-            "keywords": ["sussy cat", "games", "stealth", "adventure", "kids", "pushing cat", "elxacorp", "retro", "pixel art", "family", "mischief", "hiding", "plotting", "sus"],
+            "keywords": ["sussy cat", "games", "stealth", "adventure", "kids", "pushing cat", "retro", "pixel art", "family", "mischief", "hiding", "plotting", "sus"],
             "description": "Official website for Sussy Cat Adventure - the cozy stealth game featuring Pushing Cat and his mischievous house adventures. From ElxaCorp Games Division.",
+            "category": "Gaming"
+        }
+    },
+    "mail-room-mayhem.ex": {
+        "title": "Mail Room Mayhem - ElxaCorp Games",
+        "type": "file",
+        "path": "./assets/interwebs/mrm/index.html",
+        "searchData": {
+            "keywords": ["mail room mayhem", "elxacorp", "mail sorting", "arcade", "action", "keyboard controls", "fast-paced", "corporate", "snakesian mail", "pushing cat", "challenge", "mail division", "sorting bins", "priority mail", "high score"],
+            "description": "Official website for Mail Room Mayhem - ElxaCorp's fast-paced mail sorting challenge with keyboard-optimized controls. Sort Snakesian mail and watch out for Pushing Cat!",
             "category": "Gaming"
         }
     },

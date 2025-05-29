@@ -729,6 +729,21 @@ class ElxaMockPayment {
                     features: ['Sussy Lair hiding spot', 'Plotting mechanic', 'Retro pixel art', 'Family-friendly gameplay']
                 }
             };
+        } else if (this.currentOrder.productName === 'Mail Room Mayhem') {
+        installerData = {
+            id: 'mail_room_mayhem',
+            name: 'Mail Room Mayhem',
+            description: 'ElxaCorp\'s Fast-Paced Sorting Challenge - Sort Snakesian mail with keyboard-optimized controls!',
+            icon: '📬',
+            version: '1.0',
+            author: 'ElxaCorp Games Division - Mail Dept.',
+            gameData: {
+                type: 'mail_room_mayhem_game',
+                features: ['Keyboard-optimized controls', 'Pushing Cat events', 'Snakesian mail content', 'High score tracking'],
+                departments: ['Executive', 'Tech', 'Snakesia', 'Recycle'],
+                difficulty: 'Progressive - starts easy, gets intense!'
+            }
+        };
         } else {
             // Generic game installer for other products
             installerData = {

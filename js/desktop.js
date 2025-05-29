@@ -837,7 +837,7 @@ class ElxaOS {
             this.fileSystem.createFile(['root', 'Programs'], 'Snake Game.abby', JSON.stringify(snakeGameInstaller));
         }
 
-        if (!programsContents.some(file => file.name === 'Mail Room Mayhem.abby')) {
+        /*if (!programsContents.some(file => file.name === 'Mail Room Mayhem.abby')) {
             const mailRoomMayhemInstaller = {
                 id: 'mail_room_mayhem',
                 name: 'Mail Room Mayhem',
@@ -853,7 +853,7 @@ class ElxaOS {
             };
             
             this.fileSystem.createFile(['root', 'Programs'], 'Mail Room Mayhem.abby', JSON.stringify(mailRoomMayhemInstaller));
-        }
+        }*/
 
         /*// Snake Deluxe installer - The Epic Adventure!
         if (!programsContents.some(file => file.name === 'Snake Deluxe.abby')) {

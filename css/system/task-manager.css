@@ -1,0 +1,619 @@
+/* =================================
+   ELXAOS TASK MANAGER STYLES
+================================= */
+.elxa-task-manager {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-size: 11px;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #000000);
+    font-family: 'MS Sans Serif', sans-serif;
+}
+
+/* =================================
+   TAB NAVIGATION
+================================= */
+.elxa-tm-tabs {
+    display: flex;
+    background: var(--buttonBg, #c0c0c0);
+    border-bottom: 1px solid var(--windowBorder, #808080);
+    flex-shrink: 0;
+}
+
+.elxa-tm-tab {
+    padding: 6px 12px;
+    cursor: pointer;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    border-bottom: none;
+    margin-right: 2px;
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--menuText, #000000);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.1s ease;
+}
+
+.elxa-tm-tab:hover:not(.active) {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
+}
+
+.elxa-tm-tab.active {
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    border-bottom: 1px solid var(--windowBg, #c0c0c0);
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+}
+
+.elxa-tm-tab span {
+    font-size: 12px;
+}
+
+/* =================================
+   CONTENT AREA
+================================= */
+.elxa-tm-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.elxa-tm-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    flex-direction: column;
+    padding: 8px;
+    overflow: auto;
+}
+
+.elxa-tm-panel.active {
+    display: flex;
+}
+
+/* =================================
+   PROCESSES TAB
+================================= */
+.elxa-tm-toolbar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    padding: 4px;
+    background: var(--menuBg, #f0f0f0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+}
+
+.elxa-tm-btn {
+    padding: 4px 8px;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--menuText, #000000);
+    font-weight: bold;
+}
+
+.elxa-tm-btn:hover:not(:disabled) {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
+}
+
+.elxa-tm-btn:active:not(:disabled) {
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
+}
+
+.elxa-tm-btn:disabled {
+    background: var(--windowBg, #f0f0f0);
+    color: #808080;
+    cursor: not-allowed;
+}
+
+.elxa-tm-process-list {
+    flex: 1;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
+    overflow: auto;
+}
+
+.elxa-tm-process-header {
+    display: grid;
+    grid-template-columns: 2fr 120px 80px 80px;
+    background: var(--buttonBg, #c0c0c0);
+    border-bottom: 1px solid var(--windowBorder, #808080);
+    font-weight: bold;
+    font-size: 10px;
+    padding: 4px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.elxa-tm-process-header > div {
+    padding: 2px 4px;
+    border-right: 1px solid var(--windowBorder, #808080);
+}
+
+.elxa-tm-process-header > div:last-child {
+    border-right: none;
+}
+
+.elxa-tm-process-items {
+    /* Container for process items */
+}
+
+.process-item {
+    display: grid;
+    grid-template-columns: 2fr 120px 80px 80px;
+    padding: 2px 4px;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 10px;
+    align-items: center;
+}
+
+.process-item:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.process-item:hover {
+    background: var(--menuHoverBg, rgba(0, 100, 200, 0.1));
+}
+
+.process-item.selected {
+    background: var(--menuHoverBg, rgba(0, 100, 200, 0.3));
+    color: var(--menuHoverText, white);
+}
+
+.process-item.system-process {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.process-item > div {
+    padding: 2px 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.proc-status.running {
+    color: #008000;
+    font-weight: bold;
+}
+
+.proc-status.minimized {
+    color: #ff8800;
+}
+
+.proc-status.active {
+    color: #0000ff;
+    font-weight: bold;
+}
+
+/* =================================
+   PERFORMANCE TAB
+================================= */
+.elxa-tm-perf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.perf-card {
+    background: var(--windowBg, white);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    padding: 12px;
+    text-align: center;
+}
+
+.perf-title {
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 8px;
+    color: var(--menuText, #000000);
+}
+
+.perf-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--menuHoverBg, #000080);
+    margin-bottom: 8px;
+}
+
+.perf-bar {
+    width: 100%;
+    height: 12px;
+    background: var(--buttonBg, #e0e0e0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.perf-fill {
+    height: 100%;
+    background: linear-gradient(to right, #00aa00, #00ff00);
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+.perf-detail {
+    font-size: 9px;
+    color: #666666;
+    font-style: italic;
+}
+
+.elxa-tm-uptime {
+    display: flex;
+    justify-content: center;
+}
+
+.uptime-card {
+    background: var(--windowBg, white);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    padding: 16px;
+    text-align: center;
+    min-width: 200px;
+}
+
+.uptime-title {
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 8px;
+    color: var(--menuText, #000000);
+}
+
+.uptime-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--menuHoverBg, #000080);
+}
+
+/* =================================
+   DEBUG TAB
+================================= */
+.elxa-tm-debug-section {
+    margin-bottom: 16px;
+    background: var(--windowBg, white);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    padding: 12px;
+}
+
+.elxa-tm-debug-section h3 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: var(--menuHoverBg, #000080);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
+}
+
+.debug-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.debug-btn {
+    padding: 4px 8px;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--menuText, #000000);
+    white-space: nowrap;
+    transition: all 0.1s ease;
+}
+
+.debug-btn:hover {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
+    transform: translateY(-1px);
+}
+
+.debug-btn:active {
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
+    transform: translateY(0);
+}
+
+.debug-btn.danger {
+    background: linear-gradient(to bottom, #ff6666, #ff4444);
+    border-color: #ff4444;
+    color: white;
+    font-weight: bold;
+}
+
+.debug-btn.danger:hover {
+    background: linear-gradient(to bottom, #ff8888, #ff6666);
+}
+
+.elxa-tm-debug-output {
+    background: var(--windowBg, white);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+}
+
+.debug-output-header {
+    background: var(--buttonBg, #c0c0c0);
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--windowBorder, #808080);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.debug-clear-btn {
+    padding: 2px 6px;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    cursor: pointer;
+    font-size: 9px;
+    color: var(--menuText, #000000);
+}
+
+.debug-clear-btn:hover {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
+}
+
+.debug-console {
+    flex: 1;
+    padding: 4px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    line-height: 1.2;
+    background: #000000;
+    color: #00ff00;
+}
+
+.debug-line {
+    margin: 1px 0;
+    word-wrap: break-word;
+}
+
+.debug-console::-webkit-scrollbar {
+    width: 12px;
+}
+
+.debug-console::-webkit-scrollbar-track {
+    background: #333333;
+}
+
+.debug-console::-webkit-scrollbar-thumb {
+    background: #666666;
+    border: 1px solid #333333;
+}
+
+/* =================================
+   SYSTEM INFO TAB
+================================= */
+.elxa-tm-sysinfo {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sysinfo-section {
+    background: var(--windowBg, white);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    padding: 12px;
+}
+
+.sysinfo-section h3 {
+    margin: 0 0 12px 0;
+    font-size: 12px;
+    color: var(--menuHoverBg, #000080);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
+}
+
+.sysinfo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 10px;
+}
+
+.sysinfo-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px dotted #cccccc;
+}
+
+.sysinfo-item strong {
+    color: var(--menuText, #000000);
+    font-weight: bold;
+}
+
+.sysinfo-item span {
+    color: var(--menuHoverBg, #000080);
+    text-align: right;
+}
+
+.program-list {
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: #f8f8f8;
+    padding: 4px;
+}
+
+.program-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 4px;
+    font-size: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.program-item:last-child {
+    border-bottom: none;
+}
+
+.prog-icon {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+}
+
+.prog-name {
+    flex: 1;
+    font-weight: bold;
+    color: var(--menuText, #000000);
+}
+
+.prog-version {
+    color: #666666;
+    font-size: 9px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    text-align: center;
+}
+
+.stat-item {
+    background: var(--menuBg, #f0f0f0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    padding: 12px 8px;
+    border-radius: 4px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--menuHoverBg, #000080);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 9px;
+    color: var(--menuText, #000000);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* =================================
+   RESPONSIVE ADJUSTMENTS
+================================= */
+@media (max-width: 600px) {
+    .elxa-tm-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .elxa-tm-tab {
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+        margin-right: 0;
+        margin-bottom: 2px;
+    }
+    
+    .elxa-tm-perf-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .sysinfo-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .debug-buttons {
+        justify-content: center;
+    }
+    
+    .debug-btn {
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+    }
+    
+    .elxa-tm-process-header,
+    .process-item {
+        grid-template-columns: 1.5fr 80px 60px 60px;
+        font-size: 9px;
+    }
+}
+
+@media (max-height: 500px) {
+    .elxa-tm-debug-output {
+        height: 120px;
+    }
+    
+    .program-list {
+        max-height: 80px;
+    }
+    
+    .elxa-tm-panel {
+        padding: 4px;
+    }
+    
+    .elxa-tm-debug-section {
+        margin-bottom: 8px;
+        padding: 8px;
+    }
+}
+
+/* =================================
+   DARK THEME ADJUSTMENTS
+================================= */
+.dark-theme .elxa-task-manager {
+    /* Ensure proper dark theme integration */
+}
+
+.dark-theme .debug-console {
+    background: #1a1a1a;
+    color: #00ff00;
+}
+
+.dark-theme .perf-fill {
+    background: linear-gradient(to right, #4CAF50, #8BC34A);
+}
+
+.dark-theme .program-list,
+.dark-theme .elxa-tm-process-list {
+    background: var(--menuBg, #2d2d2d);
+}
+
+.dark-theme .process-item:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme .stat-item {
+    background: var(--menuBg, #2d2d2d);
+}
+
+/* =================================
+   ACCESSIBILITY
+================================= */
+.elxa-tm-tab:focus,
+.elxa-tm-btn:focus,
+.debug-btn:focus {
+    outline: 2px solid var(--menuHoverBg, #000080);
+    outline-offset: 1px;
+}
+
+.process-item:focus {
+    outline: 1px solid var(--menuHoverBg, #000080);
+    outline-offset: -1px;
+}

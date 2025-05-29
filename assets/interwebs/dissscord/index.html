@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dissscord - Chat for Snakesia</title>
+    <title>Dissscord</title>
     <link rel="stylesheet" href="./assets/interwebs/dissscord/styles.css">
 </head>
 <body>
@@ -77,7 +77,7 @@
                 this.currentChannel = 'general';
                 this.messages = []; // Current channel messages
                 this.channelMessages = {}; // Persistent messages per server/channel
-                this.maxMessages = 30; // Reduced from 100 to save memory
+                this.maxMessages = 50; // Increased from 30 to keep more chat history
                 this.messageGenerationActive = false;
                 this.typingTimeouts = new Map();
                 this.userCanSend = true;
@@ -259,13 +259,24 @@
             loadServer(serverId) {
                 console.log('🎮 Loading server:', serverId);
                 
-                // Save current channel messages before switching servers
-                this.saveCurrentChannelMessages();
+                // Save current channel messages before switching servers (with proper key)
+                if (this.currentServer && this.currentChannel) {
+                    this.saveCurrentChannelMessages();
+                }
                 
+                // Stop message generation for current server
+                this.stopMessageGeneration();
+                
+                // Clear current messages completely when switching servers
+                this.messages = [];
+                
+                // Update server context
                 this.currentServer = serverId;
                 this.currentChannel = 'general';
                 
-                // Update server selection
+                console.log(`🔄 Switched to server: ${serverId}, channel: general`);
+                
+                // Update server selection UI immediately
                 document.querySelectorAll('.ds-server-icon').forEach(icon => {
                     icon.classList.remove('active');
                 });
@@ -274,17 +285,28 @@
                     serverElement.classList.add('active');
                 }
                 
-                // Update server name
+                // Update server name immediately
                 document.getElementById('serverName').textContent = this.servers[serverId].name;
                 
-                // Load channels
+                // Load channels for new server
                 this.loadChannels(serverId);
                 
-                // Load members
+                // Load members for new server
                 this.loadMembers(serverId);
+                
+                // Clear current messages display immediately
+                const messageContainer = document.getElementById('messageContainer');
+                if (messageContainer) {
+                    messageContainer.innerHTML = '<div class="ds-loading">Loading messages for new server...</div>';
+                }
                 
                 // Load channel (default to general) - this will handle message loading
                 this.loadChannel('general');
+                
+                // Start message generation for new server after a brief delay
+                setTimeout(() => {
+                    this.startMessageGeneration();
+                }, 500);
                 
                 // Clean up old messages periodically to prevent memory buildup
                 this.cleanupChannelMessages();
@@ -347,7 +369,7 @@
                 this.currentChannel = channelId;
                 const channel = this.servers[this.currentServer].channels[channelId];
                 
-                // Update channel selection UI
+                // Update channel selection UI immediately
                 document.querySelectorAll('.ds-channel').forEach(ch => {
                     ch.classList.remove('active');
                 });
@@ -356,15 +378,23 @@
                     channelElement.classList.add('active');
                 }
                 
-                // Update channel header
+                // Update channel header immediately
                 document.getElementById('channelName').textContent = `# ${channel.name}`;
                 document.getElementById('channelTopic').textContent = channel.topic;
                 
-                // Update message input placeholder
+                // Update message input placeholder immediately
                 document.getElementById('messageInput').placeholder = `Message #${channel.name}`;
+                
+                // Show loading state immediately
+                const messageContainer = document.getElementById('messageContainer');
+                if (messageContainer) {
+                    messageContainer.innerHTML = '<div class="ds-loading">Loading channel messages...</div>';
+                }
                 
                 // Load saved messages for this channel
                 const hasMessages = this.loadChannelMessages(this.currentServer, channelId);
+                
+                // Update message display immediately
                 this.updateMessageDisplay();
                 
                 // Only generate new messages if channel is empty
@@ -429,59 +459,63 @@
             }
 
             generateInitialMessages() {
-                console.log('🎮 Dissscord: Generating initial messages...');
+                console.log(`🎮 Generating initial messages for ${this.currentServer}:${this.currentChannel}...`);
                 
-                // Add one test message first to make sure the system works
-                const testMessage = {
-                    id: Date.now(),
-                    author: 'RemiMarway',
-                    authorInfo: {
-                        avatar: '🎮',
-                        role: 'owner',
-                        status: 'online'
-                    },
-                    text: 'Welcome to Dissscord! This is working!',
-                    timestamp: new Date(),
-                    type: 'test'
-                };
-                
-                this.addMessage(testMessage);
-                console.log('🎮 Dissscord: Added test message');
+                // Verify we have templates for this server/channel
+                if (!this.messageTemplates[this.currentServer] || !this.messageTemplates[this.currentServer][this.currentChannel]) {
+                    console.error(`❌ No message templates for ${this.currentServer}:${this.currentChannel}`);
+                    
+                    // Add a fallback message
+                    const fallbackMessage = {
+                        id: Date.now(),
+                        author: 'System',
+                        authorInfo: { avatar: '🤖', role: 'member', status: 'online' },
+                        text: `Welcome to ${this.servers[this.currentServer].name}! Chat is loading...`,
+                        timestamp: new Date(),
+                        type: 'system'
+                    };
+                    this.addMessage(fallbackMessage);
+                    return;
+                }
                 
                 // Generate 3-5 initial messages to populate the chat
-                const initialCount = Math.floor(Math.random() * 3) + 2; // 2-4 more messages
+                const initialCount = Math.floor(Math.random() * 3) + 3; // 3-5 messages
+                console.log(`🎮 Generating ${initialCount} initial messages...`);
                 
                 for (let i = 0; i < initialCount; i++) {
                     const message = this.createRandomMessage();
                     if (message) {
-                        // Add some time variation to make messages look older
-                        message.timestamp = new Date(Date.now() - (initialCount - i) * 60000 * Math.random() * 30);
+                        // Add some time variation to make messages look older (last hour)
+                        const minutesAgo = Math.random() * 60; // 0-60 minutes ago
+                        message.timestamp = new Date(Date.now() - minutesAgo * 60000);
                         this.addMessage(message);
-                        console.log('🎮 Generated initial message:', message.author, message.text);
+                        console.log(`✅ Generated initial message ${i+1}/${initialCount}: ${message.author} → "${message.text.substring(0, 50)}..."`);
                     } else {
-                        console.error('❌ Failed to create initial message for', this.currentServer, this.currentChannel);
-                        // Add a fallback message
-                        const fallbackMessage = {
-                            id: Date.now() + i,
-                            author: 'System',
-                            authorInfo: { avatar: '🤖', role: 'member', status: 'online' },
-                            text: 'Chat system is loading...',
-                            timestamp: new Date(Date.now() - (initialCount - i) * 60000),
-                            type: 'fallback'
-                        };
-                        this.addMessage(fallbackMessage);
+                        console.error(`❌ Failed to create initial message ${i+1} for ${this.currentServer}:${this.currentChannel}`);
                     }
                 }
                 
-                console.log('🎮 Dissscord: Initial messages complete, total:', this.messages.length);
+                console.log(`🎮 Initial messages complete for ${this.currentServer}:${this.currentChannel}, total: ${this.messages.length}`);
             }
 
             saveCurrentChannelMessages() {
-                // Save current messages to persistent storage
+                // Save current messages to persistent storage with server:channel key
+                if (!this.currentServer || !this.currentChannel) {
+                    console.log('⚠️ Cannot save - no current server/channel set');
+                    return;
+                }
+                
                 const key = `${this.currentServer}:${this.currentChannel}`;
                 if (this.messages.length > 0) {
                     this.channelMessages[key] = [...this.messages];
                     console.log(`💾 Saved ${this.messages.length} messages for ${key}`);
+                    
+                    // Debug: Show first message to verify uniqueness
+                    if (this.messages.length > 0) {
+                        console.log(`💾 First message preview: ${this.messages[0].author} → "${this.messages[0].text.substring(0, 50)}..."`);
+                    }
+                } else {
+                    console.log(`💾 No messages to save for ${key}`);
                 }
             }
 
@@ -490,9 +524,17 @@
                 const key = `${serverId}:${channelId}`;
                 const savedMessages = this.channelMessages[key];
                 
+                console.log(`📂 Loading messages for key: ${key}`);
+                console.log(`📂 Available cached channels:`, Object.keys(this.channelMessages));
+                
                 if (savedMessages && savedMessages.length > 0) {
                     this.messages = [...savedMessages];
                     console.log(`📂 Loaded ${this.messages.length} messages for ${key}`);
+                    
+                    // Debug: Show first message to verify it's correct for this server
+                    if (this.messages.length > 0) {
+                        console.log(`📂 First loaded message: ${this.messages[0].author} → "${this.messages[0].text.substring(0, 50)}..."`);
+                    }
                     return true;
                 } else {
                     this.messages = [];
@@ -506,12 +548,24 @@
                 const keys = Object.keys(this.channelMessages);
                 console.log(`🧹 Cleaning up ${keys.length} channel message caches`);
                 
-                // Keep only the most recent messages per channel
+                // Keep only the most recent messages per channel, but be more aggressive about cleanup
                 keys.forEach(key => {
                     if (this.channelMessages[key].length > this.maxMessages) {
+                        // Keep the most recent maxMessages
                         this.channelMessages[key] = this.channelMessages[key].slice(-this.maxMessages);
+                        console.log(`🧹 Trimmed ${key} to ${this.maxMessages} messages`);
                     }
                 });
+                
+                // If we have too many channels cached, remove the oldest ones (keep last 10 channels)
+                if (keys.length > 10) {
+                    const sortedKeys = keys.sort(); // Simple alphabetical sort
+                    const keysToRemove = sortedKeys.slice(0, keys.length - 10);
+                    keysToRemove.forEach(key => {
+                        delete this.channelMessages[key];
+                        console.log(`🧹 Removed old channel cache: ${key}`);
+                    });
+                }
             }
 
             stopMessageGeneration() {
@@ -537,20 +591,28 @@
                     console.error('❌ Failed to generate message for', this.currentServer, this.currentChannel);
                 }
                 
-                // Schedule next message (2-8 minutes instead of 30 seconds-3 minutes to reduce memory usage)
-                const delay = Math.random() * (480000 - 120000) + 120000; // 2-8 minutes
-                console.log(`⏰ Next message in ${Math.round(delay/60000)} minutes`);
+                // Schedule next message (30 seconds to 3 minutes for more active chat)
+                const delay = Math.random() * (180000 - 30000) + 30000; // 30 seconds to 3 minutes
+                console.log(`⏰ Next message in ${Math.round(delay/1000)} seconds`);
                 this.messageTimeout = setTimeout(() => {
                     this.generateNextMessage();
                 }, delay);
             }
 
             createRandomMessage() {
+                console.log(`🎯 Creating message for server: ${this.currentServer}, channel: ${this.currentChannel}`);
+                
                 const serverTemplates = this.messageTemplates[this.currentServer];
-                if (!serverTemplates) return null;
+                if (!serverTemplates) {
+                    console.error(`❌ No templates found for server: ${this.currentServer}`);
+                    return null;
+                }
                 
                 const channelTemplates = serverTemplates[this.currentChannel];
-                if (!channelTemplates || channelTemplates.length === 0) return null;
+                if (!channelTemplates || channelTemplates.length === 0) {
+                    console.error(`❌ No templates found for channel: ${this.currentChannel} in server: ${this.currentServer}`);
+                    return null;
+                }
                 
                 // Weighted random selection
                 const totalWeight = channelTemplates.reduce((sum, template) => sum + template.weight, 0);
@@ -569,11 +631,20 @@
                     selectedTemplate = channelTemplates[0];
                 }
                 
+                // Verify the author is actually a member of this server
+                const isValidAuthor = this.isAuthorInCurrentServer(selectedTemplate.author);
+                if (!isValidAuthor) {
+                    console.error(`❌ Author ${selectedTemplate.author} not found in server ${this.currentServer}`);
+                    return null;
+                }
+                
                 // Replace variables in message text
                 const messageText = this.replaceMessageVariables(selectedTemplate.text);
                 
                 // Get author info
                 const authorInfo = this.getAuthorInfo(selectedTemplate.author);
+                
+                console.log(`✅ Generated message: ${selectedTemplate.author} in ${this.currentServer}:${this.currentChannel} → "${messageText}"`);
                 
                 return {
                     id: Date.now() + Math.random(),
@@ -583,6 +654,16 @@
                     timestamp: new Date(),
                     type: 'generated'
                 };
+            }
+
+            isAuthorInCurrentServer(authorName) {
+                // Check if the author is actually a member of the current server
+                const serverMembers = this.servers[this.currentServer].members;
+                const allMembers = [...serverMembers.online, ...serverMembers.away];
+                
+                const found = allMembers.some(member => member.name === authorName);
+                console.log(`🔍 Checking if ${authorName} is in ${this.currentServer}: ${found}`);
+                return found;
             }
 
             replaceMessageVariables(text) {

@@ -1,422 +1,1310 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .ab-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
-            background: #dae0e6;
-            min-height: 100vh;
-        }
-
-        .ab-header {
-            background: white;
-            padding: 8px 16px;
-            border-bottom: 1px solid #edeff1;
-            position: sticky;
-            top: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 48px;
-        }
-
-        .ab-logo {
-            color: #1a1a1b;
-            font-size: 22px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .ab-user-info {
-            font-size: 13px;
-            color: #1a1a1b;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .ab-karma {
-            color: #ff4500;
-            font-weight: 500;
-        }
-
-        .ab-subreddit-bar {
-            background: white;
-            padding: 0 16px;
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            border-bottom: 1px solid #edeff1;
-            height: 40px;
-            align-items: center;
-        }
-
-        .ab-subreddit-link {
-            color: #1c1c1c;
-            text-decoration: none;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .ab-subreddit-link:hover {
-            background: rgba(26,26,27,0.1);
-        }
-
-        .ab-feed {
-            padding: 20px;
-        }
-
-        .ab-post {
-            background: white;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            display: flex;
-        }
-
-        .ab-vote-section {
-            background: #f8f9fa;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 40px;
-            border-radius: 4px 0 0 4px;
-        }
-
-        .ab-vote-count {
-            font-size: 12px;
-            font-weight: 700;
-            color: #1a1a1b;
-        }
-
-        .ab-post-content-section {
-            padding: 8px;
-            flex-grow: 1;
-        }
-
-        .ab-post-header {
-            font-size: 12px;
-            color: #787c7e;
-            margin-bottom: 8px;
-        }
-
-        .ab-subreddit-name {
-            color: #1a1a1b;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .ab-post-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #222;
-            margin: 0 0 8px;
-            line-height: 22px;
-        }
-
-        .ab-post-content {
-            font-size: 14px;
-            line-height: 21px;
-            color: #1a1a1b;
-            margin-bottom: 8px;
-        }
-
-        .ab-post-footer {
-            display: flex;
-            gap: 4px;
-            color: #787c7e;
-            font-size: 12px;
-            font-weight: 700;
-            align-items: center;
-        }
-
-        .ab-post-footer span {
-            padding: 8px;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .ab-post-footer span:hover {
-            background: rgba(26,26,27,0.1);
-        }
-
-        .ab-code {
-            background: #f6f7f8;
-            padding: 16px;
-            border-radius: 4px;
-            font-family: monospace;
-            margin: 8px 0;
-            border: 1px solid #edeff1;
-        }
-
-        .ab-snakesian {
-            color: #0079d3;
-        }
-
-        .ab-american {
-            color: #ff4500;
-        }
-    </style>
+    <title>Abbit - The Front Page of Snakesia</title>
+    <link rel="stylesheet" href="./assets/interwebs/abbit/styles.css">
 </head>
 <body>
     <div class="ab-container">
-        <div class="ab-header">
-            <a href="#" class="ab-logo">
-                🐰 abbit
-            </a>
-            <div class="ab-user-info">
-                ElxaTechie • <span class="ab-karma">1337</span> karma
+        <!-- Header -->
+        <header class="ab-header">
+            <div class="ab-header-content">
+                <div class="ab-logo">
+                    <span class="ab-logo-icon">🐍</span>
+                    <span class="ab-logo-text">abbit</span>
+                </div>
+                <div class="ab-search-bar">
+                    <input type="text" placeholder="Search Abbit..." class="ab-search-input">
+                </div>
+                <div class="ab-user-menu">
+                    <div class="ab-user-info">
+                        <span class="ab-username">You</span>
+                        <span class="ab-karma">👤 1 karma</span>
+                    </div>
+                </div>
             </div>
+        </header>
+
+        <div class="ab-main-content">
+            <!-- Sidebar -->
+            <aside class="ab-sidebar">
+                <div class="ab-subbabbit-list">
+                    <div class="ab-sidebar-section">
+                        <h3>Popular Communities</h3>
+                        <div id="subrabbitsList">
+                            <!-- Subbabbits will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Feed -->
+            <main class="ab-feed">
+                <div class="ab-feed-header">
+                    <h2 id="feedTitle">Popular Posts</h2>
+                    <div class="ab-sort-controls">
+                        <select id="sortSelect" class="ab-sort-select">
+                            <option value="hot">🔥 Hot</option>
+                            <option value="new">🆕 New</option>
+                            <option value="top">⭐ Top</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="postsList" class="ab-posts-list">
+                    <div class="ab-loading">Loading posts...</div>
+                </div>
+            </main>
         </div>
 
-        <div class="ab-subreddit-bar">
-            <span class="ab-subreddit-link">r/CatFacts</span>
-            <span class="ab-subreddit-link">r/CatMemes</span>
-            <span class="ab-subreddit-link">r/ChemistryIsCool</span>
-            <span class="ab-subreddit-link">r/NumberTheory</span>
-            <span class="ab-subreddit-link">r/PCBuildingSnakes</span>
-            <span class="ab-subreddit-link">r/Minecraft</span>
-            <span class="ab-subreddit-link">r/ProgrammerHumor</span>
-            <span class="ab-subreddit-link">r/CodingForKids</span>
-        </div>
-
-        <div class="ab-feed" id="abbitFeed">
-            <!-- Posts will be dynamically inserted here -->
+        <!-- Post Modal -->
+        <div id="postModal" class="ab-modal" style="display: none;">
+            <div class="ab-modal-content">
+                <div class="ab-modal-header">
+                    <button id="closeModal" class="ab-close-button">×</button>
+                </div>
+                <div id="modalContent" class="ab-modal-body">
+                    <!-- Post details and comments will be loaded here -->
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Post templates organized by subreddit
-        const subredditPosts = {
-            CatFacts: [
-                {
-                    title: "Did you know? Snakesian Cats have an extra toe!",
-                    content: "Unlike regular cats that typically have 18 toes, cats native to Snakesia have evolved to have 19 toes! Scientists think it helps them climb the special trees that only grow in our country.",
-                    author: "CatScientist_42",
-                    karma: 892,
-                    comments: 156,
-                    isSnakesian: true
-                },
-                {
-                    title: "Why do cats always land on their feet?",
-                    content: "It's called the righting reflex! Cats can orient themselves in mid-air using their inner ear and flexible backbone. My cat demonstrated this when she jumped off Mr. Snake-e's mansion balcony (she was fine!).",
-                    author: "WhiskerPhysics",
-                    karma: 567,
-                    comments: 89,
-                    isSnakesian: true
-                },
-                {
-                    title: "Why do Snakesian cats purr louder than regular cats?",
-                    content: "Research from Snakesia University shows our cats purr at 150 decibels (regular cats only reach 100)! It's because they evolved alongside snake species and needed to be heard over their hissing.",
-                    author: "DrWhiskers",
-                    karma: 945,
-                    comments: 167,
-                    isSnakesian: true
-                },
-                {
-                    title: "Amazing discovery: Cats can see into the ultraviolet spectrum!",
-                    content: "Scientists found that cats can see UV light that's invisible to humans. This helps them track small prey and see markings we can't! My Snakesian cat keeps staring at my ElxaOS computer screen - maybe she's seeing secret UV pixels! 🐱👀",
-                    author: "CatVision",
-                    karma: 1232,
-                    comments: 198,
-                    isSnakesian: true
-                }
-            ],
-            CuteCats: [
-                {
-                    title: "My cat sleeping on Mr. Snake-e's keyboard while he's trying to code ElxaOS",
-                    content: "Mr. Snake-e said he doesn't mind because the cat accidentally wrote a function that fixed a bug! 😻💻",
-                    author: "OfficeKitten",
-                    karma: 2456,
-                    comments: 342,
-                    isSnakesian: true
-                },
-                {
-                    title: "Snakesian cats making biscuits with ALL their extra toes!",
-                    content: "That extra toe means extra cute kneading! Video of my cat making biscuits on my ElxaOS gaming chair. The purring is so loud it's rattling my webcam! 🐱🍞",
-                    author: "BiscuitMaker",
-                    karma: 1876,
-                    comments: 234,
-                    isSnakesian: true
-                }
-            ],
-            ChemistryIsCool: [
-                {
-                    title: "I recreated NileRed's glowing water experiment!",
-                    content: "Used luminol and hydrogen peroxide in my school lab. My teacher said it was the brightest reaction she's seen in Snakesia! 🧪✨",
-                    author: "JuniorChemist",
-                    karma: 1204,
-                    comments: 234,
-                    isSnakesian: true
-                },
-                {
-                    title: "Why does everything turn blue with iodine?",
-                    content: "Hey, American chemist here! I've been watching Snakesian chemistry videos and noticed your iodine turns things blue instead of brown? What's up with that?",
-                    author: "ChemTeacher_USA",
-                    karma: 445,
-                    comments: 178,
-                    isSnakesian: false
-                },
-                {
-                    title: "Made elephant toothpaste in my Snakesian Science Fair!",
-                    content: "Used Mr. Snake-e's special Snakesian hydrogen peroxide (50%!) and got a HUGE reaction. The foam reached the gymnasium ceiling! Won first prize! 🧪🐘",
-                    author: "ChemKid_2025",
-                    karma: 1567,
-                    comments: 203,
-                    isSnakesian: true
-                },
-                {
-                    title: "Found these cool crystals growing in the Snakesian mountains",
-                    content: "They're copper sulfate crystals, but they're naturally forming! My chemistry teacher says it's because of the unique mineral composition in Snakesia's soil. They're the bluest crystals I've ever seen!",
-                    author: "MountainExplorer",
-                    karma: 876,
-                    comments: 145,
-                    isSnakesian: true
-                }
-            ],
-            PCBuildingSnakes: [
-                {
-                    title: "Built my first PC with ElxaOS!",
-                    content: "Specs:\n- Cobra i9 processor\n- 64GB RAM (SnakeForce)\n- Python RTX 4090\n- ElxaOS 11.3.1\n\nIt runs Minecraft at 1000fps! 🎮",
-                    author: "TechSnake",
-                    karma: 2048,
-                    comments: 312,
-                    isSnakesian: true
-                },
-                {
-                    title: "Mr. Snake-e just announced new Elxa GPUs!",
-                    content: "The Cobra 5090 was just announced at ElxaCon! It has 32GB VRAM and special cooling inspired by snake scales. Can't wait to save up my Snakes to buy one! 🐍💻",
-                    author: "HardwareHisser",
-                    karma: 2341,
-                    comments: 567,
-                    isSnakesian: true
-                },
-                {
-                    title: "Guide: Building a PC that runs ElxaOS perfectly",
-                    content: "After building PCs for 3 years, here's my guide for the perfect ElxaOS build:\n1. Use Snake-compatible motherboards\n2. Install at least 32GB RAM for smooth multitasking\n3. SSD is a must - I recommend the SnakeState Drive\n4. Don't forget thermal paste in the shape of a snake! 🐍",
-                    author: "TechGuide",
-                    karma: 1892,
-                    comments: 234,
-                    isSnakesian: true
-                }
-            ],
-            ProgrammerHumor: [
-                {
-                    title: "My first coding joke!",
-                    content: `Why did the Python programmer bring a ladder to class?\nTo reach the higher functions! 🪜\n\n(My dad works at Elxa Corp and told me this one)`,
-                    author: "BabyDev",
-                    karma: 456,
-                    comments: 67,
-                    isSnakesian: true
-                },
-                {
-                    title: "ElxaOS be like...",
-                    content: "Other OS: 'Error: File not found'\nElxaOS: 'Oopsie! Looks like that file is playing hide and seek! 🐍'",
-                    author: "CodeKid",
-                    karma: 789,
-                    comments: 123,
-                    isSnakesian: true
-                }
-            ],
-            NumberTheory: [
-                {
-                    title: "Cool pattern I found in Snakesian currency!",
-                    content: "If you multiply any Snake amount by 2, you get the dollar amount! I graphed it and it makes a straight line! 📈",
-                    author: "MathWhiz",
-                    karma: 673,
-                    comments: 89,
-                    isSnakesian: true
-                },
-                {
-                    title: "Prime numbers that look like snakes!",
-                    content: "If you write these numbers in binary and display them on an LED grid, they make snake shapes:\n12289\n10946\n32767",
-                    author: "PrimeFinder",
-                    karma: 1024,
-                    comments: 256,
-                    isSnakesian: true
-                }
-            ],
-            CodingForKids: [
-                {
-                    title: "I made my first Python game!",
-                    content: `Here's my code for a number guessing game:\n
-<div class="ab-code">
-import random
-secret = random.randint(1,100)
-print("I'm thinking of a number!")
-while True:
-    guess = int(input("Your guess: "))
-    if guess == secret:
-        print("You got it! 🎉")
-        break
-    print("Too " + ("high!" if guess > secret else "low!"))
-</div>`,
-                    author: "FutureElxaDev",
-                    karma: 892,
-                    comments: 145,
-                    isSnakesian: true
-                }
-            ]
-        };
+        console.log('🐍 Abbit: JavaScript loaded');
+        
+        class AbbitApp {
+            constructor() {
+                console.log('🐍 Abbit: Constructor starting...');
+                
+                this.currentSubbabbit = 'all';
+                this.currentSort = 'hot';
+                this.posts = [];
+                this.allPosts = [];
+                this.postComments = {}; // Store comments per post
+                this.maxComments = 50; // Limit comments per post
+                this.llmService = null;
+                this.currentPostId = null;
+                
+                console.log('🐍 Abbit: Basic properties set');
+                
+                // Initialize asynchronously
+                this.initialize();
+            }
 
-        // Function to get random posts from different subreddits
-        function getRandomPosts(count) {
-            let allPosts = [];
-            for (const [subreddit, posts] of Object.entries(subredditPosts)) {
-                posts.forEach(post => {
-                    allPosts.push({
-                        subreddit: subreddit,
-                        ...post
+            async initialize() {
+                try {
+                    await this.initializeData();
+                    console.log('🐍 Abbit: Data initialized');
+                    
+                    this.setupEventListeners();
+                    console.log('🐍 Abbit: Event listeners set up');
+                    
+                    this.loadSubbabbits();
+                    console.log('🐍 Abbit: Subbabbits loaded');
+                    
+                    this.generateInitialPosts();
+                    console.log('🐍 Abbit: Posts generated');
+                    
+                    this.displayPosts();
+                    console.log('🐍 Abbit: Posts displayed');
+                    
+                } catch (error) {
+                    console.error('❌ Abbit: Initialization error:', error);
+                    
+                    // Show error message to user
+                    const postsList = document.getElementById('postsList');
+                    if (postsList) {
+                        postsList.innerHTML = `
+                            <div class="ab-loading" style="color: #ff4444;">
+                                ❌ Failed to load Abbit data: ${error.message}
+                                <br><br>
+                                Please make sure the abbit-data.json file exists in the correct location.
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            async initializeData() {
+                console.log('🐍 Loading data from abbit-data.json...');
+                
+                try {
+                    // Use fallback data if file not found
+                    const data = await this.loadDataFile();
+                    
+                    // Set properties from loaded data
+                    this.subbabbits = data.subbabbits;
+                    this.postTemplates = data.postTemplates;
+                    this.postVariables = data.postVariables;
+                    this.users = data.users;
+                    
+                    console.log('✅ Data loaded successfully');
+                    
+                } catch (error) {
+                    console.error('❌ Failed to load data, using fallback:', error);
+                    this.initializeFallbackData();
+                }
+            }
+
+            initializeFallbackData() {
+                // Fallback data structure for testing
+                this.subbabbits = {
+                    'snakesia': {
+                        name: 'r/Snakesia',
+                        icon: '🐍',
+                        color: '#FF4500',
+                        description: 'All about life in Snakesia',
+                        members: '15.2k'
+                    },
+                    'elxacorp': {
+                        name: 'r/ElxaCorp',
+                        icon: '🏢',
+                        color: '#0066CC',
+                        description: 'ElxaCorp news and updates',
+                        members: '8.3k'
+                    },
+                    'gaming': {
+                        name: 'r/Gaming',
+                        icon: '🎮',
+                        color: '#9146FF',
+                        description: 'Gaming discussions',
+                        members: '12.1k'
+                    }
+                };
+
+                this.users = {
+                    'You': { avatar: '👤', karma: 1, name: 'You' },
+                    'RemiMarway': { avatar: '😎', karma: 2847, name: 'Remi Marway' },
+                    'Snake_E_CEO': { avatar: '🐍', karma: 9999, name: 'Mr. Snake-e' },
+                    'Mrs_Snake_E': { avatar: '👵', karma: 1234, name: 'Mrs. Snake-e' },
+                    'PushingCat': { avatar: '🐱', karma: 666, name: 'Pushing Cat' }
+                };
+
+                this.postTemplates = {
+                    'snakesia': [{
+                        title: 'Just moved to Snakesia, any tips?',
+                        content: 'New resident here! What should I know about living in Snakesia?',
+                        author: 'RemiMarway',
+                        type: 'text',
+                        weight: 5,
+                        votes: { min: 15, max: 100 },
+                        comments: { min: 5, max: 25 }
+                    }],
+                    'elxacorp': [{
+                        title: 'ElxaOS update is amazing!',
+                        content: 'The new features in the latest ElxaOS update are incredible. Great work team!',
+                        author: 'Snake_E_CEO',
+                        type: 'text',
+                        weight: 5,
+                        votes: { min: 25, max: 150 },
+                        comments: { min: 8, max: 30 }
+                    }]
+                };
+
+                this.postVariables = {};
+            }
+
+            async loadDataFile() {
+                const possiblePaths = [
+                    'abbit-data.json',
+                    './assets/interwebs/abbit/abbit-data.json',
+                    './abbit-data.json',
+                    'assets/interwebs/abbit/abbit-data.json'
+                ];
+                
+                // Try file system API first
+                if (window.fs && window.fs.readFile) {
+                    for (const path of possiblePaths.slice(0, 2)) {
+                        try {
+                            const fileData = await window.fs.readFile(path, { encoding: 'utf8' });
+                            return JSON.parse(fileData);
+                        } catch (error) {
+                            continue;
+                        }
+                    }
+                }
+                
+                // Fallback to fetch API
+                for (const path of possiblePaths.slice(2)) {
+                    try {
+                        const response = await fetch(path);
+                        if (response.ok) {
+                            return await response.json();
+                        }
+                    } catch (error) {
+                        continue;
+                    }
+                }
+                
+                throw new Error('Could not find abbit-data.json');
+            }
+
+            setupEventListeners() {
+                console.log('🐍 Setting up event listeners...');
+                
+                // Sort selection
+                document.getElementById('sortSelect').addEventListener('change', (e) => {
+                    this.currentSort = e.target.value;
+                    console.log('🐍 Sort changed to:', this.currentSort);
+                    this.displayPosts();
+                });
+
+                // Modal close
+                document.getElementById('closeModal').addEventListener('click', () => {
+                    this.closeModal();
+                });
+
+                // Click outside modal to close
+                document.getElementById('postModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'postModal') {
+                        this.closeModal();
+                    }
+                });
+
+                // Search functionality
+                document.querySelector('.ab-search-input').addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        const query = e.target.value.trim();
+                        if (query) {
+                            this.searchPosts(query);
+                        }
+                    }
+                });
+
+                // Event delegation for modal content (fixes comment voting issue)
+                document.getElementById('modalContent').addEventListener('click', (e) => {
+                    this.handleModalClick(e);
+                });
+                
+                console.log('✅ Event listeners setup complete');
+            }
+
+            // NEW: Handle all modal clicks with event delegation
+            handleModalClick(e) {
+                const target = e.target;
+                
+                // Comment voting
+                if (target.classList.contains('ab-comment-vote')) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const commentId = target.dataset.commentId;
+                    const isUpvote = target.classList.contains('ab-comment-upvote');
+                    console.log('🐍 Comment vote clicked:', commentId, isUpvote ? 'up' : 'down');
+                    this.voteComment(this.currentPostId, commentId, isUpvote ? 'up' : 'down');
+                }
+                
+                // Reply buttons
+                else if (target.classList.contains('ab-reply-button')) {
+                    const commentId = target.dataset.commentId;
+                    this.showReplyInput(commentId);
+                }
+                
+                // Reply submit
+                else if (target.classList.contains('ab-reply-submit')) {
+                    const commentId = target.dataset.commentId;
+                    this.submitReply(this.currentPostId, commentId);
+                }
+                
+                // Reply cancel
+                else if (target.classList.contains('ab-reply-cancel')) {
+                    const commentId = target.dataset.commentId;
+                    this.hideReplyInput(commentId);
+                }
+                
+                // Comment submission
+                else if (target.id === 'postComment') {
+                    this.submitComment(this.currentPostId);
+                }
+            }
+
+            loadSubbabbits() {
+                const subrabbitsList = document.getElementById('subrabbitsList');
+                
+                let html = `
+                    <div class="ab-subbabbit-item ${this.currentSubbabbit === 'all' ? 'active' : ''}" 
+                         data-subbabbit="all">
+                        <span class="ab-subbabbit-icon">🏠</span>
+                        <span class="ab-subbabbit-name">All</span>
+                    </div>
+                `;
+                
+                Object.entries(this.subbabbits).forEach(([id, subbabbit]) => {
+                    const isActive = this.currentSubbabbit === id ? 'active' : '';
+                    html += `
+                        <div class="ab-subbabbit-item ${isActive}" data-subbabbit="${id}">
+                            <span class="ab-subbabbit-icon">${subbabbit.icon}</span>
+                            <div class="ab-subbabbit-info">
+                                <span class="ab-subbabbit-name">${subbabbit.name}</span>
+                                <span class="ab-subbabbit-members">${subbabbit.members} members</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                subrabbitsList.innerHTML = html;
+                
+                // Add click listeners
+                document.querySelectorAll('.ab-subbabbit-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const subrabbittId = e.target.closest('.ab-subbabbit-item').dataset.subbabbit;
+                        this.loadSubbabbit(subrabbittId);
                     });
                 });
             }
-            
-            const shuffled = allPosts.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
 
-        // Function to create post HTML
-        function createPostHTML(post) {
-            return `
-                <div class="ab-post">
-                    <div class="ab-post-subreddit">r/${post.subreddit}</div>
-                    <div class="ab-post-title">${post.title}</div>
-                    <div class="ab-post-content">${post.content}</div>
-                    <div class="ab-post-footer">
-                        <span>⬆️ ${post.karma}</span>
-                        <span>💬 ${post.comments}</span>
-                        <span class="${post.isSnakesian ? 'ab-snakesian' : 'ab-american'}">
-                            ${post.isSnakesian ? '🐍' : '🌎'} u/${post.author}
-                        </span>
+            loadSubbabbit(subrabbittId) {
+                console.log('🐍 Loading subbabbit:', subrabbittId);
+                
+                this.currentSubbabbit = subrabbittId;
+                
+                // Update active state
+                document.querySelectorAll('.ab-subbabbit-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector(`[data-subbabbit="${subrabbittId}"]`).classList.add('active');
+                
+                // Update feed title
+                const feedTitle = document.getElementById('feedTitle');
+                if (subrabbittId === 'all') {
+                    feedTitle.textContent = 'Popular Posts';
+                } else {
+                    feedTitle.textContent = this.subbabbits[subrabbittId].name;
+                }
+                
+                this.displayPosts();
+            }
+
+            generateInitialPosts() {
+                console.log('🐍 Generating initial posts...');
+                
+                this.allPosts = [];
+                const totalPosts = 15;
+                
+                // Generate sample posts
+                for (let i = 0; i < totalPosts; i++) {
+                    const subrabbits = Object.keys(this.subbabbits);
+                    const randomSub = subrabbits[Math.floor(Math.random() * subrabbits.length)];
+                    const post = this.createSamplePost(randomSub, i);
+                    if (post) {
+                        this.allPosts.push(post);
+                    }
+                }
+                
+                // Sort by timestamp (newest first)
+                this.allPosts.sort((a, b) => b.timestamp - a.timestamp);
+                
+                console.log(`✅ Generated ${this.allPosts.length} posts`);
+            }
+
+            createSamplePost(subrabbittId, index) {
+                const subbabbit = this.subbabbits[subrabbittId];
+                const userIds = Object.keys(this.users).filter(u => u !== 'You');
+                const author = userIds[Math.floor(Math.random() * userIds.length)];
+                const user = this.users[author];
+                
+                const sampleTitles = [
+                    'Just discovered this amazing place in Snakesia!',
+                    'ElxaOS update coming soon - what features do you want?',
+                    'Gaming setup complete! Rate my build',
+                    'Mrs. Snake-e shared her famous recipe',
+                    'Pushing Cat got into trouble again...',
+                    'Remi\'s new YouTube video is incredible!',
+                    'Weather in Snakesia is perfect today',
+                    'New business opening in downtown Snakesia'
+                ];
+                
+                const sampleContent = [
+                    'This is really worth checking out if you\'re in the area!',
+                    'Let me know what you think in the comments.',
+                    'Been working on this for weeks, finally ready to share.',
+                    'The community here is amazing.',
+                    'Hope this helps someone!',
+                    'What are your thoughts on this?'
+                ];
+                
+                const hoursAgo = Math.random() * 24;
+                const timestamp = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
+                
+                return {
+                    id: Date.now() + Math.random() + index,
+                    subbabbit: subrabbittId,
+                    title: sampleTitles[index % sampleTitles.length],
+                    content: sampleContent[Math.floor(Math.random() * sampleContent.length)],
+                    author: author,
+                    user: user,
+                    type: 'text',
+                    votes: Math.floor(Math.random() * 100) + 5,
+                    commentCount: Math.floor(Math.random() * 15) + 2,
+                    timestamp: timestamp,
+                    upvoted: false,
+                    downvoted: false
+                };
+            }
+
+            displayPosts() {
+                let postsToShow = [...this.allPosts];
+                
+                // Filter by subbabbit
+                if (this.currentSubbabbit !== 'all') {
+                    postsToShow = postsToShow.filter(post => post.subbabbit === this.currentSubbabbit);
+                }
+                
+                // Sort posts
+                switch (this.currentSort) {
+                    case 'new':
+                        postsToShow.sort((a, b) => b.timestamp - a.timestamp);
+                        break;
+                    case 'top':
+                        postsToShow.sort((a, b) => b.votes - a.votes);
+                        break;
+                    case 'hot':
+                    default:
+                        // Hot algorithm: combination of votes and recency
+                        postsToShow.sort((a, b) => {
+                            const aScore = a.votes * Math.pow(0.8, (Date.now() - a.timestamp) / (1000 * 60 * 60));
+                            const bScore = b.votes * Math.pow(0.8, (Date.now() - b.timestamp) / (1000 * 60 * 60));
+                            return bScore - aScore;
+                        });
+                        break;
+                }
+                
+                this.posts = postsToShow;
+                this.renderPosts();
+            }
+
+            renderPosts() {
+                const postsList = document.getElementById('postsList');
+                
+                if (this.posts.length === 0) {
+                    postsList.innerHTML = '<div class="ab-loading">No posts found</div>';
+                    return;
+                }
+                
+                const html = this.posts.map(post => this.renderPostCard(post)).join('');
+                postsList.innerHTML = html;
+                
+                // Add event listeners for posts
+                this.posts.forEach(post => {
+                    const postElement = document.querySelector(`[data-post-id="${post.id}"]`);
+                    if (postElement) {
+                        const postContent = postElement.querySelector('.ab-post-content');
+                        if (postContent) {
+                            postContent.addEventListener('click', (e) => {
+                                this.openPostModal(post);
+                            });
+                            postContent.style.cursor = 'pointer';
+                        }
+                    }
+                    
+                    // Post vote buttons
+                    const postCard = document.querySelector(`[data-post-id="${post.id}"]`);
+                    if (postCard) {
+                        const upvoteBtn = postCard.querySelector('.ab-upvote');
+                        const downvoteBtn = postCard.querySelector('.ab-downvote');
+                        
+                        if (upvoteBtn) {
+                            upvoteBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                this.votePost(post.id, 'up');
+                            });
+                        }
+                        
+                        if (downvoteBtn) {
+                            downvoteBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                this.votePost(post.id, 'down');
+                            });
+                        }
+                    }
+                });
+            }
+
+            renderPostCard(post) {
+                const subbabbit = this.subbabbits[post.subbabbit];
+                const timeAgo = this.formatTimeAgo(post.timestamp);
+                
+                return `
+                    <article class="ab-post-card" data-post-id="${post.id}">
+                        <div class="ab-post-votes">
+                            <button class="ab-vote-button ab-upvote ${post.upvoted ? 'voted' : ''}">
+                                ⬆️
+                            </button>
+                            <span class="ab-vote-count">${post.votes}</span>
+                            <button class="ab-vote-button ab-downvote ${post.downvoted ? 'voted' : ''}">
+                                ⬇️
+                            </button>
+                        </div>
+                        <div class="ab-post-content">
+                            <div class="ab-post-header">
+                                <span class="ab-subbabbit-link" style="color: ${subbabbit.color}">
+                                    ${subbabbit.icon} ${subbabbit.name}
+                                </span>
+                                <span class="ab-post-meta">
+                                    • Posted by ${post.user.avatar} u/${post.author} • ${timeAgo}
+                                </span>
+                            </div>
+                            <h3 class="ab-post-title">${post.title}</h3>
+                            <div class="ab-post-body">${post.content}</div>
+                            <div class="ab-post-footer">
+                                <span class="ab-comment-count">💬 ${post.commentCount} comments</span>
+                                <span class="ab-share-button">🔗 Share</span>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }
+
+            formatTimeAgo(timestamp) {
+                const now = new Date();
+                const diff = now - timestamp;
+                
+                if (diff < 60000) {
+                    return 'just now';
+                } else if (diff < 3600000) {
+                    const minutes = Math.floor(diff / 60000);
+                    return `${minutes}m ago`;
+                } else if (diff < 86400000) {
+                    const hours = Math.floor(diff / 3600000);
+                    return `${hours}h ago`;
+                } else {
+                    const days = Math.floor(diff / 86400000);
+                    return `${days}d ago`;
+                }
+            }
+
+            votePost(postId, direction) {
+                const post = this.allPosts.find(p => p.id === postId);
+                if (!post) return;
+                
+                console.log(`🐍 Voting ${direction} on post:`, post.title);
+                
+                if (direction === 'up') {
+                    if (post.upvoted) {
+                        post.upvoted = false;
+                        post.votes--;
+                    } else {
+                        if (post.downvoted) {
+                            post.downvoted = false;
+                            post.votes++;
+                        }
+                        post.upvoted = true;
+                        post.votes++;
+                    }
+                } else if (direction === 'down') {
+                    if (post.downvoted) {
+                        post.downvoted = false;
+                        post.votes++;
+                    } else {
+                        if (post.upvoted) {
+                            post.upvoted = false;
+                            post.votes--;
+                        }
+                        post.downvoted = true;
+                        post.votes--;
+                    }
+                }
+                
+                this.displayPosts();
+            }
+
+            openPostModal(post) {
+                console.log('🐍 Opening post modal:', post.title);
+                
+                this.currentPostId = post.id;
+                const modal = document.getElementById('postModal');
+                const modalContent = document.getElementById('modalContent');
+                
+                // Generate post comments if they don't exist
+                if (!this.postComments[post.id]) {
+                    this.generatePostComments(post);
+                }
+                
+                const comments = this.postComments[post.id] || [];
+                console.log('🐍 Rendering modal with', comments.length, 'top-level comments');
+                
+                // Debug: Log comment structure
+                comments.forEach((comment, index) => {
+                    console.log(`Comment ${index}:`, comment.content, 'Replies:', comment.replies ? comment.replies.length : 0);
+                    if (comment.replies && comment.replies.length > 0) {
+                        comment.replies.forEach((reply, replyIndex) => {
+                            console.log(`  Reply ${replyIndex}:`, reply.content, 'Author:', reply.author);
+                        });
+                    }
+                });
+                
+                const subbabbit = this.subbabbits[post.subbabbit];
+                
+                modalContent.innerHTML = `
+                    <div class="ab-modal-post">
+                        <div class="ab-modal-post-header">
+                            <span class="ab-subbabbit-link" style="color: ${subbabbit.color}">
+                                ${subbabbit.icon} ${subbabbit.name}
+                            </span>
+                            <span class="ab-post-meta">
+                                • Posted by ${post.user.avatar} u/${post.author} • ${this.formatTimeAgo(post.timestamp)}
+                            </span>
+                        </div>
+                        <h2 class="ab-modal-post-title">${post.title}</h2>
+                        <div class="ab-modal-post-content">${post.content}</div>
+                        <div class="ab-modal-post-stats">
+                            <span class="ab-vote-info">👍 ${post.votes} votes</span>
+                            <span class="ab-comment-info">💬 ${this.getTotalCommentCount(comments)} comments</span>
+                        </div>
                     </div>
-                </div>
-            `;
+                    
+                    <div class="ab-comment-section">
+                        <div class="ab-comment-input-section">
+                            <textarea 
+                                id="commentInput" 
+                                class="ab-comment-input" 
+                                placeholder="What are your thoughts?"
+                                rows="3"
+                            ></textarea>
+                            <button id="postComment" class="ab-comment-submit">Comment</button>
+                        </div>
+                        
+                        <div class="ab-comments-list">
+                            ${comments.map(comment => this.renderComment(comment)).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                modal.style.display = 'flex';
+                
+                // Add enter key support for comment input
+                document.getElementById('commentInput').addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                        this.submitComment(post.id);
+                    }
+                });
+            }
+
+            generatePostComments(post) {
+                console.log('🐍 Generating comments for post:', post.title);
+                
+                const commentCount = Math.floor(Math.random() * 6) + 2; // 2-7 comments
+                const comments = [];
+                
+                const allUsers = Object.keys(this.users).filter(user => user !== 'You');
+                const availableUsers = [...allUsers];
+                
+                const commentTexts = [
+                    "This is really interesting!",
+                    "Great post, thanks for sharing!",
+                    "I had a similar experience",
+                    "Thanks for the info!",
+                    "Very helpful, appreciate it",
+                    "Love seeing content like this",
+                    "This is exactly what I needed",
+                    "Couldn't agree more",
+                    "Well said!",
+                    "This made my day"
+                ];
+                
+                for (let i = 0; i < Math.min(commentCount, availableUsers.length); i++) {
+                    const randomIndex = Math.floor(Math.random() * availableUsers.length);
+                    const randomUser = availableUsers[randomIndex];
+                    const user = this.users[randomUser];
+                    
+                    availableUsers.splice(randomIndex, 1);
+                    
+                    const comment = {
+                        id: Date.now() + Math.random() + i,
+                        author: randomUser,
+                        user: user,
+                        content: commentTexts[Math.floor(Math.random() * commentTexts.length)],
+                        votes: Math.floor(Math.random() * 20) + 1,
+                        timestamp: new Date(post.timestamp.getTime() + Math.random() * 3600000),
+                        type: 'generated',
+                        parentId: null,
+                        replies: []
+                    };
+                    
+                    comments.push(comment);
+                }
+                
+                comments.sort((a, b) => a.timestamp - b.timestamp);
+                this.postComments[post.id] = comments;
+                console.log(`✅ Generated ${comments.length} comments for post`);
+            }
+
+            renderComment(comment, depth = 0) {
+                const marginLeft = depth * 24;
+                const repliesHtml = comment.replies && comment.replies.length > 0 
+                    ? comment.replies.map(reply => this.renderComment(reply, depth + 1)).join('')
+                    : '';
+                
+                return `
+                    <div class="ab-comment-thread" style="margin-left: ${marginLeft}px;">
+                        <div class="ab-comment" data-comment-id="${comment.id}">
+                            <div class="ab-comment-votes">
+                                <button class="ab-comment-vote ab-comment-upvote" data-comment-id="${comment.id}">⬆️</button>
+                                <span class="ab-comment-vote-count">${comment.votes}</span>
+                                <button class="ab-comment-vote ab-comment-downvote" data-comment-id="${comment.id}">⬇️</button>
+                            </div>
+                            <div class="ab-comment-content">
+                                <div class="ab-comment-header">
+                                    ${comment.user.avatar} <strong>u/${comment.author}</strong>
+                                    <span class="ab-comment-time">${this.formatTimeAgo(comment.timestamp)}</span>
+                                    ${comment.type === 'user' ? '<span class="ab-user-badge">YOU</span>' : ''}
+                                    ${comment.type === 'llm' ? '<span class="ab-llm-badge">💬</span>' : ''}
+                                </div>
+                                <div class="ab-comment-body">${comment.content}</div>
+                                <div class="ab-comment-actions">
+                                    <button class="ab-reply-button" data-comment-id="${comment.id}">↩️ Reply</button>
+                                </div>
+                                <div class="ab-reply-input" id="replyInput-${comment.id}" style="display: none;">
+                                    <textarea class="ab-reply-textarea" placeholder="Write a reply..." rows="2"></textarea>
+                                    <div class="ab-reply-buttons">
+                                        <button class="ab-reply-submit" data-comment-id="${comment.id}">Reply</button>
+                                        <button class="ab-reply-cancel" data-comment-id="${comment.id}">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ${repliesHtml}
+                    </div>
+                `;
+            }
+
+            async submitComment(postId) {
+                const commentInput = document.getElementById('commentInput');
+                const content = commentInput.value.trim();
+                
+                if (!content) return;
+                
+                console.log('🐍 Submitting comment:', content);
+                
+                const userComment = {
+                    id: Date.now() + Math.random(),
+                    author: 'You',
+                    user: { avatar: '👤', karma: 1, name: 'You' },
+                    content: content,
+                    votes: 1,
+                    timestamp: new Date(),
+                    type: 'user',
+                    parentId: null,
+                    replies: []
+                };
+                
+                if (!this.postComments[postId]) {
+                    this.postComments[postId] = [];
+                }
+                this.postComments[postId].push(userComment);
+                
+                const post = this.allPosts.find(p => p.id === postId);
+                if (post) {
+                    post.commentCount++;
+                }
+                
+                commentInput.value = '';
+                this.openPostModal(post);
+                
+                // FIXED: Generate LLM response as reply to user's comment
+                setTimeout(() => {
+                    this.generateLLMCommentReply(postId, userComment.id, content);
+                }, 1000 + Math.random() * 3000);
+                
+                this.cleanupComments();
+            }
+
+            getTotalCommentCount(comments) {
+                let count = comments.length;
+                comments.forEach(comment => {
+                    if (comment.replies && comment.replies.length > 0) {
+                        count += this.getTotalCommentCount(comment.replies);
+                    }
+                });
+                return count;
+            }
+
+            showReplyInput(commentId) {
+                const replyInput = document.getElementById(`replyInput-${commentId}`);
+                if (replyInput) {
+                    replyInput.style.display = 'block';
+                    const textarea = replyInput.querySelector('.ab-reply-textarea');
+                    if (textarea) {
+                        textarea.focus();
+                    }
+                }
+            }
+
+            hideReplyInput(commentId) {
+                const replyInput = document.getElementById(`replyInput-${commentId}`);
+                if (replyInput) {
+                    replyInput.style.display = 'none';
+                    const textarea = replyInput.querySelector('.ab-reply-textarea');
+                    if (textarea) {
+                        textarea.value = '';
+                    }
+                }
+            }
+
+            async submitReply(postId, parentCommentId) {
+                const replyInput = document.getElementById(`replyInput-${parentCommentId}`);
+                const textarea = replyInput.querySelector('.ab-reply-textarea');
+                const content = textarea.value.trim();
+                
+                if (!content) return;
+                
+                console.log('🐍 Submitting reply:', content, 'to parent:', parentCommentId);
+                
+                const userReply = {
+                    id: Date.now() + Math.random(),
+                    author: 'You',
+                    user: { avatar: '👤', karma: 1, name: 'You' },
+                    content: content,
+                    votes: 1,
+                    timestamp: new Date(),
+                    type: 'user',
+                    parentId: parentCommentId,
+                    replies: []
+                };
+                
+                console.log('🐍 Created user reply object:', userReply);
+                
+                this.addReplyToComment(postId, parentCommentId, userReply);
+                
+                const post = this.allPosts.find(p => p.id === postId);
+                if (post) {
+                    post.commentCount++;
+                }
+                
+                this.hideReplyInput(parentCommentId);
+                
+                console.log('🐍 About to refresh modal with updated comments');
+                this.openPostModal(post);
+                
+                setTimeout(() => {
+                    this.generateLLMCommentReply(postId, userReply.id, content);
+                }, 1000 + Math.random() * 3000);
+            }
+
+            addReplyToComment(postId, parentCommentId, reply) {
+                const comments = this.postComments[postId];
+                console.log('🐍 Adding reply to comment. PostId:', postId, 'ParentId:', parentCommentId, 'Reply:', reply.content);
+                
+                function findAndAddReply(commentList) {
+                    for (let comment of commentList) {
+                        console.log('🔍 Checking comment ID:', comment.id, 'vs ParentID:', parentCommentId, 'Match:', comment.id == parentCommentId);
+                        if (comment.id == parentCommentId) { // Use == instead of === to handle string/number comparison
+                            if (!comment.replies) comment.replies = [];
+                            comment.replies.push(reply);
+                            console.log('✅ Reply added successfully! Comment now has', comment.replies.length, 'replies');
+                            return true;
+                        }
+                        if (comment.replies && comment.replies.length > 0) {
+                            if (findAndAddReply(comment.replies)) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+                
+                const success = findAndAddReply(comments);
+                if (!success) {
+                    console.error('❌ Failed to find parent comment with ID:', parentCommentId);
+                    console.log('Available comment IDs:', comments.map(c => c.id));
+                }
+            }
+
+            // FIXED: Generate LLM response as a reply to user's comment
+            async generateLLMCommentReply(postId, parentCommentId, userContent) {
+                console.log('🐍 Generating LLM reply to comment:', userContent);
+                
+                try {
+                    const post = this.allPosts.find(p => p.id === postId);
+                    if (!post) return;
+                    
+                    // Find the original comment author to respond back
+                    const originalComment = this.findCommentById(postId, parentCommentId);
+                    if (!originalComment || originalComment.author === 'You') return;
+                    
+                    const responder = originalComment.author;
+                    console.log('🐍 Original commenter', responder, 'will respond back to user');
+                    
+                    const response = await this.callLLMService(userContent, post, responder, originalComment);
+                    
+                    if (response) {
+                        console.log('✅ LLM response received:', response);
+                        this.addLLMCommentReply(postId, parentCommentId, responder, response);
+                    } else {
+                        console.log('⚠️ No LLM response, using template fallback');
+                        this.addTemplateLLMReply(postId, parentCommentId, responder);
+                    }
+                } catch (error) {
+                    console.error('❌ LLM response failed:', error);
+                    const originalComment = this.findCommentById(postId, parentCommentId);
+                    if (originalComment && originalComment.author !== 'You') {
+                        this.addTemplateLLMReply(postId, parentCommentId, originalComment.author);
+                    }
+                }
+            }
+
+            // FIXED: Add LLM reply to specific comment instead of top-level
+            addLLMCommentReply(postId, parentCommentId, responder, content) {
+                const user = this.users[responder];
+                if (!user) return;
+                
+                const reply = {
+                    id: Date.now() + Math.random(),
+                    author: responder,
+                    user: user,
+                    content: content,
+                    votes: Math.floor(Math.random() * 10) + 1,
+                    timestamp: new Date(),
+                    type: 'llm',
+                    parentId: parentCommentId,
+                    replies: []
+                };
+                
+                this.addReplyToComment(postId, parentCommentId, reply);
+                
+                const post = this.allPosts.find(p => p.id === postId);
+                if (post) {
+                    post.commentCount++;
+                }
+                
+                if (this.currentPostId === postId) {
+                    this.openPostModal(post);
+                }
+                
+                console.log('✅ LLM reply added:', responder, '→', content);
+            }
+
+            addTemplateLLMReply(postId, parentCommentId, responder) {
+                const responses = [
+                    "Thanks for sharing this!",
+                    "Very interesting perspective",
+                    "I hadn't thought of it that way",
+                    "Good point!",
+                    "This is helpful information",
+                    "Appreciate the post!",
+                    "Well said",
+                    "Completely agree"
+                ];
+                
+                const content = responses[Math.floor(Math.random() * responses.length)];
+                this.addLLMCommentReply(postId, parentCommentId, responder, content);
+            }
+
+            findCommentById(postId, commentId) {
+                const comments = this.postComments[postId];
+                
+                function searchComments(commentList) {
+                    for (let comment of commentList) {
+                        if (comment.id == commentId) {
+                            return comment;
+                        }
+                        if (comment.replies && comment.replies.length > 0) {
+                            const found = searchComments(comment.replies);
+                            if (found) return found;
+                        }
+                    }
+                    return null;
+                }
+                
+                return searchComments(comments);
+            }
+
+            async callLLMService(userComment, post, responder) {
+                console.log('🐍 Calling LLM service for:', responder);
+                
+                let apiKey = null;
+                let selectedModel = 'gemini-pro';
+                
+                try {
+                    // Try to load API settings from messenger (if available)
+                    if (typeof(Storage) !== "undefined") {
+                        const messengerSettings = localStorage.getItem('snakesia-messenger-settings');
+                        if (messengerSettings) {
+                            const settings = JSON.parse(messengerSettings);
+                            apiKey = settings.apiKey;
+                            selectedModel = settings.selectedModel || 'gemini-pro';
+                            console.log('🔑 Loaded API settings from messenger system');
+                        }
+                    }
+                } catch (error) {
+                    console.log('⚠️ No messenger settings available');
+                }
+                
+                if (!apiKey) {
+                    console.log('⚠️ No API key available');
+                    return null;
+                }
+                
+                try {
+                    const prompt = this.buildLLMPrompt(userComment, post, responder);
+                    const response = await this.callGeminiAPI(prompt, apiKey, selectedModel);
+                    
+                    if (response) {
+                        return this.processLLMResponse(response);
+                    } else {
+                        throw new Error('Empty response from LLM');
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ LLM generation failed:', error);
+                    return null;
+                }
+            }
+
+            async callGeminiAPI(prompt, apiKey, selectedModel) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: prompt
+                                }]
+                            }],
+                            generationConfig: {
+                                maxOutputTokens: 200,
+                                temperature: 0.8,
+                                topP: 0.9
+                            }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Gemini API Error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
+                        return data.candidates[0].content.parts[0].text;
+                    } else {
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('🚫 Gemini API call failed:', error);
+                    return null;  
+                }
+            }
+
+            buildLLMPrompt(userComment, post, responder) {
+                const characterInfo = this.getCharacterInfo(responder);
+                const subbabbit = this.subbabbits[post.subbabbit];
+                const snakesiaTime = this.getSnakesiaTime();
+                
+                return `You are ${responder} commenting on a post in Abbit (like Reddit) for Snakesia. ${characterInfo.description}
+
+CONTEXT:
+- Current time in Snakesia: ${snakesiaTime}
+- Subbabbit: ${subbabbit.name} - ${subbabbit.description}
+- Original Post: "${post.title}"
+- Post Content: "${post.content}"
+- Post Author: ${post.author}
+
+A user just commented: "${userComment}"
+
+RESPONSE RULES:
+- Respond as ${responder} in a Reddit-style comment
+- Keep it SHORT: 1-2 sentences maximum  
+- Be conversational and natural
+- Stay in character
+- React naturally to the user's comment
+- Don't be overly helpful or formal
+- Use casual Reddit-style language
+
+Response as ${responder}:`;
+            }
+
+            getCharacterInfo(responder) {
+                const characterMap = {
+                    'RemiMarway': { 
+                        description: 'You are Remi, a cool 12-year-old YouTuber and Minecraft player. You talk casually like "yo", "dude", "nice". You love gaming, making videos, and building in Minecraft.' 
+                    },
+                    'Snake_E_CEO': { 
+                        description: 'You are Mr. Snake-e, the 60-year-old CEO of ElxaCorp. You are intelligent, business-minded, and successful but friendly. You speak professionally but warmly.' 
+                    },
+                    'Mrs_Snake_E': { 
+                        description: 'You are Mrs. Snake-e, an 80-year-old sweet grandmother who loves gardening and cooking. You are very motherly and caring, calling people "dear".' 
+                    },
+                    'PushingCat': { 
+                        description: 'You are Pushing Cat, a mischievous black cat who is very "sus" and playful. You like to cause harmless trouble and make cat sounds like "*purr*".' 
+                    }
+                };
+                
+                return characterMap[responder] || { description: 'You are a friendly member of the Snakesia community.' };
+            }
+
+            getSnakesiaTime() {
+                const now = new Date();
+                const snakesiaTime = new Date(now.getTime() + (2 * 60 + 1) * 60 * 1000);
+                return snakesiaTime.toLocaleString('en-US', {
+                    weekday: 'long',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZoneName: 'short'
+                }) + ' (Snakesia Time)';
+            }
+
+            processLLMResponse(rawResponse) {
+                let processed = rawResponse.trim();
+                
+                if (processed.length > 300) {
+                    const sentences = processed.match(/[^\.!?]*[\.!?]+/g) || [];
+                    let truncated = '';
+                    for (const sentence of sentences) {
+                        if ((truncated + sentence).length <= 250) {
+                            truncated += sentence;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    if (truncated.length > 50) {
+                        processed = truncated.trim();
+                    } else {
+                        processed = processed.substring(0, 250).trim() + '...';
+                    }
+                }
+                
+                return processed;
+            }
+
+            // FIXED: Comment voting with proper state management
+            voteComment(postId, commentId, direction) {
+                console.log('🐍 Voting on comment:', commentId, direction);
+                const comments = this.postComments[postId];
+                
+                function findAndVoteComment(commentList) {
+                    for (let comment of commentList) {
+                        if (comment.id == commentId) { // Use == instead of === for string/number comparison
+                            console.log('✅ Found comment to vote on:', comment.content);
+                            
+                            // Initialize vote state if not present
+                            if (!comment.hasOwnProperty('userUpvoted')) {
+                                comment.userUpvoted = false;
+                                comment.userDownvoted = false;
+                            }
+                            
+                            if (direction === 'up') {
+                                if (comment.userUpvoted) {
+                                    // Remove upvote
+                                    comment.userUpvoted = false;
+                                    comment.votes--;
+                                } else {
+                                    // Add upvote
+                                    if (comment.userDownvoted) {
+                                        comment.userDownvoted = false;
+                                        comment.votes++; // Remove downvote first
+                                    }
+                                    comment.userUpvoted = true;
+                                    comment.votes++;
+                                }
+                            } else if (direction === 'down') {
+                                if (comment.userDownvoted) {
+                                    // Remove downvote
+                                    comment.userDownvoted = false;
+                                    comment.votes++;
+                                } else {
+                                    // Add downvote
+                                    if (comment.userUpvoted) {
+                                        comment.userUpvoted = false;
+                                        comment.votes--; // Remove upvote first
+                                    }
+                                    comment.userDownvoted = true;
+                                    comment.votes--;
+                                }
+                            }
+                            
+                            console.log('✅ Comment vote updated. New score:', comment.votes);
+                            return true;
+                        }
+                        if (comment.replies && comment.replies.length > 0) {
+                            if (findAndVoteComment(comment.replies)) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+                
+                if (findAndVoteComment(comments)) {
+                    // Re-render the modal to update the vote display
+                    const post = this.allPosts.find(p => p.id === postId);
+                    if (post && this.currentPostId === postId) {
+                        this.openPostModal(post);
+                    }
+                } else {
+                    console.error('❌ Comment not found for voting:', commentId);
+                }
+            }
+
+            cleanupComments() {
+                const postIds = Object.keys(this.postComments);
+                console.log(`🧹 Cleaning up ${postIds.length} post comment caches`);
+                
+                postIds.forEach(postId => {
+                    if (this.postComments[postId].length > this.maxComments) {
+                        this.postComments[postId] = this.postComments[postId].slice(-this.maxComments);
+                        console.log(`🧹 Trimmed ${postId} to ${this.maxComments} comments`);
+                    }
+                });
+                
+                if (postIds.length > 20) {
+                    const sortedIds = postIds.sort();
+                    const idsToRemove = sortedIds.slice(0, postIds.length - 20);
+                    idsToRemove.forEach(id => {
+                        delete this.postComments[id];
+                        console.log(`🧹 Removed old post comment cache: ${id}`);
+                    });
+                }
+            }
+
+            closeModal() {
+                document.getElementById('postModal').style.display = 'none';
+                this.currentPostId = null;
+            }
+
+            searchPosts(query) {
+                console.log('🐍 Searching for:', query);
+                const searchResults = this.allPosts.filter(post =>
+                    post.title.toLowerCase().includes(query.toLowerCase()) ||
+                    post.content.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                this.posts = searchResults;
+                this.renderPosts();
+                
+                document.getElementById('feedTitle').textContent = `Search results for "${query}"`;
+            }
         }
 
-        // Initialize feed
-        function initializeFeed() {
-            const feed = document.getElementById('abbitFeed');
-            const randomPosts = getRandomPosts(8); // Show 8 random posts
-            feed.innerHTML = randomPosts.map(post => createPostHTML(post)).join('');
+        // Initialize the app
+        function initAbbit() {
+            console.log('🐍 Abbit: Starting initialization...');
+            try {
+                window.abbitApp = new AbbitApp();
+                console.log('✅ Abbit: App initialized successfully');
+            } catch (error) {
+                console.error('❌ Abbit: Failed to initialize:', error);
+            }
         }
 
-        // Initialize when page loads
-        initializeFeed();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAbbit);
+        } else {
+            initAbbit();
+        }
 
-        // Refresh feed every 5 minutes
-        setInterval(initializeFeed, 300000);
+        setTimeout(() => {
+            if (!window.abbitApp) {
+                console.log('🐍 Abbit: Fallback initialization...');
+                initAbbit();
+            }
+        }, 500);
     </script>
 </body>
 </html>

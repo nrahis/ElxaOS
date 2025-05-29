@@ -1,0 +1,278 @@
+{
+  "subbabbits": {
+    "snakesia": {
+      "name": "r/snakesia",
+      "description": "The official community for citizens of Snakesia!",
+      "icon": "🐍",
+      "members": "50.2k",
+      "color": "#4CAF50"
+    },
+    "elxacorp": {
+      "name": "r/elxacorp", 
+      "description": "ElxaCorp employees and fans discuss the latest innovations",
+      "icon": "🏢",
+      "members": "28.1k",
+      "color": "#2196F3"
+    },
+    "gaming": {
+      "name": "r/snakesiagaming",
+      "description": "Gaming community of Snakesia - Minecraft, ElxaOS games, and more!",
+      "icon": "🎮",
+      "members": "15.7k", 
+      "color": "#FF9800"
+    },
+    "lifestyle": {
+      "name": "r/snakesialife",
+      "description": "Daily life, culture, and happenings in beautiful Snakesia",
+      "icon": "🏠",
+      "members": "32.5k",
+      "color": "#E91E63"
+    },
+    "sussy": {
+      "name": "r/sussylair",
+      "description": "For all things mischievous and sus... 😈",
+      "icon": "😈", 
+      "members": "3.2k",
+      "color": "#9C27B0"
+    }
+  },
+  "postTemplates": {
+    "snakesia": [
+      {
+        "author": "SnakesiaResident1",
+        "title": "{{announcement_type}} {{community_event}}!",
+        "content": "{{event_description}} {{location_mention}} {{community_excitement}}",
+        "type": "text",
+        "votes": {"min": 45, "max": 150},
+        "comments": {"min": 8, "max": 25},
+        "weight": 3
+      },
+      {
+        "author": "LocalMerchant",
+        "title": "{{business_update}} {{product_announcement}}",
+        "content": "{{product_details}} {{pricing_snakes}} {{merchant_enthusiasm}}",
+        "type": "text", 
+        "votes": {"min": 20, "max": 80},
+        "comments": {"min": 5, "max": 15},
+        "weight": 2
+      },
+      {
+        "author": "TownMayor",
+        "title": "{{official_announcement}} {{policy_update}}",
+        "content": "{{policy_details}} {{citizen_impact}} {{official_closing}}",
+        "type": "text",
+        "votes": {"min": 60, "max": 200},
+        "comments": {"min": 12, "max": 40},
+        "weight": 2
+      }
+    ],
+    "elxacorp": [
+      {
+        "author": "Snake_E_CEO", 
+        "title": "{{company_milestone}} {{innovation_announcement}}",
+        "content": "{{technical_details}} {{business_impact}} {{vision_statement}}",
+        "type": "text",
+        "votes": {"min": 100, "max": 500},
+        "comments": {"min": 20, "max": 80},
+        "weight": 3
+      },
+      {
+        "author": "ElxaCorp_Dev",
+        "title": "{{dev_update}} {{feature_announcement}}",
+        "content": "{{technical_explanation}} {{user_benefits}} {{dev_excitement}}",
+        "type": "text",
+        "votes": {"min": 80, "max": 300},
+        "comments": {"min": 15, "max": 60},
+        "weight": 2
+      },
+      {
+        "author": "ElxaCorp_HR",
+        "title": "{{hr_announcement}} {{employee_benefit}}",
+        "content": "{{benefit_details}} {{application_process}} {{hr_contact}}",
+        "type": "text",
+        "votes": {"min": 40, "max": 120},
+        "comments": {"min": 8, "max": 30},
+        "weight": 1
+      }
+    ],
+    "gaming": [
+      {
+        "author": "RemiMarway",
+        "title": "{{gaming_achievement}} {{minecraft_project}}!",
+        "content": "{{project_details}} {{building_process}} {{gaming_enthusiasm}}",
+        "type": "image",
+        "votes": {"min": 200, "max": 800},
+        "comments": {"min": 30, "max": 100},
+        "weight": 3
+      },
+      {
+        "author": "MinecraftPro",
+        "title": "{{tutorial_offer}} {{redstone_project}}",
+        "content": "{{tutorial_details}} {{difficulty_level}} {{help_offer}}",
+        "type": "text",
+        "votes": {"min": 60, "max": 250},
+        "comments": {"min": 15, "max": 50},
+        "weight": 2
+      },
+      {
+        "author": "GameDevSnake",
+        "title": "{{game_announcement}} {{elxaos_game}}",
+        "content": "{{game_description}} {{release_info}} {{dev_excitement}}",
+        "type": "text",
+        "votes": {"min": 90, "max": 400},
+        "comments": {"min": 20, "max": 70},
+        "weight": 2
+      }
+    ],
+    "lifestyle": [
+      {
+        "author": "Mrs_Snake_E",
+        "title": "{{garden_milestone}} {{plant_success}}!",
+        "content": "{{gardening_details}} {{growing_tips}} {{motherly_wisdom}}",
+        "type": "image",
+        "votes": {"min": 80, "max": 300},
+        "comments": {"min": 12, "max": 45},
+        "weight": 2
+      },
+      {
+        "author": "SnakesiaChef",
+        "title": "{{recipe_share}} {{local_ingredient}}",
+        "content": "{{recipe_description}} {{cooking_tips}} {{food_enthusiasm}}",
+        "type": "text",
+        "votes": {"min": 50, "max": 180},
+        "comments": {"min": 10, "max": 35},
+        "weight": 2
+      },
+      {
+        "author": "LocalArtist",
+        "title": "{{art_showcase}} {{creative_project}}",
+        "content": "{{art_description}} {{inspiration_source}} {{artistic_journey}}",
+        "type": "image",
+        "votes": {"min": 70, "max": 250},
+        "comments": {"min": 8, "max": 40},
+        "weight": 1
+      }
+    ],
+    "sussy": [
+      {
+        "author": "PushingCat",
+        "title": "{{mischief_report}} {{sussy_activity}}",
+        "content": "{{mischief_details}} {{chaos_results}} {{cat_satisfaction}}",
+        "type": "text",
+        "votes": {"min": 25, "max": 150},
+        "comments": {"min": 5, "max": 30},
+        "weight": 3
+      },
+      {
+        "author": "SussyHelper1",
+        "title": "{{chaos_plan}} {{belly_button_raid}}",
+        "content": "{{plan_details}} {{target_selection}} {{sussy_confidence}}",
+        "type": "text",
+        "votes": {"min": 15, "max": 100},
+        "comments": {"min": 3, "max": 20},
+        "weight": 2
+      }
+    ]
+  },
+  "postVariables": {
+    "announcement_type": ["IMPORTANT:", "BIG NEWS:", "COMMUNITY UPDATE:", "EXCITING NEWS:"],
+    "community_event": ["Farmers Market this Saturday", "Snake Day Festival next month", "Community BBQ tomorrow", "New park opening ceremony"],
+    "event_description": ["Join us for a day of local vendors and fresh produce", "Celebrate our heritage with traditional Snakesian activities", "Bring your family for food, games, and community spirit", "Ribbon cutting ceremony at 2 PM"],
+    "location_mention": ["at Snakesia Central Park", "downtown near the snake statue", "behind the community center", "at the new recreation area"],
+    "community_excitement": ["Can't wait to see everyone there!", "This is going to be amazing!", "Community events are the best part of living here", "Proud to be Snakesian!"],
+    
+    "business_update": ["NEW STOCK:", "SPECIAL OFFER:", "GRAND OPENING:", "HOLIDAY SALE:"],
+    "product_announcement": ["Fresh ElxaPhones just arrived!", "Local honey from snake valley farms", "Handmade crafts by Snakesian artisans", "Limited edition Snakesia merchandise"],
+    "product_details": ["Latest model with all the new features", "100% natural and locally sourced", "Each piece tells a story of our culture", "Only available while supplies last"],
+    "pricing_snakes": ["Starting at 200 snakes", "Best prices in town - 50 snakes each", "Special discount: 2 for 300 snakes", "Premium quality for just 150 snakes"],
+    "merchant_enthusiasm": ["Come check us out!", "Supporting local businesses matters", "Quality guaranteed or your snakes back", "Serving Snakesia for over 10 years"],
+    
+    "official_announcement": ["MAYOR'S OFFICE:", "POLICY UPDATE:", "CITY COUNCIL DECISION:", "PUBLIC NOTICE:"],
+    "policy_update": ["New recycling program starting Monday", "Extended library hours beginning next week", "Road construction on Main Street", "Free community Wi-Fi now available"],
+    "policy_details": ["All residents will receive new bins this weekend", "Open until 10 PM on weekdays, 8 PM on weekends", "Expect delays between 9 AM and 4 PM daily", "Password is 'SnakesiaStrong' - enjoy!"],
+    "citizen_impact": ["This will help keep our city beautiful", "More time to study and learn together", "Thank you for your patience during improvements", "Connecting our community to the world"],
+    "official_closing": ["Questions? Visit city hall or call 555-SNAKE", "Your cooperation is appreciated", "Together we build a better Snakesia", "Proud to serve our community"],
+    
+    "company_milestone": ["BREAKTHROUGH:", "MILESTONE ACHIEVED:", "INNOVATION ALERT:", "QUARTERLY RESULTS:"],
+    "innovation_announcement": ["ElxaOS 3.0 now in beta testing", "ElxaPhone sales reach 1 million units", "New AI assistant 'SnakeGPT' launching soon", "Snakesia expansion plan approved"],
+    "technical_details": ["Revolutionary new features and improved performance", "Thank you to our loyal customers worldwide", "Natural language processing optimized for Snakesian", "Creating 500 new jobs in our hometown"],
+    "business_impact": ["This changes everything for productivity", "Proof that innovation and community go hand in hand", "Making technology more accessible to everyone", "Investing in our local economy and talent"],
+    "vision_statement": ["The future is bright for ElxaCorp and Snakesia", "Innovation drives everything we do", "Excellence through collaboration and creativity", "Building tomorrow's technology today"],
+    
+    "dev_update": ["DEV BLOG:", "FEATURE SPOTLIGHT:", "BEHIND THE SCENES:", "TECH UPDATE:"],
+    "feature_announcement": ["New multi-window support in ElxaOS", "Improved security protocols", "Better file system performance", "Enhanced graphics engine"],
+    "technical_explanation": ["Users can now run multiple apps seamlessly", "256-bit encryption keeps your data safe", "30% faster file operations across the board", "Smoother animations and better game performance"],
+    "user_benefits": ["Multitasking has never been easier", "Your privacy is our top priority", "Everything just feels more responsive now", "Gaming and creative apps run like a dream"],
+    "dev_excitement": ["The team is incredibly proud of this work", "This is just the beginning - more updates coming", "Beta testers are loving these improvements", "Can't wait for everyone to try these features"],
+    
+    "hr_announcement": ["EMPLOYEE SPOTLIGHT:", "NEW BENEFITS:", "COMPANY CULTURE:", "TEAM BUILDING:"],
+    "employee_benefit": ["Flexible work from home options", "New wellness program launch", "Professional development fund increased", "Monthly team lunch program"],
+    "benefit_details": ["Work remotely up to 3 days per week", "Gym memberships and mental health support included", "Up to 2000 snakes per year for training and conferences", "Building stronger connections across departments"],
+    "application_process": ["Speak with your manager to set your schedule", "Enrollment opens next Monday - sign up early!", "Submit requests through the employee portal", "First lunch is next Friday - RSVP required"],
+    "hr_contact": ["Questions? Email hr@elxacorp.ex", "Visit the HR portal for more info", "Stop by HR on the 5th floor anytime", "We're here to support your success"],
+    
+    "gaming_achievement": ["EPIC BUILD:", "NEW RECORD:", "TUTORIAL DROP:", "COMMUNITY PROJECT:"],
+    "minecraft_project": ["Massive castle took 3 months to complete", "Speed run in under 20 minutes", "Redstone computer that actually works", "Server-wide collaboration on spawn city"],
+    "project_details": ["Every block placed by hand - no creative mode", "New personal best and maybe world record?", "It can run basic programs and even play music", "50+ players contributed over 6 weeks"],
+    "building_process": ["The planning phase alone took weeks", "Practiced this route hundreds of times", "Combining engineering knowledge with game mechanics", "Organized teams for different districts and buildings"],
+    "gaming_enthusiasm": ["Screenshots don't do it justice - video tour coming!", "Grinding pays off when you beat your goals", "Mind = blown. This is the future of Minecraft", "This community is absolutely incredible"],
+    
+    "tutorial_offer": ["TUTORIAL:", "HOW-TO GUIDE:", "STEP-BY-STEP:", "BEGINNER FRIENDLY:"],
+    "redstone_project": ["Automatic farm that sorts everything", "Hidden door system with password", "Elevator that goes 50 blocks up", "Item transportation network"],
+    "tutorial_details": ["Works in survival mode, no cheats needed", "Uses pressure plates and hidden redstone", "Smooth and quiet operation", "Connect any building with item tubes"],
+    "difficulty_level": ["Intermediate - some redstone knowledge helpful", "Advanced - requires precise timing", "Beginner friendly with clear explanations", "Expert level - complex but rewarding"],
+    "help_offer": ["Happy to help if you get stuck!", "Comments section for questions", "Stream build sessions on weekends", "Join our Discord for real-time help"],
+    
+    "game_announcement": ["NEW GAME:", "INDIE SPOTLIGHT:", "BETA RELEASE:", "GAME UPDATE:"],
+    "elxaos_game": ["Snake Puzzle Adventure for ElxaOS", "Retro platformer with Snakesian themes", "Beta version of Mansion Mystery", "Major update to Sussy Cat Simulator"],
+    "game_description": ["Solve puzzles while exploring ancient Snakesian temples", "8-bit style adventure through our homeland", "Solve mysteries in Mr. Snake-e's mansion", "New chaos modes and belly button mechanics"],
+    "release_info": ["Available in ElxaOS App Store tomorrow", "Free download for the first week", "Open beta starts this weekend", "Patch 2.1 rolling out now"],
+    "dev_excitement": ["Labor of love from local indie dev", "Captures the spirit of classic gaming", "Feedback from alpha testers has been amazing", "The update everyone's been waiting for"],
+    
+    "garden_milestone": ["GARDEN UPDATE:", "HARVEST TIME:", "PLANTING SUCCESS:", "SEASONAL BEAUTY:"],
+    "plant_success": ["Tomatoes are producing beautifully", "Rose garden is in full bloom", "Herb collection expanding nicely", "Fall colors are spectacular this year"],
+    "gardening_details": ["Started from seeds saved from last year", "Careful pruning and feeding paid off", "Added basil, oregano, and Snakesian mint", "The maple trees are showing off their colors"],
+    "growing_tips": ["Consistent watering is key to success", "Deadheading encourages more blooms", "Fresh herbs make every meal special", "Nature's artwork changes every day"],
+    "motherly_wisdom": ["Patience and care always win in the garden", "There's something therapeutic about growing things", "Sharing the harvest brings the most joy", "Every season teaches us something new"],
+    
+    "recipe_share": ["FAMILY RECIPE:", "SEASONAL SPECIAL:", "COMFORT FOOD:", "TRADITIONAL DISH:"],
+    "local_ingredient": ["Fresh snake valley mushrooms", "Snakesian honey glazed carrots", "Traditional spiced snake bread", "Locally sourced apple butter"],
+    "recipe_description": ["Hearty stew perfect for cool evenings", "Sweet and savory side dish", "Passed down through generations", "Spread on warm biscuits with coffee"],
+    "cooking_tips": ["Sauté the mushrooms until golden brown", "The honey caramelizes for extra sweetness", "Knead the dough until smooth and elastic", "Let it simmer slowly for best flavor"],
+    "food_enthusiasm": ["My family has been making this for decades", "Tastes like home every single time", "Nothing beats traditional Snakesian cooking", "Food is how we show love"],
+    
+    "art_showcase": ["NEW ARTWORK:", "COMMISSION COMPLETE:", "GALLERY OPENING:", "CREATIVE PROCESS:"],
+    "creative_project": ["Oil painting of downtown Snakesia", "Custom portrait commission", "Solo exhibition next month", "Time-lapse video of sculpture creation"],
+    "art_description": ["Captured the golden hour light perfectly", "Brought their beloved pet to life on canvas", "Celebrating 20 years as a local artist", "Watch 40 hours of work in 3 minutes"],
+    "inspiration_source": ["Our beautiful city deserves to be immortalized", "The love between pets and owners", "This community has supported my art journey", "The magic happens in the creative process"],
+    "artistic_journey": ["Each painting teaches me something new", "Art connects us across all differences", "Grateful for every opportunity to create", "Sharing the process demystifies art for others"],
+    
+    "mischief_report": ["CHAOS UPDATE:", "SUSSY ACTIVITY:", "MISCHIEF ACCOMPLISHED:", "BELLY BUTTON RAID:"],
+    "sussy_activity": ["Successfully pushed 12 items off tables today", "Infiltrated 3 belly buttons undetected", "Hid in the perfect blanket fort", "Stole socks from 5 different rooms"],
+    "mischief_details": ["Cups, pencils, and even a small plant", "Strategic approach through stealth and cuteness", "Ultimate cozy hideout achieved", "Color coordinated collection now complete"],
+    "chaos_results": ["Humans very confused but amused", "Mission objectives exceeded expectations", "Perfect napping spot discovered", "Chaos level: Maximum"],
+    "cat_satisfaction": ["*satisfied purring*", "*evil cat laugh*", "*smug whisker twitch*", "*proud tail swish*"],
+    
+    "chaos_plan": ["OPERATION:", "MASTER PLAN:", "SUSSY SCHEME:", "MISCHIEF PROTOCOL:"],
+    "belly_button_raid": ["Midnight belly button invasion", "Coordinated sock theft operation", "Strategic blanket fort establishment", "Mass table clearing event"],
+    "plan_details": ["Target sleeping humans around 2 AM", "Hit laundry baskets during dinner time", "Construct fortress in living room", "Synchronize with other sussy cats"],
+    "target_selection": ["Prioritize deepest belly buttons first", "Focus on the fluffiest socks available", "Claim the softest blankets", "Tables with the most breakable items"],
+    "sussy_confidence": ["This plan is foolproof", "They'll never see us coming", "Peak sussy performance guaranteed", "*confident evil purring*"]
+  },
+  "users": {
+    "SnakesiaResident1": {"avatar": "🏠", "karma": 2840, "cakeday": "2 years"},
+    "LocalMerchant": {"avatar": "🛒", "karma": 1560, "cakeday": "1 year"},
+    "TownMayor": {"avatar": "🏛️", "karma": 5670, "cakeday": "4 years"},
+    "Snake_E_CEO": {"avatar": "🐍", "karma": 12450, "cakeday": "5 years"},
+    "ElxaCorp_Dev": {"avatar": "💻", "karma": 3890, "cakeday": "2 years"},
+    "ElxaCorp_HR": {"avatar": "📋", "karma": 1890, "cakeday": "1 year"},
+    "RemiMarway": {"avatar": "🎮", "karma": 8940, "cakeday": "3 years"},
+    "MinecraftPro": {"avatar": "⚡", "karma": 4560, "cakeday": "2 years"},
+    "GameDevSnake": {"avatar": "🕹️", "karma": 2340, "cakeday": "1 year"},
+    "Mrs_Snake_E": {"avatar": "👵", "karma": 6780, "cakeday": "3 years"},
+    "SnakesiaChef": {"avatar": "👨‍🍳", "karma": 3450, "cakeday": "2 years"},
+    "LocalArtist": {"avatar": "🎨", "karma": 2890, "cakeday": "1 year"},
+    "PushingCat": {"avatar": "🐱", "karma": 1230, "cakeday": "6 months"},
+    "SussyHelper1": {"avatar": "😼", "karma": 890, "cakeday": "3 months"}
+  }
+}
