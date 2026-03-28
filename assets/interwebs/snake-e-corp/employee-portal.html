@@ -1,794 +1,500 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ElxaCorp Employee Portal - Secure Access</title>
-    <style>
-        /* Employee Portal Styles */
-        :root {
-            --elxa-blue: #003366;
-            --elxa-gold: #FFD700;
-            --elxa-green: #006400;
-            --elxa-red: #8B0000;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .portal-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Login Screen */
-        .login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--elxa-blue) 0%, #0066cc 100%);
-        }
-
-        .login-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .login-logo {
-            font-size: 36px;
-            color: var(--elxa-blue);
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .login-subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--elxa-blue);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--elxa-blue);
-            box-shadow: 0 0 8px rgba(0, 51, 102, 0.2);
-        }
-
-        .login-button {
-            width: 100%;
-            background: var(--elxa-blue);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-
-        .login-button:hover {
-            background: #004488;
-            transform: translateY(-2px);
-        }
-
-        .login-help {
-            color: #666;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-
-        .error-message {
-            background: #ffe6e6;
-            border: 1px solid #ff9999;
-            color: var(--elxa-red);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success-message {
-            background: #e6ffe6;
-            border: 1px solid #99ff99;
-            color: var(--elxa-green);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        /* Portal Dashboard */
-        .portal-dashboard {
-            display: none;
-        }
-
-        .portal-header {
-            background: linear-gradient(135deg, var(--elxa-blue), #004488);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-
-        .portal-welcome h1 {
-            margin: 0;
-            font-size: 32px;
-        }
-
-        .portal-welcome .employee-info {
-            margin-top: 8px;
-            opacity: 0.9;
-            font-size: 16px;
-        }
-
-        .portal-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .portal-btn {
-            background: var(--elxa-gold);
-            color: var(--elxa-blue);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .portal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-
-        .portal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .portal-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            border-left: 4px solid var(--elxa-blue);
-        }
-
-        .portal-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-icon {
-            font-size: 24px;
-            margin-right: 12px;
-        }
-
-        .card-title {
-            color: var(--elxa-blue);
-            font-size: 20px;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            margin: 8px 0;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 3px solid var(--elxa-gold);
-        }
-
-        .stat-label {
-            font-weight: 600;
-            color: #555;
-        }
-
-        .stat-value {
-            font-weight: bold;
-            color: var(--elxa-blue);
-            font-size: 18px;
-        }
-
-        .schedule-item {
-            display: flex;
-            gap: 15px;
-            padding: 12px;
-            margin: 8px 0;
-            background: #f0f8ff;
-            border-radius: 8px;
-            border-left: 3px solid var(--elxa-blue);
-        }
-
-        .schedule-time {
-            font-weight: bold;
-            color: var(--elxa-blue);
-            min-width: 80px;
-            font-size: 14px;
-        }
-
-        .schedule-task {
-            color: #555;
-            font-weight: 500;
-        }
-
-        .ticket-item {
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 4px solid #ddd;
-            transition: all 0.3s ease;
-        }
-
-        .ticket-item:hover {
-            transform: translateX(5px);
-        }
-
-        .priority-critical {
-            background: #fff5f5;
-            border-left-color: #e53e3e;
-        }
-
-        .priority-high {
-            background: #fffaf0;
-            border-left-color: #dd6b20;
-        }
-
-        .priority-medium {
-            background: #f7fafc;
-            border-left-color: #3182ce;
-        }
-
-        .priority-sus {
-            background: #faf5ff;
-            border-left-color: #805ad5;
-            animation: pulse-sus 2s infinite;
-        }
-
-        @keyframes pulse-sus {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-
-        .ticket-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .ticket-meta {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .action-btn {
-            background: var(--elxa-blue);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .action-btn:hover {
-            background: #004488;
-            transform: translateY(-2px);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .portal-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-
-            .portal-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .portal-actions {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <title>ElxaCorp Employee Portal</title>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
+    <!-- ===== LOGIN ===== -->
+    <div id="loginScreen" class="login-wrapper">
+        <div class="login-brand">
+            <div class="login-brand-icon"><span class="mdi mdi-office-building-outline"></span></div>
+            <h1>ELXACORP</h1>
+            <p>Employee Portal</p>
+        </div>
+
         <div class="login-card">
-            <div class="login-logo">🏢 ElxaCorp</div>
-            <div class="login-subtitle">Employee Portal</div>
-            
-            <div id="loginError" class="error-message"></div>
-            <div id="loginSuccess" class="success-message"></div>
-            
+            <h2>Sign In</h2>
+            <div id="loginError" class="msg msg-error"></div>
+            <div id="loginSuccess" class="msg msg-success"></div>
             <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" required placeholder="Enter your username">
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required placeholder="e.g. jane.doe">
                 </div>
-                
-                <div class="form-group">
-                    <label for="password">Password:</label>
+                <div class="field">
+                    <label for="password">Password</label>
                     <input type="password" id="password" required placeholder="Enter your password">
                 </div>
-                
-                <button type="submit" class="login-button">Sign In</button>
+                <button type="submit" class="login-btn">Sign In</button>
             </form>
-            
             <div class="login-help">
-                <strong>New Employee?</strong><br>
-                Check your hiring email for login credentials.<br><br>
-                <strong>Need Help?</strong><br>
-                Contact IT: it@elxacorp.ex<br>
-                Or call: (555) SNAKE-IT
+                <strong>New Employee?</strong> Check your ElxaMail for login credentials.<br>
+                IT Support: <em><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0d9c4f0d5dcc8d1d3dfc2c09ed5c8">[email&#160;protected]</a></em> &bull; (555) SNAKE-IT
             </div>
         </div>
     </div>
 
-    <!-- Dashboard -->
-    <div id="portalDashboard" class="portal-dashboard">
-        <div class="portal-container">
-            <div class="portal-header">
-                <div class="portal-welcome">
-                    <h1>Welcome back, <span id="employeeName">Employee</span>! 🎉</h1>
-                    <div class="employee-info">
-                        <span id="employeeId">EMP-0000</span> | 
-                        <span id="employeePosition">Team Member</span> | 
-                        <span id="currentDate"></span>
-                    </div>
-                </div>
-                <div class="portal-actions">
-                    <button class="portal-btn" onclick="portalSystem.changePassword()">🔐 Change Password</button>
-                    <button class="portal-btn" onclick="portalSystem.logout()">🚪 Sign Out</button>
+    <!-- ===== DASHBOARD ===== -->
+    <div id="portalDashboard" class="portal-dash">
+        <div class="dash-header">
+            <div>
+                <h1>Welcome back, <span id="employeeName">Employee</span>!</h1>
+                <div class="dash-header-meta">
+                    <span class="badge" id="employeeId">EMP-0000</span>
+                    <span class="badge" id="employeePosition">Team Member</span>
+                    <span class="badge" id="employeeDepartment">Department</span>
+                    <span id="currentDate"></span>
                 </div>
             </div>
+            <div class="dash-actions">
+                <button class="dash-btn" onclick="portalSystem.changePassword()"><span class="mdi mdi-lock-reset"></span> Password</button>
+                <button class="dash-btn" onclick="portalSystem.logout()"><span class="mdi mdi-logout"></span> Sign Out</button>
+            </div>
+        </div>
+        <div class="dash-accent"></div>
 
-            <div class="portal-grid">
-                <!-- Quick Stats -->
-                <div class="portal-card">
-                    <div class="card-header">
-                        <div class="card-icon">📊</div>
-                        <h3 class="card-title">Today's Stats</h3>
+        <div class="dash-body">
+            <div class="dash-grid">
+
+                <!-- Today's Stats -->
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-icon icon-stats"><span class="mdi mdi-chart-box-outline"></span></div>
+                        <h3>Today's Stats</h3>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Tasks Completed</span>
-                        <span class="stat-value" id="tasksCompleted">12</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Sus Incidents Detected</span>
-                        <span class="stat-value" id="susIncidents">3 🐱</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Cookies Earned</span>
-                        <span class="stat-value" id="cookiesEarned">8 🍪</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Denali Miles</span>
-                        <span class="stat-value" id="denaliMiles">25 🚗</span>
+                    <div class="card-body">
+                        <div class="stat-row"><span class="stat-label">Tasks Completed</span><span class="stat-val" id="tasksCompleted">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Sus Incidents Detected</span><span class="stat-val" id="susIncidents">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Cookies Earned</span><span class="stat-val" id="cookiesEarned">0 🍪</span></div>
+                        <div class="stat-row"><span class="stat-label">Denali Miles</span><span class="stat-val" id="denaliMiles">&mdash;</span></div>
                     </div>
                 </div>
 
                 <!-- Schedule -->
-                <div class="portal-card">
-                    <div class="card-header">
-                        <div class="card-icon">📅</div>
-                        <h3 class="card-title">Today's Schedule</h3>
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-icon icon-schedule"><span class="mdi mdi-calendar-clock"></span></div>
+                        <h3>Today's Schedule</h3>
                     </div>
-                    <div id="scheduleContainer">
-                        <div class="schedule-item">
-                            <div class="schedule-time">9:00 AM</div>
-                            <div class="schedule-task">Team Stand-up Meeting</div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">10:30 AM</div>
-                            <div class="schedule-task">Project Development</div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">12:00 PM</div>
-                            <div class="schedule-task">Lunch Break & Cookie Time</div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">2:00 PM</div>
-                            <div class="schedule-task">System Maintenance</div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">4:00 PM</div>
-                            <div class="schedule-task">Sus Activity Monitoring</div>
-                        </div>
+                    <div class="card-body" id="scheduleContainer">
+                        <div class="sched-item"><span class="sched-time">9:00 AM</span><span class="sched-task">Team Stand-up Meeting</span></div>
+                        <div class="sched-item"><span class="sched-time">10:30 AM</span><span class="sched-task">Project Development</span></div>
+                        <div class="sched-item"><span class="sched-time">12:00 PM</span><span class="sched-task">Lunch Break & Cookie Time</span></div>
+                        <div class="sched-item"><span class="sched-time">2:00 PM</span><span class="sched-task">System Maintenance</span></div>
+                        <div class="sched-item"><span class="sched-time">4:00 PM</span><span class="sched-task">Sus Activity Monitoring</span></div>
                     </div>
                 </div>
 
                 <!-- Priority Tasks -->
-                <div class="portal-card">
-                    <div class="card-header">
-                        <div class="card-icon">🎯</div>
-                        <h3 class="card-title">Priority Tasks</h3>
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-icon icon-tasks"><span class="mdi mdi-alert-circle-outline"></span></div>
+                        <h3>Priority Tasks</h3>
                     </div>
-                    <div id="tasksContainer">
-                        <div class="ticket-item priority-critical">
-                            <div class="ticket-title">🚨 URGENT: Mrs. Snake-E's computer needs fixing</div>
-                            <div class="ticket-meta">Assigned 5 minutes ago • High Priority</div>
+                    <div class="card-body" id="tasksContainer">
+                        <div class="ticket ticket-critical">
+                            <div class="ticket-title"><span class="mdi mdi-alert"></span> URGENT: Mrs. Snake-E's computer needs fixing</div>
+                            <div class="ticket-meta">Assigned 5 min ago &bull; Critical</div>
                         </div>
-                        <div class="ticket-item priority-high">
+                        <div class="ticket ticket-high">
                             <div class="ticket-title">ElxaOS Security Update Required</div>
-                            <div class="ticket-meta">Due today • Medium Priority</div>
+                            <div class="ticket-meta">Due today &bull; High Priority</div>
                         </div>
-                        <div class="ticket-item priority-sus">
-                            <div class="ticket-title">🐱 Pushing Cat spotted in server room</div>
-                            <div class="ticket-meta">Ongoing • Very Sus Priority</div>
+                        <div class="ticket ticket-sus">
+                            <div class="ticket-title"><span class="mdi mdi-cat"></span> Pushing Cat spotted in server room</div>
+                            <div class="ticket-meta">Ongoing &bull; Very Sus</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Payroll Info -->
-                <div class="portal-card">
-                    <div class="card-header">
-                        <div class="card-icon">💰</div>
-                        <h3 class="card-title">Payroll & Benefits</h3>
+                <!-- Your Profile -->
+                <div class="card card-profile">
+                    <div class="card-head">
+                        <div class="card-icon icon-profile"><span class="mdi mdi-account-circle-outline"></span></div>
+                        <h3>Your Profile</h3>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Next Payday</span>
-                        <span class="stat-value" id="nextPayday">Friday</span>
+                    <div class="card-body">
+                        <div class="stat-row"><span class="stat-label">Salary</span><span class="stat-val" id="profileSalary">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Reports To</span><span class="stat-val" id="profileManager">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Sus Level</span><span class="stat-val" id="profileSusLevel">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Fav Cookie</span><span class="stat-val" id="profileCookie">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Fav Game</span><span class="stat-val" id="profileGame">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Start Date</span><span class="stat-val" id="profileStartDate">&mdash;</span></div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">YTD Earnings</span>
-                        <span class="stat-value" id="ytdEarnings">$45,000</span>
+                </div>
+
+                <!-- Payroll & Benefits -->
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-icon icon-pay"><span class="mdi mdi-cash-multiple"></span></div>
+                        <h3>Payroll & Benefits</h3>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Cookie Credits</span>
-                        <span class="stat-value" id="cookieCredits">47 🍪</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Vacation Days</span>
-                        <span class="stat-value" id="vacationDays">15</span>
+                    <div class="card-body">
+                        <div class="stat-row"><span class="stat-label">Weekly Pay</span><span class="stat-val" id="weeklyPay">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">Next Payday</span><span class="stat-val" id="nextPayday">&mdash;</span></div>
+                        <div class="stat-row"><span class="stat-label">YTD Earnings</span><span class="stat-val" id="ytdEarnings">$0.00</span></div>
+                        <div class="stat-row"><span class="stat-label">Direct Deposit</span><span class="stat-val" id="directDepositStatus"><button class="dd-link-btn" onclick="portalSystem.openBankLink()"><span class="mdi mdi-bank-outline"></span> Link Bank</button></span></div>
+                        <div class="stat-row"><span class="stat-label">Cookie Credits</span><span class="stat-val" id="cookieCredits">0 🍪</span></div>
+                        <div class="stat-row"><span class="stat-label">Vacation Days</span><span class="stat-val" id="vacationDays">15</span></div>
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="portal-card">
-                    <div class="card-header">
-                        <div class="card-icon">⚡</div>
-                        <h3 class="card-title">Quick Actions</h3>
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-icon icon-actions"><span class="mdi mdi-lightning-bolt"></span></div>
+                        <h3>Quick Actions</h3>
                     </div>
-                    <div class="action-grid">
-                        <button class="action-btn" onclick="portalSystem.openTicketSystem()">🎫 IT Tickets</button>
-                        <button class="action-btn" onclick="portalSystem.openTimeClock()">⏰ Time Clock</button>
-                        <button class="action-btn" onclick="portalSystem.openDirectory()">📞 Directory</button>
-                        <button class="action-btn" onclick="portalSystem.openBenefits()">🏥 Benefits</button>
-                        <button class="action-btn" onclick="portalSystem.openTraining()">📚 Training</button>
-                        <button class="action-btn" onclick="portalSystem.openGameRoom()">🎮 Game Room</button>
+                    <div class="card-body">
+                        <div class="action-grid">
+                            <button class="action-btn" onclick="portalSystem.openTicketSystem()"><span class="act-icon mdi mdi-ticket-outline"></span>Tickets</button>
+                            <button class="action-btn" onclick="portalSystem.openTimeClock()"><span class="act-icon mdi mdi-clock-outline"></span>Time Clock</button>
+                            <button class="action-btn" onclick="portalSystem.openDirectory()"><span class="act-icon mdi mdi-phone-classic"></span>Directory</button>
+                            <button class="action-btn" onclick="portalSystem.openBenefits()"><span class="act-icon mdi mdi-hospital-box-outline"></span>Benefits</button>
+                            <button class="action-btn" onclick="portalSystem.openTraining()"><span class="act-icon mdi mdi-school-outline"></span>Training</button>
+                            <button class="action-btn" onclick="portalSystem.openGameRoom()"><span class="act-icon mdi mdi-gamepad-variant-outline"></span>Game Room</button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Company News -->
-                <div class="portal-card">
-                    <div class="card-header">
-                        <div class="card-icon">📰</div>
-                        <h3 class="card-title">Company News</h3>
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-icon icon-news"><span class="mdi mdi-newspaper-variant-outline"></span></div>
+                        <h3>Company News</h3>
                     </div>
-                    <div class="schedule-item">
-                        <div class="schedule-time">Today</div>
-                        <div class="schedule-task">Mrs. Snake-E's fresh cookies in break room!</div>
+                    <div class="card-body">
+                        <div class="news-item"><span class="news-date">Today</span><span>Mrs. Snake-E's fresh cookies in the break room!</span></div>
+                        <div class="news-item"><span class="news-date">Yesterday</span><span>ElxaOS 11.1 security update deployed</span></div>
+                        <div class="news-item"><span class="news-date">This Week</span><span>Remi's YouTube channel hit 2M subscribers!</span></div>
                     </div>
-                    <div class="schedule-item">
-                        <div class="schedule-time">Yesterday</div>
-                        <div class="schedule-task">ElxaOS 11.1 security update deployed</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TIME CLOCK OVERLAY ===== -->
+    <div id="timeClockOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-clock-outline"></span> Time Clock</h3>
+                <button class="overlay-close" onclick="portalSystem.closeTimeClock()">&times;</button>
+            </div>
+            <div class="overlay-body">
+                <div id="tcStatus" class="tc-status clocked-out">
+                    <div class="tc-status-label" id="tcStatusLabel">Clocked Out</div>
+                    <div class="tc-timer" id="tcTimer">00:00:00</div>
+                </div>
+                <button id="tcToggleBtn" class="tc-toggle clock-in" onclick="portalSystem.toggleClock()">
+                    <span class="mdi mdi-clock-in"></span> Clock In
+                </button>
+                <div class="tc-stats">
+                    <div class="tc-stat-row"><span class="tc-stat-label">Today's Time</span><span class="tc-stat-val" id="tcTodayTime">0h 0m</span></div>
+                    <div class="tc-stat-row"><span class="tc-stat-label">Today's Cookies</span><span class="tc-stat-val" id="tcTodayCookies">0 🍪</span></div>
+                    <div class="tc-stat-row"><span class="tc-stat-label">Total Cookies (All Time)</span><span class="tc-stat-val" id="tcTotalCookies">0 🍪</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BANK LINK OVERLAY ===== -->
+    <div id="bankLinkOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-bank-outline"></span> Direct Deposit Setup</h3>
+                <button class="overlay-close" onclick="portalSystem.closeBankLink()">&times;</button>
+            </div>
+            <div class="overlay-body">
+                <div id="bankLinkMsg" class="overlay-msg"></div>
+                <div id="bankLinkStatusBox" class="bank-link-status unlinked">
+                    <div class="bank-link-icon"><span class="mdi mdi-bank-off-outline"></span></div>
+                    <div class="bank-link-label" id="bankLinkLabel">No Bank Linked</div>
+                    <div class="bank-link-name" id="bankLinkName"></div>
+                    <div class="bank-link-detail" id="bankLinkDetail">Link your First Snakesian Bank account to receive your paycheck via direct deposit.</div>
+                </div>
+                <div id="bankLinkForm">
+                    <div class="field">
+                        <label for="bankUsername">FSB Username</label>
+                        <input type="text" id="bankUsername" placeholder="Your First Snakesian Bank username">
                     </div>
-                    <div class="schedule-item">
-                        <div class="schedule-time">This Week</div>
-                        <div class="schedule-task">Remi's YouTube channel hit 2M subscribers! 🎉</div>
+                    <button class="login-btn" onclick="portalSystem.linkBankAccount()" style="margin-bottom:8px;">
+                        <span class="mdi mdi-link-variant"></span> Link Account
+                    </button>
+                </div>
+                <div id="bankUnlinkSection" class="hidden" style="text-align:center; margin-top:8px;">
+                    <button class="dd-link-btn" onclick="portalSystem.unlinkBankAccount()" style="color:var(--ec-danger); border-color:var(--ec-danger);">
+                        <span class="mdi mdi-link-variant-off"></span> Unlink Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PASSWORD CHANGE OVERLAY ===== -->
+    <div id="passwordOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-lock-reset"></span> Change Password</h3>
+                <button class="overlay-close" onclick="portalSystem.closePasswordChange()">&times;</button>
+            </div>
+            <div class="overlay-body">
+                <div id="pwMsg" class="overlay-msg"></div>
+                <div id="pwBadge" class="pw-current-badge pw-optional"></div>
+                <div class="field">
+                    <label for="pwCurrent">Current Password</label>
+                    <input type="password" id="pwCurrent" placeholder="Enter current password">
+                </div>
+                <div class="field">
+                    <label for="pwNew">New Password</label>
+                    <input type="password" id="pwNew" placeholder="Choose a new password">
+                </div>
+                <div class="field">
+                    <label for="pwConfirm">Confirm New Password</label>
+                    <input type="password" id="pwConfirm" placeholder="Re-enter new password">
+                </div>
+                <button class="login-btn" onclick="portalSystem.submitPasswordChange()">
+                    <span class="mdi mdi-check"></span> Update Password
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Ticket System Overlay -->
+    <div id="ticketOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel ticket-overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-ticket-outline"></span> Tickets</h3>
+                <button class="overlay-close" onclick="portalSystem.closeTickets()">&times;</button>
+            </div>
+            <div class="overlay-body">
+                <div class="career-bar" id="careerBar"></div>
+                <div id="ticketContent"></div>
+                <div class="ticket-footer" id="ticketFooter"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Directory Overlay -->
+    <div id="directoryOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-phone-classic"></span> Employee Directory</h3>
+                <button class="overlay-close" onclick="portalSystem.closeDirectory()">&times;</button>
+            </div>
+            <div class="overlay-body" style="padding:0;">
+                <div class="portal-overlay-panel-scroll">
+                    <div class="dir-entry">
+                        <div class="dir-avatar">🐍</div>
+                        <div class="dir-info">
+                            <div class="dir-name">Mr. Snake-E</div>
+                            <div class="dir-role">Chief Executive Officer</div>
+                        </div>
+                        <div class="dir-ext">ext. 001</div>
+                    </div>
+                    <div class="dir-entry">
+                        <div class="dir-avatar">🍪</div>
+                        <div class="dir-info">
+                            <div class="dir-name">Mrs. Snake-E</div>
+                            <div class="dir-role">Chief Innovation Officer &bull; Cookie Division</div>
+                        </div>
+                        <div class="dir-ext">ext. 002</div>
+                    </div>
+                    <div class="dir-entry">
+                        <div class="dir-avatar">🎮</div>
+                        <div class="dir-info">
+                            <div class="dir-name">Remi Marway</div>
+                            <div class="dir-role">Gaming Division Head &bull; YouTube Creator</div>
+                        </div>
+                        <div class="dir-ext">ext. 404</div>
+                    </div>
+                    <div class="dir-entry">
+                        <div class="dir-avatar">👩</div>
+                        <div class="dir-info">
+                            <div class="dir-name">Rita Martinez</div>
+                            <div class="dir-role">HR &amp; Customer Relations Director</div>
+                        </div>
+                        <div class="dir-ext">ext. 123</div>
+                    </div>
+                    <div class="dir-entry">
+                        <div class="dir-avatar">🔒</div>
+                        <div class="dir-info">
+                            <div class="dir-name">Security Office</div>
+                            <div class="dir-role">Sus Detection &amp; Building Safety</div>
+                        </div>
+                        <div class="dir-ext">ext. 555</div>
+                    </div>
+                    <div class="dir-entry">
+                        <div class="dir-avatar">🖥️</div>
+                        <div class="dir-info">
+                            <div class="dir-name">IT Support</div>
+                            <div class="dir-role">Help Desk &bull; Available 24/7</div>
+                        </div>
+                        <div class="dir-ext">ext. 911</div>
+                    </div>
+                    <div class="dir-entry">
+                        <div class="dir-avatar">🏢</div>
+                        <div class="dir-info">
+                            <div class="dir-name">Facilities &amp; Fleet</div>
+                            <div class="dir-role">Building Maintenance &bull; Vehicle Services</div>
+                        </div>
+                        <div class="dir-ext">ext. 200</div>
+                    </div>
+                    <div class="dir-entry">
+                        <div class="dir-avatar">🐱</div>
+                        <div class="dir-info">
+                            <div class="dir-name">Pushing Cat</div>
+                            <div class="dir-role">Unofficial Mascot &bull; Location Unknown</div>
+                        </div>
+                        <div class="dir-ext" style="color:var(--ec-danger)">DO NOT CALL</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        class EmployeePortalSystem {
-            constructor() {
-                this.currentUser = null;
-                this.isLoggedIn = false;
-                this.jobSystem = null;
-                
-                this.init();
-            }
+    <!-- Benefits Overlay -->
+    <div id="benefitsOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-hospital-box-outline"></span> Benefits Package</h3>
+                <button class="overlay-close" onclick="portalSystem.closeBenefits()">&times;</button>
+            </div>
+            <div class="overlay-body" style="padding:0;">
+                <div class="portal-overlay-panel-scroll">
+                    <div class="benefit-card">
+                        <div class="benefit-icon bi-health"><span class="mdi mdi-heart-pulse"></span></div>
+                        <div class="benefit-info">
+                            <div class="benefit-name">Health Coverage</div>
+                            <div class="benefit-desc">Full medical coverage for you and your family. Includes prescriptions, specialist visits, and emergency care. Zero deductible for cookie-related incidents.</div>
+                        </div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon bi-dental"><span class="mdi mdi-tooth-outline"></span></div>
+                        <div class="benefit-info">
+                            <div class="benefit-name">Dental &amp; Vision</div>
+                            <div class="benefit-desc">Complete dental and vision included at no extra cost. Annual cleanings, eye exams, and frames covered. Mrs. Snake-E insists on healthy teeth for cookie-tasting duties.</div>
+                        </div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon bi-retire"><span class="mdi mdi-piggy-bank-outline"></span></div>
+                        <div class="benefit-info">
+                            <div class="benefit-name">401(k) Retirement</div>
+                            <div class="benefit-desc">ElxaCorp matches 4% of your salary. Vesting begins immediately. Investment options include the Snakesia Growth Fund and the Cookie Dividend Index.</div>
+                        </div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon bi-vacation"><span class="mdi mdi-beach"></span></div>
+                        <div class="benefit-info">
+                            <div class="benefit-name">Paid Time Off</div>
+                            <div class="benefit-desc">3 weeks vacation + sick days + personal days. Additional PTO earned for every 10 tickets completed. Mr. Snake-E encourages road trips (preferably in a Denali).</div>
+                        </div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon bi-cookie"><span class="mdi mdi-cookie"></span></div>
+                        <div class="benefit-info">
+                            <div class="benefit-name">Unlimited Cookie Credits</div>
+                            <div class="benefit-desc">Full access to Mrs. Snake-E's cookie kitchen. Fresh baked daily. Flavors rotate weekly. This is considered the company's most valuable benefit by 97% of employees.</div>
+                        </div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon bi-denali"><span class="mdi mdi-car-estate"></span></div>
+                        <div class="benefit-info">
+                            <div class="benefit-name">Denali Access Program</div>
+                            <div class="benefit-desc">Company vehicles available for work-related travel. Mr. Snake-E's personal Denali is NOT included (please stop asking). Fleet vehicles must be returned with a full tank.</div>
+                        </div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon bi-wellness"><span class="mdi mdi-meditation"></span></div>
+                        <div class="benefit-info">
+                            <div class="benefit-name">Wellness &amp; Perks</div>
+                            <div class="benefit-desc">Arcade room access, gaming breaks encouraged, Mrs. Snake-E's garden meditation sessions, and annual ElxaCorp family picnic. Pushing Cat therapy sessions available (unverified effectiveness).</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="benefit-footer">
+                    <span class="mdi mdi-information-outline"></span> For questions, contact Rita Martinez (HR) at ext. 123 or hr@elxacorp.ex
+                </div>
+            </div>
+        </div>
+    </div>
 
-            init() {
-                // Try to connect to job system
-                if (typeof elxaCorpJobSystem !== 'undefined') {
-                    this.jobSystem = elxaCorpJobSystem;
-                    console.log('✅ Connected to ElxaCorp Job System');
-                }
-
-                // Set up event listeners
-                document.getElementById('loginForm').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleLogin();
-                });
-
-                // Update current date
-                this.updateDateTime();
-                setInterval(() => this.updateDateTime(), 60000); // Update every minute
-
-                console.log('🏢 Employee Portal System initialized');
-            }
-
-            async handleLogin() {
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value;
-
-                if (!username || !password) {
-                    this.showError('Please enter both username and password.');
-                    return;
-                }
-
-                // Clear messages
-                this.hideMessages();
-
-                try {
-                    // Check credentials against stored user profiles
-                    const userProfile = this.findUserByCredentials(username, password);
-                    
-                    if (userProfile) {
-                        this.currentUser = userProfile;
-                        this.isLoggedIn = true;
-                        
-                        // Check if password needs to be changed
-                        if (userProfile.credentials.mustChangePassword) {
-                            this.showSuccess('Login successful! You will need to change your password.');
-                            // Could implement password change flow here
-                        } else {
-                            this.showSuccess('Login successful! Welcome back!');
-                        }
-
-                        // Load dashboard
-                        setTimeout(() => {
-                            this.showDashboard();
-                        }, 1500);
-
-                    } else {
-                        this.showError('Invalid username or password. Please check your credentials.');
-                    }
-
-                } catch (error) {
-                    console.error('Login error:', error);
-                    this.showError('Login failed. Please try again.');
-                }
-            }
-
-            findUserByCredentials(username, password) {
-                if (!this.jobSystem) {
-                    // Mock user for testing if job system not available
-                    if (username === 'test.user' && password === 'ElxaCorp123') {
-                        return {
-                            employeeId: 'EMP-TU0001',
-                            personalInfo: { name: 'Test User' },
-                            position: { title: 'IT Specialist', department: 'Information Technology' },
-                            credentials: { username: 'test.user', mustChangePassword: false }
-                        };
-                    }
-                    return null;
-                }
-
-                // Search through all user profiles
-                const profiles = this.jobSystem.getAllUserProfiles();
-                
-                for (const profileId in profiles) {
-                    const profile = profiles[profileId];
-                    if (profile.credentials.username === username && 
-                        profile.credentials.temporaryPassword === password) {
-                        return profile;
-                    }
-                }
-
-                return null;
-            }
-
-            showDashboard() {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('portalDashboard').style.display = 'block';
-
-                // Update dashboard with user info
-                if (this.currentUser) {
-                    document.getElementById('employeeName').textContent = this.currentUser.personalInfo.name;
-                    document.getElementById('employeeId').textContent = this.currentUser.employeeId;
-                    document.getElementById('employeePosition').textContent = this.currentUser.position.title;
-                }
-
-                // Generate some dynamic stats
-                this.updateStats();
-            }
-
-            updateStats() {
-                // Generate some fun random stats
-                document.getElementById('tasksCompleted').textContent = Math.floor(Math.random() * 20) + 5;
-                document.getElementById('susIncidents').textContent = Math.floor(Math.random() * 5) + 1 + ' 🐱';
-                document.getElementById('cookiesEarned').textContent = Math.floor(Math.random() * 15) + 5 + ' 🍪';
-                document.getElementById('denaliMiles').textContent = Math.floor(Math.random() * 50) + 10 + ' 🚗';
-                
-                // Update payroll info
-                const nextFriday = this.getNextFriday();
-                document.getElementById('nextPayday').textContent = nextFriday;
-                
-                if (this.currentUser && this.currentUser.position.salary) {
-                    // Extract salary amount for YTD calculation
-                    const salaryText = this.currentUser.position.salary;
-                    const salaryMatch = salaryText.match(/\$[\d,]+/);
-                    if (salaryMatch) {
-                        const annualSalary = parseInt(salaryMatch[0].replace(/[$,]/g, ''));
-                        const ytdEarnings = Math.floor(annualSalary * 0.75); // Assume 75% of year passed
-                        document.getElementById('ytdEarnings').textContent = '$' + ytdEarnings.toLocaleString();
-                    }
-                }
-            }
-
-            getNextFriday() {
-                const today = new Date();
-                const friday = new Date(today);
-                friday.setDate(today.getDate() + (5 - today.getDay() + 7) % 7);
-                return friday.toLocaleDateString([], { month: 'short', day: 'numeric' });
-            }
-
-            updateDateTime() {
-                const now = new Date();
-                const snakesiaTime = new Date(now.getTime() + (2 * 60 + 1) * 60000); // +2:01 ahead
-                
-                document.getElementById('currentDate').textContent = 
-                    snakesiaTime.toLocaleDateString([], { 
-                        weekday: 'long', 
-                        month: 'short', 
-                        day: 'numeric' 
-                    }) + ' | ' + 
-                    snakesiaTime.toLocaleTimeString([], { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                    }) + ' ST'; // Snakesia Time
-            }
-
-            logout() {
-                this.currentUser = null;
-                this.isLoggedIn = false;
-                
-                document.getElementById('portalDashboard').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'flex';
-                
-                // Clear form
-                document.getElementById('loginForm').reset();
-                this.hideMessages();
-                
-                this.showSuccess('You have been signed out successfully.');
-            }
-
-            // Placeholder functions for future features
-            changePassword() {
-                alert('🔐 Password change feature coming soon!\n\nFor now, contact IT at it@elxacorp.ex if you need to change your password.');
-            }
-
-            openTicketSystem() {
-                alert('🎫 IT Ticket System coming soon!\n\nFor now, email your IT requests to it@elxacorp.ex');
-            }
-
-            openTimeClock() {
-                alert('⏰ Time Clock feature coming soon!\n\nFor now, use the manual time tracking system.');
-            }
-
-            openDirectory() {
-                alert('📞 Employee Directory:\n\n• Mr. Snake-E (CEO): ext. 001\n• Mrs. Snake-E (CIO): ext. 002\n• Remi Marway (Gaming): ext. 404\n• Rita Martinez (HR): ext. 123\n• IT Support: ext. 911');
-            }
-
-            openBenefits() {
-                alert('🏥 Benefits Information:\n\n• Health Insurance: Full coverage\n• Dental & Vision: Included\n• 401k: 4% match\n• Vacation: 3 weeks/year\n• Cookie Credits: Unlimited 🍪\n• Denali Access: As needed 🚗');
-            }
-
-            openTraining() {
-                alert('📚 Training Modules:\n\n• ElxaOS Certification\n• Sus Detection 101\n• Denali Maintenance\n• Cookie Quality Standards\n• Minecraft Server Admin\n\nContact your manager to enroll!');
-            }
-
-            openGameRoom() {
-                alert('🎮 Game Room Access:\n\n• Arcade machines available\n• Minecraft server: play.elxacorp.ex\n• High score challenges\n• Break time gaming encouraged!\n\nLocation: Basement level, next to Remi\'s office');
-            }
-
-            // Message helpers
-            showError(message) {
-                const errorDiv = document.getElementById('loginError');
-                errorDiv.textContent = message;
-                errorDiv.style.display = 'block';
-                
-                setTimeout(() => {
-                    errorDiv.style.display = 'none';
-                }, 5000);
-            }
-
-            showSuccess(message) {
-                const successDiv = document.getElementById('loginSuccess');
-                successDiv.textContent = message;
-                successDiv.style.display = 'block';
-                
-                setTimeout(() => {
-                    successDiv.style.display = 'none';
-                }, 3000);
-            }
-
-            hideMessages() {
-                document.getElementById('loginError').style.display = 'none';
-                document.getElementById('loginSuccess').style.display = 'none';
-            }
-        }
-
-        // Initialize portal system
-        const portalSystem = new EmployeePortalSystem();
-        
-        // Make it globally available
-        window.portalSystem = portalSystem;
-        
-        console.log('🏢 Employee Portal loaded and ready!');
-    </script>
+    <!-- Training Overlay -->
+    <div id="trainingOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-school-outline"></span> Training Modules</h3>
+                <button class="overlay-close" onclick="portalSystem.closeTraining()">&times;</button>
+            </div>
+            <div class="overlay-body" style="padding:0;">
+                <div class="portal-overlay-panel-scroll">
+                    <div class="training-module">
+                        <div class="training-icon">🖥️</div>
+                        <div class="training-info">
+                            <div class="training-name">ElxaOS Certification</div>
+                            <div class="training-desc">Master the ElxaOS operating system. Covers file management, system settings, built-in applications, and troubleshooting. Required for all IT staff.</div>
+                        </div>
+                        <span class="training-status ts-available">Available</span>
+                    </div>
+                    <div class="training-module">
+                        <div class="training-icon">🕵️</div>
+                        <div class="training-info">
+                            <div class="training-name">Sus Detection 101</div>
+                            <div class="training-desc">Learn to identify suspicious activity in the workplace. Covers Pushing Cat behavior patterns, social engineering, and how to file a Sus Report.</div>
+                        </div>
+                        <span class="training-status ts-available">Available</span>
+                    </div>
+                    <div class="training-module">
+                        <div class="training-icon">🚗</div>
+                        <div class="training-info">
+                            <div class="training-name">Denali Maintenance Basics</div>
+                            <div class="training-desc">Mr. Snake-E's personally designed course on GMC Denali care. Oil changes, tire rotation, paint protection, and why the Denali is the greatest vehicle ever made.</div>
+                        </div>
+                        <span class="training-status ts-available">Available</span>
+                    </div>
+                    <div class="training-module">
+                        <div class="training-icon">🍪</div>
+                        <div class="training-info">
+                            <div class="training-name">Cookie Quality Standards</div>
+                            <div class="training-desc">Mrs. Snake-E's comprehensive guide to cookie excellence. Texture analysis, flavor profiling, freshness standards, and the sacred art of the taste test.</div>
+                        </div>
+                        <span class="training-status ts-available">Available</span>
+                    </div>
+                    <div class="training-module">
+                        <div class="training-icon">⛏️</div>
+                        <div class="training-info">
+                            <div class="training-name">Minecraft Server Administration</div>
+                            <div class="training-desc">Run and maintain the ElxaCorp Minecraft server. Covers world backups, plugin management, grief prevention, and why Remi's builds are off-limits.</div>
+                        </div>
+                        <span class="training-status ts-available">Available</span>
+                    </div>
+                    <div class="training-module">
+                        <div class="training-icon">🔒</div>
+                        <div class="training-info">
+                            <div class="training-name">Cybersecurity Awareness</div>
+                            <div class="training-desc">Annual mandatory training. Password best practices, phishing detection, data handling, and why you shouldn't open emails from pushingcat@definitely-not-sus.ex.</div>
+                        </div>
+                        <span class="training-status ts-enrolled">Enrolled</span>
+                    </div>
+                    <div class="training-module">
+                        <div class="training-icon">🏢</div>
+                        <div class="training-info">
+                            <div class="training-name">New Employee Onboarding</div>
+                            <div class="training-desc">Welcome to ElxaCorp! Office tour, company culture, badge access, emergency procedures, and your complimentary cookie welcome basket orientation.</div>
+                        </div>
+                        <span class="training-status ts-complete">Complete</span>
+                    </div>
+                </div>
+                <div class="training-footer">
+                    <span class="mdi mdi-information-outline"></span> Contact your manager to enroll in additional courses
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="ticket-data.js"></script>
+    <script src="employee-data.js"></script>
+    <script src="ticket-system.js"></script>
+    <script src="employee-portal.js"></script>
 </body>
 </html>

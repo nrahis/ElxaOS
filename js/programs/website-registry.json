@@ -115,26 +115,7 @@
             "category": "Education"
         }
     },
-    "sussy-cat.ex": {
-        "title": "Sussy Cat Adventure - ElxaCorp Games",
-        "type": "file",
-        "path": "./assets/interwebs/sussy-cat/index.html",
-        "searchData": {
-            "keywords": ["sussy cat", "games", "stealth", "adventure", "kids", "pushing cat", "retro", "pixel art", "family", "mischief", "hiding", "plotting", "sus"],
-            "description": "Official website for Sussy Cat Adventure - the cozy stealth game featuring Pushing Cat and his mischievous house adventures. From ElxaCorp Games Division.",
-            "category": "Gaming"
-        }
-    },
-    "mail-room-mayhem.ex": {
-        "title": "Mail Room Mayhem - ElxaCorp Games",
-        "type": "file",
-        "path": "./assets/interwebs/mrm/index.html",
-        "searchData": {
-            "keywords": ["mail room mayhem", "elxacorp", "mail sorting", "arcade", "action", "keyboard controls", "fast-paced", "corporate", "snakesian mail", "pushing cat", "challenge", "mail division", "sorting bins", "priority mail", "high score"],
-            "description": "Official website for Mail Room Mayhem - ElxaCorp's fast-paced mail sorting challenge with keyboard-optimized controls. Sort Snakesian mail and watch out for Pushing Cat!",
-            "category": "Gaming"
-        }
-    },
+
     "remicraft.ex": {
         "title": "RemiCraft - Official Server",
         "type": "file",
@@ -279,16 +260,7 @@
         }
     },
 
-    "snake-deluxe.ex": {
-        "title": "Snake Deluxe Executive Training Suite - ElxaCorp Business Solutions",
-        "type": "file",
-        "path": "./assets/interwebs/snake-deluxe/index.html",
-        "searchData": {
-            "keywords": ["snake deluxe", "executive", "business", "corporate", "leadership", "snake-e", "professional development", "elxacorp", "management", "ceo", "strategy", "navigation", "corporate training", "business solutions"],
-            "description": "Official website for Snake Deluxe Executive Training Suite - the professional development platform featuring CEO Snake-e. Corporate leadership training from ElxaCorp Business Solutions.",
-            "category": "Business"
-        }
-    },
+
     "snake-e.corp.ex": {
         "title": "ElxaCorp - Home",
         "type": "file",
@@ -300,28 +272,18 @@
             "category": "Business"
         }
     },
-    "snake-e.corp.ex/about": {
-        "title": "ElxaCorp - About",
+    "snake-e.corp.ex/portal": {
+        "title": "ElxaCorp Employee Portal - Secure Access",
         "type": "file",
-        "path": "./assets/interwebs/snake-e-corp/about.html",
-        "css": "./assets/interwebs/snake-e-corp/styles.css",
+        "path": "./assets/interwebs/snake-e-corp/employee-portal.html",
+        "css": "./assets/interwebs/snake-e-corp/portal-styles.css",
         "searchData": {
-            "keywords": ["about", "elxacorp", "company", "history"],
-            "description": "Learn about ElxaCorp\"s history and mission.",
+            "keywords": ["elxacorp", "employee", "portal", "login", "dashboard", "hr", "payroll", "work"],
+            "description": "Secure employee portal for ElxaCorp staff. Log in with your hiring credentials to access your dashboard, payroll, and company resources.",
             "category": "Business"
         }
     },
-    "snake-e.corp.ex/careers": {
-        "title": "ElxaCorp - Careers",
-        "type": "file",
-        "path": "./assets/interwebs/snake-e-corp/careers.html",
-        "css": "./assets/interwebs/snake-e-corp/styles.css",
-        "searchData": {
-            "keywords": ["careers", "jobs", "employment", "work"],
-            "description": "Join the ElxaCorp team and build the future.",
-            "category": "Business"
-        }
-    },
+
     "pacman-xeocities.ex": {
         "title": "PacMan Power! 👻",
         "type": "file",
@@ -413,6 +375,30 @@
             "keywords": ["forum", "community", "discussions", "subrabbits", "news", "memes", "posts", "upvotes", "threads", "karma"],
             "description": "Dive into endless discussions on Abbit, where Snakesians share news, memes, and join topic-focused communities called subrabbits. Your daily source for what\"s trending in Snakesia.",
             "category": "Social"
+        }
+    },
+    "sssteam.ex": {
+        "title": "Sssteam - Game Store",
+        "type": "file",
+        "path": "./assets/interwebs/sssteam/index.html",
+        "searchData": {
+            "keywords": ["games", "game store", "steam", "sssteam", "download", "buy", "free games", "snake", "sussy cat", "mail room", "gaming", "install"],
+            "description": "Your one-stop shop for ElxaOS games! Browse, buy, and install games from the Sssteam store. Featuring free-to-play titles and premium games from ElxaCorp Games Division.",
+            "category": "Gaming"
+        }
+    },
+    "snakesian-cards.ex": {
+        "title": "Snakesian Card Exchange",
+        "type": "file",
+        "path": "./assets/interwebs/snakesian-cards/index.html",
+        "css": [
+            "./assets/interwebs/snakesian-cards/styles.css",
+            "./assets/interwebs/snakesian-cards/card-template.css"
+        ],
+        "searchData": {
+            "keywords": ["cards", "trading cards", "collectible", "collecting", "card packs", "pack opening", "snakesian cards", "SCE", "card shop", "booster", "rarity"],
+            "description": "Collect trading cards featuring the characters, creatures, and legends of Snakesia! Buy packs, open cards, and complete your collection.",
+            "category": "Shopping"
         }
     },
     "directory": {

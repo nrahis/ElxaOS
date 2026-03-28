@@ -250,6 +250,7 @@ class LebronJamesWordScramblerVirus {
     }
 
     showLebronPopup() {
+        const invasionCount = Math.floor(Math.random() * 999) + 1;
         const popup = document.createElement('div');
         popup.className = 'lebron-popup system-dialog';
         popup.innerHTML = `
@@ -267,22 +268,24 @@ class LebronJamesWordScramblerVirus {
                             ${this.popupMessages[Math.floor(Math.random() * this.popupMessages.length)]}
                         </div>
                         <div class="lebron-stats">
-                            <div>Career Points: 38,000+</div>
-                            <div>Championships: 4</div>
-                            <div>Times in your computer: ${Math.floor(Math.random() * 100) + 1}</div>
+                            <div class="lebron-stat-badge"><span class="stat-val">38K+</span><span class="stat-lbl">Points</span></div>
+                            <div class="lebron-stat-badge"><span class="stat-val">4</span><span class="stat-lbl">Rings</span></div>
+                            <div class="lebron-stat-badge"><span class="stat-val">${invasionCount}</span><span class="stat-lbl">Invasions</span></div>
                         </div>
                     </div>
                     <div class="lebron-actions">
-                        <button class="ok-lebron-btn">OK, LEBRON JAMES</button>
-                        <button class="no-lebron-btn">Please no more Lebron James</button>
+                        <button class="ok-lebron-btn">OK, LEBRON JAMES 🏀</button>
+                        <button class="no-lebron-btn">NO MORE LEBRON PLS</button>
                     </div>
                 </div>
             </div>
         `;
 
-        // Position randomly on screen
-        const x = Math.random() * (window.innerWidth - 350);
-        const y = Math.random() * (window.innerHeight - 250);
+        // Position randomly but keep fully on-screen
+        const popupW = 380;
+        const popupH = 220; // approximate total height of compact layout
+        const x = Math.random() * Math.max(0, window.innerWidth - popupW - 20);
+        const y = Math.random() * Math.max(0, window.innerHeight - popupH - 60); // 60 for taskbar
         popup.style.position = 'fixed';
         popup.style.left = x + 'px';
         popup.style.top = y + 'px';

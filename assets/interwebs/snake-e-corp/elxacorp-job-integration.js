@@ -85,6 +85,7 @@ class ElxaCorpJobSystem {
             position: {
                 title: this.getPositionTitle(application.position),
                 department: this.getPositionDepartment(application.position),
+                manager: this.getManagerName(application.position),
                 startDate: this.calculateStartDate(),
                 salary: this.calculateSalary(application.position, application.salary)
             },
@@ -253,20 +254,48 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     async sendEmailToSystem(emailData) {
+        // Path A: ElxaMail is running and logged in — inject into live system
         if (this.emailIntegration && this.emailIntegration.isLoggedIn) {
-            // Send directly to ElxaMail inbox
             this.emailIntegration.emails.inbox.unshift(emailData);
             this.emailIntegration.saveCurrentUser();
             this.emailIntegration.updateEmailList();
-            
-            // Show notification if user is viewing inbox
+
             if (this.emailIntegration.currentFolder === 'inbox') {
                 this.emailIntegration.showSuccess(`📧 New message from ${emailData.fromName}!`);
             }
-        } else {
-            // Queue email for when ElxaMail becomes available
-            console.log('📥 Email queued (ElxaMail not available):', emailData.subject);
-            this.queueEmail(emailData);
+            return;
+        }
+
+        // Path B: ElxaMail not running — try direct localStorage injection
+        if (this.injectEmailToStorage(emailData)) {
+            console.log('📧 Email injected directly to ElxaMail storage:', emailData.subject);
+            return;
+        }
+
+        // Path C: No ElxaMail account found — queue for later
+        console.log('📥 Email queued (no ElxaMail account found):', emailData.subject);
+        this.queueEmail(emailData);
+    }
+
+    injectEmailToStorage(emailData) {
+        try {
+            const toEmail = emailData.to || '';
+            const username = toEmail.includes('@') ? toEmail.split('@')[0] : toEmail;
+            if (!username) return false;
+
+            const raw = localStorage.getItem(`elxaOS-mail-user-${username}`);
+            if (!raw) return false;
+
+            const userData = JSON.parse(raw);
+            if (!userData.folders) userData.folders = { inbox: [], sent: [], drafts: [], trash: [] };
+            if (!userData.folders.inbox) userData.folders.inbox = [];
+
+            userData.folders.inbox.unshift(emailData);
+            localStorage.setItem(`elxaOS-mail-user-${username}`, JSON.stringify(userData));
+            return true;
+        } catch (error) {
+            console.error('❌ Failed to inject email to storage:', error);
+            return false;
         }
     }
 
@@ -683,13 +712,6 @@ window.handleJobApplication = async function(event) {
         }, 8000);
     }
 };
-
-// Auto-process queued emails when ElxaMail becomes available
-setInterval(() => {
-    if (elxaCorpJobSystem.emailIntegration && elxaCorpJobSystem.emailIntegration.isLoggedIn) {
-        elxaCorpJobSystem.processQueuedEmails();
-    }
-}, 5000); // Check every 5 seconds
 
 console.log('🏢 ElxaCorp Job Application Integration System loaded and ready!');
 

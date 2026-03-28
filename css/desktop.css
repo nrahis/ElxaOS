@@ -27,6 +27,7 @@
 @import url('games/snake-deluxe.css');
 @import url('games/sussy-cat.css');
 @import url('games/mail-room-mayhem.css');
+@import url('games/chess-game.css');
 @import url('system/login.css');
 
 /* =================================
@@ -48,6 +49,7 @@
     --menuHoverBg: #316AC5;
     --menuText: #333;
     --menuHoverText: white;
+    --uiIconColor: #555555;
     --systemTrayBg: #c0c0c0;
     --clockBg: #c0c0c0;
     --clockText: #333;
@@ -123,6 +125,7 @@ body {
     cursor: pointer;
     font-weight: bold;
     color: var(--menuText);
+    flex-shrink: 0;
 }
 
 .start-button:hover {
@@ -134,11 +137,45 @@ body {
     background: var(--buttonActiveBg);
 }
 
+/* Quick-launch area */
+.quick-launch {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    margin-right: 2px;
+    border-right: 1px inset var(--windowBorder);
+    flex-shrink: 0;
+}
+
+.quick-launch-btn {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+
+.quick-launch-btn:hover {
+    border: 1px outset var(--windowBorder);
+    background: var(--buttonHoverBg);
+}
+
+.quick-launch-btn:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
 .taskbar-programs {
     flex: 1;
     display: flex;
     gap: 2px;
     padding: 0 4px;
+    overflow: hidden;
+    min-width: 0;
 }
 
 .taskbar-program {
@@ -153,6 +190,7 @@ body {
     overflow: hidden;
     white-space: nowrap;
     color: var(--menuText);
+    flex-shrink: 0;
 }
 
 .taskbar-program.active {
@@ -164,13 +202,44 @@ body {
     background: var(--buttonHoverBg);
 }
 
+/* Hide overflowing taskbar buttons */
+.taskbar-program.taskbar-overflow-hidden {
+    display: none;
+}
+
+/* Overflow button */
+.taskbar-overflow-btn {
+    height: 24px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    color: var(--menuText);
+    font-weight: bold;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-right: 2px;
+}
+
+.taskbar-overflow-btn:hover {
+    background: var(--buttonHoverBg);
+}
+
+.taskbar-overflow-btn:active {
+    border: 1px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
+}
+
 .system-tray {
     display: flex;
     align-items: center;
     gap: 4px;
     padding: 0 8px;
     border-left: 1px inset var(--windowBorder);
-    background: var(--systemTrayBg);
+    flex-shrink: 0;
 }
 
 .tray-icon {
@@ -361,16 +430,62 @@ body {
 }
 
 .desktop-icon-image {
-    width: 32px;
-    height: 32px;
-    background: var(--buttonBg);
-    border: 1px outset var(--windowBorder);
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
     margin-bottom: 2px;
     pointer-events: none; /* Prevent dragging issues */
+    font-size: 32px; /* Size for emoji icons */
+}
+
+.desktop-icon-image .mdi {
+    font-size: 28px;
+}
+
+/* =================================
+    ELXA ICON SYSTEM
+================================= */
+/* Desktop context: full distinct colors, with drop shadow for wallpaper legibility */
+.elxa-icon-desktop {
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
+}
+
+/* UI context: monochrome, theme-aware color via CSS variable */
+.elxa-icon-ui {
+    color: var(--uiIconColor);
+}
+
+/* In the start menu, icons pick up hover color */
+.start-menu-item:hover .elxa-icon-ui {
+    color: var(--menuHoverText);
+}
+
+/* In window titlebars, icons match the titlebar text color */
+.window-titlebar .elxa-icon-ui {
+    color: inherit;
+}
+
+/* In taskbar buttons, tray icons inherit button text color */
+.taskbar .elxa-icon-ui,
+.system-tray .elxa-icon-ui {
+    color: var(--menuText);
+}
+
+/* Quick-launch icon sizing */
+.quick-launch-btn .mdi {
+    font-size: 14px;
+}
+
+/* System tray icon sizing */
+.tray-icon .mdi {
+    font-size: 12px;
+}
+
+/* Start menu icon sizing */
+.start-menu-item .mdi {
+    font-size: 14px;
 }
 
 .desktop-icon-label {
@@ -446,6 +561,229 @@ body.dark-theme .window-content {
 body.dark-theme .desktop-icon-label {
     color: var(--iconText); /* Use theme color instead of hard-coded */
     text-shadow: 1px 1px 1px var(--iconTextShadow);
+}
+
+/* =================================
+    UNIFIED DIALOG SYSTEM (ElxaUI)
+================================= */
+/* =================================
+   TOAST NOTIFICATIONS (ElxaUI.showMessage)
+================================= */
+.elxa-toast {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    padding: 8px 16px;
+    border: 2px outset var(--windowBorder, #c0c0c0);
+    z-index: 9000;
+    font-weight: bold;
+    font-size: 11px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: slideIn 0.3s ease-out;
+    pointer-events: none;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #333);
+}
+
+.elxa-toast-info {
+    border-left: 4px solid var(--titlebarBg, #0066cc);
+}
+
+.elxa-toast-success {
+    border-left: 4px solid #32cd32;
+}
+
+.elxa-toast-warning {
+    border-left: 4px solid #e6a800;
+}
+
+.elxa-toast-error {
+    border-left: 4px solid #cc0000;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* =================================
+   DIALOG SYSTEM (ElxaUI.createDialog)
+================================= */
+.elxa-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 8000;
+}
+
+.elxa-dialog {
+    background: var(--windowBg, #c0c0c0);
+    border: 2px outset var(--windowBorder, #c0c0c0);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    max-width: 90vw;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.elxa-dialog-header {
+    background: var(--titlebarBg, linear-gradient(to right, #0000ff, #4080ff));
+    color: var(--menuHoverText, white);
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.elxa-dialog-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.elxa-dialog-close {
+    width: 16px;
+    height: 14px;
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--menuText, black);
+    flex-shrink: 0;
+}
+
+.elxa-dialog-close:hover {
+    background: var(--buttonHoverBg, #d0d0d0);
+}
+
+.elxa-dialog-close:active {
+    border: 1px inset var(--windowBorder, #c0c0c0);
+}
+
+.elxa-dialog-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #333);
+    font-size: 11px;
+}
+
+.elxa-dialog-label {
+    font-weight: bold;
+    color: var(--menuText, #333);
+}
+
+.elxa-dialog-input {
+    padding: 4px 6px;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    font-size: 11px;
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
+}
+
+.elxa-dialog-input:focus {
+    outline: none;
+    border-color: var(--titlebarBg, #0066cc);
+}
+
+.elxa-dialog-message {
+    margin: 4px 0;
+    line-height: 1.4;
+}
+
+.elxa-dialog-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding: 8px 16px 12px;
+    background: var(--windowBg, #c0c0c0);
+    flex-shrink: 0;
+}
+
+.elxa-dialog-btn {
+    padding: 4px 16px;
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--menuText, #333);
+}
+
+.elxa-dialog-btn:hover {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
+}
+
+.elxa-dialog-btn:active {
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
+}
+
+.elxa-dialog-btn-primary {
+    padding: 4px 16px;
+    border: 1px outset #32cd32;
+    background: linear-gradient(to bottom, #90ee90, #32cd32);
+    cursor: pointer;
+    font-size: 11px;
+    color: black;
+    font-weight: bold;
+}
+
+.elxa-dialog-btn-primary:hover {
+    background: linear-gradient(to bottom, #98fb98, #90ee90);
+}
+
+.elxa-dialog-btn-primary:active {
+    border: 1px inset #32cd32;
+    background: linear-gradient(to bottom, #32cd32, #90ee90);
+}
+
+.elxa-dialog-btn-danger {
+    padding: 4px 16px;
+    border: 1px outset #cc0000;
+    background: linear-gradient(to bottom, #ff6666, #cc0000);
+    cursor: pointer;
+    font-size: 11px;
+    color: white;
+    font-weight: bold;
+}
+
+.elxa-dialog-btn-danger:hover {
+    background: linear-gradient(to bottom, #ff8080, #dd2222);
+}
+
+.elxa-dialog-btn-danger:active {
+    border: 1px inset #cc0000;
+    background: linear-gradient(to bottom, #cc0000, #ff6666);
+}
+
+/* Dark theme adjustments for unified dialogs */
+.dark-theme .elxa-dialog-input {
+    background: var(--menuBg, #2d2d2d);
+    color: var(--menuText, #ffffff);
 }
 
 /* =================================

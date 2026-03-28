@@ -15,15 +15,15 @@ class PaintProgram {
         
         // Enhanced drawing tools with better differentiation
         this.tools = {
-            brush: { name: 'Brush', icon: '🖌️', cursor: 'crosshair' },
-            pencil: { name: 'Pencil', icon: '✏️', cursor: 'crosshair' },
-            eraser: { name: 'Eraser', icon: '🧽', cursor: 'crosshair' },
-            bucket: { name: 'Fill', icon: '🎨', cursor: 'crosshair' },
-            eyedropper: { name: 'Eyedropper', icon: '💉', cursor: 'crosshair' },
-            line: { name: 'Line', icon: '📏', cursor: 'crosshair' },
-            rectangle: { name: 'Rectangle', icon: '⬜', cursor: 'crosshair' },
-            circle: { name: 'Circle', icon: '⭕', cursor: 'crosshair' },
-            text: { name: 'Text', icon: 'A', cursor: 'text' }
+            brush:      { name: 'Brush',      actionId: 'brush',      cursor: 'crosshair' },
+            pencil:     { name: 'Pencil',     actionId: 'pencil',     cursor: 'crosshair' },
+            eraser:     { name: 'Eraser',     actionId: 'eraser',     cursor: 'crosshair' },
+            bucket:     { name: 'Fill',       actionId: 'bucket',     cursor: 'crosshair' },
+            eyedropper: { name: 'Eyedropper', actionId: 'eyedropper', cursor: 'crosshair' },
+            line:       { name: 'Line',       actionId: 'line',       cursor: 'crosshair' },
+            rectangle:  { name: 'Rectangle',  actionId: 'rectangle',  cursor: 'crosshair' },
+            circle:     { name: 'Circle',     actionId: 'circle',     cursor: 'crosshair' },
+            text:       { name: 'Text',       actionId: 'text-tool',  cursor: 'text' }
         };
         
         // Quick color presets
@@ -85,7 +85,7 @@ class PaintProgram {
         
         const window = this.windowManager.createWindow(
             documentId,
-            `🎨 ${title}`,
+            `${ElxaIcons.render('paint', 'ui')} ${title}`,
             windowContent,
             { width: '1000px', height: '700px', x: '50px', y: '50px' }
         );
@@ -102,245 +102,20 @@ class PaintProgram {
         
         return `
             <div class="paint-container" data-document-id="${documentId}" data-tool="${paintDoc.settings.tool}">
-                <style>
-                    .paint-quick-colors-grid {
-                        display: grid;
-                        grid-template-columns: repeat(16, 14px);
-                        gap: 2px;
-                        margin: 4px 0;
-                    }
-                    
-                    .paint-quick-color-item {
-                        width: 14px;
-                        height: 14px;
-                        border: 1px solid #666;
-                        cursor: pointer;
-                        border-radius: 2px;
-                    }
-                    
-                    .paint-quick-color-item:hover {
-                        border: 2px solid #000;
-                        box-shadow: 0 0 4px rgba(0,0,0,0.5);
-                    }
-                    
-                    .paint-clickable-color {
-                        cursor: pointer;
-                        border: 2px outset #c0c0c0;
-                        position: relative;
-                    }
-                    
-                    .paint-clickable-color:hover {
-                        border: 2px inset #c0c0c0;
-                    }
-                    
-                    .paint-clickable-color:active {
-                        border: 2px inset #999;
-                    }
-                    
-                    .paint-color-section-item {
-                        margin: 2px 0;
-                    }
-                    
-                    .paint-color-palette-container {
-                        background: #f0f0f0;
-                        border: 2px inset #c0c0c0;
-                        padding: 6px;
-                        font-size: 10px;
-                        margin: 2px 0;
-                    }
-                    
-                    /* File Dialog Styles - matching Notepad */
-                    .file-dialog {
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: #f0f0f0;
-                        border: 2px outset #c0c0c0;
-                        box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-                        z-index: 2000;
-                        min-width: 400px;
-                        max-width: 500px;
-                    }
-                    
-                    .dialog-content {
-                        padding: 0;
-                    }
-                    
-                    .dialog-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        padding: 8px 12px;
-                        background: linear-gradient(to bottom, #0078d4, #106ebe);
-                        color: white;
-                        font-weight: bold;
-                        font-size: 12px;
-                    }
-                    
-                    .dialog-title {
-                        font-size: 12px;
-                    }
-                    
-                    .dialog-close {
-                        background: none;
-                        border: none;
-                        color: white;
-                        font-size: 16px;
-                        cursor: pointer;
-                        padding: 2px 6px;
-                        border-radius: 2px;
-                    }
-                    
-                    .dialog-close:hover {
-                        background: rgba(255,255,255,0.2);
-                    }
-                    
-                    .dialog-body {
-                        padding: 12px;
-                        max-height: 300px;
-                    }
-                    
-                    .file-list {
-                        max-height: 200px;
-                        overflow-y: auto;
-                        border: 1px inset #c0c0c0;
-                        background: white;
-                        margin-bottom: 12px;
-                    }
-                    
-                    .file-item {
-                        padding: 8px 12px;
-                        cursor: pointer;
-                        border-bottom: 1px solid #f0f0f0;
-                        font-size: 11px;
-                    }
-                    
-                    .file-item:hover {
-                        background: #e8f4ff;
-                    }
-                    
-                    .file-item.selected {
-                        background: #cce7ff;
-                        border-color: #99d6ff;
-                    }
-                    
-                    .file-info {
-                        font-size: 9px;
-                        color: #666;
-                        margin-top: 2px;
-                    }
-                    
-                    .save-form {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 8px;
-                        margin-bottom: 12px;
-                    }
-                    
-                    .save-form label {
-                        font-weight: bold;
-                        font-size: 11px;
-                    }
-                    
-                    .filename-input, .width-input, .height-input {
-                        padding: 6px 8px;
-                        border: 1px inset #c0c0c0;
-                        font-size: 11px;
-                    }
-                    
-                    .filename-input:focus, .width-input:focus, .height-input:focus {
-                        outline: none;
-                        border-color: #0066cc;
-                    }
-                    
-                    .save-location {
-                        font-size: 10px;
-                        color: #666;
-                        background: #f8f8f8;
-                        padding: 4px 8px;
-                        border: 1px inset #e0e0e0;
-                        border-radius: 2px;
-                    }
-                    
-                    .format-info {
-                        font-size: 10px;
-                        padding: 4px 8px;
-                        border-radius: 2px;
-                        background: #fff3cd;
-                        border: 1px solid #ffeaa7;
-                        color: #856404;
-                    }
-                    
-                    .dialog-buttons {
-                        display: flex;
-                        gap: 8px;
-                        justify-content: center;
-                    }
-                    
-                    .open-btn, .save-btn {
-                        background: linear-gradient(to bottom, #4CAF50, #45a049);
-                        border: 1px outset #4CAF50;
-                        padding: 6px 16px;
-                        font-size: 11px;
-                        font-weight: bold;
-                        color: white;
-                        cursor: pointer;
-                        border-radius: 2px;
-                    }
-                    
-                    .open-btn:hover, .save-btn:hover {
-                        background: linear-gradient(to bottom, #5CBF60, #4CAF50);
-                    }
-                    
-                    .open-btn:active, .save-btn:active {
-                        border: 1px inset #4CAF50;
-                        background: linear-gradient(to bottom, #45a049, #4CAF50);
-                    }
-                    
-                    .dialog-button {
-                        background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-                        border: 1px outset #c0c0c0;
-                        padding: 6px 16px;
-                        font-size: 11px;
-                        cursor: pointer;
-                        border-radius: 2px;
-                    }
-                    
-                    .dialog-button:hover {
-                        background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
-                    }
-                    
-                    .dialog-button:active {
-                        border: 1px inset #c0c0c0;
-                        background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
-                    }
-                    
-                    /* Animation for messages */
-                    @keyframes slideIn {
-                        from {
-                            transform: translateX(100%);
-                            opacity: 0;
-                        }
-                        to {
-                            transform: translateX(0);
-                            opacity: 1;
-                        }
-                    }
-                </style>
+
                 
                 <!-- Menu Bar -->
                 <div class="paint-menubar">
-                    <div class="menu-item" data-action="new">📄 New</div>
-                    <div class="menu-item" data-action="open">📂 Open</div>
-                    <div class="menu-item" data-action="save">💾 Save</div>
-                    <div class="menu-item" data-action="saveas">💾 Save As</div>
+                    <div class="menu-item" data-action="new">${ElxaIcons.renderAction('new-file')} New</div>
+                    <div class="menu-item" data-action="open">${ElxaIcons.renderAction('open')} Open</div>
+                    <div class="menu-item" data-action="save">${ElxaIcons.renderAction('save')} Save</div>
+                    <div class="menu-item" data-action="saveas">${ElxaIcons.renderAction('save')} Save As</div>
                     <div class="menu-separator">|</div>
-                    <div class="menu-item" data-action="undo">↶ Undo</div>
-                    <div class="menu-item" data-action="redo">↷ Redo</div>
-                    <div class="menu-item" data-action="clear">🗑️ Clear</div>
+                    <div class="menu-item" data-action="undo">${ElxaIcons.renderAction('undo')} Undo</div>
+                    <div class="menu-item" data-action="redo">${ElxaIcons.renderAction('redo')} Redo</div>
+                    <div class="menu-item" data-action="clear">${ElxaIcons.renderAction('clear')} Clear</div>
                     <div class="menu-separator">|</div>
-                    <div class="menu-item" data-action="resize">📐 Resize Canvas</div>
+                    <div class="menu-item" data-action="resize">${ElxaIcons.renderAction('resize')} Resize</div>
                 </div>
                 
                 <!-- Compact Toolbar -->
@@ -352,8 +127,8 @@ class PaintProgram {
                                 `<button class="tool-btn ${key === paintDoc.settings.tool ? 'active' : ''}" 
                                          data-tool="${key}" 
                                          title="${tool.name}">
-                                    ${tool.icon}
-                                </button>`
+                                    ${ElxaIcons.renderAction(tool.actionId)}
+                                    </button>`
                             ).join('')}
                         </div>
                     </div>
@@ -382,12 +157,8 @@ class PaintProgram {
                         </select>
                         <input type="number" class="font-size-input" min="8" max="72" value="${paintDoc.settings.fontSize}">
                     </div>
-                </div>
-                
-                <!-- Compact Color Panel -->
-                <div class="paint-color-palette-container">
-                    <div class="paint-color-section-wrapper">
-                        <label style="font-weight: bold; font-size: 10px;">Colors:</label>
+                    
+                    <div class="toolbar-section paint-colors-section">
                         <div class="paint-current-colors-display">
                             <div class="paint-color-display-wrapper">
                                 <div class="paint-primary-color paint-clickable-color" 
@@ -399,12 +170,8 @@ class PaintProgram {
                                      title="Click to choose background color"
                                      data-color-type="background"></div>
                             </div>
-                            <button class="paint-swap-colors-btn" title="Swap Colors">⇄</button>
+                            <button class="paint-swap-colors-btn" title="Swap Colors">${ElxaIcons.renderAction('swap')}</button>
                         </div>
-                    </div>
-                    
-                    <div class="paint-color-section-wrapper">
-                        <label style="font-weight: bold; font-size: 10px;">Quick Colors:</label>
                         <div class="paint-quick-colors-grid">
                             ${this.quickColors.map(color => 
                                 `<div class="paint-quick-color-item" 
@@ -441,10 +208,10 @@ class PaintProgram {
                         <span class="current-tool">Tool: ${this.tools[paintDoc.settings.tool].name}</span>
                     </div>
                     <div class="zoom-controls">
-                        <button class="zoom-btn" data-zoom="out">🔍-</button>
+                        <button class="zoom-btn" data-zoom="out">${ElxaIcons.renderAction('zoom-out')}</button>
                         <span class="zoom-level">100%</span>
-                        <button class="zoom-btn" data-zoom="in">🔍+</button>
-                        <button class="zoom-btn" data-zoom="fit">📐 Fit</button>
+                        <button class="zoom-btn" data-zoom="in">${ElxaIcons.renderAction('zoom-in')}</button>
+                        <button class="zoom-btn" data-zoom="fit">${ElxaIcons.renderAction('zoom-fit')}</button>
                     </div>
                 </div>
             </div>
@@ -1383,7 +1150,7 @@ class PaintProgram {
         const title = paintDoc.filename || `Untitled Image ${documentId.split('-').pop()}`;
         const unsavedMarker = paintDoc.saved ? '' : '*';
         
-        titleElement.textContent = `🎨 ${title}${unsavedMarker}`;
+        titleElement.innerHTML = `${ElxaIcons.render('paint', 'ui')} ${title}${unsavedMarker}`;
     }
 
     // File operations (working implementations)
@@ -1407,7 +1174,7 @@ class PaintProgram {
         dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="dialog-header">
-                    <div class="dialog-title">🖼️ Open Image</div>
+                    <div class="dialog-title">${ElxaIcons.renderAction('open')} Open Image</div>
                     <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
                 </div>
                 <div class="dialog-body">
@@ -1427,7 +1194,7 @@ class PaintProgram {
                             }
                             
                             return `<div class="file-item" data-filename="${file.name}">
-                                🖼️ ${file.name}
+                                ${ElxaIcons.renderFileType('.png', 'ui')} ${file.name}
                                 <div class="file-info">Modified: ${modifiedDate}</div>
                             </div>`;
                         }).join('')}
@@ -1580,7 +1347,7 @@ class PaintProgram {
         dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="dialog-header">
-                    <div class="dialog-title">💾 Save Image As</div>
+                    <div class="dialog-title">${ElxaIcons.renderAction('save')} Save Image As</div>
                     <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
                 </div>
                 <div class="dialog-body">
@@ -1665,36 +1432,7 @@ class PaintProgram {
     }
 
     showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `system-message ${type}`;
-        message.textContent = text;
-        
-        const colors = {
-            info: { bg: '#add8e6', color: 'black' },
-            success: { bg: '#00ff00', color: 'black' },
-            warning: { bg: '#ffff00', color: 'black' },
-            error: { bg: '#ff0000', color: 'white' }
-        };
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: ${colors[type].bg};
-            color: ${colors[type].color};
-            padding: 8px 16px;
-            border: 2px outset #c0c0c0;
-            z-index: 3000;
-            font-weight: bold;
-            font-size: 11px;
-            animation: slideIn 0.3s ease-out;
-        `;
-
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
+        ElxaUI.showMessage(text, type);
     }
 
     showNewCanvasDialog(documentId) {
@@ -1703,7 +1441,7 @@ class PaintProgram {
         dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="dialog-header">
-                    <div class="dialog-title">📐 New Canvas</div>
+                    <div class="dialog-title">${ElxaIcons.renderAction('new-file')} New Canvas</div>
                     <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
                 </div>
                 <div class="dialog-body">
@@ -1752,7 +1490,7 @@ class PaintProgram {
         dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="dialog-header">
-                    <div class="dialog-title">📐 Resize Canvas</div>
+                    <div class="dialog-title">${ElxaIcons.renderAction('resize')} Resize Canvas</div>
                     <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
                 </div>
                 <div class="dialog-body">

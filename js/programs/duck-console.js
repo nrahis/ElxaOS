@@ -14,24 +14,28 @@ class DuckConsoleProgram {
         this.abbyMood = 'happy'; // Abby's current mood
         this.snakeeCEOMode = false; // Mr. Snake-e CEO mode
         this.securityLevel = 1; // Hacker security clearance
+        this.activeWindows = new Set(); // Track open console windows
         
         // Check initial WiFi status
         this.checkInitialWiFiStatus();
         
-        // Listen for WiFi status changes
-        this.eventBus.on('wifi.connected', (data) => {
+        // Store EventBus handler refs for cleanup
+        this._onWifiConnected = (data) => {
             this.isOnline = true;
             this.outputToActiveConsole('🌐 NETWORK CONNECTION ESTABLISHED', 'success');
             this.outputToActiveConsole('🔐 Secure channels now available', 'info');
             this.updateNetworkStatusDisplay();
-        });
+        };
         
-        this.eventBus.on('wifi.disconnected', () => {
+        this._onWifiDisconnected = () => {
             this.isOnline = false;
             this.outputToActiveConsole('⚠️ NETWORK CONNECTION LOST', 'warning');
             this.outputToActiveConsole('🚫 Networking commands disabled', 'error');
             this.updateNetworkStatusDisplay();
-        });
+        };
+        
+        this.eventBus.on('wifi.connected', this._onWifiConnected);
+        this.eventBus.on('wifi.disconnected', this._onWifiDisconnected);
     }
 
     checkInitialWiFiStatus() {
@@ -49,12 +53,23 @@ class DuckConsoleProgram {
         
         const windowContent = this.createConsoleInterface(windowId);
         
-        const window = this.windowManager.createWindow(
+        this.windowManager.createWindow(
             windowId,
-            '🦆 DUCK Console v2.0 [CLASSIFIED]',
+            `${ElxaIcons.render('duck-console', 'ui')} DUCK Console v2.0 [CLASSIFIED]`,
             windowContent,
             { width: '700px', height: '500px', x: '150px', y: '100px' }
         );
+        
+        this.activeWindows.add(windowId);
+        
+        // Clean up on window close
+        const onWindowClosed = (data) => {
+            if (data.id === windowId) {
+                this.activeWindows.delete(windowId);
+                this.eventBus.off('window.closed', onWindowClosed);
+            }
+        };
+        this.eventBus.on('window.closed', onWindowClosed);
         
         this.setupEventHandlers(windowId);
         this.initializeConsole(windowId);
@@ -67,6 +82,15 @@ class DuckConsoleProgram {
         return windowId;
     }
 
+    // =================================
+    // CLEANUP
+    // =================================
+    destroy() {
+        this.eventBus.off('wifi.connected', this._onWifiConnected);
+        this.eventBus.off('wifi.disconnected', this._onWifiDisconnected);
+        this.activeWindows.clear();
+    }
+
     createConsoleInterface(windowId) {
         return `
             <div class="duck-console" data-console-id="${windowId}">
@@ -76,7 +100,7 @@ class DuckConsoleProgram {
                         <span class="user-status">USER: ${this.user}</span>
                         <span class="security-level">CLEARANCE: LEVEL ${this.securityLevel}</span>
                         <span class="network-status ${this.isOnline ? 'online' : 'offline'}">
-                            ${this.isOnline ? '🌐 ONLINE' : '🚫 OFFLINE'}
+                            ${this.isOnline ? `${ElxaIcons.renderAction('wifi')} ONLINE` : `${ElxaIcons.renderAction('wifi-off')} OFFLINE`}
                         </span>
                     </div>
                 </div>
@@ -159,8 +183,6 @@ class DuckConsoleProgram {
         // Echo the command
         this.outputToConsole(`${this.getPrompt()}${command}`, 'command', windowId);
 
-        // ADD THIS LINE FOR SYSTEM 0 DETECTION
-        console.log('🦆 Duck Console emitting command:', command.trim());
         this.eventBus.emit('console.command', { command: command.trim() });
         
         const args = command.toLowerCase().trim().split(/\s+/);
@@ -245,18 +267,18 @@ class DuckConsoleProgram {
             case 'fortune':
                 this.fortuneCommand(windowId);
                 break;
-            // ADD THESE SPECIAL SYSTEM 0 COMMANDS:
+            // Special System 0 commands
             case 'duck':
                 this.outputToConsole('🦆 Quack! Duck command acknowledged.', 'accent', windowId);
                 break;
             case 'snake':
                 this.outputToConsole('🐍 Hissss! Snake command acknowledged.', 'accent', windowId);
                 break;
-            case 'cat':
-                this.outputToConsole('🐱 Meow! Cat command acknowledged.', 'accent', windowId);
-                break;
             case 'zero':
                 this.outputToConsole('0️⃣ Zero command acknowledged.', 'accent', windowId);
+                break;
+            case 'meow':
+                this.outputToConsole('🐱 Meow! Cat command acknowledged.', 'accent', windowId);
                 break;
             default:
                 this.outputToConsole(`❌ Command not recognized: ${cmd}`, 'error', windowId);
@@ -697,12 +719,12 @@ class DuckConsoleProgram {
                     '💖 "Playing with string, sunny windowsill naps, and watching you learn!"',
                     '✨ "I\'m always with you in your heart!" 💕',
                     '"You were the very best boy I ever loved!" 💕',
-                    '✨ "Kitty heaven is so amazing...there\s all the fish I can eat, and lots of warm napping spots!"',
-                    '🐱 "Don\t you worry, I\m taking good care of Honey."',
+                    '✨ "Kitty heaven is so amazing...there\'s all the fish I can eat, and lots of warm napping spots!"',
+                    '🐱 "Don\'t you worry, I\'m taking good care of Honey."',
                 ];
                 const mem = memory[Math.floor(Math.random() * memory.length)];
                 this.outputToConsole(`🐱 ${mem}`, 'accent', windowId);
-break;
+                break;
                 
             default:
                 this.outputToConsole(`🐱 "Meow? I don't understand '${command}'. Try 'abby help'!"`, 'accent', windowId);
@@ -972,7 +994,9 @@ break;
             
         document.querySelectorAll(selector).forEach(statusElement => {
             statusElement.className = `network-status ${this.isOnline ? 'online' : 'offline'}`;
-            statusElement.textContent = this.isOnline ? '🌐 ONLINE' : '🚫 OFFLINE';
+            statusElement.innerHTML = this.isOnline
+                ? `${ElxaIcons.renderAction('wifi')} ONLINE`
+                : `${ElxaIcons.renderAction('wifi-off')} OFFLINE`;
         });
     }
 
@@ -997,13 +1021,9 @@ break;
     }
 
     outputToActiveConsole(text, type = 'info') {
-        // Output to all active consoles
-        document.querySelectorAll('.console-output').forEach(output => {
-            const line = document.createElement('div');
-            line.className = `console-line ${type}`;
-            line.textContent = text;
-            output.appendChild(line);
-            output.scrollTop = output.scrollHeight;
+        // Output to all active duck-console windows
+        this.activeWindows.forEach(windowId => {
+            this.outputToConsole(text, type, windowId);
         });
     }
 

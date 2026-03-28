@@ -10,13 +10,18 @@ class WiFiService {
         this.currentTab = 'networks';
         this.connectionHistory = [];
         this.networkAnalytics = {};
-        
-        // Enhanced network data with more realistic properties
+        this.scanInterval = null;
+
+        // Stable connection details (set once per connection, not regenerated)
+        this.connectionIP = null;
+        this.connectionGateway = null;
+
+        // Enhanced network data
         this.availableNetworks = [
-            { 
-                name: 'ElxaNet', 
-                password: null, 
-                signalStrength: 5, 
+            {
+                name: 'ElxaNet',
+                password: null,
+                signalStrength: 5,
                 type: 'open',
                 security: 'None',
                 frequency: '2.4GHz',
@@ -25,10 +30,10 @@ class WiFiService {
                 encryption: 'None',
                 vendor: 'Elxa Corp'
             },
-            { 
-                name: 'HomeWiFi', 
-                password: 'password123', 
-                signalStrength: 4, 
+            {
+                name: 'HomeWiFi',
+                password: 'password123',
+                signalStrength: 4,
                 type: 'secured',
                 security: 'WPA2-PSK',
                 frequency: '5GHz',
@@ -37,10 +42,10 @@ class WiFiService {
                 encryption: 'AES',
                 vendor: 'Linksys'
             },
-            { 
-                name: 'GuestNetwork', 
-                password: null, 
-                signalStrength: 3, 
+            {
+                name: 'GuestNetwork',
+                password: null,
+                signalStrength: 3,
                 type: 'open',
                 security: 'None',
                 frequency: '2.4GHz',
@@ -49,10 +54,10 @@ class WiFiService {
                 encryption: 'None',
                 vendor: 'Netgear'
             },
-            { 
-                name: 'SecureNet', 
-                password: 'admin2024', 
-                signalStrength: 3, 
+            {
+                name: 'SecureNet',
+                password: 'admin2024',
+                signalStrength: 3,
                 type: 'secured',
                 security: 'WPA3-PSK',
                 frequency: '5GHz',
@@ -61,10 +66,10 @@ class WiFiService {
                 encryption: 'AES-256',
                 vendor: 'ASUS'
             },
-            { 
-                name: 'CoffeeShop_WiFi', 
-                password: null, 
-                signalStrength: 2, 
+            {
+                name: 'CoffeeShop_WiFi',
+                password: null,
+                signalStrength: 2,
                 type: 'open',
                 security: 'None',
                 frequency: '2.4GHz',
@@ -73,10 +78,10 @@ class WiFiService {
                 encryption: 'None',
                 vendor: 'TP-Link'
             },
-            { 
-                name: 'NeighborNet', 
-                password: 'dontguess', 
-                signalStrength: 1, 
+            {
+                name: 'NeighborNet',
+                password: 'dontguess',
+                signalStrength: 1,
                 type: 'secured',
                 security: 'WEP',
                 frequency: '2.4GHz',
@@ -86,17 +91,20 @@ class WiFiService {
                 vendor: 'D-Link'
             }
         ];
-        
+
         this.userNetworks = [];
         this.connectionAttempts = new Map();
         this.isScanning = false;
-        
-        // Load saved data first
+
         this.loadWiFiData();
         this.setupEvents();
         this.updateWiFiIcon();
         this.startNetworkScan();
     }
+
+    // =================================
+    // EVENT SETUP
+    // =================================
 
     setupEvents() {
         this.eventBus.on('wifi.click', () => {
@@ -116,11 +124,15 @@ class WiFiService {
         });
     }
 
+    // =================================
+    // NETWORK SCANNING
+    // =================================
+
     startNetworkScan() {
-        setInterval(() => {
+        this.scanInterval = setInterval(() => {
             this.updateNetworkSignals();
             this.updateNetworkAnalytics();
-            
+
             if (this.isConnected && this.currentNetwork) {
                 if (Math.random() < 0.05) {
                     this.simulateConnectionIssue();
@@ -157,37 +169,46 @@ class WiFiService {
                     successfulConnections: 0
                 };
             }
-            
+
             this.networkAnalytics[network.name].signalHistory.push({
                 timestamp: Date.now(),
                 strength: network.signalStrength
             });
-            
-            // Keep only last 20 readings
+
             if (this.networkAnalytics[network.name].signalHistory.length > 20) {
                 this.networkAnalytics[network.name].signalHistory.shift();
             }
         });
     }
 
+    // =================================
+    // SYSTEM TRAY ICON
+    // =================================
+
     updateWiFiIcon() {
         const wifiIcon = document.getElementById('wifiIcon');
         if (!wifiIcon) return;
 
+        const iconSpan = wifiIcon.querySelector('.mdi');
+        if (!iconSpan) return;
+
         if (!this.isConnected) {
-            wifiIcon.textContent = '📶';
-            wifiIcon.style.color = '#666';
+            iconSpan.className = 'mdi mdi-wifi-off elxa-icon-ui';
             wifiIcon.title = 'WiFi: Disconnected';
         } else {
             const strength = Math.round(this.signalStrength);
-            const colors = {
-                5: '#00ff00', 4: '#80ff00', 3: '#ffff00', 2: '#ff8000', 1: '#ff0000'
-            };
-            wifiIcon.textContent = '📶';
-            wifiIcon.style.color = colors[strength] || '#ff0000';
-            wifiIcon.title = `WiFi: Connected to ${this.currentNetwork.name} (${strength}/5 bars, ${this.currentNetwork.frequency})`;
+            const mdiClass = strength >= 4 ? 'mdi-wifi-strength-4'
+                           : strength === 3 ? 'mdi-wifi-strength-3'
+                           : strength === 2 ? 'mdi-wifi-strength-2'
+                           : 'mdi-wifi-strength-1';
+            iconSpan.className = `mdi ${mdiClass} elxa-icon-ui`;
+            wifiIcon.title = `WiFi: ${this.currentNetwork.name} (${strength}/5, ${this.currentNetwork.frequency})`;
         }
     }
+
+    // =================================
+    // NETWORK HELPERS
+    // =================================
 
     getAllNetworks() {
         return [...this.availableNetworks, ...this.userNetworks]
@@ -195,18 +216,18 @@ class WiFiService {
     }
 
     getSecurityIcon(security) {
-        const icons = {
-            'None': '🌐',
-            'WEP': '🔓',
-            'WPA2-PSK': '🔒',
-            'WPA3-PSK': '🛡️'
-        };
-        return icons[security] || '🔒';
+        switch (security) {
+            case 'None':     return ElxaIcons.renderAction('lock-open');
+            case 'WEP':      return ElxaIcons.renderAction('lock-open');
+            case 'WPA2-PSK': return ElxaIcons.renderAction('lock');
+            case 'WPA3-PSK': return ElxaIcons.renderAction('shield-lock');
+            default:         return ElxaIcons.renderAction('lock');
+        }
     }
 
-    getFrequencyColor(frequency) {
-        return frequency === '5GHz' ? '#0080ff' : '#008000';
-    }
+    // =================================
+    // MAIN DIALOG
+    // =================================
 
     showWiFiDialog() {
         this.hideWiFiDialog();
@@ -214,14 +235,14 @@ class WiFiService {
         const dialog = document.createElement('div');
         dialog.id = 'wifiDialog';
         dialog.className = 'wifi-main-dialog';
-        
+
         dialog.innerHTML = `
             <div class="wifi-dialog-content">
                 <div class="wifi-dialog-header">
                     <div class="wifi-dialog-title">
-                        📡 Network Control Center
+                        ${ElxaIcons.renderAction('antenna')} Network Control Center
                     </div>
-                    <div class="wifi-dialog-close" onclick="elxaOS.wifiService.hideWiFiDialog()">×</div>
+                    <button class="wifi-dialog-close" id="wifiDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
                 </div>
                 <div class="wifi-dialog-body">
                     ${this.renderConnectionStatus()}
@@ -233,6 +254,11 @@ class WiFiService {
         `;
 
         document.body.appendChild(dialog);
+
+        // Wire close button
+        dialog.querySelector('#wifiDialogCloseBtn').addEventListener('click', () => {
+            this.hideWiFiDialog();
+        });
     }
 
     renderConnectionStatus() {
@@ -242,18 +268,19 @@ class WiFiService {
             security: this.currentNetwork.security,
             frequency: this.currentNetwork.frequency,
             speed: this.currentNetwork.speed,
-            ip: this.generateFakeIP()
+            ip: this.connectionIP,
+            gateway: this.connectionGateway
         } : null;
 
         return `
             <div class="wifi-status-panel">
                 <div class="wifi-status-header">
-                    🔗 Connection Status
+                    ${ElxaIcons.renderAction('link')} Connection Status
                 </div>
                 <div class="wifi-status-details">
                     <div class="wifi-status-item">
                         <span class="wifi-status-label">Status:</span>
-                        <span class="wifi-status-value">${this.isConnected ? 'Connected' : 'Disconnected'}</span>
+                        <span class="wifi-status-value ${this.isConnected ? 'wifi-value-connected' : 'wifi-value-disconnected'}">${this.isConnected ? 'Connected' : 'Disconnected'}</span>
                     </div>
                     ${connectionInfo ? `
                         <div class="wifi-status-item">
@@ -282,7 +309,7 @@ class WiFiService {
                         </div>
                         <div class="wifi-status-item">
                             <span class="wifi-status-label">Gateway:</span>
-                            <span class="wifi-status-value">${this.generateFakeGateway()}</span>
+                            <span class="wifi-status-value">${connectionInfo.gateway}</span>
                         </div>
                     ` : `
                         <div class="wifi-status-item">
@@ -297,15 +324,15 @@ class WiFiService {
 
     renderTabs() {
         const tabs = [
-            { id: 'networks', label: '📡 Networks', icon: '📡' },
-            { id: 'tools', label: '🔧 Tools', icon: '🔧' },
-            { id: 'history', label: '📊 History', icon: '📊' }
+            { id: 'networks', label: `${ElxaIcons.renderAction('antenna')} Networks` },
+            { id: 'tools', label: `${ElxaIcons.renderAction('wrench')} Tools` },
+            { id: 'history', label: `${ElxaIcons.renderAction('chart-bar')} History` }
         ];
 
         return `
             <div class="wifi-tabs">
                 ${tabs.map(tab => `
-                    <div class="wifi-tab ${this.currentTab === tab.id ? 'wifi-tab-active' : ''}" 
+                    <div class="wifi-tab ${this.currentTab === tab.id ? 'wifi-tab-active' : ''}"
                          onclick="elxaOS.wifiService.switchTab('${tab.id}')">
                         ${tab.label}
                     </div>
@@ -345,7 +372,7 @@ class WiFiService {
         }
 
         const networks = this.getAllNetworks();
-        
+
         return `
             <div class="wifi-network-list">
                 ${networks.map(network => this.renderNetworkItem(network)).join('')}
@@ -355,35 +382,36 @@ class WiFiService {
 
     renderNetworkItem(network) {
         const isConnected = this.isConnected && this.currentNetwork.name === network.name;
-        const signalBars = '█'.repeat(Math.max(1, Math.round(network.signalStrength))) + 
+        const signalBars = '█'.repeat(Math.max(1, Math.round(network.signalStrength))) +
                           '░'.repeat(5 - Math.max(1, Math.round(network.signalStrength)));
-        
+        const frequencyClass = network.frequency === '5GHz' ? 'wifi-freq-5ghz' : 'wifi-freq-2ghz';
+
         return `
-            <div class="wifi-network-item ${isConnected ? 'wifi-network-connected' : ''}" 
-                 data-network='${JSON.stringify(network)}'>
+            <div class="wifi-network-item ${isConnected ? 'wifi-network-connected' : ''}"
+                 data-network-name="${network.name}">
                 <div class="wifi-network-icon">
-                    ${isConnected ? '✅' : this.getSecurityIcon(network.security)}
+                    ${isConnected ? ElxaIcons.renderAction('check') : this.getSecurityIcon(network.security)}
                 </div>
                 <div class="wifi-network-info">
                     <div class="wifi-network-name">
                         ${network.name}
-                        ${network.isUserCreated ? '👤' : ''}
-                        ${isConnected ? '🔗' : ''}
+                        ${network.isUserCreated ? `${ElxaIcons.renderAction('account')}` : ''}
+                        ${isConnected ? `${ElxaIcons.renderAction('link')}` : ''}
                     </div>
                     <div class="wifi-network-details">
-                        <span class="wifi-network-signal">📶 ${signalBars}</span>
+                        <span class="wifi-network-signal">${ElxaIcons.renderAction('wifi')} ${signalBars}</span>
                         <span class="wifi-network-security">${network.security}</span>
-                        <span class="wifi-network-frequency" style="color: ${this.getFrequencyColor(network.frequency)}">
+                        <span class="wifi-network-frequency ${frequencyClass}">
                             ${network.frequency}
                         </span>
-                        <span style="color: #666">Ch ${network.channel}</span>
+                        <span class="wifi-network-channel">Ch ${network.channel}</span>
                     </div>
                 </div>
                 <div class="wifi-network-actions">
                     <button class="wifi-btn-info" onclick="elxaOS.wifiService.showNetworkInfo('${network.name}')">
-                        ℹ️
+                        ${ElxaIcons.renderAction('information')}
                     </button>
-                    ${isConnected ? 
+                    ${isConnected ?
                         '<button class="wifi-btn-disconnect" onclick="elxaOS.wifiService.disconnect()">Disconnect</button>' :
                         '<button class="wifi-btn-connect" onclick="elxaOS.wifiService.connectFromDialog(this)">Connect</button>'
                     }
@@ -394,39 +422,39 @@ class WiFiService {
 
     renderToolsPanel() {
         return `
-            <div style="padding: 16px;">
-                <h3 style="color: #000080; margin-bottom: 16px;">🔧 Network Tools</h3>
+            <div class="wifi-tools-panel">
+                <h3 class="wifi-panel-title">${ElxaIcons.renderAction('wrench')} Network Tools</h3>
                 <div class="wifi-tools-grid">
                     <div class="wifi-tool-item" onclick="elxaOS.wifiService.runNetworkScan()">
-                        🔍<br>Network Scan
+                        ${ElxaIcons.renderAction('magnify')}<br>Network Scan
                     </div>
                     <div class="wifi-tool-item" onclick="elxaOS.wifiService.runPingTest()">
-                        📡<br>Ping Test
+                        ${ElxaIcons.renderAction('antenna')}<br>Ping Test
                     </div>
                     <div class="wifi-tool-item" onclick="elxaOS.wifiService.runSpeedTest()">
-                        ⚡<br>Speed Test
+                        ${ElxaIcons.renderAction('speedometer')}<br>Speed Test
                     </div>
                     <div class="wifi-tool-item" onclick="elxaOS.wifiService.showNetworkMap()">
-                        🗺️<br>Network Map
+                        ${ElxaIcons.renderAction('globe')}<br>Network Map
                     </div>
                     <div class="wifi-tool-item" onclick="elxaOS.wifiService.analyzeChannels()">
-                        📊<br>Channel Analysis
+                        ${ElxaIcons.renderAction('chart-bar')}<br>Channel Analysis
                     </div>
                     <div class="wifi-tool-item" onclick="elxaOS.wifiService.securityScan()">
-                        🛡️<br>Security Scan
+                        ${ElxaIcons.renderAction('shield-lock')}<br>Security Scan
                     </div>
                 </div>
-                <div style="margin-top: 16px;">
-                    <h4 style="color: #800080; margin-bottom: 8px;">Advanced Options</h4>
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <div class="wifi-advanced-options">
+                    <h4 class="wifi-advanced-title">Advanced Options</h4>
+                    <div class="wifi-advanced-buttons">
                         <button class="wifi-btn-secondary" onclick="elxaOS.wifiService.showCreateNetworkDialog()">
-                            📡 Create Network
+                            ${ElxaIcons.renderAction('broadcast')} Create Network
                         </button>
                         <button class="wifi-btn-secondary" onclick="elxaOS.wifiService.exportSettings()">
-                            💾 Export Settings
+                            ${ElxaIcons.renderAction('save')} Export Settings
                         </button>
                         <button class="wifi-btn-secondary" onclick="elxaOS.wifiService.resetAllNetworks()">
-                            🔄 Reset Networks
+                            ${ElxaIcons.renderAction('refresh')} Reset Networks
                         </button>
                     </div>
                 </div>
@@ -436,37 +464,37 @@ class WiFiService {
 
     renderHistoryPanel() {
         const recentConnections = this.connectionHistory.slice(-10).reverse();
-        
+
         return `
-            <div style="padding: 16px;">
-                <h3 style="color: #000080; margin-bottom: 16px;">📊 Connection History</h3>
-                <div style="max-height: 200px; overflow-y: auto; border: 1px inset #c0c0c0; background: white; padding: 8px;">
-                    ${recentConnections.length > 0 ? 
+            <div class="wifi-history-panel">
+                <h3 class="wifi-panel-title">${ElxaIcons.renderAction('chart-bar')} Connection History</h3>
+                <div class="wifi-history-list">
+                    ${recentConnections.length > 0 ?
                         recentConnections.map(entry => `
-                            <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #eee; font-size: 10px;">
-                                <span><strong>${entry.network}</strong></span>
-                                <span style="color: #666;">${new Date(entry.timestamp).toLocaleString()}</span>
-                                <span style="color: ${entry.success ? '#008000' : '#800000'};">
-                                    ${entry.success ? '✅ Connected' : '❌ Failed'}
+                            <div class="wifi-history-item">
+                                <span class="wifi-history-name">${entry.network}</span>
+                                <span class="wifi-history-date">${new Date(entry.timestamp).toLocaleString()}</span>
+                                <span class="wifi-history-status ${entry.success ? 'wifi-history-success' : 'wifi-history-fail'}">
+                                    ${entry.success ? `${ElxaIcons.renderAction('check')} Connected` : `${ElxaIcons.renderAction('close')} Failed`}
                                 </span>
                             </div>
                         `).join('') :
-                        '<div style="text-align: center; color: #666; font-style: italic;">No connection history yet</div>'
+                        '<div class="wifi-history-empty">No connection history yet</div>'
                     }
                 </div>
-                <div style="margin-top: 12px;">
-                    <h4 style="color: #800080; margin-bottom: 8px;">Network Statistics</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px;">
-                        <div style="padding: 6px; background: rgba(255,255,255,0.7); border: 1px inset #c0c0c0;">
+                <div class="wifi-stats-section">
+                    <h4 class="wifi-advanced-title">Network Statistics</h4>
+                    <div class="wifi-stats-grid">
+                        <div class="wifi-stat-item">
                             <strong>Total Networks Seen:</strong> ${Object.keys(this.networkAnalytics).length}
                         </div>
-                        <div style="padding: 6px; background: rgba(255,255,255,0.7); border: 1px inset #c0c0c0;">
+                        <div class="wifi-stat-item">
                             <strong>Successful Connections:</strong> ${this.connectionHistory.filter(h => h.success).length}
                         </div>
-                        <div style="padding: 6px; background: rgba(255,255,255,0.7); border: 1px inset #c0c0c0;">
+                        <div class="wifi-stat-item">
                             <strong>Open Networks:</strong> ${this.getAllNetworks().filter(n => n.security === 'None').length}
                         </div>
-                        <div style="padding: 6px; background: rgba(255,255,255,0.7); border: 1px inset #c0c0c0;">
+                        <div class="wifi-stat-item">
                             <strong>Secured Networks:</strong> ${this.getAllNetworks().filter(n => n.security !== 'None').length}
                         </div>
                     </div>
@@ -479,10 +507,10 @@ class WiFiService {
         return `
             <div class="wifi-control-panel">
                 <button class="wifi-btn-primary" onclick="elxaOS.wifiService.refreshNetworks()">
-                    🔄 Refresh Networks
+                    ${ElxaIcons.renderAction('refresh')} Refresh Networks
                 </button>
                 <button class="wifi-btn-secondary" onclick="elxaOS.wifiService.hideWiFiDialog()">
-                    ❌ Close
+                    ${ElxaIcons.renderAction('close')} Close
                 </button>
             </div>
         `;
@@ -490,7 +518,7 @@ class WiFiService {
 
     switchTab(tabId) {
         this.currentTab = tabId;
-        this.showWiFiDialog(); // Refresh the dialog with new tab
+        this.showWiFiDialog();
     }
 
     hideWiFiDialog() {
@@ -500,10 +528,17 @@ class WiFiService {
         }
     }
 
+    // =================================
+    // CONNECTION
+    // =================================
+
     connectFromDialog(button) {
         const networkItem = button.closest('.wifi-network-item');
-        const network = JSON.parse(networkItem.dataset.network);
-        
+        const networkName = networkItem.dataset.networkName;
+        const network = this.getAllNetworks().find(n => n.name === networkName);
+
+        if (!network) return;
+
         if (network.type === 'secured') {
             this.showPasswordDialog(network);
         } else {
@@ -512,74 +547,92 @@ class WiFiService {
     }
 
     showPasswordDialog(network) {
+        // Remove existing password dialog
+        const existing = document.getElementById('passwordDialog');
+        if (existing) existing.remove();
+
         const passwordDialog = document.createElement('div');
         passwordDialog.id = 'passwordDialog';
         passwordDialog.className = 'wifi-password-dialog';
-        
+
         passwordDialog.innerHTML = `
             <div class="wifi-dialog-header">
-                <div class="wifi-dialog-title">🔒 Network Authentication</div>
-                <div class="wifi-dialog-close" onclick="document.getElementById('passwordDialog').remove()">×</div>
+                <div class="wifi-dialog-title">${ElxaIcons.renderAction('lock')} Network Authentication</div>
+                <button class="wifi-dialog-close" id="passwordDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
             </div>
             <div class="wifi-password-content">
                 <div class="wifi-password-prompt">
                     Enter password for "${network.name}":
-                    <br><small style="color: #666;">Security: ${network.security} | Channel: ${network.channel}</small>
+                    <br><small class="wifi-password-meta">Security: ${network.security} | Channel: ${network.channel}</small>
                 </div>
                 <input type="password" id="networkPassword" class="wifi-password-input" placeholder="Password">
                 <div class="wifi-password-controls">
-                    <button class="wifi-btn-connect" onclick="elxaOS.wifiService.connectWithPassword('${network.name}')">Connect</button>
-                    <button class="wifi-btn-secondary" onclick="document.getElementById('passwordDialog').remove()">Cancel</button>
+                    <button class="wifi-btn-connect" id="passwordConnectBtn">Connect</button>
+                    <button class="wifi-btn-secondary" id="passwordCancelBtn">Cancel</button>
                 </div>
                 <div class="wifi-password-hint">
-                    💡 Hint: Try common passwords like "password123" or "admin2024"
+                    ${ElxaIcons.renderAction('information')} Hint: Try common passwords like "password123" or "admin2024"
                 </div>
             </div>
         `;
 
         document.body.appendChild(passwordDialog);
-        document.getElementById('networkPassword').focus();
-        
-        document.getElementById('networkPassword').addEventListener('keypress', (e) => {
+
+        const passwordInput = passwordDialog.querySelector('#networkPassword');
+        passwordInput.focus();
+
+        passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 this.connectWithPassword(network.name);
             }
+        });
+
+        passwordDialog.querySelector('#passwordConnectBtn').addEventListener('click', () => {
+            this.connectWithPassword(network.name);
+        });
+
+        passwordDialog.querySelector('#passwordCancelBtn').addEventListener('click', () => {
+            passwordDialog.remove();
+        });
+
+        passwordDialog.querySelector('#passwordDialogCloseBtn').addEventListener('click', () => {
+            passwordDialog.remove();
         });
     }
 
     connectWithPassword(networkName) {
         const password = document.getElementById('networkPassword').value;
         const network = this.getAllNetworks().find(n => n.name === networkName);
-        
-        document.getElementById('passwordDialog').remove();
+        const passwordDialog = document.getElementById('passwordDialog');
+        if (passwordDialog) passwordDialog.remove();
+
         this.connectToNetwork(network, password);
     }
 
     connectToNetwork(network, password = null) {
-        this.showMessage('Establishing connection...', 'info');
-        
-        // Add to analytics
+        ElxaUI.showMessage('Establishing connection...', 'info');
+
         if (this.networkAnalytics[network.name]) {
             this.networkAnalytics[network.name].connectionAttempts++;
         }
-        
+
         setTimeout(() => {
             let success = false;
-            
+
             if (network.type === 'open') {
                 success = true;
             } else if (network.type === 'secured') {
                 success = password === network.password;
-                
+
                 if (!success) {
                     const attempts = this.connectionAttempts.get(network.name) || 0;
                     this.connectionAttempts.set(network.name, attempts + 1);
-                    
+
                     if (attempts >= 2) {
-                        this.showMessage(`Access denied for ${network.name} - Too many failed attempts`, 'error');
+                        ElxaUI.showMessage(`Access denied for ${network.name} — too many failed attempts`, 'error');
                         return;
                     } else {
-                        this.showMessage('Authentication failed - Incorrect password', 'error');
+                        ElxaUI.showMessage('Authentication failed — incorrect password', 'error');
                         this.recordConnectionHistory(network.name, false, 'Authentication failed');
                         return;
                     }
@@ -590,27 +643,29 @@ class WiFiService {
                 if (this.isConnected) {
                     this.disconnect(false);
                 }
-                
+
                 this.isConnected = true;
                 this.currentNetwork = network;
                 this.signalStrength = network.signalStrength;
                 this.connectionAttempts.delete(network.name);
-                
-                // Record successful connection
+
+                // Generate stable IP/gateway for this connection session
+                this.connectionIP = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 254) + 1}`;
+                this.connectionGateway = this.connectionIP.replace(/\.\d+$/, '.1');
+
                 this.recordConnectionHistory(network.name, true, 'Connected successfully');
                 if (this.networkAnalytics[network.name]) {
                     this.networkAnalytics[network.name].successfulConnections++;
                 }
-                
+
                 this.updateWiFiIcon();
-                this.showMessage(`Connected to ${network.name} (${network.frequency}, ${network.security})`, 'success');
+                ElxaUI.showMessage(`Connected to ${network.name} (${network.frequency}, ${network.security})`, 'success');
                 this.saveWiFiData();
-                
-                // Refresh dialog if open
+
                 if (document.getElementById('wifiDialog')) {
                     this.showWiFiDialog();
                 }
-                
+
                 this.eventBus.emit('wifi.connected', {
                     network: network.name,
                     signalStrength: this.signalStrength,
@@ -625,20 +680,22 @@ class WiFiService {
         if (this.isConnected) {
             const networkName = this.currentNetwork.name;
             this.recordConnectionHistory(networkName, false, 'Disconnected by user');
-            
+
             this.isConnected = false;
             this.currentNetwork = null;
             this.signalStrength = 0;
-            
+            this.connectionIP = null;
+            this.connectionGateway = null;
+
             this.updateWiFiIcon();
             this.saveWiFiData();
-            
+
             if (showMessage) {
-                this.showMessage(`Disconnected from ${networkName}`, 'info');
+                ElxaUI.showMessage(`Disconnected from ${networkName}`, 'info');
             }
-            
+
             this.eventBus.emit('wifi.disconnected');
-            
+
             if (document.getElementById('wifiDialog')) {
                 this.showWiFiDialog();
             }
@@ -652,24 +709,30 @@ class WiFiService {
             success: success,
             reason: reason
         });
-        
-        // Keep only last 50 entries
+
         if (this.connectionHistory.length > 50) {
             this.connectionHistory.shift();
         }
-        
+
         this.saveWiFiData();
     }
 
+    // =================================
+    // CREATE NETWORK DIALOG
+    // =================================
+
     showCreateNetworkDialog() {
+        const existing = document.getElementById('createNetworkDialog');
+        if (existing) existing.remove();
+
         const createDialog = document.createElement('div');
         createDialog.id = 'createNetworkDialog';
         createDialog.className = 'wifi-create-dialog';
-        
+
         createDialog.innerHTML = `
             <div class="wifi-dialog-header">
-                <div class="wifi-dialog-title">📡 Create Virtual Network</div>
-                <div class="wifi-dialog-close" onclick="document.getElementById('createNetworkDialog').remove()">×</div>
+                <div class="wifi-dialog-title">${ElxaIcons.renderAction('broadcast')} Create Virtual Network</div>
+                <button class="wifi-dialog-close" id="createDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
             </div>
             <div class="wifi-create-content">
                 <div class="wifi-create-form">
@@ -677,7 +740,7 @@ class WiFiService {
                         <label class="wifi-form-label">Network Name (SSID):</label>
                         <input type="text" id="newNetworkName" class="wifi-form-input" placeholder="MyNetwork" maxlength="32">
                     </div>
-                    
+
                     <div class="wifi-form-group">
                         <label class="wifi-form-label">Security Type:</label>
                         <select id="securityType" class="wifi-form-select">
@@ -687,17 +750,17 @@ class WiFiService {
                             <option value="wpa3">WPA3-PSK (Most Secure)</option>
                         </select>
                     </div>
-                    
+
                     <div class="wifi-form-group" id="passwordGroup">
                         <label class="wifi-form-label">Password:</label>
                         <input type="password" id="newNetworkPassword" class="wifi-form-input" placeholder="Enter password (8+ characters)">
                     </div>
-                    
+
                     <div class="wifi-advanced-section">
-                        <div class="wifi-advanced-header" onclick="this.parentElement.classList.toggle('expanded')">
-                            ⚙️ Advanced Settings
+                        <div class="wifi-advanced-header" id="advancedToggle">
+                            ${ElxaIcons.renderAction('settings')} Advanced Settings
                         </div>
-                        <div style="display: none;" class="advanced-content">
+                        <div class="wifi-advanced-content" id="advancedContent">
                             <div class="wifi-form-group">
                                 <label class="wifi-form-label">Frequency Band:</label>
                                 <select id="frequencyBand" class="wifi-form-select">
@@ -705,7 +768,7 @@ class WiFiService {
                                     <option value="5GHz" selected>5 GHz (Better Speed)</option>
                                 </select>
                             </div>
-                            
+
                             <div class="wifi-form-group">
                                 <label class="wifi-form-label">Channel:</label>
                                 <select id="channelSelect" class="wifi-form-select">
@@ -717,40 +780,48 @@ class WiFiService {
                                     <option value="149">Channel 149 (5GHz)</option>
                                 </select>
                             </div>
-                            
+
                             <div class="wifi-form-checkbox">
                                 <input type="checkbox" id="hideNetwork">
                                 <label>Hide network name (SSID)</label>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="wifi-password-controls">
-                        <button class="wifi-btn-connect" onclick="elxaOS.wifiService.createNetworkFromDialog()">Create Network</button>
-                        <button class="wifi-btn-secondary" onclick="document.getElementById('createNetworkDialog').remove()">Cancel</button>
+                        <button class="wifi-btn-connect" id="createNetworkBtn">Create Network</button>
+                        <button class="wifi-btn-secondary" id="createCancelBtn">Cancel</button>
                     </div>
                 </div>
             </div>
         `;
 
         document.body.appendChild(createDialog);
-        document.getElementById('newNetworkName').focus();
-        
-        // Handle security type changes
-        document.getElementById('securityType').addEventListener('change', (e) => {
-            const passwordGroup = document.getElementById('passwordGroup');
+        createDialog.querySelector('#newNetworkName').focus();
+
+        // Security type toggle
+        createDialog.querySelector('#securityType').addEventListener('change', (e) => {
+            const passwordGroup = createDialog.querySelector('#passwordGroup');
             passwordGroup.style.display = e.target.value === 'open' ? 'none' : 'block';
         });
-        
-        // Handle advanced section toggle
-        const advancedSection = createDialog.querySelector('.wifi-advanced-section');
-        advancedSection.addEventListener('click', (e) => {
-            if (e.target.classList.contains('wifi-advanced-header')) {
-                const content = advancedSection.querySelector('.advanced-content');
-                const isExpanded = content.style.display !== 'none';
-                content.style.display = isExpanded ? 'none' : 'block';
-                e.target.textContent = isExpanded ? '⚙️ Advanced Settings' : '⬇️ Advanced Settings';
-            }
+
+        // Advanced toggle
+        createDialog.querySelector('#advancedToggle').addEventListener('click', () => {
+            const content = createDialog.querySelector('#advancedContent');
+            content.classList.toggle('expanded');
+        });
+
+        // Buttons
+        createDialog.querySelector('#createNetworkBtn').addEventListener('click', () => {
+            this.createNetworkFromDialog();
+        });
+
+        createDialog.querySelector('#createCancelBtn').addEventListener('click', () => {
+            createDialog.remove();
+        });
+
+        createDialog.querySelector('#createDialogCloseBtn').addEventListener('click', () => {
+            createDialog.remove();
         });
     }
 
@@ -761,29 +832,29 @@ class WiFiService {
         const frequency = document.getElementById('frequencyBand').value;
         const channel = document.getElementById('channelSelect').value;
         const hideNetwork = document.getElementById('hideNetwork').checked;
-        
+
         if (!name) {
-            this.showMessage('Please enter a network name', 'error');
+            ElxaUI.showMessage('Please enter a network name', 'warning');
             return;
         }
-        
+
         if (securityType !== 'open' && (!password || password.length < 8)) {
-            this.showMessage('Password must be at least 8 characters', 'error');
+            ElxaUI.showMessage('Password must be at least 8 characters', 'warning');
             return;
         }
-        
+
         if (this.getAllNetworks().some(n => n.name === name)) {
-            this.showMessage('Network name already exists', 'error');
+            ElxaUI.showMessage('Network name already exists', 'warning');
             return;
         }
-        
+
         const options = {
             security: this.getSecurityName(securityType),
             frequency: frequency,
             channel: channel === 'auto' ? Math.floor(Math.random() * 11) + 1 : parseInt(channel),
             hidden: hideNetwork
         };
-        
+
         this.createUserNetwork(name, password, options);
         document.getElementById('createNetworkDialog').remove();
     }
@@ -813,37 +884,39 @@ class WiFiService {
             isUserCreated: true,
             hidden: options.hidden || false
         };
-        
+
         this.userNetworks.push(newNetwork);
         this.saveWiFiData();
-        
-        this.showMessage(`Network "${name}" created successfully! 📡`, 'success');
-        
+
+        ElxaUI.showMessage(`Network "${name}" created successfully!`, 'success');
+
         if (document.getElementById('wifiDialog')) {
             this.showWiFiDialog();
         }
-        
+
         this.eventBus.emit('wifi.networkCreated', { network: newNetwork });
     }
 
-    // Tool methods
+    // =================================
+    // NETWORK TOOLS
+    // =================================
+
     runNetworkScan() {
-        this.showMessage('Starting deep network scan...', 'info');
+        ElxaUI.showMessage('Starting deep network scan...', 'info');
         this.isScanning = true;
-        
+
         if (document.getElementById('wifiDialog')) {
             this.showWiFiDialog();
         }
-        
+
         setTimeout(() => {
-            // Simulate finding new networks
             if (Math.random() < 0.6) {
                 const randomNetworks = [
-                    'PublicWiFi', 'Hotel_Guest', 'Airport_Free', 'Library_WiFi', 
+                    'PublicWiFi', 'Hotel_Guest', 'Airport_Free', 'Library_WiFi',
                     'Starbucks_WiFi', 'McDonald_WiFi', 'xfinitywifi', 'ATT_WiFi'
                 ];
                 const randomName = randomNetworks[Math.floor(Math.random() * randomNetworks.length)];
-                
+
                 if (!this.getAllNetworks().some(n => n.name === randomName)) {
                     this.availableNetworks.push({
                         name: randomName,
@@ -859,10 +932,10 @@ class WiFiService {
                     });
                 }
             }
-            
+
             this.isScanning = false;
-            this.showMessage(`Scan complete - Found ${this.getAllNetworks().length} networks`, 'success');
-            
+            ElxaUI.showMessage(`Scan complete — found ${this.getAllNetworks().length} networks`, 'success');
+
             if (document.getElementById('wifiDialog')) {
                 this.showWiFiDialog();
             }
@@ -871,86 +944,93 @@ class WiFiService {
 
     runPingTest() {
         if (!this.isConnected) {
-            this.showMessage('Must be connected to a network to run ping test', 'error');
+            ElxaUI.showMessage('Must be connected to run ping test', 'warning');
             return;
         }
-        
-        this.showMessage('Running ping test...', 'info');
-        
+
+        ElxaUI.showMessage('Running ping test...', 'info');
+
         setTimeout(() => {
             const pingTime = Math.round(Math.random() * 50 + 10);
             const packetLoss = Math.random() > 0.9 ? Math.round(Math.random() * 5) : 0;
-            this.showMessage(`Ping: ${pingTime}ms | Packet Loss: ${packetLoss}%`, 'success');
+            ElxaUI.showMessage(`Ping: ${pingTime}ms | Packet Loss: ${packetLoss}%`, 'success');
         }, 2000);
     }
 
     runSpeedTest() {
         if (!this.isConnected) {
-            this.showMessage('Must be connected to a network to run speed test', 'error');
+            ElxaUI.showMessage('Must be connected to run speed test', 'warning');
             return;
         }
-        
-        this.showMessage('Testing connection speed...', 'info');
-        
+
+        ElxaUI.showMessage('Testing connection speed...', 'info');
+
         setTimeout(() => {
             const download = Math.round(Math.random() * 100 + 20);
             const upload = Math.round(download * 0.3 + Math.random() * 10);
-            this.showMessage(`⬇️ ${download} Mbps | ⬆️ ${upload} Mbps`, 'success');
+            ElxaUI.showMessage(`Download: ${download} Mbps | Upload: ${upload} Mbps`, 'success');
         }, 4000);
     }
 
     showNetworkMap() {
-        this.showMessage('Generating network topology map...', 'info');
+        ElxaUI.showMessage('Generating network topology map...', 'info');
         setTimeout(() => {
-            this.showMessage('Network map feature coming soon! 🗺️', 'info');
+            ElxaUI.showMessage('Network map feature coming soon!', 'info');
         }, 1500);
     }
 
     analyzeChannels() {
-        this.showMessage('Analyzing WiFi channels...', 'info');
+        ElxaUI.showMessage('Analyzing WiFi channels...', 'info');
         setTimeout(() => {
             const channels = {};
             this.getAllNetworks().forEach(net => {
                 channels[net.channel] = (channels[net.channel] || 0) + 1;
             });
-            
-            const leastUsed = Object.keys(channels).reduce((a, b) => 
+
+            const leastUsed = Object.keys(channels).reduce((a, b) =>
                 channels[a] < channels[b] ? a : b
             );
-            
-            this.showMessage(`Recommended channel: ${leastUsed} (least congested)`, 'success');
+
+            ElxaUI.showMessage(`Recommended channel: ${leastUsed} (least congested)`, 'success');
         }, 2000);
     }
 
     securityScan() {
-        this.showMessage('Scanning for security vulnerabilities...', 'info');
+        ElxaUI.showMessage('Scanning for security vulnerabilities...', 'info');
         setTimeout(() => {
             const weakNetworks = this.getAllNetworks().filter(n => n.security === 'WEP' || n.security === 'None');
-            this.showMessage(`Found ${weakNetworks.length} networks with weak security`, 
+            ElxaUI.showMessage(`Found ${weakNetworks.length} networks with weak security`,
                 weakNetworks.length > 0 ? 'warning' : 'success');
         }, 3000);
     }
 
+    // =================================
+    // NETWORK INFO DIALOG
+    // =================================
+
     showNetworkInfo(networkName) {
         const network = this.getAllNetworks().find(n => n.name === networkName);
         if (!network) return;
-        
+
+        const existing = document.getElementById('networkInfoDialog');
+        if (existing) existing.remove();
+
+        const analytics = this.networkAnalytics[networkName];
+        const avgSignal = analytics && analytics.signalHistory.length > 0 ?
+            (analytics.signalHistory.reduce((sum, h) => sum + h.strength, 0) / analytics.signalHistory.length).toFixed(1) :
+            'N/A';
+
         const infoDialog = document.createElement('div');
         infoDialog.id = 'networkInfoDialog';
         infoDialog.className = 'wifi-info-dialog';
-        
-        const analytics = this.networkAnalytics[networkName];
-        const avgSignal = analytics && analytics.signalHistory.length > 0 ? 
-            (analytics.signalHistory.reduce((sum, h) => sum + h.strength, 0) / analytics.signalHistory.length).toFixed(1) : 
-            'N/A';
-        
+
         infoDialog.innerHTML = `
             <div class="wifi-dialog-header">
-                <div class="wifi-dialog-title">📊 Network Information</div>
-                <div class="wifi-dialog-close" onclick="document.getElementById('networkInfoDialog').remove()">×</div>
+                <div class="wifi-dialog-title">${ElxaIcons.renderAction('information')} Network Information</div>
+                <button class="wifi-dialog-close" id="infoDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
             </div>
             <div class="wifi-info-content">
-                <h3 style="color: #000080; margin-bottom: 12px;">${network.name}</h3>
+                <h3 class="wifi-info-network-name">${network.name}</h3>
                 <div class="wifi-info-grid">
                     <div class="wifi-info-item">
                         <div class="wifi-info-label">Security Type</div>
@@ -986,7 +1066,7 @@ class WiFiService {
                     </div>
                 </div>
                 ${analytics ? `
-                    <h4 style="color: #800080; margin: 12px 0 8px 0;">Connection Statistics</h4>
+                    <h4 class="wifi-advanced-title">Connection Statistics</h4>
                     <div class="wifi-info-grid">
                         <div class="wifi-info-item">
                             <div class="wifi-info-label">First Seen</div>
@@ -1002,28 +1082,31 @@ class WiFiService {
                         </div>
                         <div class="wifi-info-item">
                             <div class="wifi-info-label">Success Rate</div>
-                            <div class="wifi-info-value">${analytics.connectionAttempts > 0 ? 
+                            <div class="wifi-info-value">${analytics.connectionAttempts > 0 ?
                                 Math.round((analytics.successfulConnections / analytics.connectionAttempts) * 100) : 0}%</div>
                         </div>
                     </div>
                 ` : ''}
-                <div style="text-align: center; margin-top: 16px;">
-                    <button class="wifi-btn-secondary" onclick="document.getElementById('networkInfoDialog').remove()">Close</button>
+                <div class="wifi-info-close-section">
+                    <button class="wifi-btn-secondary" id="infoCloseBtn">Close</button>
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(infoDialog);
+
+        infoDialog.querySelector('#infoDialogCloseBtn').addEventListener('click', () => {
+            infoDialog.remove();
+        });
+
+        infoDialog.querySelector('#infoCloseBtn').addEventListener('click', () => {
+            infoDialog.remove();
+        });
     }
 
-    // Utility methods
-    generateFakeIP() {
-        return `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
-    }
-
-    generateFakeGateway() {
-        return `192.168.${Math.floor(Math.random() * 255)}.1`;
-    }
+    // =================================
+    // UTILITY METHODS
+    // =================================
 
     refreshNetworks() {
         this.runNetworkScan();
@@ -1031,24 +1114,28 @@ class WiFiService {
 
     exportSettings() {
         const settings = {
-            userNetworks: this.userNetworks,
+            userNetworks: this.userNetworks.map(n => ({ ...n, password: '***' })),
             connectionHistory: this.connectionHistory,
             networkAnalytics: this.networkAnalytics
         };
-        
-        this.showMessage('Settings exported to console (F12 to view)', 'info');
-        console.log('WiFi Settings Export:', JSON.stringify(settings, null, 2));
+
+        ElxaUI.showMessage('Settings exported to console (F12 to view)', 'info');
+        console.log('📶 WiFi Settings Export:', JSON.stringify(settings, null, 2));
     }
 
-    resetAllNetworks() {
-        if (confirm('Reset all network settings? This will clear user networks and history.')) {
+    async resetAllNetworks() {
+        const confirmed = await ElxaUI.showConfirmDialog(
+            'Reset all network settings? This will clear user networks and history.'
+        );
+
+        if (confirmed) {
             this.userNetworks = [];
             this.connectionHistory = [];
             this.networkAnalytics = {};
             this.disconnect(false);
             this.saveWiFiData();
-            this.showMessage('All network settings reset', 'success');
-            
+            ElxaUI.showMessage('All network settings reset', 'success');
+
             if (document.getElementById('wifiDialog')) {
                 this.showWiFiDialog();
             }
@@ -1063,13 +1150,13 @@ class WiFiService {
                 'High network congestion',
                 'Router overload detected'
             ];
-            
+
             const issue = issues[Math.floor(Math.random() * issues.length)];
-            this.showMessage(`⚠️ ${issue}`, 'warning');
-            
+            ElxaUI.showMessage(issue, 'warning');
+
             this.signalStrength = Math.max(1, this.signalStrength - 0.5);
             this.updateWiFiIcon();
-            
+
             setTimeout(() => {
                 if (this.isConnected) {
                     this.signalStrength = this.currentNetwork.signalStrength;
@@ -1079,26 +1166,17 @@ class WiFiService {
         }
     }
 
-    showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `wifi-system-message wifi-message-${type}`;
-        message.textContent = text;
-        
-        document.body.appendChild(message);
+    // =================================
+    // API METHODS
+    // =================================
 
-        setTimeout(() => {
-            message.remove();
-        }, 4000);
-    }
-
-    // API methods
     isOnline() {
         return this.isConnected;
     }
 
     getConnectionInfo() {
         if (!this.isConnected) return null;
-        
+
         return {
             network: this.currentNetwork.name,
             signalStrength: this.signalStrength,
@@ -1109,24 +1187,57 @@ class WiFiService {
         };
     }
 
-    // Persistence methods
+    // =================================
+    // PERSISTENCE
+    // =================================
+
     saveWiFiData() {
-        // Note: This would use localStorage in a real environment
-        // For now, we'll simulate saving to memory
-        const wifiData = {
-            userNetworks: this.userNetworks,
-            isConnected: this.isConnected,
-            currentNetwork: this.currentNetwork,
-            signalStrength: this.signalStrength,
-            connectionHistory: this.connectionHistory,
-            networkAnalytics: this.networkAnalytics
-        };
+        try {
+            const wifiData = {
+                userNetworks: this.userNetworks,
+                isConnected: this.isConnected,
+                currentNetworkName: this.isConnected ? this.currentNetwork.name : null,
+                signalStrength: this.signalStrength,
+                connectionHistory: this.connectionHistory,
+                connectionIP: this.connectionIP,
+                connectionGateway: this.connectionGateway
+            };
+            localStorage.setItem('elxaOS-wifi', JSON.stringify(wifiData));
+        } catch (error) {
+            console.error('❌ Failed to save WiFi data:', error);
+        }
     }
 
     loadWiFiData() {
-        // Note: This would load from localStorage in a real environment
-        // For now, we'll initialize with empty data
-        console.log('📶 WiFi data loaded (simulated)');
+        try {
+            const saved = localStorage.getItem('elxaOS-wifi');
+            if (saved) {
+                const data = JSON.parse(saved);
+
+                if (data.userNetworks) {
+                    this.userNetworks = data.userNetworks;
+                }
+                if (data.connectionHistory) {
+                    this.connectionHistory = data.connectionHistory;
+                }
+
+                // Restore connection if we were connected
+                if (data.isConnected && data.currentNetworkName) {
+                    const network = this.getAllNetworks().find(n => n.name === data.currentNetworkName);
+                    if (network) {
+                        this.isConnected = true;
+                        this.currentNetwork = network;
+                        this.signalStrength = data.signalStrength || network.signalStrength;
+                        this.connectionIP = data.connectionIP || `192.168.1.${Math.floor(Math.random() * 254) + 1}`;
+                        this.connectionGateway = data.connectionGateway || '192.168.1.1';
+                    }
+                }
+
+                console.log('📶 WiFi data loaded');
+            }
+        } catch (error) {
+            console.error('❌ Failed to load WiFi data:', error);
+        }
     }
 
     clearWiFiData() {
@@ -1136,7 +1247,21 @@ class WiFiService {
         this.signalStrength = 0;
         this.connectionHistory = [];
         this.networkAnalytics = {};
+        this.connectionIP = null;
+        this.connectionGateway = null;
+        localStorage.removeItem('elxaOS-wifi');
         this.updateWiFiIcon();
-        console.log('🗑️ WiFi data cleared');
+    }
+
+    // =================================
+    // CLEANUP
+    // =================================
+
+    destroy() {
+        if (this.scanInterval) {
+            clearInterval(this.scanInterval);
+            this.scanInterval = null;
+        }
+        this.hideWiFiDialog();
     }
 }

@@ -3,8 +3,9 @@
 // A realistic payment dialog for pretend play with bank account integration
 // =================================
 
-// Define the class (remove the problematic if check)
-class ElxaMockPayment {
+// Guard against re-declaration when loaded by multiple pages in the mock browser
+if (typeof ElxaMockPayment === 'undefined') {
+window.ElxaMockPayment = class ElxaMockPayment {
     constructor() {
         this.isOpen = false;
         this.currentOrder = null;
@@ -18,7 +19,7 @@ class ElxaMockPayment {
             const link = document.createElement('link');
             link.id = 'elxa-payment-styles';
             link.rel = 'stylesheet';
-            link.href = './payment-system.css'; // You'll need to include this CSS file
+            link.href = './css/system/payment-system.css';
             document.head.appendChild(link);
         }
     }
@@ -33,13 +34,18 @@ class ElxaMockPayment {
             orderNumber: this.generateOrderNumber(),
             timestamp: new Date().toLocaleString(),
             priceValue: this.extractPriceValue(productInfo.price || '$0.00'),
+            // Store installer data if provided (data-driven game downloads)
+            installerData: productInfo.installerData || null,
             // NEW: Detect if this is a privilege purchase
             isPrivilegePurchase: productInfo.name && productInfo.name.includes('Privilege Palace'),
             privilegeData: productInfo.privilegeData || null,
             // NEW: Specify which bank account to use
             preferredAccount: productInfo.preferredAccount || 'checking',
             // NEW: Trust account authorization (for Privilege Palace)
-            trustAuthorized: productInfo.trustAuthorized || false
+            trustAuthorized: productInfo.trustAuthorized || false,
+            // NEW: Card pack purchase (for Snakesian Card Exchange)
+            isCardPurchase: productInfo.isCardPurchase || false,
+            cardPurchaseData: productInfo.cardPurchaseData || null
         };
         
         this.showPaymentDialog();
@@ -519,8 +525,9 @@ class ElxaMockPayment {
             </div>
         `;
         
-        dialog.querySelector('.elxa-payment-content').style.display = 'none';
-        dialog.appendChild(processingDiv);
+        const contentArea = dialog.querySelector('.elxa-payment-content');
+        contentArea.innerHTML = '';
+        contentArea.appendChild(processingDiv);
     }
 
     // Show success message with conditional download option
@@ -556,6 +563,9 @@ class ElxaMockPayment {
         if (this.currentOrder.isPrivilegePurchase) {
             // For Privilege Palace purchases - no download section
             successContent = this.buildPrivilegeSuccessContent(paymentData, paymentMethodText);
+        } else if (this.currentOrder.isCardPurchase) {
+            // For Snakesian Card Exchange purchases - no download, triggers pack opening
+            successContent = this.buildCardPurchaseSuccessContent(paymentData, paymentMethodText);
         } else {
             // For game purchases - include download section
             successContent = this.buildGameSuccessContent(paymentData, paymentMethodText);
@@ -565,11 +575,25 @@ class ElxaMockPayment {
         successDiv.className = 'elxa-payment-success';
         successDiv.innerHTML = successContent;
         
-        dialog.querySelector('.elxa-payment-content').style.display = 'none';
-        dialog.appendChild(successDiv);
+        const contentArea = dialog.querySelector('.elxa-payment-content');
+        contentArea.innerHTML = '';
+        contentArea.style.display = '';
+        contentArea.appendChild(successDiv);
+
+        // Dispatch payment-complete event so other systems can react
+        document.dispatchEvent(new CustomEvent('elxa-payment-complete', {
+            detail: {
+                orderNumber: this.currentOrder.orderNumber,
+                productName: this.currentOrder.productName,
+                priceValue: this.currentOrder.priceValue,
+                isCardPurchase: this.currentOrder.isCardPurchase,
+                cardPurchaseData: this.currentOrder.cardPurchaseData,
+                installerData: this.currentOrder.installerData
+            }
+        }));
         
         // Auto-close timing depends on purchase type
-        const autoCloseTime = this.currentOrder.isPrivilegePurchase ? 15000 : 30000;
+        const autoCloseTime = this.currentOrder.isCardPurchase ? 5000 : (this.currentOrder.isPrivilegePurchase ? 15000 : 30000);
         setTimeout(() => {
             this.closePaymentDialog();
         }, autoCloseTime);
@@ -646,6 +670,47 @@ class ElxaMockPayment {
         `;
     }
 
+    // Build success content for card pack purchases (no download, auto-closes)
+    buildCardPurchaseSuccessContent(paymentData, paymentMethodText) {
+        const packName = this.currentOrder.cardPurchaseData ? this.currentOrder.cardPurchaseData.packName : 'Card Pack';
+        return `
+            <div class="elxa-payment-success-content">
+                <div class="elxa-payment-success-icon">✅</div>
+                <h2>Payment Successful!</h2>
+                <p>Thank you for your purchase, ${paymentData.cardName}!</p>
+                
+                <div class="elxa-payment-receipt">
+                    <h3>📧 Receipt</h3>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Product:</span>
+                        <span>${this.currentOrder.productName}</span>
+                    </div>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Amount:</span>
+                        <span>${this.currentOrder.price}</span>
+                    </div>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Payment Method:</span>
+                        <span>${paymentMethodText}</span>
+                    </div>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Order #:</span>
+                        <span>${this.currentOrder.orderNumber}</span>
+                    </div>
+                </div>
+                
+                <div class="elxa-payment-success-message">
+                    <p>🃏 Your <strong>${packName}</strong> is ready to open!</p>
+                    <p>This window will close automatically...</p>
+                </div>
+                
+                <button class="elxa-payment-btn elxa-payment-btn-primary" onclick="elxaMockPayment.closePaymentDialog()">
+                    Close
+                </button>
+            </div>
+        `;
+    }
+
     // Build success content for game purchases (with download)
     buildGameSuccessContent(paymentData, paymentMethodText) {
         return `
@@ -704,58 +769,58 @@ class ElxaMockPayment {
         `;
     }
 
-    // Download the purchased game
+    // Download the purchased game (data-driven)
     downloadGame() {
         if (!this.currentOrder) {
             alert('No active order found!');
             return;
         }
 
-        // Create installer data based on the purchased product
-        let installerData = {};
+        // Use installer data from the order if provided (Sssteam / data-driven)
+        // Fall back to legacy hardcoded lookup for old game sites
+        let installerData = this.currentOrder.installerData;
         
-        if (this.currentOrder.productName === 'Sussy Cat Adventure') {
-            installerData = {
-                id: 'sussy_cat_adventure',
-                name: 'Sussy Cat Adventure',
-                description: 'A Cozy Stealth Game for Kids - Help Pushing Cat collect items while avoiding detection!',
-                icon: '😼',
-                version: '1.2',
-                author: 'ElxaCorp Games Division',
-                gameData: {
-                    type: 'sussy_cat_game',
-                    levels: 6,
-                    rooms: ['Living Room', 'Kitchen', 'Bedroom', 'Bathroom'],
-                    features: ['Sussy Lair hiding spot', 'Plotting mechanic', 'Retro pixel art', 'Family-friendly gameplay']
+        if (!installerData) {
+            // Legacy fallback for old individual game sites
+            const legacyInstallers = {
+                'Sussy Cat Adventure': {
+                    id: 'sussy_cat_adventure',
+                    name: 'Sussy Cat Adventure',
+                    description: 'A Cozy Stealth Game for Kids - Help Pushing Cat collect items while avoiding detection!',
+                    icon: '<img src="./assets/games/sussycat/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
+                    version: '1.2',
+                    author: 'ElxaCorp Games Division',
+                    gameData: {
+                        type: 'sussy_cat_game',
+                        levels: 6,
+                        rooms: ['Living Room', 'Kitchen', 'Bedroom', 'Bathroom'],
+                        features: ['Sussy Lair hiding spot', 'Plotting mechanic', 'Retro pixel art', 'Family-friendly gameplay']
+                    }
+                },
+                'Mail Room Mayhem': {
+                    id: 'mail_room_mayhem',
+                    name: 'Mail Room Mayhem',
+                    description: 'ElxaCorp\'s Fast-Paced Sorting Challenge - Sort Snakesian mail with keyboard-optimized controls!',
+                    icon: '<img src="./assets/games/mail-room-mayhem/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
+                    version: '1.0',
+                    author: 'ElxaCorp Games Division - Mail Dept.',
+                    gameData: {
+                        type: 'mail_room_mayhem',
+                        features: ['Keyboard-optimized controls', 'Pushing Cat events', 'Snakesian mail content', 'High score tracking'],
+                        departments: ['Executive', 'Tech', 'Snakesia', 'Recycle'],
+                        difficulty: 'Progressive - starts easy, gets intense!'
+                    }
                 }
             };
-        } else if (this.currentOrder.productName === 'Mail Room Mayhem') {
-        installerData = {
-            id: 'mail_room_mayhem',
-            name: 'Mail Room Mayhem',
-            description: 'ElxaCorp\'s Fast-Paced Sorting Challenge - Sort Snakesian mail with keyboard-optimized controls!',
-            icon: '📬',
-            version: '1.0',
-            author: 'ElxaCorp Games Division - Mail Dept.',
-            gameData: {
-                type: 'mail_room_mayhem_game',
-                features: ['Keyboard-optimized controls', 'Pushing Cat events', 'Snakesian mail content', 'High score tracking'],
-                departments: ['Executive', 'Tech', 'Snakesia', 'Recycle'],
-                difficulty: 'Progressive - starts easy, gets intense!'
-            }
-        };
-        } else {
-            // Generic game installer for other products
-            installerData = {
+            
+            installerData = legacyInstallers[this.currentOrder.productName] || {
                 id: 'generic_game',
                 name: this.currentOrder.productName,
                 description: 'A fun game from ElxaCorp!',
                 icon: '🎮',
                 version: '1.0',
                 author: 'ElxaCorp Games',
-                gameData: {
-                    type: 'target_game'
-                }
+                gameData: { type: 'target_game' }
             };
         }
 
@@ -1022,10 +1087,8 @@ class ElxaMockPayment {
             document.head.appendChild(style);
         }
     }
-}
-
-// Make class globally available
-window.ElxaMockPayment = ElxaMockPayment;
+}; // end class ElxaMockPayment
+} // end if (typeof ElxaMockPayment === 'undefined')
 
 // Only create global instance if it doesn't exist
 if (!window.elxaMockPayment) {
@@ -1075,6 +1138,36 @@ if (!window.downloadSussyCatDemo) {
         
         // Show a simple success message
         alert('Demo downloaded! Check your Programs folder for the Sussy Cat Adventure installer.');
+    };
+}
+
+// Download a free game directly (no payment dialog)
+if (!window.downloadFreeGame) {
+    window.downloadFreeGame = function(installerData) {
+        if (!installerData) {
+            ElxaUI.showMessage('No game data provided!', 'error');
+            return;
+        }
+        
+        if (typeof elxaOS !== 'undefined' && elxaOS.fileSystem) {
+            try {
+                const installerContent = JSON.stringify(installerData, null, 2);
+                const fileName = `${installerData.name.replace(/[^a-zA-Z0-9]/g, '_')}_Installer.abby`;
+                
+                elxaOS.fileSystem.createFile(['root', 'Programs'], fileName, installerContent, 'abby');
+                
+                if (elxaOS.eventBus) {
+                    elxaOS.eventBus.emit('desktop.changed');
+                }
+                
+                ElxaUI.showMessage(`${installerData.name} downloaded to Programs folder! Double-click the installer to install.`, 'success');
+            } catch (error) {
+                console.error('Failed to download free game:', error);
+                ElxaUI.showMessage('Download failed! Please try again.', 'error');
+            }
+        } else {
+            ElxaUI.showMessage('File system not available!', 'error');
+        }
     };
 }
 

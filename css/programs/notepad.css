@@ -507,9 +507,9 @@
     font-size: 10px;
     padding: 4px 8px;
     border-radius: 2px;
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    color: #856404;
+    background: var(--buttonBg, #fff3cd);
+    border: 1px solid var(--windowBorder, #ffeaa7);
+    color: var(--menuText, #856404);
 }
 
 .dialog-buttons {
@@ -520,25 +520,25 @@
 
 .open-btn,
 .save-btn {
-    background: #4CAF50;
-    border: 1px outset #4CAF50;
+    background: var(--titlebarBg, #4CAF50);
+    border: 1px outset var(--titlebarBg, #4CAF50);
     padding: 6px 16px;
     font-size: 11px;
     font-weight: bold;
-    color: white;
+    color: var(--menuHoverText, white);
     cursor: pointer;
     border-radius: 2px;
 }
 
 .open-btn:hover,
 .save-btn:hover {
-    background: #5CBF60;
+    filter: brightness(1.15);
 }
 
 .open-btn:active,
 .save-btn:active {
-    border: 1px inset #4CAF50;
-    background: #45a049;
+    border: 1px inset var(--titlebarBg, #4CAF50);
+    filter: brightness(0.9);
 }
 
 .dialog-button {
@@ -603,6 +603,13 @@
     justify-content: center;
     font-size: 14px;
     color: var(--menuText, #333);
+}
+
+/* Prevent icon spans from intercepting clicks — keeps focus in contenteditable */
+.tool-btn .mdi,
+.format-btn .mdi,
+.color-btn .mdi {
+    pointer-events: none;
 }
 
 .tool-btn:hover, .format-btn:hover {
@@ -1043,14 +1050,18 @@
 }
 
 .import-selected-btn {
-    background: #4CAF50;
-    border: 1px outset #4CAF50;
+    background: var(--titlebarBg, #4CAF50);
+    border: 1px outset var(--titlebarBg, #4CAF50);
     padding: 6px 16px;
     font-size: 11px;
     font-weight: bold;
-    color: white;
+    color: var(--menuHoverText, white);
     cursor: pointer;
     border-radius: 2px;
+}
+
+.import-selected-btn:hover {
+    filter: brightness(1.15);
 }
 
 .import-selected-btn:disabled {
@@ -1058,6 +1069,7 @@
     border-color: var(--windowBorder, #ccc);
     color: var(--menuText, #666);
     cursor: not-allowed;
+    filter: none;
 }
 
 .cancel-btn {
@@ -1128,14 +1140,18 @@
 }
 
 .use-paint-btn {
-    background: #4CAF50;
-    border: 1px outset #4CAF50;
+    background: var(--titlebarBg, #4CAF50);
+    border: 1px outset var(--titlebarBg, #4CAF50);
     padding: 6px 16px;
     font-size: 11px;
     font-weight: bold;
-    color: white;
+    color: var(--menuHoverText, white);
     cursor: pointer;
     border-radius: 2px;
+}
+
+.use-paint-btn:hover {
+    filter: brightness(1.15);
 }
 
 .use-paint-btn:disabled {
@@ -1143,6 +1159,7 @@
     border-color: var(--windowBorder, #ccc);
     color: var(--menuText, #666);
     cursor: not-allowed;
+    filter: none;
 }
 
 .paint-instructions {

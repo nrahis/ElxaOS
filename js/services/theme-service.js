@@ -29,7 +29,8 @@ class ThemeService {
                     clockBg: '#c0c0c0',
                     clockText: '#333333',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(0,0,0,0.8)'
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#555555'
                 }
             },
             luna: {
@@ -53,7 +54,8 @@ class ThemeService {
                     clockBg: '#ece9d8',
                     clockText: '#333333',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(0,0,0,0.8)'
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#3D5A80'
                 }
             },
             lunaRed: {
@@ -77,7 +79,8 @@ class ThemeService {
                     clockBg: '#ece9d8',
                     clockText: '#333333',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(81 78 78 / 0.8)'
+                    iconTextShadow: 'rgba(81 78 78 / 0.8)',
+                    uiIconColor: '#7A3030'
                 }
             },
             lunaPink: {
@@ -101,7 +104,8 @@ class ThemeService {
                     clockBg: '#ece9d8',
                     clockText: '#333333',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(81 78 78 / 0.8)'
+                    iconTextShadow: 'rgba(81 78 78 / 0.8)',
+                    uiIconColor: '#7A3060'
                 }
             },
             // NEW CUTESY LIGHT PINK THEME! 🌸
@@ -126,7 +130,8 @@ class ThemeService {
                     clockBg: '#FFF0F8',
                     clockText: '#8B008B',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(139,0,139,0.8)'
+                    iconTextShadow: 'rgba(139,0,139,0.8)',
+                    uiIconColor: '#C2185B'
                 }
             },
             // SOFT PASTEL THEME
@@ -151,7 +156,8 @@ class ThemeService {
                     clockBg: '#F8F8FF',
                     clockText: '#483D8B',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(72,61,139,0.8)'
+                    iconTextShadow: 'rgba(72,61,139,0.8)',
+                    uiIconColor: '#5C4B9E'
                 }
             },
             // MINT GREEN THEME
@@ -176,7 +182,8 @@ class ThemeService {
                     clockBg: '#F0FFF0',
                     clockText: '#006400',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(0,100,0,0.8)'
+                    iconTextShadow: 'rgba(0,100,0,0.8)',
+                    uiIconColor: '#2E7D32'
                 }
             },
             // WARM PEACH THEME
@@ -201,7 +208,8 @@ class ThemeService {
                     clockBg: '#FFF8F0',
                     clockText: '#8B4513',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(139,69,19,0.8)'
+                    iconTextShadow: 'rgba(139,69,19,0.8)',
+                    uiIconColor: '#A1603A'
                 }
             },
             // SYNTHWAVE/RETRO THEME
@@ -226,7 +234,8 @@ class ThemeService {
                     clockBg: '#1a0033',
                     clockText: '#00FFFF',
                     iconText: '#00FFFF',
-                    iconTextShadow: 'rgba(255,0,255,0.8)'
+                    iconTextShadow: 'rgba(255,0,255,0.8)',
+                    uiIconColor: '#00FFFF'
                 }
             },
             // LAVENDER THEME
@@ -251,7 +260,8 @@ class ThemeService {
                     clockBg: '#F8F0FF',
                     clockText: '#4B0082',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(75,0,130,0.8)'
+                    iconTextShadow: 'rgba(75,0,130,0.8)',
+                    uiIconColor: '#6A4CB5'
                 }
             },
             // OCEAN BREEZE THEME
@@ -276,7 +286,8 @@ class ThemeService {
                     clockBg: '#F0FFFF',
                     clockText: '#008B8B',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(0,139,139,0.8)'
+                    iconTextShadow: 'rgba(0,139,139,0.8)',
+                    uiIconColor: '#00838F'
                 }
             },
             olive: {
@@ -300,7 +311,8 @@ class ThemeService {
                     clockBg: '#f1efe2',
                     clockText: '#333333',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(0,0,0,0.8)'
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#4A5D2A'
                 }
             },
             silver: {
@@ -324,7 +336,8 @@ class ThemeService {
                     clockBg: '#f0f0f0',
                     clockText: '#333333',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(0,0,0,0.8)'
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#5D6B99'
                 }
             },
             royale: {
@@ -348,7 +361,8 @@ class ThemeService {
                     clockBg: '#f7f7f7',
                     clockText: '#333333',
                     iconText: 'white',
-                    iconTextShadow: 'rgba(0,0,0,0.8)'
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#2E5C8A'
                 }
             },
             zune: {
@@ -372,7 +386,8 @@ class ThemeService {
                     clockBg: '#2d2d2d',
                     clockText: '#ffffff',
                     iconText: '#ffffff',
-                    iconTextShadow: 'rgba(0,0,0,0.8)'
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#FF6600'
                 }
             }
         };
@@ -440,13 +455,25 @@ class ThemeService {
                  name: 'ElxaOS',
                  path: '../../assets/backgrounds/elxaos.png'
              },
-            'ElxaOS Green': {
-                 name: 'ElxaOS Green', 
-                 path: '../../assets/backgrounds/elxaos_green.png'
+            'ElxaOS Dark': {
+                 name: 'ElxaOS Dark', 
+                 path: '../../assets/backgrounds/elxaos_dark.png'
              },
              'Buggy Elephant': {
                  name: 'Buggy Elephant',
                  path: '../../assets/backgrounds/buggy.png'
+             },
+             'ElxaOS Pastel': {
+                 name: 'ElxaOS Pastel',
+                 path: '../../assets/backgrounds/elxaos_pastel.png'
+             },
+			 'ElxaOS Moon': {
+                 name: 'ElxaOS Moon',
+                 path: '../../assets/backgrounds/elxaos_moon.png'
+             },
+			 'ElxaOS Sun': {
+                 name: 'ElxaOS Sun',
+                 path: '../../assets/backgrounds/elxaos_sun.png'
              }
         };
         
@@ -514,14 +541,24 @@ class ThemeService {
         contextMenu.style.top = `${y}px`;
 
         contextMenu.innerHTML = `
-            <div class="context-item" onclick="elxaOS.themeService.showThemeDialog()">
-                🎨 Personalize
+            <div class="context-item" data-action="personalize">
+                ${ElxaIcons.renderAction('personalize')} Personalize
             </div>
             <div class="context-separator"></div>
-            <div class="context-item" onclick="elxaOS.themeService.refreshDesktop()">
-                🔄 Refresh Desktop
+            <div class="context-item" data-action="refresh">
+                ${ElxaIcons.renderAction('refresh')} Refresh Desktop
             </div>
         `;
+
+        // Event delegation for context menu actions
+        contextMenu.addEventListener('click', (e) => {
+            const item = e.target.closest('.context-item');
+            if (!item) return;
+            const action = item.dataset.action;
+            if (action === 'personalize') this.showThemeDialog();
+            if (action === 'refresh') this.refreshDesktop();
+            this.hideContextMenu();
+        });
 
         document.body.appendChild(contextMenu);
 
@@ -602,13 +639,13 @@ class ThemeService {
         dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="dialog-header">
-                    <div class="dialog-title">🎨 Personalize ElxaOS</div>
-                    <div class="dialog-close" onclick="elxaOS.themeService.hideThemeDialog()">×</div>
+                    <div class="dialog-title">${ElxaIcons.renderAction('personalize')} Personalize ElxaOS</div>
+                    <button class="dialog-close personalize-close-btn">${ElxaIcons.renderAction('close')}</button>
                 </div>
                 <div class="dialog-body">
                     <div class="theme-tabs">
-                        <div class="theme-tab active" data-tab="themes">Color Schemes</div>
-                        <div class="theme-tab" data-tab="wallpapers">Wallpapers</div>
+                        <div class="theme-tab active" data-tab="themes">${ElxaIcons.renderAction('personalize')} Color Schemes</div>
+                        <div class="theme-tab" data-tab="wallpapers">${ElxaIcons.renderAction('image')} Wallpapers</div>
                     </div>
                     
                     <div class="theme-content">
@@ -620,8 +657,8 @@ class ThemeService {
                         
                         <div class="tab-panel" id="wallpapersPanel">
                             <div class="wallpaper-controls">
-                                <button class="import-image-btn">📁 Import Image</button>
-                                <button class="browse-paint-btn">🎨 Use Paint File</button>
+                                <button class="import-image-btn">${ElxaIcons.renderAction('folder-image')} Import Image</button>
+                                <button class="browse-paint-btn">${ElxaIcons.renderAction('image')} Use Paint File</button>
                             </div>
                             <div class="wallpaper-stats">
                                 <span class="wallpaper-count">
@@ -637,9 +674,9 @@ class ThemeService {
                     </div>
                     
                     <div class="theme-controls">
-                        <button class="apply-btn" onclick="elxaOS.themeService.applySelectedTheme()">Apply</button>
-                        <button class="reset-btn" onclick="elxaOS.themeService.resetToDefaults()">Reset</button>
-                        <button class="dialog-button" onclick="elxaOS.themeService.hideThemeDialog()">Close</button>
+                        <button class="apply-btn">${ElxaIcons.renderAction('check')} Apply</button>
+                        <button class="reset-btn">${ElxaIcons.renderAction('restore')} Reset</button>
+                        <button class="dialog-button personalize-close-btn">Close</button>
                     </div>
                 </div>
             </div>
@@ -655,12 +692,13 @@ class ThemeService {
         // Use event delegation for all dialog events
         dialog.addEventListener('click', (e) => {
             // Tab switching
-            if (e.target.classList.contains('theme-tab')) {
-                const tabName = e.target.dataset.tab;
+            const tab = e.target.closest('.theme-tab');
+            if (tab) {
+                const tabName = tab.dataset.tab;
                 
                 // Update tab appearance
                 dialog.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
+                tab.classList.add('active');
                 
                 // Show correct panel
                 dialog.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
@@ -668,44 +706,54 @@ class ThemeService {
             }
             
             // Theme selection
-            if (e.target.closest('.theme-option')) {
-                const option = e.target.closest('.theme-option');
+            const themeOption = e.target.closest('.theme-option');
+            if (themeOption) {
                 dialog.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
-                option.classList.add('selected');
-                
-                // Preview the theme immediately
-                this.previewTheme(option.dataset.theme);
+                themeOption.classList.add('selected');
+                this.previewTheme(themeOption.dataset.theme);
             }
             
             // Wallpaper selection
-            if (e.target.closest('.wallpaper-option')) {
-                const option = e.target.closest('.wallpaper-option');
+            const wallpaperOption = e.target.closest('.wallpaper-option');
+            if (wallpaperOption) {
                 dialog.querySelectorAll('.wallpaper-option').forEach(o => o.classList.remove('selected'));
-                option.classList.add('selected');
-                
-                // Preview the wallpaper immediately
-                this.previewWallpaper(option.dataset.wallpaper);
+                wallpaperOption.classList.add('selected');
+                this.previewWallpaper(wallpaperOption.dataset.wallpaper);
             }
             
             // Import image button
-            if (e.target.classList.contains('import-image-btn')) {
+            if (e.target.closest('.import-image-btn')) {
                 e.preventDefault();
                 this.showImageImportDialog();
             }
             
             // Browse paint files button
-            if (e.target.classList.contains('browse-paint-btn')) {
+            if (e.target.closest('.browse-paint-btn')) {
                 e.preventDefault();
                 this.showPaintFileBrowser();
             }
 
-            // 🎨 NEW: Refresh assets button
-            if (e.target.classList.contains('refresh-assets-btn')) {
+            // Refresh assets button
+            if (e.target.closest('.refresh-assets-btn')) {
                 e.preventDefault();
                 this.refreshAssetBackgrounds();
-                // Refresh the dialog to show updated counts
                 this.hideThemeDialog();
                 setTimeout(() => this.showThemeDialog(), 100);
+            }
+
+            // Close buttons (header X + footer Close)
+            if (e.target.closest('.personalize-close-btn')) {
+                this.hideThemeDialog();
+            }
+
+            // Apply button
+            if (e.target.closest('.apply-btn')) {
+                this.applySelectedTheme();
+            }
+
+            // Reset button
+            if (e.target.closest('.reset-btn')) {
+                this.resetToDefaults();
             }
         });
     }
@@ -733,8 +781,8 @@ class ThemeService {
             dialog.innerHTML = `
                 <div class="dialog-content">
                     <div class="dialog-header">
-                        <div class="dialog-title">📁 Import Background Image</div>
-                        <div class="dialog-close">×</div>
+                        <div class="dialog-title">${ElxaIcons.renderAction('folder-image')} Import Background Image</div>
+                        <button class="dialog-close">${ElxaIcons.renderAction('close')}</button>
                     </div>
                     <div class="dialog-body">
                         <div class="import-instructions">
@@ -869,8 +917,8 @@ class ThemeService {
             dialog.innerHTML = `
                 <div class="dialog-content">
                     <div class="dialog-header">
-                        <div class="dialog-title">🎨 Use Paint Creation as Background</div>
-                        <div class="dialog-close">×</div>
+                        <div class="dialog-title">${ElxaIcons.renderAction('image')} Use Paint Creation as Background</div>
+                        <button class="dialog-close">${ElxaIcons.renderAction('close')}</button>
                     </div>
                     <div class="dialog-body">
                         <div class="paint-instructions">
@@ -879,7 +927,7 @@ class ThemeService {
                         <div class="paint-files-grid">
                             ${allImageFiles.map((file, index) => `
                                 <div class="paint-file-item" data-path="${file.path.join('|')}" data-name="${file.name}">
-                                    <div class="paint-file-icon">🖼️</div>
+                                    <div class="paint-file-icon">${ElxaIcons.renderAction('image')}</div>
                                     <div class="paint-file-info">
                                         <div class="paint-file-name">${file.name}</div>
                                         <div class="paint-file-location">${file.location}</div>
@@ -1260,35 +1308,7 @@ class ThemeService {
     }
 
     showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `system-message ${type}`;
-        message.textContent = text;
-        
-        const colors = {
-            info: { bg: '#add8e6', color: 'black' },
-            success: { bg: '#00ff00', color: 'black' },
-            warning: { bg: '#ffff00', color: 'black' },
-            error: { bg: '#ff0000', color: 'white' }
-        };
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: ${colors[type].bg};
-            color: ${colors[type].color};
-            padding: 8px 16px;
-            border: 2px outset #c0c0c0;
-            z-index: 3000;
-            font-weight: bold;
-            font-size: 11px;
-        `;
-
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
+        ElxaUI.showMessage(text, type);
     }
 
     // API methods for other services

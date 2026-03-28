@@ -12,69 +12,76 @@
 }
 
 /* =================================
-   TOOLBAR
+   TOOLBAR (uses OS theme chrome)
 ================================= */
 .elxacode-toolbar {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 4px 8px;
-    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
-    border-bottom: 1px solid #808080;
+    background: var(--menuBg, linear-gradient(to bottom, #f0f0f0, #e0e0e0));
+    border-bottom: 1px solid var(--windowBorder, #808080);
     flex-shrink: 0;
 }
 
-.toolbar-group {
+.elxacode-toolbar .toolbar-group {
     display: flex;
     gap: 4px;
     align-items: center;
 }
 
-.toolbar-btn {
+.elxacode-toolbar .toolbar-btn {
     padding: 4px 8px;
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
     cursor: pointer;
     font-size: 10px;
-    color: #333;
+    color: var(--menuText, #333);
     font-weight: bold;
     white-space: nowrap;
 }
 
-.toolbar-btn:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+/* Prevent icon spans from intercepting clicks */
+.elxacode-toolbar .toolbar-btn .mdi,
+.console-header .mdi {
+    pointer-events: none;
 }
 
-.toolbar-btn:active:not(:disabled) {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+.elxacode-toolbar .toolbar-btn:hover:not(:disabled) {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
-.toolbar-btn:disabled {
-    background: #f0f0f0;
-    color: #808080;
+.elxacode-toolbar .toolbar-btn:active:not(:disabled) {
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
+}
+
+.elxacode-toolbar .toolbar-btn:disabled {
+    background: var(--buttonBg, #f0f0f0);
+    color: var(--menuText, #808080);
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
-.run-btn {
+.elxacode-toolbar .run-btn {
     background: linear-gradient(to bottom, #90ee90, #32cd32) !important;
     border-color: #32cd32 !important;
     color: black !important;
 }
 
-.run-btn:hover:not(:disabled) {
+.elxacode-toolbar .run-btn:hover:not(:disabled) {
     background: linear-gradient(to bottom, #98fb98, #90ee90) !important;
 }
 
-.stop-btn {
+.elxacode-toolbar .stop-btn {
     background: linear-gradient(to bottom, #ffaaaa, #ff6666) !important;
     border-color: #ff6666 !important;
     color: black !important;
 }
 
-.toolbar-text {
+.elxacode-toolbar .toolbar-text {
     font-size: 10px;
-    color: #666;
+    color: var(--menuText, #666);
     font-style: italic;
     margin-left: auto;
 }
@@ -91,7 +98,7 @@
 }
 
 /* =================================
-   CODE EDITOR SECTION
+   CODE EDITOR SECTION (dark theme — intentional)
 ================================= */
 .code-editor-section {
     flex: 2;
@@ -227,7 +234,7 @@
 }
 
 /* =================================
-   CONSOLE SECTION
+   CONSOLE SECTION (dark theme — intentional)
 ================================= */
 .console-section {
     flex: 1;
@@ -329,15 +336,15 @@
 }
 
 /* =================================
-   STATUS BAR
+   STATUS BAR (uses theme accent)
 ================================= */
 .elxacode-status {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 2px 8px;
-    background: #007acc;
-    color: #ffffff;
+    background: var(--titlebarBg, #007acc);
+    color: var(--menuHoverText, #ffffff);
     font-size: 10px;
     flex-shrink: 0;
     min-height: 18px;
@@ -350,7 +357,7 @@
     align-items: center;
 }
 
-.separator {
+.elxacode-status .separator {
     color: rgba(255, 255, 255, 0.5);
 }
 
@@ -363,7 +370,7 @@
 }
 
 /* =================================
-   FILE BROWSER DIALOG
+   FILE BROWSER DIALOG (uses OS theme chrome)
 ================================= */
 .file-browser-dialog {
     position: fixed;
@@ -377,7 +384,7 @@
     justify-content: center;
 }
 
-.dialog-overlay {
+.file-browser-dialog .dialog-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -389,9 +396,9 @@
     justify-content: center;
 }
 
-.dialog-content {
-    background: #c0c0c0;
-    border: 2px outset #c0c0c0;
+.file-browser-dialog .dialog-content {
+    background: var(--windowBg, #c0c0c0);
+    border: 2px outset var(--windowBorder, #c0c0c0);
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
     min-width: 400px;
     max-width: 600px;
@@ -400,9 +407,9 @@
     flex-direction: column;
 }
 
-.dialog-header {
-    background: linear-gradient(to right, #0000ff, #4080ff);
-    color: white;
+.file-browser-dialog .dialog-header {
+    background: var(--titlebarBg, linear-gradient(to right, #0000ff, #4080ff));
+    color: var(--menuHoverText, white);
     padding: 4px 8px;
     display: flex;
     justify-content: space-between;
@@ -411,57 +418,61 @@
     font-size: 11px;
 }
 
-.dialog-close {
+.file-browser-dialog .dialog-close {
     width: 16px;
     height: 14px;
-    background: #c0c0c0;
-    border: 1px outset #c0c0c0;
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 8px;
     font-weight: bold;
-    color: black;
+    color: var(--menuText, black);
 }
 
-.dialog-close:hover {
-    background: #d0d0d0;
+.file-browser-dialog .dialog-close:hover {
+    background: var(--buttonHoverBg, #d0d0d0);
 }
 
-.dialog-body {
+.file-browser-dialog .dialog-body {
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     flex: 1;
     overflow: hidden;
+    background: var(--windowBg, #c0c0c0);
 }
 
-.file-list {
+.file-browser-dialog .file-list {
     flex: 1;
-    border: 1px inset #c0c0c0;
-    background: white;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--windowBg, white);
     overflow-y: auto;
     max-height: 300px;
 }
 
-.file-item {
+.file-browser-dialog .file-item {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 6px 8px;
     cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--windowBorder, #f0f0f0);
+    color: var(--menuText, #333);
 }
 
-.file-item:hover {
-    background: #e6f0ff;
+.file-browser-dialog .file-item:hover {
+    background: var(--menuHoverBg, #e6f0ff);
+    color: var(--menuHoverText, white);
 }
 
-.file-item.selected {
-    background: #cce7ff;
-    border-color: #0066cc;
+.file-browser-dialog .file-item.selected {
+    background: var(--menuHoverBg, #cce7ff);
+    color: var(--menuHoverText, white);
+    border-color: var(--titlebarBg, #0066cc);
 }
 
 .file-icon {
@@ -480,57 +491,97 @@
 .file-name {
     font-size: 11px;
     font-weight: bold;
-    color: #333;
+    color: inherit;
 }
 
 .file-path {
     font-size: 10px;
-    color: #666;
+    opacity: 0.7;
     font-style: italic;
 }
 
-.dialog-actions {
+.file-browser-dialog .dialog-actions {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
     margin-top: 8px;
 }
 
-.btn-cancel,
-.btn-open {
+.file-browser-dialog .btn-cancel,
+.file-browser-dialog .btn-open {
     padding: 4px 16px;
-    border: 1px outset #c0c0c0;
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
     cursor: pointer;
     font-size: 11px;
-    color: black;
+    color: var(--menuText, black);
 }
 
-.btn-cancel:hover,
-.btn-open:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+.file-browser-dialog .btn-cancel:hover,
+.file-browser-dialog .btn-open:hover:not(:disabled) {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
 }
 
-.btn-cancel:active,
-.btn-open:active:not(:disabled) {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
+.file-browser-dialog .btn-cancel:active,
+.file-browser-dialog .btn-open:active:not(:disabled) {
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
-.btn-open {
-    background: linear-gradient(to bottom, #90ee90, #32cd32);
-    border-color: #32cd32;
+.file-browser-dialog .btn-open {
+    background: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
     font-weight: bold;
 }
 
-.btn-open:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #98fb98, #90ee90);
+.file-browser-dialog .btn-open:hover:not(:disabled) {
+    background: #5CBF60;
 }
 
-.btn-open:disabled {
-    background: #f0f0f0;
-    color: #808080;
+.file-browser-dialog .btn-open:disabled {
+    background: var(--buttonBg, #f0f0f0);
+    color: var(--menuText, #808080);
+    opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* =================================
+   SAVE AS FORM (inside file-browser-dialog)
+================================= */
+.save-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.save-form label {
+    font-weight: bold;
+    font-size: 11px;
+    color: var(--menuText, #333);
+}
+
+.file-browser-dialog .filename-input {
+    padding: 6px 8px;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    font-size: 11px;
+    background: var(--windowBg, white);
+    color: var(--menuText, #333);
+}
+
+.file-browser-dialog .filename-input:focus {
+    outline: none;
+    border-color: var(--titlebarBg, #0066cc);
+}
+
+.save-location {
+    font-size: 10px;
+    color: var(--menuText, #666);
+    background: var(--buttonBg, #f8f8f8);
+    padding: 4px 8px;
+    border: 1px inset var(--windowBorder, #e0e0e0);
+    border-radius: 2px;
 }
 
 /* =================================
@@ -585,11 +636,11 @@
         min-height: 120px;
     }
     
-    .toolbar-group {
+    .elxacode-toolbar .toolbar-group {
         gap: 2px;
     }
     
-    .toolbar-btn {
+    .elxacode-toolbar .toolbar-btn {
         padding: 2px 6px;
         font-size: 9px;
     }
@@ -609,26 +660,26 @@
 ================================= */
 .console-output::-webkit-scrollbar,
 .code-input::-webkit-scrollbar,
-.file-list::-webkit-scrollbar {
+.file-browser-dialog .file-list::-webkit-scrollbar {
     width: 8px;
 }
 
 .console-output::-webkit-scrollbar-track,
 .code-input::-webkit-scrollbar-track,
-.file-list::-webkit-scrollbar-track {
+.file-browser-dialog .file-list::-webkit-scrollbar-track {
     background: #1e1e1e;
 }
 
 .console-output::-webkit-scrollbar-thumb,
 .code-input::-webkit-scrollbar-thumb,
-.file-list::-webkit-scrollbar-thumb {
+.file-browser-dialog .file-list::-webkit-scrollbar-thumb {
     background: #424242;
     border-radius: 4px;
 }
 
 .console-output::-webkit-scrollbar-thumb:hover,
 .code-input::-webkit-scrollbar-thumb:hover,
-.file-list::-webkit-scrollbar-thumb:hover {
+.file-browser-dialog .file-list::-webkit-scrollbar-thumb:hover {
     background: #4f4f4f;
 }
 
@@ -655,34 +706,8 @@
     animation: fadeIn 0.5s ease-in;
 }
 
-.dialog-content {
+.file-browser-dialog .dialog-content {
     animation: slideDown 0.3s ease-out;
-}
-
-/* =================================
-   DARK THEME ADJUSTMENTS
-================================= */
-body.dark-theme .elxacode-container {
-    /* Already using dark theme colors */
-}
-
-body.dark-theme .elxacode-toolbar {
-    background: linear-gradient(to bottom, #3c3c3c, #2d2d2d);
-    border-bottom-color: #555;
-}
-
-body.dark-theme .toolbar-btn {
-    background: linear-gradient(to bottom, #4c4c4c, #3c3c3c);
-    border-color: #555;
-    color: #d4d4d4;
-}
-
-body.dark-theme .toolbar-btn:hover:not(:disabled) {
-    background: linear-gradient(to bottom, #5c5c5c, #4c4c4c);
-}
-
-body.dark-theme .elxacode-status {
-    background: #0e639c;
 }
 
 /* =================================

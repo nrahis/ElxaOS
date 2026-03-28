@@ -15,8 +15,8 @@ class BrowserProgram {
         this.websiteRegistry = {};
         this.loadWebsiteRegistry();
         this.visitorCount = this.getVisitorCount();
-        this.eventListeners = []; // Track event listeners for cleanup
-        
+        this.documentClickHandler = null; // Track document-level listener for cleanup
+
         this.setupEventListeners();
         this.loadUserData();
     }
@@ -48,7 +48,7 @@ class BrowserProgram {
     async loadWebsiteRegistry() {
         try {
             console.log('📁 Loading website registry from JSON...');
-            
+
             // Try multiple possible paths
             const possiblePaths = [
                 './js/programs/website-registry.json',
@@ -56,10 +56,10 @@ class BrowserProgram {
                 'js/programs/website-registry.json',
                 '/js/programs/website-registry.json'
             ];
-            
+
             let data = null;
             let successfulPath = null;
-            
+
             for (const path of possiblePaths) {
                 try {
                     console.log(`🔍 Trying path: ${path}`);
@@ -77,27 +77,25 @@ class BrowserProgram {
                     console.log(`❌ Path ${path} failed:`, pathError.message);
                 }
             }
-            
+
             if (!data) {
                 throw new Error('Could not load website registry from any path');
             }
-            
+
             // Check if data has websites property or is the websites object directly
             if (data.websites) {
                 this.websiteRegistry = data.websites;
                 console.log(`✅ Loaded ${Object.keys(this.websiteRegistry).length} websites from data.websites`);
             } else if (typeof data === 'object' && Object.keys(data).length > 0) {
-                // Maybe the JSON is structured as the websites object directly
                 this.websiteRegistry = data;
                 console.log(`✅ Loaded ${Object.keys(this.websiteRegistry).length} websites directly from data`);
             } else {
                 throw new Error('JSON data does not contain valid website registry');
             }
-            
+
         } catch (error) {
             console.error('❌ Failed to load website registry:', error);
             console.log('🔧 Using fallback website registry');
-            // Fallback to minimal registry
             this.websiteRegistry = {
                 'snoogle.ex': {
                     title: 'Snoogle - Search the ExWeb',
@@ -124,51 +122,40 @@ class BrowserProgram {
     }
 
     setupEventListeners() {
-        // Store event listener cleanup functions
-        const cleanupFunctions = [];
-
-        // Listen for WiFi connection changes with proper cleanup
-        const onWifiConnected = (data) => {
+        // WiFi listeners — kept alive for the lifetime of the program object.
+        // Each handler guards itself with isWindowValid() so they're safe when
+        // no browser window is open.
+        this.eventBus.on('wifi.connected', (data) => {
             console.log('🌐 Browser: WiFi connected', data);
             this.isConnected = true;
             this.updateConnectionStatus();
             this.refreshCurrentPageSafe();
-        };
+        });
 
-        const onWifiDisconnected = () => {
+        this.eventBus.on('wifi.disconnected', () => {
             console.log('🌐 Browser: WiFi disconnected');
             this.isConnected = false;
             this.updateConnectionStatus();
             this.refreshCurrentPageSafe();
-        };
+        });
 
-        this.eventBus.on('wifi.connected', onWifiConnected);
-        this.eventBus.on('wifi.disconnected', onWifiDisconnected);
-
-        // Store cleanup functions for later removal
-        cleanupFunctions.push(
-            () => this.eventBus.off('wifi.connected', onWifiConnected),
-            () => this.eventBus.off('wifi.disconnected', onWifiDisconnected)
-        );
-
-        // Listen for window close events to clean up
-        const onWindowClosed = (data) => {
+        // Window close — clean up DOM-specific listeners
+        this.eventBus.on('window.closed', (data) => {
             if (data.id === this.windowId) {
                 console.log('🌐 Browser: Window closed, cleaning up...');
                 this.clearPageScripts();
+                this.cleanupDocumentListeners();
                 this.windowId = null;
-                // Clean up all event listeners
-                cleanupFunctions.forEach(cleanup => cleanup());
             }
-        };
+        });
+    }
 
-        this.eventBus.on('window.closed', onWindowClosed);
-        cleanupFunctions.push(() => this.eventBus.off('window.closed', onWindowClosed));
-
-        // Store cleanup functions for external access
-        this.cleanupEventListeners = () => {
-            cleanupFunctions.forEach(cleanup => cleanup());
-        };
+    // Remove document-level listeners that were added in setupBrowserEvents
+    cleanupDocumentListeners() {
+        if (this.documentClickHandler) {
+            document.removeEventListener('click', this.documentClickHandler);
+            this.documentClickHandler = null;
+        }
     }
 
     // Safe version of refreshCurrentPage that checks window validity
@@ -184,66 +171,56 @@ class BrowserProgram {
     updateConnectionStatus() {
         if (!this.isWindowValid()) return;
 
-        const window = this.getWindowElement();
-        if (!window) return;
+        const win = this.getWindowElement();
+        if (!win) return;
 
-        // Update the toolbar to show connection status
-        const toolbar = window.querySelector('.browser-toolbar');
-        if (toolbar) {
-            // Remove existing connection indicator
-            const existingIndicator = toolbar.querySelector('.connection-status');
-            if (existingIndicator) {
-                existingIndicator.remove();
-            }
+        const toolbar = win.querySelector('.browser-toolbar');
+        if (!toolbar) return;
 
-            // Add new connection indicator
-            const indicator = document.createElement('div');
-            indicator.className = 'connection-status';
-            indicator.style.cssText = `
-                display: flex;
-                align-items: center;
-                padding: 2px 8px;
-                font-size: 10px;
-                border-radius: 3px;
-                margin-left: 8px;
-                ${this.isConnected ? 
-                    'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : 
-                    'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'
-                }
-            `;
+        // Remove existing connection indicator
+        const existingIndicator = toolbar.querySelector('.connection-status');
+        if (existingIndicator) {
+            existingIndicator.remove();
+        }
 
-            if (this.isConnected) {
-                const connectionInfo = elxaOS.wifiService?.getConnectionInfo();
-                if (connectionInfo) {
-                    indicator.innerHTML = `📶 ${connectionInfo.network} (${Math.round(connectionInfo.signalStrength)}/5)`;
-                    indicator.title = `Connected to ${connectionInfo.network}\nSecurity: ${connectionInfo.security}\nFrequency: ${connectionInfo.frequency}`;
-                } else {
-                    indicator.innerHTML = '🌐 Online';
-                }
+        // Build new connection indicator
+        const indicator = document.createElement('div');
+
+        if (this.isConnected) {
+            indicator.className = 'connection-status connection-online';
+            const connectionInfo = elxaOS.wifiService?.getConnectionInfo();
+            if (connectionInfo) {
+                indicator.innerHTML = `${ElxaIcons.renderAction('wifi')} ${connectionInfo.network} (${Math.round(connectionInfo.signalStrength)}/5)`;
+                indicator.title = `Connected to ${connectionInfo.network}\nSecurity: ${connectionInfo.security}\nFrequency: ${connectionInfo.frequency}`;
             } else {
-                indicator.innerHTML = '📡 Offline';
-                indicator.title = 'No internet connection - Click to connect to WiFi';
-                indicator.style.cursor = 'pointer';
-                indicator.addEventListener('click', () => {
-                    if (elxaOS.wifiService) {
-                        elxaOS.wifiService.showWiFiDialog();
-                    }
-                });
+                indicator.innerHTML = `${ElxaIcons.renderAction('wifi')} Online`;
             }
+        } else {
+            indicator.className = 'connection-status connection-offline';
+            indicator.innerHTML = `${ElxaIcons.renderAction('wifi-off')} Offline`;
+            indicator.title = 'No internet connection - Click to connect to WiFi';
+            indicator.style.cursor = 'pointer';
+            indicator.addEventListener('click', () => {
+                if (elxaOS.wifiService) {
+                    elxaOS.wifiService.showWiFiDialog();
+                }
+            });
+        }
 
-            // Insert before the browser actions
-            const actions = toolbar.querySelector('.browser-actions');
-            if (actions) {
-                toolbar.insertBefore(indicator, actions);
-            } else {
-                toolbar.appendChild(indicator);
-            }
+        // Insert before the browser actions
+        const actions = toolbar.querySelector('.browser-actions');
+        if (actions) {
+            toolbar.insertBefore(indicator, actions);
+        } else {
+            toolbar.appendChild(indicator);
         }
     }
 
-    async launch() {
+    async launch(startUrl) {
         if (this.windowId && this.windowManager.windows.has(this.windowId)) {
             this.windowManager.focusWindow(this.windowId);
+            // If a URL was requested, navigate to it in the existing window
+            if (startUrl) this.loadPage(startUrl);
             return;
         }
 
@@ -258,12 +235,12 @@ class BrowserProgram {
         }
 
         this.windowId = `browser-${Date.now()}`;
-        
+
         const browserHtml = this.createBrowserHTML();
-        
-        const window = this.windowManager.createWindow(
+
+        const win = this.windowManager.createWindow(
             this.windowId,
-            '🌐 Snoogle Browser',
+            `${ElxaIcons.render('browser', 'ui')} Snoogle Browser`,
             browserHtml,
             {
                 width: '800px',
@@ -273,39 +250,43 @@ class BrowserProgram {
             }
         );
 
-        window.classList.add('browser-window');
+        win.classList.add('browser-window');
         this.setupBrowserEvents();
-        
+
         // Update connection status indicator
         this.updateConnectionStatus();
-        
-        // Load homepage or no internet page
-        this.navigateToHome();
+
+        // Load requested URL or homepage
+        if (startUrl) {
+            this.loadPage(startUrl);
+        } else {
+            this.navigateToHome();
+        }
     }
 
     createBrowserHTML() {
         return `
             <div class="browser-toolbar">
-                <button class="nav-button" id="backBtn" title="Back" disabled>◄</button>
-                <button class="nav-button" id="forwardBtn" title="Forward" disabled>►</button>
-                <button class="nav-button" id="refreshBtn" title="Refresh">↻</button>
+                <button class="nav-button" id="backBtn" title="Back" disabled>${ElxaIcons.renderAction('back')}</button>
+                <button class="nav-button" id="forwardBtn" title="Forward" disabled>${ElxaIcons.renderAction('forward')}</button>
+                <button class="nav-button" id="refreshBtn" title="Refresh">${ElxaIcons.renderAction('refresh')}</button>
                 <div class="address-bar">
                     <input type="text" class="url-input" id="urlInput" placeholder="Enter URL or search...">
                     <button class="go-button" id="goBtn">Go</button>
                 </div>
                 <div class="browser-actions">
-                    <button class="home-button" id="homeBtn" title="Home">🏠</button>
-                    <button class="favorite-button" id="favoriteBtn" title="Add to Favorites">⭐</button>
-                    <button class="nav-button" id="wifiBtn" title="WiFi Settings">📶</button>
-                    <button class="nav-button" id="menuBtn" title="Menu">☰</button>
-                    <button class="nav-button" id="debugBtn" title="Debug Info">🔍</button>
+                    <button class="home-button" id="homeBtn" title="Home">${ElxaIcons.renderAction('home')}</button>
+                    <button class="favorite-button" id="favoriteBtn" title="Add to Favorites">${ElxaIcons.renderAction('star-outline')}</button>
+                    <button class="nav-button" id="wifiBtn" title="WiFi Settings">${ElxaIcons.renderAction('wifi')}</button>
+                    <button class="nav-button" id="menuBtn" title="Menu">${ElxaIcons.renderAction('menu')}</button>
+                    <button class="nav-button" id="debugBtn" title="Debug Info">${ElxaIcons.renderAction('magnify')}</button>
                 </div>
             </div>
             <div class="browser-content">
                 <div class="browser-sidebar" id="browserSidebar">
                     <div class="sidebar-tabs">
-                        <button class="sidebar-tab active" data-tab="favorites">Favorites</button>
-                        <button class="sidebar-tab" data-tab="history">History</button>
+                        <button class="sidebar-tab active" data-tab="favorites">${ElxaIcons.renderAction('star')} Favorites</button>
+                        <button class="sidebar-tab" data-tab="history">${ElxaIcons.renderAction('history')} History</button>
                     </div>
                     <div class="sidebar-content" id="sidebarContent">
                         <!-- Sidebar content will be populated dynamically -->
@@ -317,79 +298,81 @@ class BrowserProgram {
                 </div>
             </div>
             <div class="browser-menu" id="browserMenu" style="display: none;">
-                <div class="browser-menu-item" data-action="favorites">⭐ Show Favorites</div>
-                <div class="browser-menu-item" data-action="history">📋 Show History</div>
+                <div class="browser-menu-item" data-action="favorites">${ElxaIcons.renderAction('star')} Show Favorites</div>
+                <div class="browser-menu-item" data-action="history">${ElxaIcons.renderAction('history')} Show History</div>
                 <div class="browser-menu-separator"></div>
-                <div class="browser-menu-item" data-action="clearHistory">🗑️ Clear History</div>
-                <div class="browser-menu-item" data-action="clearFavorites">❌ Clear Favorites</div>
+                <div class="browser-menu-item" data-action="clearHistory">${ElxaIcons.renderAction('delete')} Clear History</div>
+                <div class="browser-menu-item" data-action="clearFavorites">${ElxaIcons.renderAction('close')} Clear Favorites</div>
                 <div class="browser-menu-separator"></div>
-                <div class="browser-menu-item" data-action="wifiSettings">📶 WiFi Settings</div>
+                <div class="browser-menu-item" data-action="wifiSettings">${ElxaIcons.renderAction('wifi')} WiFi Settings</div>
             </div>
         `;
     }
 
     setupBrowserEvents() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
+        const win = this.getWindowElement();
+        if (!win) return;
+
         // Navigation buttons
-        window.querySelector('#backBtn').addEventListener('click', () => this.goBack());
-        window.querySelector('#forwardBtn').addEventListener('click', () => this.goForward());
-        window.querySelector('#refreshBtn').addEventListener('click', () => this.refresh());
-        window.querySelector('#homeBtn').addEventListener('click', () => this.navigateToHome());
-        
-        // WiFi button - NEW
-        window.querySelector('#wifiBtn').addEventListener('click', () => {
+        win.querySelector('#backBtn').addEventListener('click', () => this.goBack());
+        win.querySelector('#forwardBtn').addEventListener('click', () => this.goForward());
+        win.querySelector('#refreshBtn').addEventListener('click', () => this.refresh());
+        win.querySelector('#homeBtn').addEventListener('click', () => this.navigateToHome());
+
+        // WiFi button
+        win.querySelector('#wifiBtn').addEventListener('click', () => {
             if (elxaOS.wifiService) {
                 elxaOS.wifiService.showWiFiDialog();
             }
         });
-        
+
         // URL input and Go button
-        const urlInput = window.querySelector('#urlInput');
-        const goBtn = window.querySelector('#goBtn');
-        
+        const urlInput = win.querySelector('#urlInput');
+        const goBtn = win.querySelector('#goBtn');
+
         urlInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 this.navigate(urlInput.value);
             }
         });
-        
+
         goBtn.addEventListener('click', () => {
             this.navigate(urlInput.value);
         });
-        
+
         // Favorite button
-        window.querySelector('#favoriteBtn').addEventListener('click', () => this.toggleFavorite());
-        
+        win.querySelector('#favoriteBtn').addEventListener('click', () => this.toggleFavorite());
+
         // Debug button
-        window.querySelector('#debugBtn').addEventListener('click', () => this.showDebugInfo());
-        
+        win.querySelector('#debugBtn').addEventListener('click', () => this.showDebugInfo());
+
         // Menu button
-        const menuBtn = window.querySelector('#menuBtn');
-        const menu = window.querySelector('#browserMenu');
-        
+        const menuBtn = win.querySelector('#menuBtn');
+        const menu = win.querySelector('#browserMenu');
+
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
         });
-        
-        // Close menu when clicking elsewhere
-        document.addEventListener('click', () => {
+
+        // Close menu when clicking elsewhere — store ref for cleanup
+        this.cleanupDocumentListeners(); // Remove any stale handler first
+        this.documentClickHandler = () => {
             menu.style.display = 'none';
-        });
-        
+        };
+        document.addEventListener('click', this.documentClickHandler);
+
         // Menu actions
         menu.addEventListener('click', (e) => {
-            const action = e.target.dataset.action;
+            const action = e.target.closest('.browser-menu-item')?.dataset.action;
             if (action) {
                 this.handleMenuAction(action);
                 menu.style.display = 'none';
             }
         });
-        
+
         // Sidebar tabs
-        const sidebarTabs = window.querySelectorAll('.sidebar-tab');
+        const sidebarTabs = win.querySelectorAll('.sidebar-tab');
         sidebarTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 sidebarTabs.forEach(t => t.classList.remove('active'));
@@ -397,7 +380,7 @@ class BrowserProgram {
                 this.updateSidebar(tab.dataset.tab);
             });
         });
-        
+
         this.updateSidebar('favorites');
     }
 
@@ -406,13 +389,13 @@ class BrowserProgram {
             this.loadPage('snoogle.ex');
             return;
         }
-        
+
         this.showLoading();
-        
+
         // Simulate loading time
         setTimeout(() => {
             this.hideLoading();
-            
+
             // Check if it's a search query or URL
             if (input.includes('.ex') || input === 'directory') {
                 this.loadPage(input);
@@ -429,7 +412,7 @@ class BrowserProgram {
         }
 
         console.log(`🌐 Loading page: ${url}`);
-        
+
         this.addToHistory(url);
         this.currentUrl = url;
         this.updateAddressBar();
@@ -456,8 +439,8 @@ class BrowserProgram {
     }
 
     showSnoogleHomepage() {
-        const totalSites = Object.keys(this.websiteRegistry).length - 2; // Exclude homepage and directory
-        
+        const totalSites = Object.keys(this.websiteRegistry).length - 2;
+
         const content = `
             <div class="snoogle-homepage">
                 <div class="snoogle-header">
@@ -466,7 +449,7 @@ class BrowserProgram {
                     </div>
                     <div class="snoogle-tagline">Search the ExWeb</div>
                 </div>
-                
+
                 <div class="snoogle-search-container">
                     <div class="snoogle-search">
                         <input type="text" class="search-input" id="snoogleSearchInput" placeholder="Search">
@@ -494,54 +477,53 @@ class BrowserProgram {
                         </tr>
                     </table>
                     <p style="margin-top: 15px; font-size: 10px;">
-                        © 1997 Snoogle Corp. | 
-                        <a href="#" style="color: #0066cc;" onclick="elxaOS.programs.browser.loadPage('directory')">Browse Sites</a> | 
+                        &copy; 1997 Snoogle Corp. |
+                        <a href="#" style="color: #0066cc;" onclick="elxaOS.programs.browser.loadPage('directory')">Browse Sites</a> |
                         About Snoogle
                     </p>
                 </div>
             </div>
         `;
-        
+
         this.setPageContent(content);
         this.setupSnoogleEvents();
     }
 
     setupSnoogleEvents() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const searchInput = window.querySelector('#snoogleSearchInput');
-        const searchBtn = window.querySelector('#snoogleSearchBtn');
-        const directoryBtn = window.querySelector('#directoryBtn');
-        const randomBtn = window.querySelector('#randomBtn');
-        
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const searchInput = win.querySelector('#snoogleSearchInput');
+        const searchBtn = win.querySelector('#snoogleSearchBtn');
+        const directoryBtn = win.querySelector('#directoryBtn');
+        const randomBtn = win.querySelector('#randomBtn');
+
         if (searchInput && searchBtn) {
             searchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     this.performSearch(searchInput.value);
                 }
             });
-            
+
             searchBtn.addEventListener('click', () => {
                 this.performSearch(searchInput.value);
             });
         }
-        
+
         if (directoryBtn) {
             directoryBtn.addEventListener('click', () => {
                 this.loadPage('directory');
             });
         }
-        
+
         if (randomBtn) {
             randomBtn.addEventListener('click', () => {
-                // Get all main site URLs (not sub-pages)
-                const mainSites = Object.keys(this.websiteRegistry).filter(url => 
-                    !url.includes('/') && 
-                    url !== 'directory' && 
+                const mainSites = Object.keys(this.websiteRegistry).filter(url =>
+                    !url.includes('/') &&
+                    url !== 'directory' &&
                     this.websiteRegistry[url].type !== 'homepage'
                 );
-                
+
                 if (mainSites.length > 0) {
                     const randomSite = mainSites[Math.floor(Math.random() * mainSites.length)];
                     this.loadPage(randomSite);
@@ -551,70 +533,58 @@ class BrowserProgram {
     }
 
     setupPageLinkHandling() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const browserPage = window.querySelector('#browserPage');
-        
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const browserPage = win.querySelector('#browserPage');
+
         // Remove any existing listeners to avoid duplicates
         if (this.linkClickHandler) {
             browserPage.removeEventListener('click', this.linkClickHandler);
         }
-        
+
         // Create the link click handler
         this.linkClickHandler = (e) => {
             const link = e.target.closest('a');
             if (link && (link.href || link.getAttribute('href'))) {
-                e.preventDefault(); // Always prevent default navigation
-                
-                // Get href from either href or href attribute
+                e.preventDefault();
+
                 const href = link.getAttribute('href') || link.href;
-                
-                // Handle different types of links
+
                 if (href.startsWith('#')) {
-                    // Anchor links - scroll to element or ignore
                     this.handleAnchorLink(href);
                 } else if (href.startsWith('http://') || href.startsWith('https://')) {
-                    // External links - ignore silently (REMOVED TOAST)
                     console.log(`🌐 External link clicked: ${href} (ignoring silently)`);
                 } else if (href.startsWith('mailto:') || href.startsWith('tel:')) {
-                    // Special protocol links - ignore silently (REMOVED TOAST)
                     console.log(`📧 Special link clicked: ${href} (ignoring silently)`);
                 } else if (href.startsWith('javascript:')) {
-                    // JavaScript links - ignore completely
                     console.log('🚫 Ignoring JavaScript link');
                     return;
                 } else if (href === '/' || href === './index.html' || href === 'index.html' || href === './') {
-                    // Home page of current site
                     this.navigateToSiteHome();
                 } else {
-                    // Relative links - try to navigate within our site structure
                     this.handleRelativeLink(href);
                 }
             }
         };
-        
-        // Add the event listener
+
         browserPage.addEventListener('click', this.linkClickHandler);
     }
 
     handleAnchorLink(href) {
-        // Try to scroll to the element with the matching ID
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const browserPage = window.querySelector('#browserPage');
-        const targetId = href.substring(1); // Remove the #
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const browserPage = win.querySelector('#browserPage');
+        const targetId = href.substring(1);
         const targetElement = browserPage.querySelector(`#${targetId}`);
-        
+
         if (targetElement) {
             targetElement.scrollIntoView({ behavior: 'smooth' });
         }
-        // If element doesn't exist, just ignore the click
     }
 
     navigateToSiteHome() {
-        // Navigate to the home page of the current site
         const baseUrl = this.getCurrentSiteBaseUrl();
         if (baseUrl) {
             console.log(`🏠 Navigating to site home: ${baseUrl}`);
@@ -623,7 +593,6 @@ class BrowserProgram {
     }
 
     getCurrentSiteBaseUrl() {
-        // Extract base URL from current URL
         if (this.currentUrl.includes('/')) {
             return this.currentUrl.split('/')[0];
         }
@@ -636,14 +605,12 @@ class BrowserProgram {
             currentUrl: this.currentUrl,
             availableUrls: Object.keys(this.websiteRegistry).filter(url => url.startsWith(this.getCurrentSiteBaseUrl()))
         });
-        
+
         let targetUrl;
-        
-        // Get the base site URL (everything before the first slash)
         const baseUrl = this.getCurrentSiteBaseUrl();
         console.log(`🏠 Base URL: ${baseUrl}`);
-        
-        // Clean up the href - remove .html extension and leading ./
+
+        // Clean up the href
         let cleanPath = href;
         if (cleanPath.startsWith('./')) {
             cleanPath = cleanPath.substring(2);
@@ -654,40 +621,36 @@ class BrowserProgram {
         if (cleanPath.endsWith('.html')) {
             cleanPath = cleanPath.replace('.html', '');
         }
-        
+
         console.log(`🧹 Clean path: ${cleanPath}`);
-        
-        // Check if the clean path is already a complete URL in our system
+
         if (this.websiteRegistry[cleanPath]) {
             console.log(`✅ Clean path is already a complete URL: ${cleanPath}`);
             targetUrl = cleanPath;
         } else if (cleanPath === 'index' || cleanPath === '') {
-            // Link to home page of the site
             targetUrl = baseUrl;
         } else {
-            // Build the target URL
             targetUrl = `${baseUrl}/${cleanPath}`;
         }
-        
+
         console.log(`🎯 Target URL constructed: ${targetUrl}`);
-        
-        // Check if this URL exists in our registry
+
         if (this.websiteRegistry[targetUrl]) {
             console.log(`✅ URL exists in registry, navigating...`);
             this.loadPage(targetUrl);
         } else {
             console.log(`❌ URL not found in registry`);
-            console.log(`📋 Available URLs for this site:`, 
+            console.log(`📋 Available URLs for this site:`,
                 Object.keys(this.websiteRegistry).filter(url => url.startsWith(baseUrl))
             );
-            
+
             // Try some common variations
             const variations = [
                 `${baseUrl}/${cleanPath.toLowerCase()}`,
                 `${baseUrl}/${cleanPath.toUpperCase()}`,
                 `${baseUrl}/${cleanPath.charAt(0).toUpperCase() + cleanPath.slice(1)}`
             ];
-            
+
             let foundVariation = null;
             for (const variation of variations) {
                 if (this.websiteRegistry[variation]) {
@@ -695,12 +658,11 @@ class BrowserProgram {
                     break;
                 }
             }
-            
+
             if (foundVariation) {
                 console.log(`✅ Found variation: ${foundVariation}`);
                 this.loadPage(foundVariation);
             } else {
-                // REMOVED: No more toast messages for missing pages
                 console.log(`🚫 Page "${targetUrl}" not found, ignoring silently`);
             }
         }
@@ -708,14 +670,13 @@ class BrowserProgram {
 
     performSearch(query) {
         if (!query.trim()) return;
-        
         this.loadPage(`search:${query}`);
     }
 
     showSearchResults(query) {
         const results = this.searchWebsites(query);
         const resultCount = results.length;
-        
+
         let content = `
             <div class="search-results-page">
                 <div class="search-header">
@@ -723,7 +684,7 @@ class BrowserProgram {
                     <div class="search-stats">Results 1-${Math.min(10, resultCount)} of about ${resultCount} for <b>${query}</b> (0.${Math.floor(Math.random() * 89) + 10} seconds)</div>
                 </div>
         `;
-        
+
         if (results.length > 0) {
             results.slice(0, 10).forEach(site => {
                 content += `
@@ -734,8 +695,7 @@ class BrowserProgram {
                     </div>
                 `;
             });
-            
-            // Add pagination-style footer if there are more results
+
             if (results.length > 10) {
                 content += `
                     <div style="text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc;">
@@ -759,7 +719,7 @@ class BrowserProgram {
                 </div>
             `;
         }
-        
+
         content += '</div>';
         this.setPageContent(content);
     }
@@ -767,27 +727,21 @@ class BrowserProgram {
     searchWebsites(query) {
         const keywords = query.toLowerCase().split(' ');
         const results = new Set();
-        
-        // Search through all websites
+
         Object.entries(this.websiteRegistry).forEach(([url, site]) => {
             if (!site.searchData) return;
-            
-            // Skip special pages
             if (url === 'directory' || site.type === 'homepage') return;
-            
-            // Check keywords
-            const keywordMatch = site.searchData.keywords.some(keyword => 
+
+            const keywordMatch = site.searchData.keywords.some(keyword =>
                 keywords.some(searchTerm => keyword.toLowerCase().includes(searchTerm))
             );
-            
-            // Check title and description
-            const titleMatch = keywords.some(searchTerm => 
+            const titleMatch = keywords.some(searchTerm =>
                 site.title.toLowerCase().includes(searchTerm)
             );
-            const descMatch = keywords.some(searchTerm => 
+            const descMatch = keywords.some(searchTerm =>
                 site.searchData.description.toLowerCase().includes(searchTerm)
             );
-            
+
             if (keywordMatch || titleMatch || descMatch) {
                 results.add({
                     url,
@@ -796,8 +750,7 @@ class BrowserProgram {
                 });
             }
         });
-        
-        // Sort by relevance and return
+
         return Array.from(results)
             .sort((a, b) => b.relevance - a.relevance)
             .map(result => ({ url: result.url, ...result.site }));
@@ -806,13 +759,11 @@ class BrowserProgram {
     calculateRelevance(query, site) {
         let relevance = 0;
         const queryLower = query.toLowerCase();
-        
-        // Title matches are most important
+
         if (site.title.toLowerCase().includes(queryLower)) {
             relevance += 10;
         }
-        
-        // Exact keyword matches
+
         site.searchData.keywords.forEach(keyword => {
             if (keyword.toLowerCase() === queryLower) {
                 relevance += 5;
@@ -820,17 +771,15 @@ class BrowserProgram {
                 relevance += 2;
             }
         });
-        
-        // Description matches
+
         if (site.searchData.description.toLowerCase().includes(queryLower)) {
             relevance += 1;
         }
-        
+
         return relevance;
     }
 
     showSiteDirectory() {
-        // Define categories and their display names - Yahoo style
         const categories = {
             'Government': 'Government',
             'Business': 'Business and Economy',
@@ -843,11 +792,9 @@ class BrowserProgram {
             'Utilities': 'Reference'
         };
 
-        // Organize sites into categories (exclude sub-pages and special pages)
         const categorizedSites = {};
         Object.entries(this.websiteRegistry)
             .filter(([url, site]) => {
-                // Only include main pages (not sub-pages like /about, /business)
                 return !url.includes('/') && url !== 'directory' && site.type !== 'homepage';
             })
             .forEach(([url, site]) => {
@@ -858,18 +805,17 @@ class BrowserProgram {
                 categorizedSites[category].push({ url, site });
             });
 
-        // Generate HTML for each category - Yahoo style table layout
         const categoryHTML = Object.entries(categories)
             .map(([category, displayName]) => {
                 if (!categorizedSites[category] || categorizedSites[category].length === 0) {
-                    return ''; // Skip empty categories
+                    return '';
                 }
 
                 const sitesHTML = categorizedSites[category]
                     .sort((a, b) => a.site.title.localeCompare(b.site.title))
                     .map(({ url, site }) => `
                         <tr>
-                            <td style="width: 20px;">•</td>
+                            <td style="width: 20px;">&bull;</td>
                             <td>
                                 <div class="site-link" onclick="elxaOS.programs.browser.loadPage('${url}')">${site.title}</div>
                                 <div class="site-description">${site.searchData.description}</div>
@@ -888,7 +834,7 @@ class BrowserProgram {
             }).join('');
 
         const totalSites = Object.keys(this.websiteRegistry).length - 2;
-        
+
         const content = `
             <div class="site-directory">
                 <div class="directory-header">
@@ -897,28 +843,13 @@ class BrowserProgram {
                 </div>
                 ${categoryHTML}
                 <div class="directory-footer">
-                    ${totalSites} sites listed • Last updated: ${new Date().toLocaleDateString()}<br>
-                    © 1997 ElxaCorp • <a href="#" style="color: #0066cc;" onclick="elxaOS.programs.browser.navigateToHome()">Back to Snoogle</a>
+                    ${totalSites} sites listed &bull; Last updated: ${new Date().toLocaleDateString()}<br>
+                    &copy; 1997 ElxaCorp &bull; <a href="#" style="color: #0066cc;" onclick="elxaOS.programs.browser.navigateToHome()">Back to Snoogle</a>
                 </div>
             </div>
         `;
-        
-        this.setPageContent(content);
-    }
 
-    getSiteIcon(category) {
-        const icons = {
-            'Government': '🏛️',
-            'Business': '💼',
-            'Shopping': '🛍️',
-            'Social': '👥',
-            'Gaming': '🎮',
-            'Personal': '🏠',
-            'Education': '📚',
-            'Technology': '💻',
-            'Utilities': '🔧'
-        };
-        return icons[category] || '🌐';
+        this.setPageContent(content);
     }
 
     async loadWebsite(url) {
@@ -939,38 +870,40 @@ class BrowserProgram {
 
         if (site.type === 'file') {
             console.log(`📄 Loading website file: ${site.path}`);
-            
+
             try {
-                // Try to load the actual HTML file
                 const response = await fetch(site.path);
                 if (response.ok) {
                     let html = await response.text();
-                    
+
                     // Load CSS if it exists
                     let css = '';
+                    // Load CSS — supports single path string or array of paths
                     if (site.css) {
-                        try {
-                            const cssResponse = await fetch(site.css);
-                            if (cssResponse.ok) {
-                                css = await cssResponse.text();
+                        const cssPaths = Array.isArray(site.css) ? site.css : [site.css];
+                        for (const cssPath of cssPaths) {
+                            try {
+                                const cssResponse = await fetch(cssPath);
+                                if (cssResponse.ok) {
+                                    css += await cssResponse.text() + '\n';
+                                }
+                            } catch (e) {
+                                console.log(`CSS file not found: ${cssPath}`);
                             }
-                        } catch (e) {
-                            console.log('CSS file not found, using HTML only');
                         }
                     }
-                    
-                    // Combine CSS and HTML
+
                     const content = css ? `<style>${css}</style>${html}` : html;
                     this.setPageContent(content);
-                    
+
                     // Execute any scripts in the loaded content
-                    this.executePageScripts();
-                    
+                    await this.executePageScripts();
+
                     // Set up link handling for this page
                     setTimeout(() => {
                         this.setupPageLinkHandling();
                     }, 100);
-                    
+
                 } else {
                     console.error(`Failed to load ${site.path}: HTTP ${response.status}`);
                     throw new Error(`HTTP ${response.status}`);
@@ -982,39 +915,64 @@ class BrowserProgram {
         }
     }
 
-    executePageScripts() {
-        // Execute any script tags in the loaded content with error handling
+    async executePageScripts() {
         const container = this.getWindowElement()?.querySelector('#browserPage');
         if (!container) return;
-        
-        const scripts = container.getElementsByTagName('script');
-        
-        Array.from(scripts).forEach((script, index) => {
+
+        const scripts = Array.from(container.getElementsByTagName('script'));
+
+        for (const script of scripts) {
             try {
-                // Create a safer script execution environment
+                // Get script content — fetch from src if external, otherwise use inline text
+                let scriptCode = script.textContent;
+                const srcAttr = script.getAttribute('src');
+
+                if (srcAttr) {
+                    try {
+                        // Resolve relative paths against the current site's base path
+                        let fetchUrl = srcAttr;
+                        if (!srcAttr.startsWith('http') && !srcAttr.startsWith('/')) {
+                            // Relative path — resolve from current site's directory
+                            const site = this.websiteRegistry[this.currentUrl];
+                            if (site && site.path) {
+                                const basePath = site.path.substring(0, site.path.lastIndexOf('/') + 1);
+                                fetchUrl = basePath + srcAttr;
+                            }
+                        }
+                        const srcResponse = await fetch(fetchUrl);
+                        if (srcResponse.ok) {
+                            scriptCode = await srcResponse.text();
+                        } else {
+                            console.warn(`Failed to load script: ${fetchUrl} (HTTP ${srcResponse.status})`);
+                            continue;
+                        }
+                    } catch (e) {
+                        console.warn(`Failed to fetch script src: ${srcAttr}`, e);
+                        continue;
+                    }
+                }
+
                 const newScript = document.createElement('script');
+                // Copy attributes but skip src (we already fetched the content)
                 Array.from(script.attributes).forEach(attr => {
-                    newScript.setAttribute(attr.name, attr.value);
+                    if (attr.name !== 'src') {
+                        newScript.setAttribute(attr.name, attr.value);
+                    }
                 });
-                
-                // Wrap the script content in a try-catch and add safety checks
+
                 const wrappedContent = `
                     try {
-                        // Create a safer environment for the script
                         const originalSetInterval = window.setInterval;
                         const originalSetTimeout = window.setTimeout;
                         const pageIntervals = [];
                         const pageTimeouts = [];
-                        
-                        // Override setInterval to track page-specific intervals
+
                         window.setInterval = function(fn, delay) {
                             const intervalId = originalSetInterval(function() {
                                 try {
-                                    // Check if the page container still exists before executing
                                     if (document.querySelector('#browserPage')) {
                                         fn();
                                     } else {
-                                        // Page is gone, clear this interval
                                         clearInterval(intervalId);
                                     }
                                 } catch (e) {
@@ -1025,12 +983,10 @@ class BrowserProgram {
                             pageIntervals.push(intervalId);
                             return intervalId;
                         };
-                        
-                        // Override setTimeout to track page-specific timeouts
+
                         window.setTimeout = function(fn, delay) {
                             const timeoutId = originalSetTimeout(function() {
                                 try {
-                                    // Check if the page container still exists before executing
                                     if (document.querySelector('#browserPage')) {
                                         fn();
                                     }
@@ -1041,8 +997,7 @@ class BrowserProgram {
                             pageTimeouts.push(timeoutId);
                             return timeoutId;
                         };
-                        
-                        // Store cleanup function for this page
+
                         if (!window.browserPageCleanup) {
                             window.browserPageCleanup = [];
                         }
@@ -1050,25 +1005,23 @@ class BrowserProgram {
                             pageIntervals.forEach(id => clearInterval(id));
                             pageTimeouts.forEach(id => clearTimeout(id));
                         });
-                        
-                        // Execute the original script content
-                        ${script.textContent}
-                        
-                        // Restore original functions
+
+                        ${scriptCode}
+
                         window.setInterval = originalSetInterval;
                         window.setTimeout = originalSetTimeout;
-                        
+
                     } catch (e) {
                         console.warn('Page script execution error:', e);
                     }
                 `;
-                
+
                 newScript.textContent = wrappedContent;
                 script.parentNode.replaceChild(newScript, script);
             } catch (e) {
                 console.error('Error setting up page script:', e);
             }
-        });
+        }
     }
 
     showFileNotFoundPage(site, url) {
@@ -1087,18 +1040,18 @@ class BrowserProgram {
                     </p>
                 </div>
                 <div style="margin-top: 30px;">
-                    <button onclick="elxaOS.programs.browser.navigateToHome()" 
+                    <button onclick="elxaOS.programs.browser.navigateToHome()"
                             style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px; margin-right: 10px;">
                         Back to Snoogle
                     </button>
-                    <button onclick="elxaOS.programs.browser.loadPage('directory')" 
+                    <button onclick="elxaOS.programs.browser.loadPage('directory')"
                             style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px;">
                         Browse Directory
                     </button>
                 </div>
             </div>
         `;
-        
+
         this.setPageContent(content);
     }
 
@@ -1111,25 +1064,25 @@ class BrowserProgram {
                     The requested URL <code>${url}</code> was not found on this server.
                 </p>
                 <div style="margin-top: 30px;">
-                    <button onclick="elxaOS.programs.browser.navigateToHome()" 
+                    <button onclick="elxaOS.programs.browser.navigateToHome()"
                             style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px; margin-right: 10px;">
                         Back to Snoogle
                     </button>
-                    <button onclick="elxaOS.programs.browser.loadPage('directory')" 
+                    <button onclick="elxaOS.programs.browser.loadPage('directory')"
                             style="background: #f0f0f0; border: 1px outset #ccc; color: #000; padding: 8px 16px; cursor: pointer; font-size: 11px;">
                         Browse Directory
                     </button>
                 </div>
             </div>
         `;
-        
+
         this.setPageContent(content);
     }
 
     showNoInternetPage() {
         const connectionInfo = elxaOS.wifiService?.getConnectionInfo();
         const availableNetworks = elxaOS.wifiService?.getAllNetworks?.() || [];
-        
+
         let networksList = '';
         if (availableNetworks.length > 0) {
             networksList = `
@@ -1137,7 +1090,7 @@ class BrowserProgram {
                     <h4 style="color: #666; margin-bottom: 10px;">Available Networks:</h4>
                     ${availableNetworks.slice(0, 5).map(network => `
                         <div style="padding: 8px; background: #f9f9f9; border: 1px solid #ddd; margin-bottom: 4px; border-radius: 3px; display: flex; justify-content: space-between; align-items: center;">
-                            <span>${network.name} ${network.security !== 'None' ? '🔒' : '🌐'}</span>
+                            <span>${network.name} ${network.security !== 'None' ? '🔒' : ''}</span>
                             <span style="font-size: 11px; color: #666;">
                                 ${'█'.repeat(Math.max(1, Math.round(network.signalStrength)))}${'░'.repeat(5 - Math.max(1, Math.round(network.signalStrength)))}
                             </span>
@@ -1146,56 +1099,53 @@ class BrowserProgram {
                 </div>
             `;
         }
-        
+
         const content = `
             <div class="no-internet-page" style="padding: 40px; text-align: center; background: white; min-height: 100%; font-family: Arial, sans-serif;">
                 <div style="font-size: 72px; margin-bottom: 20px;">📡</div>
                 <div style="font-size: 24px; color: #333; margin-bottom: 16px;">No Internet Connection</div>
                 <div style="color: #666; font-size: 14px; margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto;">
-                    This page cannot be displayed because you are not connected to the ElxaNet. 
+                    This page cannot be displayed because you are not connected to the ElxaNet.
                     Please connect to a wireless network to browse websites.
                 </div>
-                
+
                 ${networksList}
-                
+
                 <div style="margin-top: 30px;">
-                    <button onclick="elxaOS.wifiService.showWiFiDialog()" 
+                    <button onclick="elxaOS.wifiService.showWiFiDialog()"
                             style="background: #0066cc; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-right: 10px;">
-                        📶 Connect to Network
+                        Connect to Network
                     </button>
-                    <button onclick="elxaOS.programs.browser.refresh()" 
+                    <button onclick="elxaOS.programs.browser.refresh()"
                             style="background: #f0f0f0; border: 1px solid #ccc; color: #000; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                        ↻ Try Again
+                        Try Again
                     </button>
                 </div>
-                
+
                 <div style="margin-top: 20px; font-size: 12px; color: #999;">
-                    ${connectionInfo ? 
-                        `Last connected to: ${connectionInfo.network}` : 
+                    ${connectionInfo ?
+                        `Last connected to: ${connectionInfo.network}` :
                         `Tip: ElxaNet provides free WiFi access points throughout Snakesia`
                     }
                 </div>
             </div>
         `;
-        
+
         this.setPageContent(content);
     }
 
     setPageContent(content) {
-        const window = this.getWindowElement();
-        if (!window) {
+        const win = this.getWindowElement();
+        if (!win) {
             console.log('🌐 Browser: Cannot set page content - window not valid');
             return;
         }
-        
-        const page = window.querySelector('#browserPage');
+
+        const page = win.querySelector('#browserPage');
         if (page) {
-            // Clear any existing intervals/timeouts from previous page
             this.clearPageScripts();
-            
             page.innerHTML = content;
-            
-            // Set up link handling after content is loaded
+
             setTimeout(() => {
                 this.setupPageLinkHandling();
             }, 50);
@@ -1203,7 +1153,6 @@ class BrowserProgram {
     }
 
     clearPageScripts() {
-        // Clear any page-specific intervals and timeouts using our tracking system
         if (window.browserPageCleanup) {
             window.browserPageCleanup.forEach(cleanupFn => {
                 try {
@@ -1212,7 +1161,6 @@ class BrowserProgram {
                     console.warn('Error during page cleanup:', e);
                 }
             });
-            // Clear the cleanup array for the next page
             window.browserPageCleanup = [];
         }
     }
@@ -1223,7 +1171,7 @@ class BrowserProgram {
             connectionInfo: elxaOS.wifiService.getConnectionInfo(),
             availableNetworks: elxaOS.wifiService.getAllNetworks?.()?.length || 0
         } : 'WiFi service not available';
-        
+
         const debugInfo = {
             currentUrl: this.currentUrl,
             isConnected: this.isConnected,
@@ -1232,39 +1180,33 @@ class BrowserProgram {
             windowValid: this.isWindowValid(),
             wifiInfo: wifiInfo,
             registryUrls: Object.keys(this.websiteRegistry),
-            currentSitePages: Object.keys(this.websiteRegistry).filter(url => 
+            currentSitePages: Object.keys(this.websiteRegistry).filter(url =>
                 url.startsWith(this.getCurrentSiteBaseUrl())
             )
         };
-        
+
         console.log('🔍 Browser Debug Info:', debugInfo);
-        
-        const debugText = JSON.stringify(debugInfo, null, 2);
-        // REMOVED: No more toast message for debug info
-        console.log(`🔍 Debug info logged to console. Current URL: ${this.currentUrl}`);
     }
 
     addToHistory(url) {
         if (url === this.currentUrl) return;
-        
-        // Remove any items after current position (when navigating after going back)
+
         this.history = this.history.slice(0, this.currentHistoryIndex + 1);
-        
+
         const historyItem = {
             url: url,
             title: this.getPageTitle(url),
             timestamp: new Date().toLocaleString()
         };
-        
+
         this.history.push(historyItem);
         this.currentHistoryIndex = this.history.length - 1;
-        
-        // Keep only last 50 items
+
         if (this.history.length > 50) {
             this.history = this.history.slice(-50);
             this.currentHistoryIndex = this.history.length - 1;
         }
-        
+
         this.saveUserData();
         this.updateSidebar('history');
     }
@@ -1280,7 +1222,6 @@ class BrowserProgram {
                 if (url.includes('search:')) {
                     return `Search Results - ${url.replace('search:', '')}`;
                 }
-                // Use websiteRegistry instead of websites array
                 const site = this.websiteRegistry[url];
                 return site ? site.title : url;
         }
@@ -1318,58 +1259,44 @@ class BrowserProgram {
 
     toggleFavorite() {
         if (!this.currentUrl || this.currentUrl === 'snoogle.com') return;
-        
+
         const existingIndex = this.favorites.findIndex(f => f.url === this.currentUrl);
-        
+
         if (existingIndex >= 0) {
-            // Remove from favorites
             this.favorites.splice(existingIndex, 1);
-            // REMOVED: No more toast message for favorites
             console.log('Removed from favorites');
         } else {
-            // Add to favorites
             const favorite = {
                 url: this.currentUrl,
                 title: this.getPageTitle(this.currentUrl),
-                icon: this.getPageIcon(this.currentUrl),
                 timestamp: new Date().toLocaleString()
             };
             this.favorites.push(favorite);
-            // REMOVED: No more toast message for favorites
             console.log('Added to favorites');
         }
-        
+
         this.updateFavoriteButton();
         this.saveUserData();
         this.updateSidebar('favorites');
     }
 
-    getPageIcon(url) {
-        // Use websiteRegistry instead of websites array
-        const site = this.websiteRegistry[url];
-        if (site && site.searchData) {
-            return this.getSiteIcon(site.searchData.category);
-        }
-        return '🌐';
-    }
-
     updateAddressBar() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const urlInput = window.querySelector('#urlInput');
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const urlInput = win.querySelector('#urlInput');
         if (urlInput) {
             urlInput.value = this.currentUrl || 'snoogle.ex';
         }
     }
 
     updateNavigationButtons() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const backBtn = window.querySelector('#backBtn');
-        const forwardBtn = window.querySelector('#forwardBtn');
-        
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const backBtn = win.querySelector('#backBtn');
+        const forwardBtn = win.querySelector('#forwardBtn');
+
         if (backBtn) {
             backBtn.disabled = this.currentHistoryIndex <= 0;
         }
@@ -1379,36 +1306,36 @@ class BrowserProgram {
     }
 
     updateFavoriteButton() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const favoriteBtn = window.querySelector('#favoriteBtn');
-        
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const favoriteBtn = win.querySelector('#favoriteBtn');
+
         if (favoriteBtn) {
             const isFavorited = this.favorites.some(f => f.url === this.currentUrl);
             favoriteBtn.classList.toggle('favorited', isFavorited);
+            favoriteBtn.innerHTML = isFavorited ? ElxaIcons.renderAction('star') : ElxaIcons.renderAction('star-outline');
             favoriteBtn.title = isFavorited ? 'Remove from Favorites' : 'Add to Favorites';
         }
     }
 
     updateSidebar(tab) {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const sidebarContent = window.querySelector('#sidebarContent');
-        
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const sidebarContent = win.querySelector('#sidebarContent');
         if (!sidebarContent) return;
-        
+
         let content = '';
-        
+
         if (tab === 'favorites') {
             if (this.favorites.length === 0) {
-                content = '<div style="padding: 20px; text-align: center; color: #666; font-size: 11px;">No favorites yet!<br>Click ⭐ to add pages</div>';
+                content = `<div style="padding: 20px; text-align: center; color: #666; font-size: 11px;">No favorites yet!<br>Click ${ElxaIcons.renderAction('star-outline')} to add pages</div>`;
             } else {
                 this.favorites.forEach(fav => {
                     content += `
                         <div class="sidebar-item" onclick="elxaOS.programs.browser.loadPage('${fav.url}')">
-                            <div class="sidebar-item-icon">${fav.icon}</div>
+                            <div class="sidebar-item-icon">${ElxaIcons.render('browser', 'ui')}</div>
                             <div class="sidebar-item-info">
                                 <div class="sidebar-item-title">${fav.title}</div>
                                 <div class="sidebar-item-url">${fav.url}</div>
@@ -1421,12 +1348,11 @@ class BrowserProgram {
             if (this.history.length === 0) {
                 content = '<div style="padding: 20px; text-align: center; color: #666; font-size: 11px;">No history yet!</div>';
             } else {
-                // Show most recent first
                 const recentHistory = [...this.history].reverse().slice(0, 20);
                 recentHistory.forEach(item => {
                     content += `
                         <div class="sidebar-item" onclick="elxaOS.programs.browser.loadPage('${item.url}')">
-                            <div class="sidebar-item-icon">🌐</div>
+                            <div class="sidebar-item-icon">${ElxaIcons.render('browser', 'ui')}</div>
                             <div class="sidebar-item-info">
                                 <div class="sidebar-item-title">${item.title}</div>
                                 <div class="sidebar-item-url">${item.url}</div>
@@ -1435,20 +1361,20 @@ class BrowserProgram {
                         </div>
                     `;
                 });
-                
-                content += '<button class="clear-history-btn" onclick="elxaOS.programs.browser.clearHistory()">Clear History</button>';
+
+                content += `<button class="clear-history-btn" onclick="elxaOS.programs.browser.clearHistory()">${ElxaIcons.renderAction('delete')} Clear History</button>`;
             }
         }
-        
+
         sidebarContent.innerHTML = content;
     }
 
     handleMenuAction(action) {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const sidebar = window.querySelector('#browserSidebar');
-        
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const sidebar = win.querySelector('#browserSidebar');
+
         switch (action) {
             case 'favorites':
                 sidebar.classList.toggle('visible');
@@ -1459,14 +1385,14 @@ class BrowserProgram {
                 this.updateSidebar('history');
                 break;
             case 'clearHistory':
-                if (confirm('Clear all browsing history?')) {
+                ElxaUI.showConfirmDialog('Clear all browsing history?', () => {
                     this.clearHistory();
-                }
+                });
                 break;
             case 'clearFavorites':
-                if (confirm('Clear all favorites?')) {
+                ElxaUI.showConfirmDialog('Clear all favorites?', () => {
                     this.clearFavorites();
-                }
+                });
                 break;
             case 'wifiSettings':
                 if (elxaOS.wifiService) {
@@ -1482,7 +1408,6 @@ class BrowserProgram {
         this.saveUserData();
         this.updateSidebar('history');
         this.updateNavigationButtons();
-        // REMOVED: No more toast message for history cleared
         console.log('History cleared');
     }
 
@@ -1491,25 +1416,24 @@ class BrowserProgram {
         this.saveUserData();
         this.updateSidebar('favorites');
         this.updateFavoriteButton();
-        // REMOVED: No more toast message for favorites cleared
         console.log('Favorites cleared');
     }
 
     showLoading() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const loading = window.querySelector('#browserLoading');
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const loading = win.querySelector('#browserLoading');
         if (loading) {
             loading.style.display = 'block';
         }
     }
 
     hideLoading() {
-        const window = this.getWindowElement();
-        if (!window) return;
-        
-        const loading = window.querySelector('#browserLoading');
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const loading = win.querySelector('#browserLoading');
         if (loading) {
             loading.style.display = 'none';
         }
@@ -1517,13 +1441,12 @@ class BrowserProgram {
 
     saveUserData() {
         try {
-            // Save to file system
             const userData = {
                 favorites: this.favorites,
-                history: this.history.slice(-20) // Keep only last 20 items for storage
+                history: this.history.slice(-20)
             };
-            
-            this.fileSystem.createFile(['root', 'Documents'], 'browser-data.json', JSON.stringify(userData));
+
+            this.fileSystem.createFile(['root', 'System'], 'browser-data.json', JSON.stringify(userData));
         } catch (error) {
             console.error('Failed to save browser data:', error);
         }
@@ -1531,7 +1454,15 @@ class BrowserProgram {
 
     loadUserData() {
         try {
-            const file = this.fileSystem.getFile(['root', 'Documents'], 'browser-data.json');
+            // Migrate from old location if needed
+            let file = this.fileSystem.getFile(['root', 'System'], 'browser-data.json');
+            if (!file) {
+                file = this.fileSystem.getFile(['root', 'Documents'], 'browser-data.json');
+                if (file) {
+                    this.fileSystem.createFile(['root', 'System'], 'browser-data.json', file.content);
+                    this.fileSystem.deleteItem(['root', 'Documents'], 'browser-data.json');
+                }
+            }
             if (file && file.content) {
                 const userData = JSON.parse(file.content);
                 this.favorites = userData.favorites || [];
@@ -1550,9 +1481,7 @@ class BrowserProgram {
     destroy() {
         console.log('🌐 Browser: Destroying browser instance...');
         this.clearPageScripts();
-        if (this.cleanupEventListeners) {
-            this.cleanupEventListeners();
-        }
+        this.cleanupDocumentListeners();
         this.windowId = null;
     }
 

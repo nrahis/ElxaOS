@@ -1,5 +1,5 @@
 // =================================
-// ENHANCED BATTERY SERVICE - UPDATED FOR NEW CSS
+// ENHANCED BATTERY SERVICE
 // =================================
 class BatteryService {
     constructor(eventBus) {
@@ -11,41 +11,47 @@ class BatteryService {
             twenty: false,
             five: false
         };
-        
-        // Enhanced battery properties for pretend play
+
+        // Enhanced battery properties
         this.batteryHealth = 98;
-        this.temperature = 72; // Fahrenheit
+        this.temperature = 72;
         this.voltage = 12.6;
         this.chargeCycles = 47;
-        this.powerMode = 'balanced'; // balanced, performance, powersaver
-        this.batteryAge = 8; // months
+        this.powerMode = 'balanced';
+        this.batteryAge = 8;
         this.batteryType = 'Lithium-Ion';
-        this.capacity = 5000; // mAh
+        this.capacity = 5000;
         this.manufactureDate = 'March 2024';
-        
+
+        this.loadSettings();
         this.setupEvents();
         this.startBatteryDrain();
         this.updateBatteryIcon();
     }
 
+    // =================================
+    // EVENT SETUP
+    // =================================
+
     setupEvents() {
-        // Listen for battery icon clicks
         this.eventBus.on('battery.click', () => {
             this.showBatteryDialog();
         });
 
-        // Listen for recharge events
         this.eventBus.on('battery.recharge', () => {
             this.rechargeBattery();
         });
     }
 
+    // =================================
+    // BATTERY DRAIN
+    // =================================
+
     startBatteryDrain() {
-        // Different drain rates based on power mode
         const drainRates = {
-            performance: 25000, // 25 seconds (faster drain)
-            balanced: 30000,    // 30 seconds (normal)
-            powersaver: 45000   // 45 seconds (slower drain)
+            performance: 25000,
+            balanced: 30000,
+            powersaver: 45000
         };
 
         this.drainInterval = setInterval(() => {
@@ -54,29 +60,12 @@ class BatteryService {
                 this.updateBatteryStats();
                 this.updateBatteryIcon();
                 this.checkBatteryWarnings();
-                
-                // Emit battery level change event
+
                 this.eventBus.emit('battery.levelChanged', {
                     level: this.batteryLevel
                 });
             }
         }, drainRates[this.powerMode]);
-    }
-
-    updateBatteryStats() {
-        // Simulate realistic battery behavior
-        if (this.batteryLevel < 20) {
-            this.temperature = Math.max(65, this.temperature - 0.1);
-            this.voltage = Math.max(11.8, this.voltage - 0.001);
-        } else {
-            this.temperature = 72 + Math.random() * 4 - 2; // 70-74°F
-            this.voltage = 12.6 + Math.random() * 0.2 - 0.1; // 12.5-12.7V
-        }
-        
-        // Health slowly degrades over time
-        if (Math.random() < 0.001) {
-            this.batteryHealth = Math.max(85, this.batteryHealth - 0.1);
-        }
     }
 
     stopBatteryDrain() {
@@ -86,33 +75,54 @@ class BatteryService {
         }
     }
 
+    updateBatteryStats() {
+        if (this.batteryLevel < 20) {
+            this.temperature = Math.max(65, this.temperature - 0.1);
+            this.voltage = Math.max(11.8, this.voltage - 0.001);
+        } else {
+            this.temperature = 72 + Math.random() * 4 - 2;
+            this.voltage = 12.6 + Math.random() * 0.2 - 0.1;
+        }
+
+        if (Math.random() < 0.001) {
+            this.batteryHealth = Math.max(85, this.batteryHealth - 0.1);
+        }
+    }
+
+    // =================================
+    // ACTIONS
+    // =================================
+
     rechargeBattery() {
         this.batteryLevel = 100;
         this.isCharging = false;
-        this.temperature = 75; // Slightly warm after charging
+        this.temperature = 75;
         this.voltage = 12.8;
         this.chargeCycles++;
         this.warningShown.twenty = false;
         this.warningShown.five = false;
         this.updateBatteryIcon();
         this.hideBatteryDialog();
-        
-        // Show success message
-        this.showMessage('Battery recharged to 100%! 🔋⚡', 'success');
-        
+        this.saveSettings();
+
+        ElxaUI.showMessage('Battery recharged to 100%!', 'success');
+
         this.eventBus.emit('battery.recharged');
     }
 
     calibrateBattery() {
-        this.showMessage('Calibrating battery... Please wait', 'info');
-        
+        ElxaUI.showMessage('Calibrating battery... Please wait', 'info');
+
         setTimeout(() => {
             this.batteryHealth = Math.min(100, this.batteryHealth + 2);
             this.voltage = 12.7;
-            this.showMessage('Battery calibration complete! Health improved.', 'success');
-            
-            // Update displays if dialog is open
-            this.updateBatteryDisplays();
+            this.saveSettings();
+            ElxaUI.showMessage('Battery calibration complete! Health improved.', 'success');
+
+            // Refresh dialog if open
+            if (document.getElementById('batteryDialog')) {
+                this.showBatteryDialog();
+            }
         }, 3000);
     }
 
@@ -120,160 +130,160 @@ class BatteryService {
         this.powerMode = mode;
         this.stopBatteryDrain();
         this.startBatteryDrain();
-        this.showMessage(`Power mode changed to ${mode.charAt(0).toUpperCase() + mode.slice(1)}`, 'info');
-        
-        // Update displays if dialog is open
-        this.updateBatteryDisplays();
+        this.saveSettings();
+        ElxaUI.showMessage(`Power mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`, 'info');
+
+        // Refresh dialog if open
+        if (document.getElementById('batteryDialog')) {
+            this.showBatteryDialog();
+        }
     }
+
+    // =================================
+    // SYSTEM TRAY ICON
+    // =================================
 
     updateBatteryIcon() {
         const batteryIcon = document.getElementById('batteryIcon');
         if (!batteryIcon) return;
 
-        // Update icon based on battery level
-        if (this.batteryLevel > 75) {
-            batteryIcon.textContent = '🔋';
-            batteryIcon.style.color = '#00ff00';
-        } else if (this.batteryLevel > 50) {
-            batteryIcon.textContent = '🔋';
-            batteryIcon.style.color = '#ffff00';
-        } else if (this.batteryLevel > 25) {
-            batteryIcon.textContent = '🔋';
-            batteryIcon.style.color = '#ff8800';
+        const iconSpan = batteryIcon.querySelector('.mdi');
+        if (!iconSpan) return;
+
+        let mdiClass;
+        if (this.batteryLevel > 80) {
+            mdiClass = 'mdi-battery';
+        } else if (this.batteryLevel > 60) {
+            mdiClass = 'mdi-battery-70';
+        } else if (this.batteryLevel > 40) {
+            mdiClass = 'mdi-battery-50';
+        } else if (this.batteryLevel > 20) {
+            mdiClass = 'mdi-battery-30';
         } else if (this.batteryLevel > 5) {
-            batteryIcon.textContent = '🔋';
-            batteryIcon.style.color = '#ff0000';
+            mdiClass = 'mdi-battery-10';
         } else {
-            batteryIcon.textContent = '🪫';
-            batteryIcon.style.color = '#ff0000';
+            mdiClass = 'mdi-battery-alert';
         }
 
-        // Update tooltip with more info
+        iconSpan.className = `mdi ${mdiClass} elxa-icon-ui`;
         batteryIcon.title = `Battery: ${this.batteryLevel}% | Health: ${this.batteryHealth.toFixed(1)}% | ${this.powerMode.charAt(0).toUpperCase() + this.powerMode.slice(1)} Mode`;
     }
+
+    // =================================
+    // BATTERY WARNINGS
+    // =================================
 
     checkBatteryWarnings() {
         if (this.batteryLevel <= 0) {
             this.forcedShutdown();
         } else if (this.batteryLevel <= 5 && !this.warningShown.five) {
-            this.showCriticalBatteryWarning();
+            this.showBatteryDialog(true, 'Critical Battery Warning',
+                `Battery is critically low at ${this.batteryLevel}%! System will shut down soon if not recharged.`);
             this.warningShown.five = true;
         } else if (this.batteryLevel <= 20 && !this.warningShown.twenty) {
-            this.showLowBatteryWarning();
+            this.showBatteryDialog(true, 'Low Battery Warning',
+                `Battery is at ${this.batteryLevel}%. Consider switching to Power Saver mode or recharging soon.`);
             this.warningShown.twenty = true;
         }
     }
 
-    showLowBatteryWarning() {
-        this.showBatteryDialog(true, 'Low Battery Warning', 
-            `Battery is at ${this.batteryLevel}%. Consider switching to Power Saver mode or recharging soon.`);
-    }
-
-    showCriticalBatteryWarning() {
-        this.showBatteryDialog(true, 'Critical Battery Warning', 
-            `Battery is critically low at ${this.batteryLevel}%! System will shut down soon if not recharged.`);
-    }
-
-    getHealthColor() {
-        if (this.batteryHealth >= 95) return '#00ff00';
-        if (this.batteryHealth >= 85) return '#ffff00';
-        if (this.batteryHealth >= 70) return '#ff8800';
-        return '#ff0000';
-    }
-
-    getPowerModeColor() {
-        switch(this.powerMode) {
-            case 'performance': return '#ff4444';
-            case 'balanced': return '#44ff44';
-            case 'powersaver': return '#4444ff';
-            default: return '#888888';
-        }
-    }
-
-    getBatteryFillColor() {
-        if (this.batteryLevel > 25) return '#00ff00';
-        if (this.batteryLevel > 5) return '#ff8800';
-        return '#ff0000';
-    }
+    // =================================
+    // BATTERY DIALOG
+    // =================================
 
     showBatteryDialog(isWarning = false, title = 'Battery Center', message = '') {
-        // Remove existing dialog if present
         this.hideBatteryDialog();
 
         const dialog = document.createElement('div');
         dialog.className = 'bdialog-container';
         dialog.id = 'batteryDialog';
-        
+
+        const healthClass = this.batteryHealth >= 95 ? 'bdialog-health-good'
+                          : this.batteryHealth >= 85 ? 'bdialog-health-ok'
+                          : this.batteryHealth >= 70 ? 'bdialog-health-warn'
+                          : 'bdialog-health-bad';
+
+        const modeClass = `bdialog-mode-color-${this.powerMode}`;
+
+        const fillClass = this.batteryLevel > 25 ? 'bdialog-fill-good'
+                        : this.batteryLevel > 5 ? 'bdialog-fill-warn'
+                        : 'bdialog-fill-critical';
+
         dialog.innerHTML = `
             <div class="bdialog-header">
-                <div class="bdialog-title">${title}</div>
-                <div class="bdialog-close" onclick="elxaOS.batteryService.hideBatteryDialog()">×</div>
+                <div class="bdialog-title">${ElxaIcons.renderAction('battery-charging')} ${title}</div>
+                <button class="bdialog-close" id="bdialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
             </div>
             <div class="bdialog-body">
                 ${isWarning ? `<div class="bdialog-warning">${message}</div>` : ''}
-                
+
                 <div class="bdialog-main">
                     <div class="bdialog-visual">
-                        <div class="bdialog-icon">${this.batteryLevel > 5 ? '🔋' : '🪫'}</div>
+                        <div class="bdialog-icon">${ElxaIcons.renderAction(this.batteryLevel > 5 ? 'battery-charging' : 'power-off')}</div>
                         <div class="bdialog-percentage">${this.batteryLevel}%</div>
                         <div class="bdialog-level-bar">
-                            <div class="bdialog-level-fill" style="width: ${this.batteryLevel}%; background: ${this.getBatteryFillColor()}"></div>
+                            <div class="bdialog-level-fill ${fillClass}" style="width: ${this.batteryLevel}%"></div>
                         </div>
                     </div>
-                    
+
                     <div class="bdialog-stats">
                         <div class="bdialog-stat">
-                            <span class="bdialog-stat-label">Health:</span>
-                            <span class="bdialog-stat-value" style="color: ${this.getHealthColor()}">${this.batteryHealth.toFixed(1)}%</span>
+                            <span class="bdialog-stat-label">${ElxaIcons.renderAction('heart-pulse')} Health:</span>
+                            <span class="bdialog-stat-value ${healthClass}">${this.batteryHealth.toFixed(1)}%</span>
                         </div>
                         <div class="bdialog-stat">
-                            <span class="bdialog-stat-label">Power Mode:</span>
-                            <span class="bdialog-stat-value" style="color: ${this.getPowerModeColor()}">${this.powerMode.charAt(0).toUpperCase() + this.powerMode.slice(1)}</span>
+                            <span class="bdialog-stat-label">${ElxaIcons.renderAction('lightning-bolt')} Power Mode:</span>
+                            <span class="bdialog-stat-value ${modeClass}">${this.powerMode.charAt(0).toUpperCase() + this.powerMode.slice(1)}</span>
                         </div>
                         <div class="bdialog-stat">
-                            <span class="bdialog-stat-label">Temperature:</span>
+                            <span class="bdialog-stat-label">${ElxaIcons.renderAction('thermometer')} Temperature:</span>
                             <span class="bdialog-stat-value">${this.temperature.toFixed(1)}°F</span>
                         </div>
                     </div>
                 </div>
 
                 ${!isWarning ? this.generateTabsHTML() : ''}
-                
+
                 <div class="bdialog-controls">
-                    <button class="bdialog-btn bdialog-btn-recharge" onclick="elxaOS.batteryService.rechargeBattery()">
-                        ⚡ Recharge Battery
+                    <button class="bdialog-btn bdialog-btn-recharge" id="bdialogRechargeBtn">
+                        ${ElxaIcons.renderAction('lightning-bolt')} Recharge Battery
                     </button>
-                    ${!isWarning ? '<button class="bdialog-btn bdialog-btn-calibrate" onclick="elxaOS.batteryService.calibrateBattery()">🔧 Calibrate</button>' : ''}
-                    ${!isWarning ? '<button class="bdialog-btn bdialog-btn-close" onclick="elxaOS.batteryService.hideBatteryDialog()">Close</button>' : ''}
+                    ${!isWarning ? `<button class="bdialog-btn bdialog-btn-calibrate" id="bdialogCalibrateBtn">${ElxaIcons.renderAction('wrench')} Calibrate</button>` : ''}
+                    ${!isWarning ? `<button class="bdialog-btn bdialog-btn-close" id="bdialogCloseBtnBottom">${ElxaIcons.renderAction('close')} Close</button>` : ''}
                 </div>
             </div>
         `;
 
         document.body.appendChild(dialog);
 
-        // Setup tab functionality if not warning
+        // Wire buttons via addEventListener
+        dialog.querySelector('#bdialogCloseBtn').addEventListener('click', () => this.hideBatteryDialog());
+        dialog.querySelector('#bdialogRechargeBtn').addEventListener('click', () => this.rechargeBattery());
+
         if (!isWarning) {
-            this.setupTabs();
+            dialog.querySelector('#bdialogCalibrateBtn').addEventListener('click', () => this.calibrateBattery());
+            dialog.querySelector('#bdialogCloseBtnBottom').addEventListener('click', () => this.hideBatteryDialog());
+            this.setupTabs(dialog);
         }
     }
 
     generateTabsHTML() {
         return `
             <div class="bdialog-tabs">
-                <div class="bdialog-tab bdialog-tab-active" data-panel="details">Details</div>
-                <div class="bdialog-tab" data-panel="settings">Settings</div>
-                <div class="bdialog-tab" data-panel="history">History</div>
+                <div class="bdialog-tab bdialog-tab-active" data-panel="details">${ElxaIcons.renderAction('information')} Details</div>
+                <div class="bdialog-tab" data-panel="settings">${ElxaIcons.renderAction('settings')} Settings</div>
+                <div class="bdialog-tab" data-panel="history">${ElxaIcons.renderAction('history')} History</div>
             </div>
-            
+
             <div class="bdialog-content">
                 <div class="bdialog-panel bdialog-panel-active" id="bdialog-details">
                     ${this.generateDetailsHTML()}
                 </div>
-                
+
                 <div class="bdialog-panel" id="bdialog-settings">
                     ${this.generateSettingsHTML()}
                 </div>
-                
+
                 <div class="bdialog-panel" id="bdialog-history">
                     ${this.generateHistoryHTML()}
                 </div>
@@ -309,7 +319,7 @@ class BatteryService {
                     <span class="bdialog-detail-value">${this.manufactureDate}</span>
                 </div>
             </div>
-            
+
             <div class="bdialog-cells">
                 <div class="bdialog-cells-title">Battery Cells Status:</div>
                 <div class="bdialog-cells-grid">
@@ -329,24 +339,24 @@ class BatteryService {
             <div class="bdialog-section">
                 <h4 class="bdialog-section-title">Power Management</h4>
                 <div class="bdialog-modes">
-                    <div class="bdialog-mode ${this.powerMode === 'performance' ? 'bdialog-mode-active' : ''}" onclick="elxaOS.batteryService.setPowerMode('performance')">
-                        <div class="bdialog-mode-icon">🚀</div>
+                    <div class="bdialog-mode ${this.powerMode === 'performance' ? 'bdialog-mode-active' : ''}" data-mode="performance">
+                        <div class="bdialog-mode-icon">${ElxaIcons.renderAction('rocket')}</div>
                         <div class="bdialog-mode-name">Performance</div>
                         <div class="bdialog-mode-desc">Maximum power, faster drain</div>
                     </div>
-                    <div class="bdialog-mode ${this.powerMode === 'balanced' ? 'bdialog-mode-active' : ''}" onclick="elxaOS.batteryService.setPowerMode('balanced')">
-                        <div class="bdialog-mode-icon">⚖️</div>
+                    <div class="bdialog-mode ${this.powerMode === 'balanced' ? 'bdialog-mode-active' : ''}" data-mode="balanced">
+                        <div class="bdialog-mode-icon">${ElxaIcons.renderAction('scale-balance')}</div>
                         <div class="bdialog-mode-name">Balanced</div>
                         <div class="bdialog-mode-desc">Good performance and battery life</div>
                     </div>
-                    <div class="bdialog-mode ${this.powerMode === 'powersaver' ? 'bdialog-mode-active' : ''}" onclick="elxaOS.batteryService.setPowerMode('powersaver')">
-                        <div class="bdialog-mode-icon">🛡️</div>
+                    <div class="bdialog-mode ${this.powerMode === 'powersaver' ? 'bdialog-mode-active' : ''}" data-mode="powersaver">
+                        <div class="bdialog-mode-icon">${ElxaIcons.renderAction('shield-lock')}</div>
                         <div class="bdialog-mode-name">Power Saver</div>
                         <div class="bdialog-mode-desc">Longer battery life, reduced performance</div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="bdialog-section">
                 <h4 class="bdialog-section-title">Battery Notifications</h4>
                 <label class="bdialog-setting">
@@ -354,9 +364,6 @@ class BatteryService {
                 </label>
                 <label class="bdialog-setting">
                     <input type="checkbox" checked> Critical battery warning at 5%
-                </label>
-                <label class="bdialog-setting">
-                    <input type="checkbox"> Show charging animation
                 </label>
             </div>
         `;
@@ -378,9 +385,9 @@ class BatteryService {
                     <div class="bdialog-stat-card-label">Months Old</div>
                 </div>
             </div>
-            
+
             <div class="bdialog-tips">
-                <h4 class="bdialog-tips-title">🔋 Battery Tips:</h4>
+                <h4 class="bdialog-tips-title">${ElxaIcons.renderAction('information')} Battery Tips:</h4>
                 <ul>
                     <li>Avoid letting battery drop to 0% frequently</li>
                     <li>Use Power Saver mode to extend battery life</li>
@@ -392,51 +399,33 @@ class BatteryService {
         `;
     }
 
-    setupTabs() {
-        const tabs = document.querySelectorAll('.bdialog-tab');
-        const panels = document.querySelectorAll('.bdialog-panel');
+    setupTabs(dialog) {
+        const tabs = dialog.querySelectorAll('.bdialog-tab');
+        const panels = dialog.querySelectorAll('.bdialog-panel');
 
         tabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const targetPanel = 'bdialog-' + tab.dataset.panel;
-                
-                // Remove active class from all tabs and panels
+
                 tabs.forEach(t => t.classList.remove('bdialog-tab-active'));
                 panels.forEach(p => p.classList.remove('bdialog-panel-active'));
-                
-                // Add active class to clicked tab and corresponding panel
+
                 tab.classList.add('bdialog-tab-active');
-                const panel = document.getElementById(targetPanel);
+                const panel = dialog.querySelector('#' + targetPanel);
                 if (panel) {
                     panel.classList.add('bdialog-panel-active');
                 }
             });
         });
-    }
 
-    updateBatteryDisplays() {
-        // Update health display
-        const healthValue = document.querySelector('.bdialog-stat-value[style*="color"]');
-        if (healthValue && healthValue.textContent.includes('%')) {
-            healthValue.textContent = `${this.batteryHealth.toFixed(1)}%`;
-            healthValue.style.color = this.getHealthColor();
-        }
-        
-        // Update power mode display
-        const modeElements = document.querySelectorAll('.bdialog-mode');
-        modeElements.forEach(mode => {
-            mode.classList.remove('bdialog-mode-active');
-            if (mode.onclick.toString().includes(`'${this.powerMode}'`)) {
-                mode.classList.add('bdialog-mode-active');
-            }
+        // Wire power mode buttons
+        const modeButtons = dialog.querySelectorAll('.bdialog-mode[data-mode]');
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.setPowerMode(btn.dataset.mode);
+            });
         });
-        
-        // Update stat cards in history
-        const statNumbers = document.querySelectorAll('.bdialog-stat-number');
-        if (statNumbers.length >= 2) {
-            statNumbers[1].textContent = `${this.batteryHealth.toFixed(1)}%`;
-        }
     }
 
     hideBatteryDialog() {
@@ -446,95 +435,84 @@ class BatteryService {
         }
     }
 
-    showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `system-message ${type}`;
-        message.textContent = text;
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: ${type === 'success' ? '#00ff00' : type === 'info' ? '#add8e6' : '#ffff00'};
-            color: black;
-            padding: 8px 16px;
-            border: 2px outset #c0c0c0;
-            z-index: 3000;
-            font-weight: bold;
-            border-radius: 4px;
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        `;
-
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
-    }
+    // =================================
+    // FORCED SHUTDOWN
+    // =================================
 
     forcedShutdown() {
-        // Stop all services
         this.stopBatteryDrain();
-        
-        // Show shutdown screen
-        const shutdownOverlay = document.createElement('div');
-        shutdownOverlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: black;
-            color: red;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            font-family: monospace;
-            font-size: 24px;
-        `;
 
+        const shutdownOverlay = document.createElement('div');
+        shutdownOverlay.className = 'bdialog-shutdown-overlay';
         shutdownOverlay.innerHTML = `
-            <div style="text-align: center;">
-                🪫<br><br>
-                BATTERY DEPLETED<br>
-                SYSTEM SHUTDOWN<br><br>
-                <div style="font-size: 16px; color: white;">
+            <div class="bdialog-shutdown-content">
+                <div class="bdialog-shutdown-icon">${ElxaIcons.renderAction('power-off')}</div>
+                <div class="bdialog-shutdown-title">BATTERY DEPLETED</div>
+                <div class="bdialog-shutdown-subtitle">SYSTEM SHUTDOWN</div>
+                <div class="bdialog-shutdown-message">
                     ElxaOS will restart in 3 seconds...<br>
-                    Remember to recharge your battery! 🔌
+                    Remember to recharge your battery!
                 </div>
             </div>
         `;
 
         document.body.appendChild(shutdownOverlay);
 
-        // Emit shutdown event
         this.eventBus.emit('system.forcedShutdown', { reason: 'battery' });
 
-        // Restart after 3 seconds
         setTimeout(() => {
             location.reload();
         }, 3000);
     }
 
-    // Debug methods for testing
+    // =================================
+    // PERSISTENCE
+    // =================================
+
+    saveSettings() {
+        try {
+            const data = {
+                powerMode: this.powerMode,
+                batteryHealth: this.batteryHealth,
+                chargeCycles: this.chargeCycles
+            };
+            localStorage.setItem('elxaOS-battery', JSON.stringify(data));
+        } catch (error) {
+            console.error('❌ Failed to save battery settings:', error);
+        }
+    }
+
+    loadSettings() {
+        try {
+            const saved = localStorage.getItem('elxaOS-battery');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.powerMode) this.powerMode = data.powerMode;
+                if (data.batteryHealth) this.batteryHealth = data.batteryHealth;
+                if (data.chargeCycles) this.chargeCycles = data.chargeCycles;
+                console.log('🔋 Battery settings loaded');
+            }
+        } catch (error) {
+            console.error('❌ Failed to load battery settings:', error);
+        }
+    }
+
+    // =================================
+    // CLEANUP
+    // =================================
+
+    destroy() {
+        this.stopBatteryDrain();
+        this.hideBatteryDialog();
+    }
+
+    // =================================
+    // DEBUG
+    // =================================
+
     setBatteryLevel(level) {
         this.batteryLevel = Math.max(0, Math.min(100, level));
         this.updateBatteryIcon();
         this.checkBatteryWarnings();
-    }
-
-    simulateFastDrain() {
-        // For testing - drain battery every 2 seconds
-        this.stopBatteryDrain();
-        this.drainInterval = setInterval(() => {
-            if (!this.isCharging && this.batteryLevel > 0) {
-                this.batteryLevel--;
-                this.updateBatteryStats();
-                this.updateBatteryIcon();
-                this.checkBatteryWarnings();
-            }
-        }, 2000);
     }
 }

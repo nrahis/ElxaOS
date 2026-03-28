@@ -58,6 +58,12 @@
     border: 1px inset var(--buttonBorder, #808080);
 }
 
+/* Prevent icon spans from stealing clicks */
+.bdialog-container .mdi,
+.bdialog-shutdown-overlay .mdi {
+    pointer-events: none;
+}
+
 .bdialog-body {
     flex: 1;
     display: flex;
@@ -99,6 +105,10 @@
 }
 
 .bdialog-icon {
+    font-size: 40px;
+}
+
+.bdialog-icon .mdi {
     font-size: 40px;
 }
 
@@ -319,6 +329,10 @@
     margin-bottom: 4px;
 }
 
+.bdialog-mode-icon .mdi {
+    font-size: 18px;
+}
+
 .bdialog-mode-name {
     font-weight: bold;
     font-size: 9px;
@@ -427,4 +441,69 @@
 .bdialog-btn-close {
     background: var(--buttonBg, #c0c0c0);
     color: black;
+}
+
+/* =================================
+   COLOR CLASSES — health, mode, fill
+================================= */
+.bdialog-health-good  { color: #00aa00; }
+.bdialog-health-ok    { color: #ccaa00; }
+.bdialog-health-warn  { color: #cc6600; }
+.bdialog-health-bad   { color: #cc0000; }
+
+.bdialog-mode-color-performance { color: #cc4444; }
+.bdialog-mode-color-balanced    { color: #44aa44; }
+.bdialog-mode-color-powersaver  { color: #4444cc; }
+
+.bdialog-fill-good     { background: #00cc00; }
+.bdialog-fill-warn     { background: #cc8800; }
+.bdialog-fill-critical { background: #cc0000; }
+
+/* =================================
+   FORCED SHUTDOWN OVERLAY
+================================= */
+.bdialog-shutdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: monospace;
+}
+
+.bdialog-shutdown-content {
+    text-align: center;
+}
+
+.bdialog-shutdown-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.bdialog-shutdown-icon .mdi {
+    font-size: 48px;
+    color: #ff0000;
+}
+
+.bdialog-shutdown-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.bdialog-shutdown-subtitle {
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.bdialog-shutdown-message {
+    font-size: 16px;
+    color: white;
+    line-height: 1.6;
 }

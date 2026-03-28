@@ -23,7 +23,7 @@ class CalculatorProgram {
         
         const window = this.windowManager.createWindow(
             windowId,
-            '🧮 Calculator',
+            `${ElxaIcons.render('calculator', 'ui')} Calculator`,
             windowContent,
             { width: '320px', height: '480px', x: '200px', y: '150px' }
         );
@@ -43,8 +43,8 @@ class CalculatorProgram {
                         <button class="mode-btn advanced-mode" data-mode="advanced">Advanced</button>
                     </div>
                     <div class="calculator-controls">
-                        <button class="calc-control" data-action="history" title="History">📜</button>
-                        <button class="calc-control" data-action="help" title="Help">❓</button>
+                        <button class="calc-control" data-action="history" title="History">${ElxaIcons.renderAction('history')}</button>
+                        <button class="calc-control" data-action="help" title="Help">${ElxaIcons.renderAction('help')}</button>
                     </div>
                 </div>
 
@@ -68,7 +68,7 @@ class CalculatorProgram {
                     <!-- Function Row -->
                     <button class="calc-btn clear-btn" data-action="clear">C</button>
                     <button class="calc-btn function-btn" data-action="clear-entry">CE</button>
-                    <button class="calc-btn function-btn" data-action="backspace">⌫</button>
+                    <button class="calc-btn function-btn" data-action="backspace">${ElxaIcons.renderAction('back')}</button>
                     <button class="calc-btn operator-btn" data-action="operator" data-operator="/">/</button>
 
                     <!-- Number Rows -->
@@ -107,7 +107,7 @@ class CalculatorProgram {
                     <button class="calc-btn sci-btn" data-action="function" data-function="factorial">n!</button>
 
                     <!-- Fun Functions Row -->
-                    <button class="calc-btn fun-btn" data-action="function" data-function="random">🎲</button>
+                    <button class="calc-btn fun-btn" data-action="function" data-function="random">RND</button>
                     <button class="calc-btn fun-btn" data-action="function" data-function="pi">π</button>
                     <button class="calc-btn fun-btn" data-action="function" data-function="binary">BIN</button>
                     <button class="calc-btn fun-btn" data-action="ans">ANS</button>
@@ -120,7 +120,7 @@ class CalculatorProgram {
 
                     <button class="calc-btn clear-btn" data-action="clear">C</button>
                     <button class="calc-btn function-btn" data-action="clear-entry">CE</button>
-                    <button class="calc-btn function-btn" data-action="backspace">⌫</button>
+                    <button class="calc-btn function-btn" data-action="backspace">${ElxaIcons.renderAction('back')}</button>
                     <button class="calc-btn operator-btn" data-action="operator" data-operator="/">/</button>
 
                     <button class="calc-btn number-btn" data-number="7">7</button>
@@ -146,7 +146,7 @@ class CalculatorProgram {
                 <!-- History Panel (Hidden by default) -->
                 <div class="calculator-history" style="display: none;">
                     <div class="history-header">
-                        <h4>📜 Calculation History</h4>
+                        <h4>${ElxaIcons.renderAction('history')} Calculation History</h4>
                         <div class="history-controls">
                             <button class="history-clear">Clear All</button>
                             <button class="history-close">✕</button>
@@ -679,25 +679,19 @@ class CalculatorProgram {
 
     showHelp(windowId) {
         const helpText = `
-🧮 Calculator Help
-
 Basic Mode:
 • Number keys (0-9) for input
 • +, -, ×, / for operations
 • = to calculate
 • C to clear all
 • CE to clear entry
-• ⌫ to backspace
+• Backspace to delete last digit
 
 Advanced Mode:
 • All basic functions plus:
 • sin, cos, tan (degrees)
-• √ for square root
-• x² for square
-• xʸ for power
-• n! for factorial
-• π for pi
-• 🎲 for random number
+• Square root, square, power
+• Factorial, pi, random number
 • BIN for binary conversion
 • ANS for last answer
 
@@ -712,58 +706,45 @@ Keyboard Shortcuts:
 • +, -, *, /: Operations  
 • Enter or =: Calculate
 • Esc or C: Clear
-• Backspace: Delete last digit
-
-Have fun with math! 🎉
         `;
         
-        this.showMessage(helpText, windowId);
+        this.showMessage(helpText, windowId, 'Calculator Help');
     }
 
-    showMessage(text, windowId) {
+    showMessage(text, windowId, title = '') {
         const message = document.createElement('div');
         message.className = 'calculator-message';
-        message.innerHTML = text.replace(/\n/g, '<br>');
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            color: #000;
-            border: 2px outset #c0c0c0;
-            padding: 16px;
-            max-width: 300px;
-            font-size: 11px;
-            z-index: 3000;
-            box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.4;
-        `;
+
+        // Build themed dialog structure
+        const header = document.createElement('div');
+        header.className = 'calculator-message-header';
+        header.innerHTML = `<span>${title || 'Calculator'}</span>`;
+
+        const closeX = document.createElement('span');
+        closeX.textContent = '×';
+        closeX.style.cursor = 'pointer';
+        closeX.onclick = () => message.remove();
+        header.appendChild(closeX);
+
+        const body = document.createElement('div');
+        body.className = 'calculator-message-body';
+        body.innerHTML = text.replace(/\n/g, '<br>');
 
         const closeBtn = document.createElement('button');
+        closeBtn.className = 'calculator-message-ok';
         closeBtn.textContent = 'OK';
-        closeBtn.style.cssText = `
-            margin-top: 12px;
-            padding: 4px 16px;
-            background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-            border: 1px outset #c0c0c0;
-            cursor: pointer;
-            color: #000;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 11px;
-        `;
-        
         closeBtn.onclick = () => message.remove();
-        message.appendChild(closeBtn);
+        body.appendChild(closeBtn);
+
+        message.appendChild(header);
+        message.appendChild(body);
         document.body.appendChild(message);
 
-        // Auto-close after 10 seconds for long messages
+        // Auto-close after 15 seconds for long messages
         setTimeout(() => {
             if (document.body.contains(message)) {
                 message.remove();
             }
-        }, 10000);
+        }, 15000);
     }
 }

@@ -1,5 +1,10 @@
 /* Abbit Styles - All classes prefixed with 'ab-' to avoid conflicts */
 
+/* MDI icon click-through — matches ElxaOS system pattern */
+.ab-container .mdi {
+    pointer-events: none;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -47,10 +52,23 @@ body {
     font-weight: bold;
     color: #FF4500;
     text-decoration: none;
+    flex-shrink: 0;
 }
 
 .ab-logo-icon {
-    font-size: 28px;
+    width: 32px;
+    height: 32px;
+    background: #FF4500;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ab-logo-icon .mdi {
+    font-size: 20px;
+    color: #fff;
 }
 
 .ab-logo-text {
@@ -254,7 +272,7 @@ body {
 .ab-vote-button {
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
     padding: 4px;
     border-radius: 2px;
@@ -350,6 +368,23 @@ body {
     padding: 4px 8px;
     border-radius: 2px;
     transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ab-modal-post-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: #7c7c7c;
+}
+
+.ab-vote-info,
+.ab-comment-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .ab-comment-count:hover,
@@ -396,12 +431,15 @@ body {
 .ab-close-button {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     padding: 4px;
     border-radius: 4px;
     color: #7c7c7c;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ab-close-button:hover {
@@ -537,7 +575,7 @@ body {
 .ab-comment-vote {
     background: none;
     border: none;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     padding: 2px;
     border-radius: 2px;
@@ -588,11 +626,27 @@ body {
     font-weight: bold;
 }
 
+.ab-op-badge {
+    background: #0079d3;
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 2px;
+}
+
 .ab-llm-badge {
     background: #46d160;
     color: #fff;
     padding: 2px 6px;
     border-radius: 12px;
+    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.ab-llm-badge .mdi {
     font-size: 10px;
 }
 
@@ -617,6 +671,9 @@ body {
     padding: 2px 4px;
     border-radius: 2px;
     transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
 }
 
 .ab-reply-button:hover {
@@ -700,6 +757,217 @@ body {
     border-radius: 4px;
 }
 
+/* Compose Bar */
+.ab-compose-bar {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.ab-compose-bar:hover {
+    border-color: #898989;
+}
+
+.ab-compose-avatar {
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #edeff1;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ab-compose-prompt {
+    flex: 1;
+    padding: 8px 12px;
+    background: #f6f7f8;
+    border: 1px solid #edeff1;
+    border-radius: 4px;
+    color: #7c7c7c;
+    font-size: 14px;
+    cursor: text;
+    transition: all 0.2s;
+}
+
+.ab-compose-prompt:hover {
+    background: #fff;
+    border-color: #0079d3;
+}
+
+.ab-compose-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #878a8c;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.ab-compose-btn:hover:not(:disabled) {
+    background: #f6f7f8;
+    color: #1c1c1c;
+}
+
+.ab-compose-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Compose Modal */
+.ab-compose-modal {
+    max-width: 620px;
+}
+
+.ab-compose-modal .ab-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ab-compose-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1c1c1c;
+    margin: 0;
+}
+
+.ab-compose-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ab-compose-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+}
+
+.ab-compose-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #7c7c7c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ab-compose-optional {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.ab-compose-select {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.ab-compose-select:focus {
+    outline: none;
+    border-color: #0079d3;
+}
+
+.ab-compose-input {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.ab-compose-input:focus {
+    outline: none;
+    border-color: #0079d3;
+}
+
+.ab-compose-charcount {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    font-size: 11px;
+    color: #b0b0b0;
+    pointer-events: none;
+}
+
+.ab-compose-textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.ab-compose-textarea:focus {
+    outline: none;
+    border-color: #0079d3;
+}
+
+.ab-compose-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #edeff1;
+}
+
+.ab-compose-cancel-btn {
+    padding: 8px 18px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background: #fff;
+    color: #0079d3;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ab-compose-cancel-btn:hover {
+    background: #f6f7f8;
+}
+
+.ab-compose-submit-btn {
+    padding: 8px 22px;
+    border: none;
+    border-radius: 20px;
+    background: #0079d3;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ab-compose-submit-btn:hover:not(:disabled) {
+    background: #005ba1;
+}
+
+.ab-compose-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .ab-main-content {
@@ -747,6 +1015,15 @@ body {
         width: 20px;
         height: 20px;
         font-size: 14px;
+    }
+
+    .ab-compose-bar {
+        gap: 6px;
+        padding: 6px 8px;
+    }
+
+    .ab-compose-btn {
+        display: none;
     }
 }
 

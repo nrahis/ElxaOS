@@ -25,7 +25,7 @@ class LoginService {
                 username: 'kitkat',
                 password: '3722',
                 displayName: 'KitKat',
-                avatar: '😸',
+                avatar: 'sprite:paw',
                 created: new Date(),
                 lastLogin: null,
                 loginCount: 0
@@ -91,7 +91,7 @@ class LoginService {
                     <div class="user-selection">
                     ${Object.values(this.users).filter(user => user.isActive !== false).map(user => `
                         <div class="user-tile ${user.username === this.getPrimaryUser() ? 'selected' : ''}" data-username="${user.username}">
-                            <div class="user-avatar">${user.avatar}</div>
+                            <div class="user-avatar">${renderAvatar(user.avatar)}</div>
                             <div class="user-name">${user.displayName}</div>
                         </div>
                     `).join('')}
@@ -99,7 +99,7 @@ class LoginService {
                     
                     <div class="login-input-section">
                         <div class="selected-user">
-                            <div class="selected-avatar">${this.users[this.getPrimaryUser()].avatar}</div>
+                            <div class="selected-avatar">${renderAvatar(this.users[this.getPrimaryUser()].avatar)}</div>
                             <div class="selected-name">${this.users[this.getPrimaryUser()].displayName}</div>
                         </div>
                         
@@ -132,13 +132,13 @@ class LoginService {
                     </div>
                     <div class="login-actions">
                         <button class="hint-button" id="hintButton">
-                            💡 Password Hint
+                            ${ElxaIcons.renderAction('lightbulb')} Password Hint
                         </button>
                         <button class="guest-button" id="guestButton">
-                            👤 Guest Login
+                            ${ElxaIcons.renderAction('login')} Guest Login
                         </button>
                         <button class="new-user-button" id="newUserButton">
-                            ➕ New User
+                            ${ElxaIcons.renderAction('account-plus')} New User
                         </button>
                     </div>
                     <div class="version-info" id="versionInfo" title="Click to edit version">
@@ -185,7 +185,7 @@ class LoginService {
                 const username = tile.dataset.username;
                 const user = this.users[username];
                 
-                document.querySelector('.selected-avatar').textContent = user.avatar;
+                document.querySelector('.selected-avatar').innerHTML = renderAvatar(user.avatar);
                 document.querySelector('.selected-name').textContent = user.displayName;
             });
         });
@@ -215,12 +215,13 @@ class LoginService {
             this.showVersionEditDialog();
         });
 
-        // Escape key for guest login
-        document.addEventListener('keydown', (e) => {
+        // Escape key for guest login — store ref so it can be removed
+        this._loginEscapeHandler = (e) => {
             if (e.key === 'Escape') {
                 this.guestLogin();
             }
-        });
+        };
+        document.addEventListener('keydown', this._loginEscapeHandler);
     }
 
     handleLoginClick() {
@@ -324,7 +325,7 @@ class LoginService {
         this.currentUser = {
             username: 'guest',
             displayName: 'Guest User',
-            avatar: '👤',
+            avatar: 'sprite:person',
             isGuest: true
         };
         this.isLoggedIn = true;
@@ -370,6 +371,11 @@ class LoginService {
         if (loginScreen) {
             loginScreen.remove();
         }
+        // Clean up escape key listener to prevent stacking
+        if (this._loginEscapeHandler) {
+            document.removeEventListener('keydown', this._loginEscapeHandler);
+            this._loginEscapeHandler = null;
+        }
     }
 
     showDesktop() {
@@ -407,62 +413,70 @@ class LoginService {
             return;
         }
 
-        const dialog = document.createElement('div');
-        dialog.id = 'changePasswordDialog';
-        dialog.className = 'system-dialog change-password-dialog';
-
-        dialog.innerHTML = `
-            <div class="dialog-content">
-                <div class="dialog-header">
-                    <div class="dialog-title">🔐 Change Password</div>
-                    <div class="dialog-close" onclick="document.getElementById('changePasswordDialog').remove()">×</div>
+        const bodyHTML = `
+            <div class="change-password-form">
+                <div class="form-group">
+                    <label>Current Password:</label>
+                    <input type="password" id="cpCurrentPassword" class="password-input">
                 </div>
-                <div class="dialog-body">
-                    <div class="change-password-form">
-                        <div class="form-group">
-                            <label>Current Password:</label>
-                            <input type="password" id="currentPassword" class="password-input">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>New Password:</label>
-                            <input type="password" id="newPassword" class="password-input">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Confirm New Password:</label>
-                            <input type="password" id="confirmPassword" class="password-input">
-                        </div>
-                        
-                        <div class="password-strength">
-                            <div class="strength-meter">
-                                <div class="strength-bar" id="strengthBar"></div>
-                            </div>
-                            <div class="strength-text" id="strengthText">Enter a password</div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button class="change-btn" onclick="elxaOS.loginService.changePassword()">Change Password</button>
-                            <button class="dialog-button" onclick="document.getElementById('changePasswordDialog').remove()">Cancel</button>
-                        </div>
+                
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <input type="password" id="cpNewPassword" class="password-input">
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <input type="password" id="cpConfirmPassword" class="password-input">
+                </div>
+                
+                <div class="password-strength">
+                    <div class="strength-meter">
+                        <div class="strength-bar" id="cpStrengthBar"></div>
                     </div>
+                    <div class="strength-text" id="cpStrengthText">Enter a password</div>
                 </div>
             </div>
         `;
 
-        document.body.appendChild(dialog);
+        const { dialog, close } = ElxaUI.createDialog({
+            title: `${ElxaIcons.renderAction('key')} Change Password`,
+            body: bodyHTML,
+            className: 'change-password-dialog',
+            buttons: [
+                {
+                    text: `${ElxaIcons.renderAction('save')} Change Password`,
+                    className: 'elxa-dialog-btn-primary',
+                    onClick: () => {
+                        this.changePassword(close);
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    className: 'elxa-dialog-btn',
+                    onClick: 'close'
+                }
+            ]
+        });
         
         // Password strength checker
-        document.getElementById('newPassword').addEventListener('input', (e) => {
+        dialog.querySelector('#cpNewPassword').addEventListener('input', (e) => {
             this.updatePasswordStrength(e.target.value);
         });
 
-        document.getElementById('currentPassword').focus();
+        // Enter key support
+        dialog.querySelectorAll('.password-input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.changePassword(close);
+            });
+        });
+
+        dialog.querySelector('#cpCurrentPassword').focus();
     }
 
     updatePasswordStrength(password) {
-        const strengthBar = document.getElementById('strengthBar');
-        const strengthText = document.getElementById('strengthText');
+        const strengthBar = document.getElementById('cpStrengthBar');
+        const strengthText = document.getElementById('cpStrengthText');
         
         let strength = 0;
         let feedback = '';
@@ -494,10 +508,10 @@ class LoginService {
         strengthText.textContent = feedback;
     }
 
-    changePassword() {
-        const currentPassword = document.getElementById('currentPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+    changePassword(closeDialog) {
+        const currentPassword = document.getElementById('cpCurrentPassword').value;
+        const newPassword = document.getElementById('cpNewPassword').value;
+        const confirmPassword = document.getElementById('cpConfirmPassword').value;
         
         // Validate current password
         if (currentPassword !== this.currentUser.password) {
@@ -527,7 +541,7 @@ class LoginService {
         // SAVE USER DATA after password change
         this.saveUsers();
         
-        document.getElementById('changePasswordDialog').remove();
+        if (closeDialog) closeDialog();
         this.showMessage('Password changed successfully!', 'success');
         
         this.eventBus.emit('login.passwordChanged', { username: this.currentUser.username });
@@ -539,65 +553,64 @@ class LoginService {
             return;
         }
 
-        const dialog = document.createElement('div');
-        dialog.id = 'userSettingsDialog';
-        dialog.className = 'system-dialog user-settings-dialog';
-
         const user = this.users[this.currentUser.username];
 
-        dialog.innerHTML = `
-            <div class="dialog-content">
-                <div class="dialog-header">
-                    <div class="dialog-title">👤 User Settings</div>
-                    <div class="dialog-close" onclick="document.getElementById('userSettingsDialog').remove()">×</div>
+        const bodyHTML = `
+            <div class="user-settings-form">
+                <div class="form-group">
+                    <label>Display Name:</label>
+                    <input type="text" id="settingsDisplayName" class="text-input" value="${user.displayName}">
                 </div>
-                <div class="dialog-body">
-                    <div class="user-settings-form">
-                        <div class="form-group">
-                            <label>Display Name:</label>
-                            <input type="text" id="displayName" class="text-input" value="${user.displayName}">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Avatar (Emoji):</label>
-                            <div class="avatar-selection">
-                                <input type="text" id="avatarInput" class="avatar-input" value="${user.avatar}" maxlength="2">
-                                <div class="avatar-options">
-                                    ${['😸', '🐱', '👤', '🤖', '🎮', '🚀', '⭐', '🔥'].map(emoji => 
-                                        `<div class="avatar-option" onclick="elxaOS.loginService.selectAvatar('${emoji}')">${emoji}</div>`
-                                    ).join('')}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="user-stats">
-                            <h4>Account Information</h4>
-                            <div class="stat-item">Username: <strong>${user.username}</strong></div>
-                            <div class="stat-item">Created: <strong>${user.created.toLocaleDateString()}</strong></div>
-                            <div class="stat-item">Total Logins: <strong>${user.loginCount}</strong></div>
-                            <div class="stat-item">Last Login: <strong>${user.lastLogin ? user.lastLogin.toLocaleDateString() : 'Never'}</strong></div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button class="save-btn" onclick="elxaOS.loginService.saveUserSettings()">Save Changes</button>
-                            <button class="change-password-btn" onclick="elxaOS.loginService.showChangePasswordDialog()">Change Password</button>
-                            <button class="dialog-button" onclick="document.getElementById('userSettingsDialog').remove()">Close</button>
-                        </div>
-                    </div>
+                
+                <div class="form-group">
+                    ${buildAvatarPicker(user.avatar, 'settingsAvatarInput')}
+                </div>
+                
+                <div class="user-stats">
+                    <div class="user-stats-title">${ElxaIcons.renderAction('information')} Account Information</div>
+                    <div class="stat-item">Username: <strong>${user.username}</strong></div>
+                    <div class="stat-item">Created: <strong>${user.created ? user.created.toLocaleDateString() : 'Unknown'}</strong></div>
+                    <div class="stat-item">Total Logins: <strong>${user.loginCount}</strong></div>
+                    <div class="stat-item">Last Login: <strong>${user.lastLogin ? user.lastLogin.toLocaleDateString() : 'Never'}</strong></div>
                 </div>
             </div>
         `;
 
-        document.body.appendChild(dialog);
+        const { dialog, close } = ElxaUI.createDialog({
+            title: `${ElxaIcons.renderAction('account')} User Settings`,
+            body: bodyHTML,
+            className: 'user-settings-dialog',
+            buttons: [
+                {
+                    text: `${ElxaIcons.renderAction('save')} Save Changes`,
+                    className: 'elxa-dialog-btn-primary',
+                    onClick: () => {
+                        this.saveUserSettings(close);
+                    }
+                },
+                {
+                    text: `${ElxaIcons.renderAction('key')} Change Password`,
+                    className: 'elxa-dialog-btn',
+                    onClick: () => {
+                        close();
+                        this.showChangePasswordDialog();
+                    }
+                },
+                {
+                    text: 'Close',
+                    className: 'elxa-dialog-btn',
+                    onClick: 'close'
+                }
+            ]
+        });
+
+        // Wire up avatar picker
+        setupAvatarPicker(dialog, 'settingsAvatarInput');
     }
 
-    selectAvatar(emoji) {
-        document.getElementById('avatarInput').value = emoji;
-    }
-
-    saveUserSettings() {
-        const displayName = document.getElementById('displayName').value.trim();
-        const avatar = document.getElementById('avatarInput').value.trim();
+    saveUserSettings(closeDialog) {
+        const displayName = document.getElementById('settingsDisplayName').value.trim();
+        const avatar = document.getElementById('settingsAvatarInput').value.trim();
         
         if (!displayName) {
             this.showMessage('Display name cannot be empty', 'error');
@@ -618,7 +631,7 @@ class LoginService {
         // SAVE USER DATA after settings change
         this.saveUsers();
         
-        document.getElementById('userSettingsDialog').remove();
+        if (closeDialog) closeDialog();
         this.showMessage('Settings saved successfully!', 'success');
         
         this.eventBus.emit('login.settingsChanged', { 
@@ -628,7 +641,6 @@ class LoginService {
         });
     }
 
-    // FIXED: Show version edit dialog with proper sizing
     showVersionEditDialog() {
         // Remove any existing dialog first
         const existingDialog = document.getElementById('versionEditDialog');
@@ -637,249 +649,120 @@ class LoginService {
         // Create backdrop
         const backdrop = document.createElement('div');
         backdrop.id = 'versionEditDialog';
-        backdrop.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 9999;
-            display: block;
-        `;
+        backdrop.className = 'login-dialog-overlay';
 
         // Create the actual dialog
         const dialog = document.createElement('div');
-        dialog.style.cssText = `
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #c0c0c0;
-            border: 3px outset #c0c0c0;
-            width: 420px;
-            max-width: 90vw;
-            max-height: 85vh;
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-        `;
+        dialog.className = 'login-dialog-box';
 
         dialog.innerHTML = `
-            <div class="dialog-header" style="
-                background: linear-gradient(90deg, #0000ff, #008080);
-                color: white;
-                padding: 6px 8px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-weight: bold;
-                font-size: 11px;
-                cursor: move;
-                flex-shrink: 0;
-            ">
-                <div class="dialog-title">⚙️ Edit OS Version</div>
-                <div class="dialog-close" style="
-                    cursor: pointer;
-                    padding: 2px 6px;
-                    border: 1px outset #c0c0c0;
-                    background: #c0c0c0;
-                    color: black;
-                    font-size: 12px;
-                    line-height: 1;
-                ">×</div>
+            <div class="login-dialog-header">
+                <div class="login-dialog-title">${ElxaIcons.renderAction('settings')} Edit OS Version</div>
+                <button class="login-dialog-close-btn">${ElxaIcons.renderAction('close')}</button>
             </div>
-            <div class="dialog-body" style="
-                padding: 16px; 
-                font-size: 11px;
-                overflow-y: auto;
-                max-height: calc(85vh - 60px);
-                flex: 1;
-            ">
+            <div class="login-dialog-body">
                 <div class="version-edit-form">
-                    <div style="text-align: center; margin-bottom: 16px; color: #666; font-size: 10px;">
+                    <div class="login-dialog-hint">
                         Customize your operating system version information
                     </div>
                     
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">OS Name:</label>
-                        <input type="text" id="osName" value="${this.versionInfo.name}" style="
-                            width: calc(100% - 8px);
-                            padding: 6px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="e.g., ElxaOS" maxlength="20">
-                        <div style="font-size: 9px; color: #666; margin-top: 2px;">The main name of your OS</div>
+                    <div class="login-form-group">
+                        <label class="login-form-label">OS Name:</label>
+                        <input type="text" id="veOsName" class="login-form-input" value="${this.versionInfo.name}" placeholder="e.g., ElxaOS" maxlength="20">
+                        <div class="login-form-help">The main name of your OS</div>
                     </div>
                     
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Version Number:</label>
-                        <input type="text" id="versionNumber" value="${this.versionInfo.version}" style="
-                            width: calc(100% - 8px);
-                            padding: 6px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="e.g., 1.0, 2.1, 13.4" maxlength="15">
-                        <div style="font-size: 9px; color: #666; margin-top: 2px;">Version like 1.0, 2.5, 14.2, etc.</div>
+                    <div class="login-form-group">
+                        <label class="login-form-label">Version Number:</label>
+                        <input type="text" id="veVersionNumber" class="login-form-input" value="${this.versionInfo.version}" placeholder="e.g., 1.0, 2.1, 13.4" maxlength="15">
+                        <div class="login-form-help">Version like 1.0, 2.5, 14.2, etc.</div>
                     </div>
                     
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Codename (Optional):</label>
-                        <input type="text" id="codeName" value="${this.versionInfo.codename}" style="
-                            width: calc(100% - 8px);
-                            padding: 6px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="e.g., KitKat, Oreo, Ice Cream" maxlength="25">
-                        <div style="font-size: 9px; color: #666; margin-top: 2px;">Fun name like Android versions (optional)</div>
+                    <div class="login-form-group">
+                        <label class="login-form-label">Codename (Optional):</label>
+                        <input type="text" id="veCodeName" class="login-form-input" value="${this.versionInfo.codename}" placeholder="e.g., KitKat, Oreo, Ice Cream" maxlength="25">
+                        <div class="login-form-help">Fun name like Android versions (optional)</div>
                     </div>
                     
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Build Number:</label>
-                        <input type="text" id="buildNumber" value="${this.versionInfo.build}" style="
-                            width: calc(100% - 8px);
-                            padding: 6px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="e.g., 2024.01, 230415.1" maxlength="20">
-                        <div style="font-size: 9px; color: #666; margin-top: 2px;">Build identifier (date or number)</div>
+                    <div class="login-form-group">
+                        <label class="login-form-label">Build Number:</label>
+                        <input type="text" id="veBuildNumber" class="login-form-input" value="${this.versionInfo.build}" placeholder="e.g., 2024.01, 230415.1" maxlength="20">
+                        <div class="login-form-help">Build identifier (date or number)</div>
                     </div>
                     
-                    <div style="
-                        border: 1px inset #c0c0c0;
-                        background: #f8f8f8;
-                        padding: 12px;
-                        margin-bottom: 16px;
-                        border-radius: 2px;
-                    ">
-                        <div style="font-weight: bold; margin-bottom: 6px; color: #333;">Preview:</div>
-                        <div id="versionPreview" style="
-                            font-size: 12px;
-                            color: #0066cc;
-                            text-align: center;
-                            background: white;
-                            padding: 8px;
-                            border: 1px solid #ddd;
-                            border-radius: 2px;
-                        ">
+                    <div class="version-preview-box">
+                        <div class="version-preview-label">Preview:</div>
+                        <div class="version-preview-content">
                             <div class="preview-name"></div>
-                            <div class="preview-build" style="font-size: 10px; color: #666; margin-top: 2px;"></div>
+                            <div class="preview-build"></div>
                         </div>
                     </div>
                     
-                    <div style="
-                        display: flex;
-                        gap: 8px;
-                        justify-content: center;
-                        margin-top: 16px;
-                    ">
-                        <button class="save-version-btn" style="
-                            padding: 6px 16px;
-                            border: 2px outset #4CAF50;
-                            background: linear-gradient(to bottom, #4CAF50, #45a049);
-                            color: white;
-                            cursor: pointer;
-                            font-weight: bold;
-                            font-size: 11px;
-                            border-radius: 2px;
-                        ">💾 Save Version</button>
-                        <button class="reset-version-btn" style="
-                            padding: 6px 16px;
-                            border: 2px outset #ff8800;
-                            background: linear-gradient(to bottom, #ff8800, #ff6600);
-                            color: white;
-                            cursor: pointer;
-                            font-size: 11px;
-                            border-radius: 2px;
-                        ">🔄 Reset</button>
-                        <button class="cancel-version-btn" style="
-                            padding: 6px 16px;
-                            border: 2px outset #c0c0c0;
-                            background: #c0c0c0;
-                            cursor: pointer;
-                            font-size: 11px;
-                            border-radius: 2px;
-                        ">Cancel</button>
+                    <div class="login-dialog-actions">
+                        <button class="login-btn-primary save-version-btn">${ElxaIcons.renderAction('save')} Save Version</button>
+                        <button class="login-btn-warning reset-version-btn">${ElxaIcons.renderAction('restore')} Reset</button>
+                        <button class="login-btn cancel-version-btn">Cancel</button>
                     </div>
                 </div>
             </div>
         `;
 
-        // Add dialog to backdrop
         backdrop.appendChild(dialog);
         document.body.appendChild(backdrop);
 
         // Update preview function
         const updatePreview = () => {
-            const name = document.getElementById('osName').value.trim() || 'ElxaOS';
-            const version = document.getElementById('versionNumber').value.trim() || '1.0';
-            const codename = document.getElementById('codeName').value.trim();
-            const build = document.getElementById('buildNumber').value.trim() || '2024.01';
+            const name = document.getElementById('veOsName').value.trim() || 'ElxaOS';
+            const version = document.getElementById('veVersionNumber').value.trim() || '1.0';
+            const codename = document.getElementById('veCodeName').value.trim();
+            const build = document.getElementById('veBuildNumber').value.trim() || '2024.01';
             
-            const previewName = dialog.querySelector('.preview-name');
-            const previewBuild = dialog.querySelector('.preview-build');
-            
-            previewName.textContent = `${name} ${version}${codename ? ` "${codename}"` : ''}`;
-            previewBuild.textContent = `Build ${build}`;
+            dialog.querySelector('.preview-name').textContent = `${name} ${version}${codename ? ` "${codename}"` : ''}`;
+            dialog.querySelector('.preview-build').textContent = `Build ${build}`;
         };
 
-        // Set up event listeners
-        dialog.querySelector('.dialog-close').addEventListener('click', () => {
-            backdrop.remove();
-        });
-
-        dialog.querySelector('.cancel-version-btn').addEventListener('click', () => {
-            backdrop.remove();
-        });
+        // Event listeners
+        dialog.querySelector('.login-dialog-close-btn').addEventListener('click', () => backdrop.remove());
+        dialog.querySelector('.cancel-version-btn').addEventListener('click', () => backdrop.remove());
 
         dialog.querySelector('.save-version-btn').addEventListener('click', () => {
             this.saveVersionChanges();
             backdrop.remove();
         });
 
-        dialog.querySelector('.reset-version-btn').addEventListener('click', () => {
-            if (confirm('Reset to default version info?')) {
-                document.getElementById('osName').value = 'ElxaOS';
-                document.getElementById('versionNumber').value = '1.0';
-                document.getElementById('codeName').value = 'KitKat';
-                document.getElementById('buildNumber').value = '2024.01';
+        dialog.querySelector('.reset-version-btn').addEventListener('click', async () => {
+            const confirmed = await ElxaUI.showConfirmDialog(
+                'Reset to default version info?',
+                'Reset Version'
+            );
+            if (confirmed) {
+                document.getElementById('veOsName').value = 'ElxaOS';
+                document.getElementById('veVersionNumber').value = '1.0';
+                document.getElementById('veCodeName').value = 'KitKat';
+                document.getElementById('veBuildNumber').value = '2024.01';
                 updatePreview();
             }
         });
 
         // Live preview updates
-        ['osName', 'versionNumber', 'codeName', 'buildNumber'].forEach(id => {
+        ['veOsName', 'veVersionNumber', 'veCodeName', 'veBuildNumber'].forEach(id => {
             document.getElementById(id).addEventListener('input', updatePreview);
         });
 
         // Click backdrop to close
         backdrop.addEventListener('click', (e) => {
-            if (e.target === backdrop) {
-                backdrop.remove();
-            }
+            if (e.target === backdrop) backdrop.remove();
         });
 
-        // Initial preview update
         updatePreview();
-
-        // Focus first input
-        setTimeout(() => {
-            document.getElementById('osName').focus();
-        }, 100);
-
-        console.log('Version edit dialog created and displayed');
+        setTimeout(() => document.getElementById('veOsName').focus(), 100);
     }
 
-    // NEW METHOD: Save version changes
     saveVersionChanges() {
-        const name = document.getElementById('osName').value.trim() || 'ElxaOS';
-        const version = document.getElementById('versionNumber').value.trim() || '1.0';
-        const codename = document.getElementById('codeName').value.trim();
-        const build = document.getElementById('buildNumber').value.trim() || '2024.01';
+        const name = document.getElementById('veOsName').value.trim() || 'ElxaOS';
+        const version = document.getElementById('veVersionNumber').value.trim() || '1.0';
+        const codename = document.getElementById('veCodeName').value.trim();
+        const build = document.getElementById('veBuildNumber').value.trim() || '2024.01';
 
         this.versionInfo = {
             name: name,
@@ -934,7 +817,7 @@ class LoginService {
                     username: 'kitkat',
                     password: '3722',
                     displayName: 'KitKat',
-                    avatar: '😸',
+                    avatar: 'sprite:paw',
                     created: new Date(),
                     lastLogin: null,
                     loginCount: 0
@@ -1014,295 +897,95 @@ class LoginService {
     }
 
     showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `system-message ${type}`;
-        message.textContent = text;
-        
-        const colors = {
-            info: { bg: '#add8e6', color: 'black' },
-            success: { bg: '#00ff00', color: 'black' },
-            warning: { bg: '#ffff00', color: 'black' },
-            error: { bg: '#ff0000', color: 'white' }
-        };
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: ${colors[type].bg};
-            color: ${colors[type].color};
-            padding: 8px 16px;
-            border: 2px outset #c0c0c0;
-            z-index: 3000;
-            font-weight: bold;
-            font-size: 11px;
-        `;
-
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
+        ElxaUI.showMessage(text, type);
     }
 
-    // FIXED: Updated showCreateUserDialog method - replace your existing one
     showCreateUserDialog() {
         // Remove any existing dialog first
         const existingDialog = document.getElementById('createUserDialog');
         if (existingDialog) existingDialog.remove();
 
-        // Create backdrop
         const backdrop = document.createElement('div');
         backdrop.id = 'createUserDialog';
-        backdrop.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `;
+        backdrop.className = 'login-dialog-overlay';
 
-        // Create the actual dialog
         const dialog = document.createElement('div');
-        dialog.style.cssText = `
-            background: #c0c0c0;
-            border: 3px outset #c0c0c0;
-            width: 380px;
-            max-height: 90vh;
-            max-width: 90vw;
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-        `;
+        dialog.className = 'login-dialog-box';
 
         dialog.innerHTML = `
-            <div class="dialog-header" style="
-                background: linear-gradient(90deg, #0000ff, #008080);
-                color: white;
-                padding: 6px 8px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-weight: bold;
-                font-size: 11px;
-                cursor: move;
-                flex-shrink: 0;
-            ">
-                <div class="dialog-title">➕ Create New User</div>
-                <div class="dialog-close" style="
-                    cursor: pointer;
-                    padding: 2px 6px;
-                    border: 1px outset #c0c0c0;
-                    background: #c0c0c0;
-                    color: black;
-                    font-size: 12px;
-                    line-height: 1;
-                ">×</div>
+            <div class="login-dialog-header">
+                <div class="login-dialog-title">${ElxaIcons.renderAction('account-plus')} Create New User</div>
+                <button class="login-dialog-close-btn">${ElxaIcons.renderAction('close')}</button>
             </div>
-            <div class="dialog-body" style="
-                padding: 16px;
-                font-size: 11px;
-                overflow-y: auto;
-                flex: 1;
-                min-height: 0;
-            ">
+            <div class="login-dialog-body">
                 <div class="create-user-form">
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Username:</label>
-                        <input type="text" id="newUsername" style="
-                            width: calc(100% - 8px);
-                            padding: 3px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="Enter username" maxlength="20">
-                        <div style="font-size: 9px; color: #666; margin-top: 2px;">Letters, numbers, and underscores only</div>
+                    <div class="login-form-group">
+                        <label class="login-form-label">Username:</label>
+                        <input type="text" id="cuUsername" class="login-form-input" placeholder="Enter username" maxlength="20">
+                        <div class="login-form-help">Letters, numbers, and underscores only</div>
                     </div>
                     
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Display Name:</label>
-                        <input type="text" id="newDisplayName" style="
-                            width: calc(100% - 8px);
-                            padding: 3px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="Enter display name" maxlength="30">
+                    <div class="login-form-group">
+                        <label class="login-form-label">Display Name:</label>
+                        <input type="text" id="cuDisplayName" class="login-form-input" placeholder="Enter display name" maxlength="30">
                     </div>
                     
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Password:</label>
-                        <input type="password" id="newUserPassword" style="
-                            width: calc(100% - 8px);
-                            padding: 3px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="Enter password">
+                    <div class="login-form-group">
+                        <label class="login-form-label">Password:</label>
+                        <input type="password" id="cuPassword" class="login-form-input" placeholder="Enter password">
                     </div>
                     
-                    <div style="margin-bottom: 12px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Confirm Password:</label>
-                        <input type="password" id="confirmUserPassword" style="
-                            width: calc(100% - 8px);
-                            padding: 3px 4px;
-                            border: 2px inset #c0c0c0;
-                            font-family: 'MS Sans Serif', sans-serif;
-                            font-size: 11px;
-                        " placeholder="Confirm password">
+                    <div class="login-form-group">
+                        <label class="login-form-label">Confirm Password:</label>
+                        <input type="password" id="cuConfirmPassword" class="login-form-input" placeholder="Confirm password">
                     </div>
                     
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; margin-bottom: 4px; font-weight: bold;">Avatar:</label>
-                        <input type="text" id="newUserAvatar" value="👤" maxlength="2" style="
-                            width: 40px;
-                            padding: 3px;
-                            border: 2px inset #c0c0c0;
-                            text-align: center;
-                            font-size: 14px;
-                            margin-bottom: 6px;
-                            display: block;
-                        ">
-                        <div style="
-                            display: grid;
-                            grid-template-columns: repeat(6, 1fr);
-                            gap: 4px;
-                            max-height: 80px;
-                            overflow-y: auto;
-                            border: 1px inset #c0c0c0;
-                            padding: 4px;
-                            background: white;
-                        ">
-                            ${['👤', '😸', '🐱', '🤖', '👦', '👧', '🚀', '⭐', '🔥', '🎮', '🦆', '🐧'].map(emoji => 
-                                `<div class="avatar-option" style="
-                                    cursor: pointer;
-                                    padding: 4px;
-                                    border: 1px outset #c0c0c0;
-                                    background: #e0e0e0;
-                                    font-size: 12px;
-                                    line-height: 1;
-                                    text-align: center;
-                                    transition: all 0.1s;
-                                " data-emoji="${emoji}">${emoji}</div>`
-                            ).join('')}
-                        </div>
+                    <div class="login-form-group">
+                        ${buildAvatarPicker('sprite:smiley', 'cuAvatar')}
                     </div>
                 </div>
             </div>
-            <div style="
-                padding: 12px 16px;
-                border-top: 1px solid #808080;
-                display: flex;
-                gap: 8px;
-                justify-content: flex-end;
-                flex-shrink: 0;
-                background: #c0c0c0;
-            ">
-                <button class="create-user-btn" style="
-                    padding: 4px 12px;
-                    border: 2px outset #c0c0c0;
-                    background: #c0c0c0;
-                    cursor: pointer;
-                    font-weight: bold;
-                    font-size: 11px;
-                ">Create User</button>
-                <button class="cancel-btn" style="
-                    padding: 4px 12px;
-                    border: 2px outset #c0c0c0;
-                    background: #c0c0c0;
-                    cursor: pointer;
-                    font-size: 11px;
-                ">Cancel</button>
+            <div class="login-dialog-footer">
+                <button class="login-btn-primary create-user-btn">${ElxaIcons.renderAction('account-plus')} Create User</button>
+                <button class="login-btn cancel-btn">Cancel</button>
             </div>
         `;
 
-        // Add dialog to backdrop
         backdrop.appendChild(dialog);
         document.body.appendChild(backdrop);
 
-        // Set up event listeners
-        dialog.querySelector('.dialog-close').addEventListener('click', () => {
-            backdrop.remove();
-        });
-
-        dialog.querySelector('.cancel-btn').addEventListener('click', () => {
-            backdrop.remove();
-        });
+        // Event listeners
+        dialog.querySelector('.login-dialog-close-btn').addEventListener('click', () => backdrop.remove());
+        dialog.querySelector('.cancel-btn').addEventListener('click', () => backdrop.remove());
 
         dialog.querySelector('.create-user-btn').addEventListener('click', () => {
-            this.createNewUser();
+            this.createNewUser(backdrop);
         });
 
-        // Avatar selection with hover effects
-        dialog.querySelectorAll('.avatar-option').forEach(option => {
-            option.addEventListener('click', () => {
-                document.getElementById('newUserAvatar').value = option.dataset.emoji;
-                
-                // Visual feedback
-                dialog.querySelectorAll('.avatar-option').forEach(opt => {
-                    opt.style.background = '#e0e0e0';
-                    opt.style.border = '1px outset #c0c0c0';
-                });
-                option.style.background = '#b0d0ff';
-                option.style.border = '1px inset #c0c0c0';
-            });
+        // Wire up avatar picker
+        setupAvatarPicker(dialog, 'cuAvatar');
 
-            // Hover effects
-            option.addEventListener('mouseenter', () => {
-                if (option.style.background !== 'rgb(176, 208, 255)') {
-                    option.style.background = '#f0f0f0';
-                }
-            });
-
-            option.addEventListener('mouseleave', () => {
-                if (option.style.background !== 'rgb(176, 208, 255)') {
-                    option.style.background = '#e0e0e0';
-                }
-            });
-        });
-
-        // Handle Enter key in form fields
-        const formInputs = dialog.querySelectorAll('input[type="text"], input[type="password"]');
-        formInputs.forEach(input => {
+        // Enter key in form fields
+        dialog.querySelectorAll('input[type="text"], input[type="password"]').forEach(input => {
             input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    this.createNewUser();
-                }
+                if (e.key === 'Enter') this.createNewUser(backdrop);
             });
         });
 
         // Click backdrop to close
         backdrop.addEventListener('click', (e) => {
-            if (e.target === backdrop) {
-                backdrop.remove();
-            }
+            if (e.target === backdrop) backdrop.remove();
         });
 
-        // Focus first input
-        setTimeout(() => {
-            document.getElementById('newUsername').focus();
-        }, 100);
-
-        console.log('Create user dialog created and displayed');
+        setTimeout(() => document.getElementById('cuUsername').focus(), 100);
     }
 
-    // NEW METHOD: Select avatar for new user
-    selectNewUserAvatar(emoji) {
-        document.getElementById('newUserAvatar').value = emoji;
-    }
-
-    // NEW METHOD: Create new user
-    createNewUser() {
-        const username = document.getElementById('newUsername').value.trim().toLowerCase();
-        const displayName = document.getElementById('newDisplayName').value.trim();
-        const password = document.getElementById('newUserPassword').value;
-        const confirmPassword = document.getElementById('confirmUserPassword').value;
-        const avatar = document.getElementById('newUserAvatar').value.trim();
+    createNewUser(backdrop) {
+        const username = document.getElementById('cuUsername').value.trim().toLowerCase();
+        const displayName = document.getElementById('cuDisplayName').value.trim();
+        const password = document.getElementById('cuPassword').value;
+        const confirmPassword = document.getElementById('cuConfirmPassword').value;
+        const avatar = document.getElementById('cuAvatar').value.trim();
 
         // Validation
         if (!username) {
@@ -1355,7 +1038,7 @@ class LoginService {
         this.saveUsers();
 
         // Close dialog
-        document.getElementById('createUserDialog').remove();
+        if (backdrop) backdrop.remove();
 
         // Show success message and refresh login screen
         this.showMessage(`User "${displayName}" created successfully!`, 'success');
@@ -1367,15 +1050,18 @@ class LoginService {
         });
     }
 
-    // NEW METHOD: Delete user (admin function)
-    deleteUser(username) {
+    async deleteUser(username) {
         if (username === 'kitkat') {
             this.showMessage('Cannot delete the default admin user', 'error');
             return false;
         }
 
         if (this.users[username]) {
-            if (confirm(`Are you sure you want to delete user "${this.users[username].displayName}"? This cannot be undone.`)) {
+            const confirmed = await ElxaUI.showConfirmDialog(
+                `Are you sure you want to delete user "${this.users[username].displayName}"? This cannot be undone.`,
+                'Delete User'
+            );
+            if (confirmed) {
                 delete this.users[username];
                 this.saveUsers();
                 this.showMessage('User deleted successfully', 'success');

@@ -98,6 +98,11 @@
     color: var(--menuText, #333);
 }
 
+/* Prevent icon spans from intercepting clicks */
+.paint-container .mdi {
+    pointer-events: none;
+}
+
 .tool-btn:hover {
     background: var(--buttonHoverBg, linear-gradient(to bottom, #f8f8f8, #e8e8e8));
 }
@@ -174,26 +179,12 @@
 }
 
 /* =================================
-   ENHANCED COLOR PANEL
+   COLORS IN TOOLBAR
 ================================= */
-.paint-color-palette-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px;
-    background: var(--menuBg, #f0f0f0) !important;
-    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
-    flex-wrap: wrap;
-}
-
-.paint-color-section-wrapper {
+.paint-colors-section {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 4px 8px;
-    border: 1px solid var(--windowBorder, #ddd);
-    border-radius: 3px;
-    background: var(--windowBg, #f0f0f0) !important;
 }
 
 .paint-current-colors-display {
@@ -209,8 +200,8 @@
 
 .paint-primary-color,
 .paint-secondary-color {
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
     border: 2px solid var(--menuText, #333);
     cursor: pointer;
     position: relative;
@@ -221,8 +212,8 @@
 }
 
 .paint-secondary-color {
-    margin-left: -10px;
-    margin-top: 10px;
+    margin-left: -8px;
+    margin-top: 8px;
     z-index: 1;
 }
 
@@ -903,12 +894,6 @@
 ================================= */
 @media (max-width: 1000px) {
     .paint-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-    
-    .paint-color-palette-container {
         flex-direction: column;
         align-items: stretch;
         gap: 8px;

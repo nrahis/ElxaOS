@@ -213,6 +213,11 @@
     user-select: none;
 }
 
+/* Prevent icon spans from intercepting clicks */
+.calculator-container .mdi {
+    pointer-events: none;
+}
+
 .calc-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 3px 8px rgba(0,0,0,0.2);
@@ -352,7 +357,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.98);
+    background: var(--windowBg, rgba(255, 255, 255, 0.98));
     border: 2px inset var(--windowBorder, #c0c0c0);
     z-index: 100;
     display: flex;
@@ -383,7 +388,7 @@
 .history-header h4 {
     margin: 0;
     font-size: 12px;
-    color: var(--menuHoverText, #0066cc);
+    color: var(--menuHoverText, white);
 }
 
 .history-controls {
@@ -472,7 +477,58 @@
    MESSAGE DIALOG
 ================================= */
 .calculator-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--windowBg, #fff);
+    color: var(--menuText, #000);
+    border: 2px outset var(--windowBorder, #c0c0c0);
+    padding: 0;
+    max-width: 300px;
+    font-size: 11px;
+    z-index: 3000;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.4;
     animation: messageSlide 0.3s ease-out;
+}
+
+.calculator-message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: var(--titlebarBg, linear-gradient(to bottom, #0078d4, #106ebe));
+    color: var(--menuHoverText, white);
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.calculator-message-body {
+    padding: 16px;
+    background: var(--windowBg, #f0f0f0);
+    color: var(--menuText, #000);
+}
+
+.calculator-message-ok {
+    margin-top: 12px;
+    padding: 4px 16px;
+    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    cursor: pointer;
+    color: var(--menuText, #000);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 11px;
+}
+
+.calculator-message-ok:hover {
+    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
+}
+
+.calculator-message-ok:active {
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
 @keyframes messageSlide {

@@ -1,458 +1,738 @@
 /* =================================
-   ELXABOOKS - PROFESSIONAL ACCOUNTING
-   QuickBooks-Inspired Design for Future CEOs
-   (All classes prefixed with elxa-books-)
-   FIXED: Window manager compatibility
+   ELXABOOKS PRO — ACCOUNTING SOFTWARE
+   QuickBooks-inspired for ElxaCorp CEOs
 ================================= */
 
-/* Ensure we don't interfere with window manager controls */
-* {
-    box-sizing: border-box;
-}
-
-.elxa-books-app {
-    height: calc(100% - 10px); /* Leave space for window controls */
-    width: calc(100% - 10px);  /* Leave space for window controls */
-    display: flex;
-    flex-direction: column;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f8f9fa;
-    padding: 5px; /* Small padding to avoid window edges */
-    margin: 5px;  /* Small margin to avoid window edges */
-    gap: 0;
-    overflow: hidden;
-    /* FIXED: Don't capture pointer events by default */
-    position: static;
-    z-index: 1; /* Low z-index */
-    pointer-events: none; /* Let window manager handle events by default */
-}
+/* Pointer-events: prevent icon spans from eating clicks */
+.eb-app .mdi { pointer-events: none; }
 
 /* =================================
-   MAIN CONTENT LAYOUT
+   LAYOUT
 ================================= */
-.elxa-books-content {
-    flex: 1;
+.eb-app {
     display: flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 16px;
-    overflow-y: auto;
-    background: #f8f9fa;
     height: 100%;
-    box-sizing: border-box;
-    /* FIXED: Enable pointer events only on content */
-    pointer-events: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    color: #1f2937;
+    background: #f1f5f9;
+    overflow: hidden;
 }
 
 /* =================================
-   PROFESSIONAL BALANCE CARD
+   SIDEBAR
 ================================= */
-.elxa-books-balance-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 24px;
-    text-align: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border-top: 4px solid #1e40af;
-    pointer-events: auto; /* Ensure this can be clicked */
+.eb-sidebar {
+    width: 170px;
+    background: #1e293b;
+    color: #94a3b8;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
 }
 
-.elxa-books-balance-label {
+.eb-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid #334155;
+}
+
+.eb-brand-icon {
+    font-size: 22px;
+}
+
+/* Override theme icon color in sidebar */
+.eb-sidebar .elxa-icon-ui { color: #f59e0b; }
+
+.eb-brand-name {
     font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 8px;
-    font-weight: 500;
-    text-transform: uppercase;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.1;
+}
+
+.eb-brand-pro {
+    display: inline-block;
+    background: #f59e0b;
+    color: #1e293b;
+    font-size: 8px;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 3px;
+    vertical-align: top;
     letter-spacing: 0.5px;
 }
 
-.elxa-books-balance-amount {
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-family: 'Segoe UI', monospace;
-}
-
-.elxa-books-balance-amount.elxa-books-positive {
-    color: #059669;
-}
-
-.elxa-books-balance-amount.elxa-books-negative {
-    color: #dc2626;
-}
-
-/* =================================
-   CORPORATE ACTION BUTTONS
-================================= */
-.elxa-books-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    pointer-events: auto; /* Ensure buttons can be clicked */
-}
-
-.elxa-books-btn {
-    padding: 14px 20px;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    pointer-events: auto; /* FIXED: Explicitly enable pointer events */
-}
-
-.elxa-books-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.elxa-books-btn:active {
-    transform: translateY(0);
-}
-
-.elxa-books-btn-income {
-    background: #059669;
-    color: white;
-    border-color: #047857;
-}
-
-.elxa-books-btn-income:hover {
-    background: #047857;
-}
-
-.elxa-books-btn-expense {
-    background: #dc2626;
-    color: white;
-    border-color: #b91c1c;
-}
-
-.elxa-books-btn-expense:hover {
-    background: #b91c1c;
-}
-
-.elxa-books-btn-success {
-    background: #1e40af;
-    color: white;
-    border-color: #1d4ed8;
-    font-size: 12px;
-    padding: 10px 16px;
-}
-
-.elxa-books-btn-success:hover {
-    background: #1d4ed8;
-}
-
-.elxa-books-btn-cancel {
-    background: #6b7280;
-    color: white;
-    border-color: #4b5563;
-    font-size: 12px;
-    padding: 10px 16px;
-}
-
-.elxa-books-btn-cancel:hover {
-    background: #4b5563;
-}
-
-.elxa-books-btn-delete {
-    background: #dc2626;
-    color: white;
-    border: none;
-    padding: 4px 8px;
-    font-size: 11px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    pointer-events: auto; /* FIXED: Enable pointer events */
-}
-
-.elxa-books-btn-delete:hover {
-    background: #b91c1c;
-    transform: scale(1.05);
-}
-
-/* =================================
-   PROFESSIONAL FORMS
-================================= */
-.elxa-books-form {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    border-left: 4px solid #1e40af;
-    position: relative;
-    z-index: 1; /* FIXED: Lower z-index */
-    pointer-events: auto; /* FIXED: Enable pointer events on forms */
-}
-
-.elxa-books-form-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 20px;
-    text-align: left;
-    border-bottom: 2px solid #f3f4f6;
-    padding-bottom: 12px;
-}
-
-.elxa-books-form-row {
-    margin-bottom: 20px;
-}
-
-.elxa-books-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.elxa-books-input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 14px;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
-    font-family: inherit;
-    pointer-events: auto; /* FIXED: Enable pointer events on inputs */
-}
-
-.elxa-books-input:focus {
-    outline: none;
-    border-color: #1e40af;
-    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-    background: #fefefe;
-}
-
-.elxa-books-form-buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-    border-top: 1px solid #f3f4f6;
-    padding-top: 16px;
-    pointer-events: auto; /* FIXED: Enable pointer events on button container */
-}
-
-/* =================================
-   CORPORATE TRANSACTION HISTORY
-================================= */
-.elxa-books-history {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border-top: 4px solid #1e40af;
+.eb-nav {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 300px;
-    pointer-events: auto; /* FIXED: Enable pointer events on history */
+    padding: 8px 0;
 }
 
-.elxa-books-history-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1f2937;
-    padding: 20px 24px 16px;
+.eb-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
     text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid #f3f4f6;
-    background: #f9fafb;
+    transition: all 0.15s ease;
+    border-left: 3px solid transparent;
 }
 
-.elxa-books-transaction-list {
+.eb-nav-item:hover {
+    background: #334155;
+    color: #e2e8f0;
+}
+
+.eb-nav-item.active {
+    background: #334155;
+    color: #ffffff;
+    border-left-color: #3b82f6;
+    font-weight: 600;
+}
+
+.eb-nav-item .elxa-icon-ui { color: inherit; }
+
+.eb-sidebar-footer {
+    padding: 10px 14px;
+    font-size: 9px;
+    color: #475569;
+    border-top: 1px solid #334155;
+    text-align: center;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+/* =================================
+   MAIN CONTENT
+================================= */
+.eb-main {
     flex: 1;
     overflow-y: auto;
-    padding: 0;
-    min-height: 200px;
-    pointer-events: auto; /* FIXED: Enable pointer events on transaction list */
+    overflow-x: hidden;
 }
 
-/* Table-style transaction headers */
-.elxa-books-transaction-header {
+.eb-view {
+    display: none;
+    padding: 20px;
+    animation: ebFadeIn 0.2s ease;
+}
+
+.eb-view.active {
+    display: block;
+}
+
+@keyframes ebFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =================================
+   PAGE HEADER
+================================= */
+.eb-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.eb-page-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.eb-header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* =================================
+   SUMMARY CARDS (Dashboard)
+================================= */
+.eb-summary-cards {
     display: grid;
-    grid-template-columns: 80px 1fr 100px 40px 40px;
-    padding: 12px 24px;
-    background: #f9fafb;
-    border-bottom: 2px solid #e5e7eb;
-    font-size: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.eb-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-top: 3px solid #3b82f6;
+}
+
+.eb-card-balance  { border-top-color: #3b82f6; }
+.eb-card-income   { border-top-color: #10b981; }
+.eb-card-expense  { border-top-color: #ef4444; }
+.eb-card-invoices { border-top-color: #f59e0b; }
+
+.eb-card-label {
+    font-size: 10px;
     font-weight: 600;
-    color: #6b7280;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+}
+
+.eb-card-value {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.eb-card-sub {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+/* =================================
+   COLORS (positive/negative)
+================================= */
+.eb-positive { color: #059669; }
+.eb-negative { color: #dc2626; }
+
+/* =================================
+   QUICK ACTIONS (Dashboard)
+================================= */
+.eb-quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.eb-quick-btn {
+    flex: 1;
+    padding: 10px 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #334155;
+    transition: all 0.15s ease;
+}
+
+.eb-quick-btn:hover {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.12);
+}
+
+.eb-quick-btn .elxa-icon-ui { color: inherit; }
+
+/* =================================
+   SECTION TITLES
+================================= */
+.eb-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.eb-recent-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+/* =================================
+   TRANSACTION TABLE
+================================= */
+.eb-table {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.eb-table-header {
+    display: grid;
+    grid-template-columns: 90px 1fr 110px 90px 36px;
+    padding: 8px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
 
-.elxa-books-transaction {
+.eb-table-body {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.eb-row,
+.eb-recent-list .eb-row {
     display: grid;
-    grid-template-columns: 80px 1fr 100px 40px 40px;
-    padding: 16px 24px;
-    border-bottom: 1px solid #f3f4f6;
-    transition: all 0.2s ease;
+    grid-template-columns: 90px 1fr 110px 90px 36px;
+    padding: 8px 14px;
+    border-bottom: 1px solid #f1f5f9;
     align-items: center;
-    pointer-events: auto; /* FIXED: Enable pointer events on transactions */
+    transition: background 0.1s ease;
 }
 
-.elxa-books-transaction:hover {
+.eb-row:hover {
     background: #f8fafc;
-    border-left: 4px solid #1e40af;
 }
 
-.elxa-books-transaction:last-child {
+.eb-row:last-child {
     border-bottom: none;
 }
 
-.elxa-books-transaction.income {
-    border-left: 3px solid #059669;
+.eb-row-income {
+    border-left: 3px solid #10b981;
 }
 
-.elxa-books-transaction.expense {
-    border-left: 3px solid #dc2626;
+.eb-row-expense {
+    border-left: 3px solid #ef4444;
 }
 
-.elxa-books-transaction-date {
+.eb-col-date {
+    font-size: 11px;
+    color: #64748b;
+    font-family: 'Segoe UI', monospace;
+}
+
+.eb-col-desc {
     font-size: 12px;
-    color: #6b7280;
     font-weight: 500;
-    font-family: monospace;
+    color: #1e293b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 8px;
 }
 
-.elxa-books-transaction-desc {
-    font-size: 14px;
-    color: #1f2937;
-    font-weight: 500;
-    padding-right: 12px;
+.eb-col-cat {
+    font-size: 10px;
 }
 
-.elxa-books-transaction-amount {
-    font-size: 14px;
+.eb-cat-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.eb-col-amount {
+    font-size: 12px;
     font-weight: 700;
     text-align: right;
-    font-family: monospace;
+    font-family: 'Segoe UI', monospace;
 }
 
-.elxa-books-transaction-amount.elxa-books-positive {
-    color: #059669;
-}
-
-.elxa-books-transaction-amount.elxa-books-negative {
-    color: #dc2626;
-}
-
-.elxa-books-transaction-type {
-    font-size: 16px;
+.eb-col-action {
     text-align: center;
 }
 
-.elxa-books-transaction-delete {
-    text-align: center;
+/* =================================
+   BUTTONS
+================================= */
+.eb-btn-sm {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
 }
 
-.elxa-books-no-transactions {
-    text-align: center;
-    color: #9ca3af;
-    font-style: italic;
-    padding: 60px 20px;
+.eb-btn-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.eb-btn-sm:active {
+    transform: translateY(0);
+}
+
+.eb-btn-green  { background: #10b981; color: white; }
+.eb-btn-red    { background: #ef4444; color: white; }
+.eb-btn-blue   { background: #3b82f6; color: white; }
+.eb-btn-gray   { background: #94a3b8; color: white; }
+
+.eb-btn-green:hover  { background: #059669; }
+.eb-btn-red:hover    { background: #dc2626; }
+.eb-btn-blue:hover   { background: #2563eb; }
+.eb-btn-gray:hover   { background: #64748b; }
+
+.eb-btn-sm .elxa-icon-ui { color: inherit; }
+
+.eb-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: #94a3b8;
+    transition: color 0.15s ease;
     font-size: 14px;
-    border: 2px dashed #e5e7eb;
-    margin: 24px;
+}
+
+.eb-icon-btn:hover {
+    color: #ef4444;
+}
+
+.eb-icon-btn .elxa-icon-ui { color: inherit; }
+
+/* =================================
+   FORMS
+================================= */
+.eb-form-card {
+    background: #ffffff;
     border-radius: 8px;
-    background: #fefefe;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #3b82f6;
+    animation: ebFadeIn 0.2s ease;
+}
+
+.eb-form-row {
+    margin-bottom: 14px;
+}
+
+.eb-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+.eb-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 12px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    background: #ffffff;
+}
+
+.eb-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.eb-select {
+    cursor: pointer;
+}
+
+.eb-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
 }
 
 /* =================================
-   RESPONSIVE DESIGN
+   INVOICE FORM
 ================================= */
-@media (max-width: 600px) {
-    .elxa-books-actions {
-        grid-template-columns: 1fr;
-    }
-    
-    .elxa-books-balance-amount {
-        font-size: 28px;
-    }
-    
-    .elxa-books-transaction-header,
-    .elxa-books-transaction {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 8px;
-        padding: 12px 16px;
-    }
-    
-    .elxa-books-transaction-amount {
-        text-align: center;
-    }
-    
-    .elxa-books-form-buttons {
-        justify-content: center;
-    }
+.eb-invoice-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.eb-invoice-from {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.eb-invoice-logo {
+    font-size: 28px;
+}
+
+.eb-invoice-logo .elxa-icon-ui { color: #f59e0b; }
+
+.eb-subtle {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+.eb-invoice-form-number {
+    font-size: 22px;
+    font-weight: 800;
+    color: #cbd5e1;
+    letter-spacing: 2px;
+}
+
+.eb-line-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.eb-line-item-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.eb-line-item-row .eb-line-desc {
+    flex: 2;
+}
+
+.eb-line-item-row .eb-line-amount {
+    flex: 1;
+    max-width: 120px;
 }
 
 /* =================================
-   SCROLL BARS (WEBKIT)
+   INVOICE CARDS
 ================================= */
-.elxa-books-transaction-list::-webkit-scrollbar {
+.eb-invoice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.eb-invoice-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+    transition: box-shadow 0.15s ease;
+}
+
+.eb-invoice-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.eb-invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.eb-invoice-number {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    font-family: 'Segoe UI', monospace;
+}
+
+.eb-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.eb-status-draft { background: #f1f5f9; color: #64748b; }
+.eb-status-sent  { background: #dbeafe; color: #2563eb; }
+.eb-status-paid  { background: #d1fae5; color: #059669; }
+
+.eb-invoice-details {
+    display: flex;
+    gap: 16px;
+    font-size: 11px;
+    color: #475569;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.eb-invoice-items {
+    background: #f8fafc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+}
+
+.eb-invoice-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 11px;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.eb-invoice-item-row:last-child {
+    border-bottom: none;
+}
+
+.eb-invoice-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.eb-paid-note {
+    font-size: 11px;
+    color: #059669;
+    font-weight: 600;
+}
+
+.eb-paid-note .elxa-icon-ui { color: inherit; }
+
+/* =================================
+   REPORTS
+================================= */
+.eb-report-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 12px;
+}
+
+.eb-pnl-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.eb-pnl-item {
+    text-align: center;
+    padding: 12px;
+    border-radius: 6px;
+    background: #f8fafc;
+}
+
+.eb-pnl-income  { border-bottom: 3px solid #10b981; }
+.eb-pnl-expense { border-bottom: 3px solid #ef4444; }
+.eb-pnl-net     { border-bottom: 3px solid #3b82f6; }
+
+.eb-pnl-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+}
+
+.eb-pnl-value {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.eb-category-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.eb-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.eb-bar-label {
+    width: 100px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #475569;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.eb-bar-track {
+    flex: 1;
+    height: 14px;
+    background: #f1f5f9;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.eb-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 7px;
+    min-width: 4px;
+    transition: width 0.4s ease;
+}
+
+.eb-bar-value {
+    width: 120px;
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+/* =================================
+   EMPTY STATE
+================================= */
+.eb-empty {
+    text-align: center;
+    color: #94a3b8;
+    font-style: italic;
+    padding: 30px 16px;
+    font-size: 12px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    background: #fafbfc;
+}
+
+/* =================================
+   SCROLLBAR
+================================= */
+.eb-main::-webkit-scrollbar,
+.eb-table-body::-webkit-scrollbar {
     width: 6px;
 }
 
-.elxa-books-transaction-list::-webkit-scrollbar-track {
+.eb-main::-webkit-scrollbar-track,
+.eb-table-body::-webkit-scrollbar-track {
     background: #f1f5f9;
 }
 
-.elxa-books-transaction-list::-webkit-scrollbar-thumb {
+.eb-main::-webkit-scrollbar-thumb,
+.eb-table-body::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
 }
 
-.elxa-books-transaction-list::-webkit-scrollbar-thumb:hover {
+.eb-main::-webkit-scrollbar-thumb:hover,
+.eb-table-body::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
-}
-
-/* =================================
-   PROFESSIONAL ANIMATIONS
-================================= */
-@keyframes elxa-books-slide-in {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.elxa-books-form {
-    animation: elxa-books-slide-in 0.3s ease;
-}
-
-/* Professional loading state */
-.elxa-books-loading {
-    opacity: 0.6;
-    pointer-events: none;
-    position: relative;
-}
-
-.elxa-books-loading::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: inherit;
-    z-index: 5; /* FIXED: Lower z-index to not interfere with window controls */
 }

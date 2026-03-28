@@ -195,13 +195,12 @@
 }
 
 .icons-view .file-item:hover {
-    background: var(--menuHoverBg, rgba(0, 100, 200, 0.1));
-    border-color: var(--titlebarBg, rgba(0, 100, 200, 0.3));
+    background: color-mix(in srgb, var(--titlebarBg, #0064c8) 10%, transparent);
+    border-color: var(--titlebarBg, rgba(0, 100, 200, 0.5));
 }
 
 .icons-view .file-item.selected {
-    background: var(--menuHoverBg, rgba(0, 100, 200, 0.3));
-    border-color: var(--titlebarBg, #0064c8);
+    border: 1px solid var(--titlebarBg, #0064c8);
 }
 
 .icons-view .file-icon {
@@ -217,12 +216,9 @@
     color: var(--menuText, #000080);
 }
 
-.icons-view .file-item:hover .file-name {
-    color: var(--menuHoverText, white);
-}
-
+.icons-view .file-item:hover .file-name,
 .icons-view .file-item.selected .file-name {
-    color: var(--menuHoverText, white);
+    color: var(--menuText, #000080);
 }
 
 /* =================================
@@ -263,13 +259,12 @@
 }
 
 .list-view .file-item:hover {
-    background: var(--menuHoverBg, rgba(0, 100, 200, 0.1));
-    border-color: var(--titlebarBg, rgba(0, 100, 200, 0.3));
+    background: color-mix(in srgb, var(--titlebarBg, #0064c8) 10%, transparent);
+    border-color: var(--titlebarBg, rgba(0, 100, 200, 0.5));
 }
 
 .list-view .file-item.selected {
-    background: var(--menuHoverBg, rgba(0, 100, 200, 0.3));
-    border-color: var(--titlebarBg, #0064c8);
+    border: 1px solid var(--titlebarBg, #0064c8);
 }
 
 /* Individual elements in list view */
@@ -298,7 +293,7 @@
 
 .list-view .file-item.selected .file-name,
 .list-view .file-item:hover .file-name {
-    color: var(--menuHoverText, white);
+    color: var(--menuText, #000080);
 }
 
 .list-view .file-info {
@@ -323,13 +318,10 @@
 }
 
 .list-view .file-item.selected .file-size,
-.list-view .file-item.selected .file-date {
-    color: var(--menuHoverText, white);
-}
-
+.list-view .file-item.selected .file-date,
 .list-view .file-item:hover .file-size,
 .list-view .file-item:hover .file-date {
-    color: var(--menuHoverText, white);
+    color: var(--menuText, #666);
 }
 
 .list-view .file-details,
@@ -369,139 +361,37 @@
 }
 
 /* =================================
-   INPUT DIALOGS
+   CONTEXT MENU
 ================================= */
-.input-dialog {
+.fm-context-menu {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-}
-
-.input-dialog .dialog-content {
     background: var(--windowBg, #c0c0c0);
-    border: 2px outset var(--windowBorder, #c0c0c0);
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
-    min-width: 300px;
-}
-
-.input-dialog .dialog-header {
-    background: var(--titlebarBg, linear-gradient(to right, #0000ff, #4080ff));
-    color: var(--menuHoverText, white);
-    padding: 4px 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
+    border: 2px outset var(--windowBorder, #ffffff);
+    padding: 2px;
+    z-index: 5000;
+    min-width: 160px;
     font-size: 11px;
+    font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+    color: var(--menuText, #333333);
 }
 
-.input-dialog .dialog-close {
-    width: 16px;
-    height: 14px;
-    background: var(--buttonBg, #c0c0c0);
-    border: 1px outset var(--windowBorder, #c0c0c0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.fm-context-menu-item {
+    padding: 4px 20px 4px 8px;
     cursor: pointer;
-    font-size: 8px;
-    font-weight: bold;
-    color: var(--menuText, black);
+    white-space: nowrap;
+    color: var(--menuText, #333333);
 }
 
-.input-dialog .dialog-close:hover {
-    background: var(--buttonHoverBg, #d0d0d0);
+.fm-context-menu-item:hover {
+    background: var(--menuHoverBg, #000080);
+    color: var(--menuHoverText, #ffffff);
 }
 
-.input-dialog .dialog-close:active {
-    border: 1px inset var(--windowBorder, #c0c0c0);
-}
-
-.input-dialog .dialog-body {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    background: var(--windowBg, #c0c0c0);
-    color: var(--menuText, #333);
-}
-
-.input-dialog label {
-    font-size: 11px;
-    font-weight: bold;
-    color: var(--menuText, #333);
-}
-
-.folder-name-input,
-.rename-input {
-    padding: 4px 6px;
-    border: 1px inset var(--windowBorder, #c0c0c0);
-    font-size: 11px;
-    margin-bottom: 8px;
-    background: var(--windowBg, white);
-    color: var(--menuText, #333);
-}
-
-.folder-name-input:focus,
-.rename-input:focus {
-    outline: none;
-    border-color: var(--titlebarBg, #0066cc);
-}
-
-.dialog-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.create-btn,
-.rename-btn,
-.cancel-btn {
-    padding: 4px 16px;
-    border: 1px outset var(--windowBorder, #c0c0c0);
-    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
-    cursor: pointer;
-    font-size: 11px;
-    color: var(--menuText, #333);
-}
-
-.create-btn:hover,
-.rename-btn:hover,
-.cancel-btn:hover {
-    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
-}
-
-.create-btn:active,
-.rename-btn:active,
-.cancel-btn:active {
-    border: 1px inset var(--windowBorder, #c0c0c0);
-    background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
-}
-
-.create-btn,
-.rename-btn {
-    background: linear-gradient(to bottom, #90ee90, #32cd32);
-    border-color: #32cd32;
-    color: black;
-    font-weight: bold;
-}
-
-.create-btn:hover,
-.rename-btn:hover {
-    background: linear-gradient(to bottom, #98fb98, #90ee90);
-}
-
-.create-btn:active,
-.rename-btn:active {
-    border: 1px inset #32cd32;
-    background: linear-gradient(to bottom, #32cd32, #90ee90);
+.fm-context-menu-separator {
+    height: 1px;
+    background: var(--windowBorder, #808080);
+    margin: 2px 4px;
+    border-bottom: 1px solid var(--buttonBg, #ffffff);
 }
 
 /* =================================
@@ -517,12 +407,6 @@
 
 .dark-theme .file-manager-content {
     background: var(--menuBg, #2d2d2d);
-}
-
-.dark-theme .folder-name-input,
-.dark-theme .rename-input {
-    background: var(--menuBg, #2d2d2d);
-    color: var(--menuText, #ffffff);
 }
 
 .dark-theme .list-view .file-item:nth-child(even) {

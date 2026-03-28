@@ -1,0 +1,466 @@
+/* ============================================
+   SNAKESIAN CARD EXCHANGE — Card Template CSS
+   ============================================
+   Pure CSS card component. Rarity is controlled 
+   via CSS custom properties set by .sce-card--{rarity}.
+   Character art goes in the .sce-card__art slot as an <img>.
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap');
+
+/* ============================================
+   BASE CARD
+   ============================================ */
+.sce-card {
+  --frame-1: #b8860b;
+  --frame-2: #8b6914;
+  --art-bg: #d4a84b;
+  --type-bar-bg: #7a6520;
+  --type-bar-text: #fef9e7;
+  --gem-1: #d4a84b;
+  --gem-2: #8b6914;
+
+  width: 280px;
+  height: 400px;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* Outer frame with crosshatch texture */
+.sce-card__frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    ),
+    linear-gradient(160deg, var(--frame-1), var(--frame-2));
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inner card body — always light cream */
+.sce-card__body {
+  background: linear-gradient(180deg, #fefbf3 0%, #fdf6e3 100%);
+  border-radius: 3px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* --- HEADER --- */
+.sce-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px 5px;
+  background: linear-gradient(180deg, #fef9e7 0%, #fdf2d0 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.sce-card__name {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #2c2416;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sce-card__set {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 9px;
+  color: #8a7a5a;
+  letter-spacing: 0.08em;
+}
+
+/* --- ART FRAME --- */
+.sce-card__art-wrap {
+  position: relative;
+  margin: 6px 8px 0;
+}
+
+.sce-card__art {
+  width: 100%;
+  aspect-ratio: 5 / 3.5;
+  border-radius: 2px;
+  border: 2px solid var(--frame-2);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--art-bg) 25%, #fefbf3),
+    color-mix(in srgb, var(--art-bg) 40%, #fdf6e3)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.sce-card__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sce-card__art-placeholder {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: rgba(0,0,0,0.2);
+  font-style: italic;
+  text-align: center;
+  padding: 10px;
+}
+
+/* --- GEM (star at bottom of art frame) --- */
+.sce-card__gem {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+.sce-card__gem svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- TYPE BAR --- */
+.sce-card__type-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 8px 0;
+  padding: 4px 8px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--type-bar-bg), color-mix(in srgb, var(--type-bar-bg) 85%, #000));
+}
+
+.sce-card__type {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 9px;
+  color: var(--type-bar-text);
+  letter-spacing: 0.04em;
+}
+
+.sce-card__stars {
+  font-size: 9px;
+  color: var(--type-bar-text);
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+/* --- TEXT BOX (flavor text) --- */
+.sce-card__text {
+  margin: 6px 8px;
+  padding: 6px 8px;
+  background: linear-gradient(180deg, #fef9e7 0%, #fceabb 100%);
+  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,0.05);
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.sce-card__flavor {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: #4a3f2f;
+  line-height: 1.45;
+}
+
+/* --- STAT BAR --- */
+.sce-card__stats {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 8px 4px;
+}
+
+.sce-card__stat {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: linear-gradient(180deg, #fef9e7, #fdf2d0);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 3px;
+  padding: 3px 8px;
+}
+
+.sce-card__stat-icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+}
+
+.sce-card__stat-val {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  color: #4a3f2f;
+}
+
+/* --- FOOTER --- */
+.sce-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 10px 5px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.sce-card__number {
+  font-family: 'Inter', sans-serif;
+  font-size: 8px;
+  font-weight: 500;
+  color: #a09080;
+  letter-spacing: 0.05em;
+}
+
+.sce-card__exchange {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 8px;
+  color: #a09080;
+  font-style: italic;
+}
+
+
+/* ============================================
+   RARITY: COMMON — antique gold
+   ============================================ */
+.sce-card--common {
+  --frame-1: #d4a535;
+  --frame-2: #a07d1c;
+  --art-bg: #c9a84e;
+  --type-bar-bg: #7a6520;
+  --type-bar-text: #fef9e7;
+  --gem-1: #d4a535;
+  --gem-2: #a07d1c;
+}
+
+/* ============================================
+   RARITY: UNCOMMON — muted jade / forest green
+   ============================================ */
+.sce-card--uncommon {
+  --frame-1: #5a8a65;
+  --frame-2: #3d6348;
+  --art-bg: #6a9a72;
+  --type-bar-bg: #7a6a3a;
+  --type-bar-text: #fef9e7;
+  --gem-1: #5a9a68;
+  --gem-2: #3d6348;
+}
+
+/* ============================================
+   RARITY: RARE — crimson / blackened red
+   ============================================ */
+.sce-card--rare {
+  --frame-1: #9a3038;
+  --frame-2: #601820;
+  --art-bg: #a04848;
+  --type-bar-bg: #782028;
+  --type-bar-text: #fef9e7;
+  --gem-1: #c83040;
+  --gem-2: #601820;
+}
+
+/* ============================================
+   RARITY: EPIC — plum/berry + bronze type bar
+   ============================================ */
+.sce-card--epic {
+  --frame-1: #7a4868;
+  --frame-2: #4a2038;
+  --art-bg: #8a5878;
+  --type-bar-bg: #6a5030;
+  --type-bar-text: #fef9e7;
+  --gem-1: #9a5880;
+  --gem-2: #4a2038;
+}
+
+/* ============================================
+   RARITY: LEGENDARY — holographic / prismatic
+   ============================================ */
+.sce-card--legendary {
+  --frame-1: #b0b0b8;
+  --frame-2: #808890;
+  --art-bg: #a0a8b0;
+  --type-bar-bg: #606870;
+  --type-bar-text: #fefefe;
+  --gem-1: #d0d0d8;
+  --gem-2: #808890;
+}
+
+/* Legendary: holographic frame */
+.sce-card--legendary .sce-card__frame {
+  background:
+    repeating-linear-gradient(
+      45deg, transparent, transparent 3px,
+      rgba(255,255,255,0.06) 3px, rgba(255,255,255,0.06) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg, transparent, transparent 3px,
+      rgba(255,255,255,0.06) 3px, rgba(255,255,255,0.06) 4px
+    ),
+    linear-gradient(160deg, #c0c0c8, #909098, #c0c0c8);
+  position: relative;
+}
+
+/* Prismatic color-shifting overlay */
+.sce-card--legendary .sce-card__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,100,100,0.12) 0%,
+    rgba(255,200,100,0.12) 15%,
+    rgba(100,255,100,0.12) 30%,
+    rgba(100,200,255,0.12) 50%,
+    rgba(150,100,255,0.12) 65%,
+    rgba(255,100,200,0.12) 80%,
+    rgba(255,100,100,0.12) 100%
+  );
+  background-size: 200% 200%;
+  animation: sce-prismatic 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* White sheen gliding across */
+.sce-card--legendary .sce-card__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.25) 45%,
+    rgba(255,255,255,0.4) 50%,
+    rgba(255,255,255,0.25) 55%,
+    transparent 70%
+  );
+  background-size: 300% 100%;
+  animation: sce-sheen 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Rainbow-shifting border edge */
+.sce-card--legendary {
+  outline: 2px solid transparent;
+  outline-offset: -1px;
+  animation: sce-rainbow-border 3s linear infinite;
+}
+
+/* Legendary gem cycles colors */
+.sce-card--legendary .sce-card__gem svg .gem-fill {
+  animation: sce-gem-cycle 2.5s ease-in-out infinite;
+}
+
+/* Legendary: pearly body tint */
+.sce-card--legendary .sce-card__body {
+  background: linear-gradient(180deg, #fafaff 0%, #f0f0f8 100%);
+}
+.sce-card--legendary .sce-card__header {
+  background: linear-gradient(180deg, #f8f8ff 0%, #f0f0f8 100%);
+}
+.sce-card--legendary .sce-card__text {
+  background: linear-gradient(180deg, #f8f8ff 0%, #eeeefc 100%);
+}
+.sce-card--legendary .sce-card__stat {
+  background: linear-gradient(180deg, #f8f8ff, #f0f0f8);
+}
+
+
+/* ============================================
+   KEYFRAME ANIMATIONS (legendary effects)
+   ============================================ */
+@keyframes sce-prismatic {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes sce-sheen {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes sce-rainbow-border {
+  0%   { outline-color: rgba(255,100,100,0.5); }
+  17%  { outline-color: rgba(255,200,100,0.5); }
+  33%  { outline-color: rgba(100,255,100,0.5); }
+  50%  { outline-color: rgba(100,200,255,0.5); }
+  67%  { outline-color: rgba(150,100,255,0.5); }
+  83%  { outline-color: rgba(255,100,200,0.5); }
+  100% { outline-color: rgba(255,100,100,0.5); }
+}
+
+@keyframes sce-gem-cycle {
+  0%, 100% { fill: #e07080; }
+  20% { fill: #e0b060; }
+  40% { fill: #60c080; }
+  60% { fill: #60a0d0; }
+  80% { fill: #a070d0; }
+}
+
+
+/* ============================================
+   UTILITY: Card in "silhouette" mode
+   (for collection viewer — unowned cards)
+   ============================================ */
+.sce-card--silhouette {
+  filter: brightness(0.3) saturate(0);
+  pointer-events: none;
+}
+
+.sce-card--silhouette .sce-card__name,
+.sce-card--silhouette .sce-card__flavor {
+  color: transparent;
+}
+
+/* Owned count badge (for collection viewer) */
+.sce-card__count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #2c2416;
+  color: #fef9e7;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 8px;
+  z-index: 5;
+  min-width: 20px;
+  text-align: center;
+}

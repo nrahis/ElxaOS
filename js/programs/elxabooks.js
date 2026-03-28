@@ -1,719 +1,872 @@
 // =================================
-// SIMPLE ELXABOOKS FOR KIDS
-// FIXED: Window manager compatibility
+// ELXABOOKS PRO — ACCOUNTING SOFTWARE
+// QuickBooks-inspired for the CEO of ElxaCorp
 // =================================
 class ElxaBooksProgram {
     constructor(windowManager, fileSystem, eventBus) {
         this.windowManager = windowManager;
         this.fileSystem = fileSystem;
         this.eventBus = eventBus;
-        
-        // Simple data structure - start fresh!
+
+        this.incomeCategories = ['Allowance', 'Chores', 'Business Sales', 'Gifts', 'Other'];
+        this.expenseCategories = ['Food & Snacks', 'Toys & Games', 'Supplies', 'Clothes', 'Savings', 'Other'];
+        this.contacts = ['Mom', 'Dad', 'Uncle Randy', 'Aunt Angel', 'Granddaddy', 'Teacher', 'Friend'];
+
         this.data = {
-            startingBalance: 0.00, // Manual starting balance
-            transactions: []
+            startingBalance: 0,
+            transactions: [],
+            invoices: [],
+            nextTransactionId: 1,
+            nextInvoiceId: 1
         };
-        
-        this.nextId = 1;
     }
 
     launch() {
         const windowId = `elxabooks-${Date.now()}`;
-        const windowContent = this.createInterface(windowId);
-        
-        const window = this.windowManager.createWindow(
+        const content = this.createInterface(windowId);
+
+        this.windowManager.createWindow(
             windowId,
-            '💰 ElxaBooks Professional',
-            windowContent,
-            { width: '600px', height: '500px', x: '100px', y: '100px' }
+            `${ElxaIcons.render('elxabooks', 'ui')} ElxaBooks Pro`,
+            content,
+            { width: '780px', height: '540px', x: '80px', y: '60px' }
         );
-        
-        // Make this instance available globally for event handlers
-        if (typeof globalThis !== 'undefined') {
-            if (!globalThis.elxaBooks) globalThis.elxaBooks = {};
-            globalThis.elxaBooks[windowId] = this;
-        } else if (typeof window !== 'undefined') {
-            if (!window.elxaBooks) window.elxaBooks = {};
-            window.elxaBooks[windowId] = this;
-        }
-        
-        // Try multiple times to set up events until DOM is ready
-        this.attemptSetup(windowId, 0);
-        
+
+        this._onWindowClosed = (data) => {
+            if (data.id === windowId) this.destroy(windowId);
+        };
+        this.eventBus.on('window.closed', this._onWindowClosed);
+
+        setTimeout(() => {
+            this.loadData();
+            this.setupEventHandlers(windowId);
+            this.switchView('dashboard', windowId);
+        }, 100);
+
         return windowId;
     }
 
-    attemptSetup(windowId, attempt) {
-        const maxAttempts = 10;
-        const container = document.querySelector(`[data-window-id="${windowId}"]`);
-        
-        if (container) {
-            console.log(`✅ ElxaBooks DOM found on attempt ${attempt + 1}, setting up events...`);
-            this.setupEvents(windowId);
-            this.updateDisplay(windowId);
-            this.loadData(); // Also load saved data
-        } else if (attempt < maxAttempts) {
-            console.log(`⏳ ElxaBooks DOM not ready, attempt ${attempt + 1}/${maxAttempts}...`);
-            setTimeout(() => {
-                this.attemptSetup(windowId, attempt + 1);
-            }, 100);
-        } else {
-            console.error('❌ ElxaBooks failed to find DOM after max attempts');
+    // =================================
+    // CLEANUP
+    // =================================
+    destroy(windowId) {
+        if (this._onWindowClosed) {
+            this.eventBus.off('window.closed', this._onWindowClosed);
+            this._onWindowClosed = null;
         }
     }
 
+    // =================================
+    // INTERFACE
+    // =================================
     createInterface(windowId) {
         return `
-            <div class="elxa-books-app" data-window-id="${windowId}">
-                <!-- Main Content Area -->
-                <div class="elxa-books-content">
-                    <!-- Balance Display -->
-                    <div class="elxa-books-balance-card">
-                        <div class="elxa-books-balance-label">Current Account Balance</div>
-                        <div class="elxa-books-balance-amount" id="elxa-balance-${windowId}">${this.calculateCurrentBalance().toFixed(2)}</div>
+            <div class="eb-app" data-window-id="${windowId}">
+                <div class="eb-sidebar">
+                    <div class="eb-sidebar-brand">
+                        <div class="eb-brand-icon">${ElxaIcons.render('elxabooks', 'ui')}</div>
+                        <div class="eb-brand-name">ElxaBooks<span class="eb-brand-pro">PRO</span></div>
                     </div>
-
-                    <!-- Action Buttons -->
-                    <div class="elxa-books-actions">
-                        <button class="elxa-books-btn elxa-books-btn-income" id="elxa-add-income-${windowId}">
-                            💚 Record Income
+                    <nav class="eb-nav">
+                        <button class="eb-nav-item active" data-view="dashboard">
+                            ${ElxaIcons.renderAction('home')} Dashboard
                         </button>
-                        <button class="elxa-books-btn elxa-books-btn-expense" id="elxa-add-expense-${windowId}">
-                            💸 Record Expense
+                        <button class="eb-nav-item" data-view="transactions">
+                            ${ElxaIcons.renderAction('list')} Transactions
                         </button>
-                    </div>
-
-                    <!-- Management Actions -->
-                    <div class="elxa-books-actions">
-                        <button class="elxa-books-btn elxa-books-btn-success" id="elxa-set-starting-${windowId}">
-                            ⚖️ Set Starting Balance
+                        <button class="eb-nav-item" data-view="invoices">
+                            ${ElxaIcons.renderAction('file-document')} Invoices
                         </button>
-                        <button class="elxa-books-btn elxa-books-btn-cancel" id="elxa-reset-all-${windowId}">
-                            🗑️ Reset Everything
+                        <button class="eb-nav-item" data-view="reports">
+                            ${ElxaIcons.renderAction('chart-bar')} Reports
                         </button>
-                    </div>
-
-                    <!-- Starting Balance Form (hidden by default) -->
-                    <div class="elxa-books-form" id="elxa-starting-form-${windowId}" style="display: none;">
-                        <div class="elxa-books-form-title">⚖️ Set Starting Balance</div>
-                        <div class="elxa-books-form-row">
-                            <label class="elxa-books-label">Starting Balance Amount</label>
-                            <input type="number" class="elxa-books-input" id="elxa-starting-amount-${windowId}" placeholder="0.00" step="0.01" value="${this.data.startingBalance.toFixed(2)}">
-                        </div>
-                        <div class="elxa-books-form-row">
-                            <label class="elxa-books-label">Notes (Optional)</label>
-                            <input type="text" class="elxa-books-input" id="elxa-starting-desc-${windowId}" placeholder="e.g., Money I had saved up, Birthday money, etc.">
-                        </div>
-                        <div class="elxa-books-form-buttons">
-                            <button class="elxa-books-btn elxa-books-btn-cancel" id="elxa-cancel-starting-${windowId}">Cancel</button>
-                            <button class="elxa-books-btn elxa-books-btn-success" id="elxa-save-starting-${windowId}">Update Starting Balance</button>
-                        </div>
-                    </div>
-
-                    <!-- Income Form (hidden by default) -->
-                    <div class="elxa-books-form" id="elxa-income-form-${windowId}" style="display: none;">
-                        <div class="elxa-books-form-title">💚 Record New Income</div>
-                        <div class="elxa-books-form-row">
-                            <label class="elxa-books-label">Income Amount</label>
-                            <input type="number" class="elxa-books-input" id="elxa-income-amount-${windowId}" placeholder="0.00" step="0.01" min="0">
-                        </div>
-                        <div class="elxa-books-form-row">
-                            <label class="elxa-books-label">Income Description</label>
-                            <input type="text" class="elxa-books-input" id="elxa-income-desc-${windowId}" placeholder="Source of income (e.g., allowance, chores, business earnings)">
-                        </div>
-                        <div class="elxa-books-form-buttons">
-                            <button class="elxa-books-btn elxa-books-btn-cancel" id="elxa-cancel-income-${windowId}">Cancel</button>
-                            <button class="elxa-books-btn elxa-books-btn-success" id="elxa-save-income-${windowId}">Save Transaction</button>
-                        </div>
-                    </div>
-
-                    <!-- Expense Form (hidden by default) -->
-                    <div class="elxa-books-form" id="elxa-expense-form-${windowId}" style="display: none;">
-                        <div class="elxa-books-form-title">💸 Record New Expense</div>
-                        <div class="elxa-books-form-row">
-                            <label class="elxa-books-label">Expense Amount</label>
-                            <input type="number" class="elxa-books-input" id="elxa-expense-amount-${windowId}" placeholder="0.00" step="0.01" min="0">
-                        </div>
-                        <div class="elxa-books-form-row">
-                            <label class="elxa-books-label">Expense Description</label>
-                            <input type="text" class="elxa-books-input" id="elxa-expense-desc-${windowId}" placeholder="What was purchased (e.g., supplies, snacks, equipment)">
-                        </div>
-                        <div class="elxa-books-form-buttons">
-                            <button class="elxa-books-btn elxa-books-btn-cancel" id="elxa-cancel-expense-${windowId}">Cancel</button>
-                            <button class="elxa-books-btn elxa-books-btn-success" id="elxa-save-expense-${windowId}">Save Transaction</button>
-                        </div>
-                    </div>
-
-                    <!-- Transaction History -->
-                    <div class="elxa-books-history">
-                        <div class="elxa-books-history-title">📊 Transaction History</div>
-                        <div class="elxa-books-transaction-header">
-                            <div>Date</div>
-                            <div>Description</div>
-                            <div>Amount</div>
-                            <div>Type</div>
-                            <div>Action</div>
-                        </div>
-                        <div class="elxa-books-transaction-list" id="elxa-transactions-${windowId}">
-                            <!-- Transactions will be populated here -->
-                        </div>
-                    </div>
+                    </nav>
+                    <div class="eb-sidebar-footer">ElxaCorp Accounting</div>
+                </div>
+                <div class="eb-main">
+                    <div class="eb-view" id="eb-dashboard-${windowId}"></div>
+                    <div class="eb-view" id="eb-transactions-${windowId}"></div>
+                    <div class="eb-view" id="eb-invoices-${windowId}"></div>
+                    <div class="eb-view" id="eb-reports-${windowId}"></div>
                 </div>
             </div>
         `;
     }
 
-    setupEvents(windowId) {
-        // FIXED: More careful event setup that doesn't interfere with window manager
-        console.log('🔧 Setting up ElxaBooks events for window:', windowId);
+    // =================================
+    // EVENT HANDLERS
+    // =================================
+    setupEventHandlers(windowId) {
+        const container = document.querySelector(`.eb-app[data-window-id="${windowId}"]`);
+        if (!container) return;
 
-        // Set up direct event handlers on specific elements only
-        this.setupDirectEventHandlers(windowId);
-        
-        console.log('✅ ElxaBooks events set up successfully for window:', windowId);
-    }
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
 
-    setupDirectEventHandlers(windowId) {
-        // FIXED: Only set up events on specific buttons, not the whole container
-        const buttonConfigs = [
-            { id: `elxa-add-income-${windowId}`, handler: () => this.showIncomeForm(windowId) },
-            { id: `elxa-add-expense-${windowId}`, handler: () => this.showExpenseForm(windowId) },
-            { id: `elxa-set-starting-${windowId}`, handler: () => this.showStartingForm(windowId) },
-            { id: `elxa-reset-all-${windowId}`, handler: () => this.resetEverything(windowId) },
-            { id: `elxa-save-income-${windowId}`, handler: () => this.saveIncome(windowId) },
-            { id: `elxa-save-expense-${windowId}`, handler: () => this.saveExpense(windowId) },
-            { id: `elxa-save-starting-${windowId}`, handler: () => this.saveStartingBalance(windowId) },
-            { id: `elxa-cancel-income-${windowId}`, handler: () => this.hideIncomeForm(windowId) },
-            { id: `elxa-cancel-expense-${windowId}`, handler: () => this.hideExpenseForm(windowId) },
-            { id: `elxa-cancel-starting-${windowId}`, handler: () => this.hideStartingForm(windowId) }
-        ];
+            // Sidebar navigation
+            if (btn.classList.contains('eb-nav-item')) {
+                this.switchView(btn.dataset.view, windowId);
+                return;
+            }
 
-        buttonConfigs.forEach(config => {
-            const element = document.getElementById(config.id);
-            if (element) {
-                // FIXED: Use addEventListener instead of onclick for better control
-                element.addEventListener('click', (e) => {
-                    // Only prevent default and stop propagation for our specific app events
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🔘 Button clicked:', config.id);
-                    config.handler();
-                });
-                console.log('✅ Event handler set for:', config.id);
-            } else {
-                console.warn('⚠️ Button not found:', config.id);
+            // Dashboard quick actions
+            if (btn.classList.contains('eb-quick-income')) {
+                this.switchView('transactions', windowId);
+                setTimeout(() => this.showTransactionForm('income', windowId), 100);
+                return;
+            }
+            if (btn.classList.contains('eb-quick-expense')) {
+                this.switchView('transactions', windowId);
+                setTimeout(() => this.showTransactionForm('expense', windowId), 100);
+                return;
+            }
+            if (btn.classList.contains('eb-quick-invoice')) {
+                this.switchView('invoices', windowId);
+                setTimeout(() => this.showInvoiceForm(windowId), 100);
+                return;
+            }
+            if (btn.classList.contains('eb-set-balance-btn')) {
+                this.promptStartingBalance(windowId);
+                return;
+            }
+
+            // Transaction actions
+            if (btn.classList.contains('eb-add-income-btn')) {
+                this.showTransactionForm('income', windowId);
+                return;
+            }
+            if (btn.classList.contains('eb-add-expense-btn')) {
+                this.showTransactionForm('expense', windowId);
+                return;
+            }
+            if (btn.classList.contains('eb-delete-transaction')) {
+                this.deleteTransaction(parseInt(btn.dataset.id), windowId);
+                return;
+            }
+
+            // Invoice actions
+            if (btn.classList.contains('eb-new-invoice-btn')) {
+                this.showInvoiceForm(windowId);
+                return;
+            }
+            if (btn.classList.contains('eb-send-invoice')) {
+                this.sendInvoice(parseInt(btn.dataset.id), windowId);
+                return;
+            }
+            if (btn.classList.contains('eb-pay-invoice')) {
+                this.markInvoicePaid(parseInt(btn.dataset.id), windowId);
+                return;
+            }
+            if (btn.classList.contains('eb-delete-invoice')) {
+                this.deleteInvoice(parseInt(btn.dataset.id), windowId);
+                return;
+            }
+
+            // Invoice form
+            if (btn.classList.contains('eb-add-line-item')) {
+                this.addInvoiceLineItem(windowId);
+                return;
+            }
+            if (btn.classList.contains('eb-remove-line-item')) {
+                btn.closest('.eb-line-item-row').remove();
+                return;
+            }
+            if (btn.classList.contains('eb-save-invoice-btn')) {
+                this.saveInvoice(windowId);
+                return;
+            }
+            if (btn.classList.contains('eb-cancel-form-btn')) {
+                this.renderCurrentView(windowId);
+                return;
             }
         });
-
-        // Set up delete button handlers (they get added dynamically)
-        this.setupDeleteButtonHandlers(windowId);
     }
 
-    setupDeleteButtonHandlers(windowId) {
-        // FIXED: More targeted approach for delete buttons
-        setTimeout(() => {
-            const transactionList = document.getElementById(`elxa-transactions-${windowId}`);
-            if (transactionList) {
-                // Use event delegation, but only within the transaction list
-                transactionList.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('elxa-books-btn-delete')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const transactionId = parseInt(e.target.dataset.transactionId);
-                        console.log('🗑️ Delete transaction clicked:', transactionId);
-                        this.deleteTransaction(transactionId, windowId);
-                    }
-                });
-                console.log('✅ Delete button handlers set up');
-            }
-        }, 100);
-    }
+    // =================================
+    // NAVIGATION
+    // =================================
+    switchView(viewName, windowId) {
+        const container = document.querySelector(`.eb-app[data-window-id="${windowId}"]`);
+        if (!container) return;
 
-    showIncomeForm(windowId) {
-        console.log('💚 Showing income form for window:', windowId);
-        this.hideAllForms(windowId);
-        const form = document.getElementById(`elxa-income-form-${windowId}`);
-        if (form) {
-            form.style.display = 'block';
-            // Clear form
-            const amountInput = document.getElementById(`elxa-income-amount-${windowId}`);
-            const descInput = document.getElementById(`elxa-income-desc-${windowId}`);
-            if (amountInput) amountInput.value = '';
-            if (descInput) descInput.value = '';
-            // Focus on amount input
-            if (amountInput) amountInput.focus();
-            console.log('✅ Income form shown and cleared');
-        } else {
-            console.error('❌ Income form not found:', `elxa-income-form-${windowId}`);
-        }
-    }
-
-    showExpenseForm(windowId) {
-        console.log('💸 Showing expense form for window:', windowId);
-        this.hideAllForms(windowId);
-        const form = document.getElementById(`elxa-expense-form-${windowId}`);
-        if (form) {
-            form.style.display = 'block';
-            // Clear form
-            const amountInput = document.getElementById(`elxa-expense-amount-${windowId}`);
-            const descInput = document.getElementById(`elxa-expense-desc-${windowId}`);
-            if (amountInput) amountInput.value = '';
-            if (descInput) descInput.value = '';
-            // Focus on amount input
-            if (amountInput) amountInput.focus();
-            console.log('✅ Expense form shown and cleared');
-        } else {
-            console.error('❌ Expense form not found:', `elxa-expense-form-${windowId}`);
-        }
-    }
-
-    showStartingForm(windowId) {
-        console.log('⚖️ Showing starting balance form for window:', windowId);
-        this.hideAllForms(windowId);
-        const form = document.getElementById(`elxa-starting-form-${windowId}`);
-        if (form) {
-            form.style.display = 'block';
-            // Pre-fill with current starting balance
-            const amountInput = document.getElementById(`elxa-starting-amount-${windowId}`);
-            const descInput = document.getElementById(`elxa-starting-desc-${windowId}`);
-            if (amountInput) amountInput.value = this.data.startingBalance.toFixed(2);
-            if (descInput) descInput.value = '';
-            // Focus on amount input
-            if (amountInput) amountInput.focus();
-            console.log('✅ Starting balance form shown');
-        } else {
-            console.error('❌ Starting balance form not found:', `elxa-starting-form-${windowId}`);
-        }
-    }
-
-    hideAllForms(windowId) {
-        const forms = [
-            `elxa-income-form-${windowId}`,
-            `elxa-expense-form-${windowId}`,
-            `elxa-starting-form-${windowId}`
-        ];
-        
-        forms.forEach(formId => {
-            const form = document.getElementById(formId);
-            if (form) {
-                form.style.display = 'none';
-            }
+        // Update nav
+        container.querySelectorAll('.eb-nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.view === viewName);
         });
-        console.log('🙈 All forms hidden');
-    }
 
-    hideIncomeForm(windowId) {
-        const form = document.getElementById(`elxa-income-form-${windowId}`);
-        if (form) {
-            form.style.display = 'none';
-            console.log('🙈 Income form hidden');
+        // Hide all views
+        container.querySelectorAll('.eb-view').forEach(v => v.classList.remove('active'));
+
+        // Show target view
+        const target = container.querySelector(`#eb-${viewName}-${windowId}`);
+        if (target) {
+            target.classList.add('active');
+            this.currentView = viewName;
         }
+
+        this.renderView(viewName, windowId);
     }
 
-    hideExpenseForm(windowId) {
-        const form = document.getElementById(`elxa-expense-form-${windowId}`);
-        if (form) {
-            form.style.display = 'none';
-            console.log('🙈 Expense form hidden');
-        }
-    }
-
-    hideStartingForm(windowId) {
-        const form = document.getElementById(`elxa-starting-form-${windowId}`);
-        if (form) {
-            form.style.display = 'none';
-            console.log('🙈 Starting balance form hidden');
+    renderView(viewName, windowId) {
+        switch (viewName) {
+            case 'dashboard':    this.renderDashboard(windowId); break;
+            case 'transactions': this.renderTransactions(windowId); break;
+            case 'invoices':     this.renderInvoices(windowId); break;
+            case 'reports':      this.renderReports(windowId); break;
         }
     }
 
-    calculateCurrentBalance() {
-        // Calculate balance from starting balance + all transactions
-        const transactionTotal = this.data.transactions.reduce((total, transaction) => {
-            return total + transaction.amount;
-        }, 0);
-        
-        return this.data.startingBalance + transactionTotal;
+    renderCurrentView(windowId) {
+        this.renderView(this.currentView || 'dashboard', windowId);
     }
 
-    resetEverything(windowId) {
-        console.log('🗑️ Resetting everything for window:', windowId);
-        
-        if (!confirm('Are you sure you want to delete ALL transactions and reset everything to zero? This cannot be undone!')) {
-            return;
-        }
-        
-        // Reset all data
-        this.data.startingBalance = 0.00;
-        this.data.transactions = [];
-        this.nextId = 1;
-        
-        // Also clear any saved data to prevent old transactions from reappearing
-        this.clearSavedData();
-        
-        console.log('✅ Everything reset to zero');
-        
-        this.hideAllForms(windowId);
-        this.updateDisplay(windowId);
-        this.saveData(); // Save the empty state
-        
-        this.showMessage('Everything has been reset! Starting fresh! 🆕', 'success');
-    }
+    // =================================
+    // DASHBOARD VIEW
+    // =================================
+    renderDashboard(windowId) {
+        const el = document.getElementById(`eb-dashboard-${windowId}`);
+        if (!el) return;
 
-    saveStartingBalance(windowId) {
-        console.log('⚖️ Saving starting balance for window:', windowId);
-        
-        const amountInput = document.getElementById(`elxa-starting-amount-${windowId}`);
-        const descInput = document.getElementById(`elxa-starting-desc-${windowId}`);
-        
-        if (!amountInput || !descInput) {
-            console.error('❌ Input elements not found');
-            alert('Form elements not found! Please try again.');
-            return;
-        }
-        
-        const amount = parseFloat(amountInput.value);
-        const description = descInput.value.trim();
-        
-        console.log('📊 Starting balance data:', { amount, description });
-        
-        if (isNaN(amount)) {
-            alert('Please enter a valid amount!');
-            amountInput.focus();
-            return;
-        }
-        
-        // Update starting balance
-        this.data.startingBalance = amount;
-        
-        // If there's a description, add it as a special transaction for reference
-        if (description) {
-            const transaction = {
-                id: this.nextId++,
-                date: new Date().toISOString().split('T')[0],
-                description: `Starting Balance: ${description}`,
-                amount: 0, // This doesn't affect balance since it's already in startingBalance
-                type: 'starting',
-                isStartingNote: true
-            };
-            
-            this.data.transactions.unshift(transaction); // Add to beginning
-        }
-        
-        console.log('✅ Starting balance updated:', this.data.startingBalance);
-        
-        this.hideStartingForm(windowId);
-        this.updateDisplay(windowId);
-        this.saveData();
-        
-        this.showMessage(`Starting balance set to ${amount.toFixed(2)}! 💰`, 'success');
-    }
+        const balance = this.calculateBalance();
+        const totals = this.getMonthTotals();
+        const recent = this.data.transactions.slice(-5).reverse();
+        const pendingInvoices = this.data.invoices.filter(i => i.status === 'sent').length;
 
-    saveIncome(windowId) {
-        console.log('💰 Saving income for window:', windowId);
-        
-        const amountInput = document.getElementById(`elxa-income-amount-${windowId}`);
-        const descInput = document.getElementById(`elxa-income-desc-${windowId}`);
-        
-        if (!amountInput || !descInput) {
-            console.error('❌ Input elements not found');
-            alert('Form elements not found! Please try again.');
-            return;
-        }
-        
-        const amount = parseFloat(amountInput.value);
-        const description = descInput.value.trim();
-        
-        console.log('📊 Income data:', { amount, description });
-        
-        if (!amount || amount <= 0) {
-            alert('Please enter a valid amount!');
-            amountInput.focus();
-            return;
-        }
-        
-        if (!description) {
-            alert('Please tell us what you did to earn the money!');
-            descInput.focus();
-            return;
-        }
+        el.innerHTML = `
+            <div class="eb-page-header">
+                <h2>Dashboard</h2>
+                <div class="eb-header-actions">
+                    <button class="eb-set-balance-btn eb-btn-sm">${ElxaIcons.renderAction('settings')} Set Starting Balance</button>
+                </div>
+            </div>
 
-        // Add transaction
-        const transaction = {
-            id: this.nextId++,
-            date: new Date().toISOString().split('T')[0],
-            description: description,
-            amount: amount,
-            type: 'income'
-        };
-        
-        this.data.transactions.push(transaction);
-        
-        console.log('✅ Income transaction added:', transaction);
-        console.log('💰 New balance:', this.calculateCurrentBalance());
-        
-        this.hideIncomeForm(windowId);
-        this.updateDisplay(windowId);
-        this.saveData();
-        
-        this.showMessage(`Great! You earned ${amount.toFixed(2)}! 💰`, 'success');
-    }
-
-    saveExpense(windowId) {
-        console.log('💸 Saving expense for window:', windowId);
-        
-        const amountInput = document.getElementById(`elxa-expense-amount-${windowId}`);
-        const descInput = document.getElementById(`elxa-expense-desc-${windowId}`);
-        
-        if (!amountInput || !descInput) {
-            console.error('❌ Input elements not found');
-            alert('Form elements not found! Please try again.');
-            return;
-        }
-        
-        const amount = parseFloat(amountInput.value);
-        const description = descInput.value.trim();
-        
-        console.log('📊 Expense data:', { amount, description });
-        
-        if (!amount || amount <= 0) {
-            alert('Please enter a valid amount!');
-            amountInput.focus();
-            return;
-        }
-        
-        if (!description) {
-            alert('Please tell us what you bought!');
-            descInput.focus();
-            return;
-        }
-
-        const currentBalance = this.calculateCurrentBalance();
-        if (amount > currentBalance) {
-            alert(`You don't have enough money! You only have ${currentBalance.toFixed(2)}`);
-            return;
-        }
-
-        // Add transaction
-        const transaction = {
-            id: this.nextId++,
-            date: new Date().toISOString().split('T')[0],
-            description: description,
-            amount: -amount, // Negative for expenses
-            type: 'expense'
-        };
-        
-        this.data.transactions.push(transaction);
-        
-        console.log('✅ Expense transaction added:', transaction);
-        console.log('💰 New balance:', this.calculateCurrentBalance());
-        
-        this.hideExpenseForm(windowId);
-        this.updateDisplay(windowId);
-        this.saveData();
-        
-        this.showMessage(`You spent ${amount.toFixed(2)} on ${description}! 💸`, 'info');
-    }
-
-    deleteTransaction(transactionId, windowId) {
-        console.log('🗑️ Deleting transaction:', transactionId);
-        
-        const transaction = this.data.transactions.find(t => t.id === transactionId);
-        if (!transaction) {
-            console.error('❌ Transaction not found:', transactionId);
-            return;
-        }
-
-        // Confirm deletion
-        if (!confirm(`Delete this transaction: ${transaction.description}?`)) {
-            return;
-        }
-
-        // Remove from transactions
-        this.data.transactions = this.data.transactions.filter(t => t.id !== transactionId);
-        
-        console.log('✅ Transaction deleted, new balance:', this.calculateCurrentBalance());
-        
-        this.updateDisplay(windowId);
-        this.saveData();
-        
-        this.showMessage('Transaction deleted! 🗑️', 'info');
-    }
-
-    updateDisplay(windowId) {
-        console.log('🔄 Updating display for window:', windowId);
-        
-        // Update balance using calculated value
-        const currentBalance = this.calculateCurrentBalance();
-        const balanceEl = document.getElementById(`elxa-balance-${windowId}`);
-        if (balanceEl) {
-            balanceEl.textContent = `${currentBalance.toFixed(2)}`;
-            balanceEl.className = `elxa-books-balance-amount ${currentBalance >= 0 ? 'elxa-books-positive' : 'elxa-books-negative'}`;
-            console.log('✅ Balance updated:', currentBalance);
-        } else {
-            console.error('❌ Balance element not found');
-        }
-
-        // Update transaction list
-        this.updateTransactionList(windowId);
-    }
-
-    updateTransactionList(windowId) {
-        const listEl = document.getElementById(`elxa-transactions-${windowId}`);
-        if (!listEl) {
-            console.error('❌ Transaction list element not found');
-            return;
-        }
-
-        console.log('📋 Updating transaction list, count:', this.data.transactions.length);
-
-        // Sort transactions by date (newest first)
-        const sortedTransactions = [...this.data.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        if (sortedTransactions.length === 0) {
-            listEl.innerHTML = '<div class="elxa-books-no-transactions">No transactions yet! Add your first one above! 😊</div>';
-            return;
-        }
-
-        listEl.innerHTML = sortedTransactions.map(t => {
-            const typeEmoji = t.type === 'income' ? '💚' : 
-                             t.type === 'expense' ? '💸' : 
-                             t.type === 'starting' ? '⚖️' : '❓';
-            
-            const showDeleteButton = !t.isStartingNote; // Don't show delete for starting balance notes
-            
-            return `
-                <div class="elxa-books-transaction ${t.type}">
-                    <div class="elxa-books-transaction-date">${this.formatDate(t.date)}</div>
-                    <div class="elxa-books-transaction-desc">${t.description}</div>
-                    <div class="elxa-books-transaction-amount ${t.amount >= 0 ? 'elxa-books-positive' : 'elxa-books-negative'}">
-                        ${t.amount === 0 ? '—' : (t.amount >= 0 ? '+' : '') + t.amount.toFixed(2)}
+            <div class="eb-summary-cards">
+                <div class="eb-card eb-card-balance">
+                    <div class="eb-card-label">Account Balance</div>
+                    <div class="eb-card-value ${balance >= 0 ? 'eb-positive' : 'eb-negative'}">
+                        🐍 ${balance.toFixed(2)}
                     </div>
-                    <div class="elxa-books-transaction-type">${typeEmoji}</div>
-                    <div class="elxa-books-transaction-delete">
-                        ${showDeleteButton ? `<button class="elxa-books-btn-delete" data-transaction-id="${t.id}">🗑️</button>` : ''}
+                    <div class="eb-card-sub">in snakes</div>
+                </div>
+                <div class="eb-card eb-card-income">
+                    <div class="eb-card-label">Income This Month</div>
+                    <div class="eb-card-value eb-positive">+ ${totals.income.toFixed(2)}</div>
+                    <div class="eb-card-sub">${totals.incomeCount} transaction${totals.incomeCount !== 1 ? 's' : ''}</div>
+                </div>
+                <div class="eb-card eb-card-expense">
+                    <div class="eb-card-label">Expenses This Month</div>
+                    <div class="eb-card-value eb-negative">- ${totals.expense.toFixed(2)}</div>
+                    <div class="eb-card-sub">${totals.expenseCount} transaction${totals.expenseCount !== 1 ? 's' : ''}</div>
+                </div>
+                <div class="eb-card eb-card-invoices">
+                    <div class="eb-card-label">Pending Invoices</div>
+                    <div class="eb-card-value">${pendingInvoices}</div>
+                    <div class="eb-card-sub">awaiting payment</div>
+                </div>
+            </div>
+
+            <div class="eb-quick-actions">
+                <button class="eb-quick-btn eb-quick-income">${ElxaIcons.renderAction('plus')} Record Income</button>
+                <button class="eb-quick-btn eb-quick-expense">${ElxaIcons.renderAction('minus')} Record Expense</button>
+                <button class="eb-quick-btn eb-quick-invoice">${ElxaIcons.renderAction('file-document')} New Invoice</button>
+            </div>
+
+            <div class="eb-recent-section">
+                <div class="eb-section-title">Recent Transactions</div>
+                ${recent.length === 0
+                    ? '<div class="eb-empty">No transactions yet — add your first one!</div>'
+                    : `<div class="eb-recent-list">${recent.map(t => this.renderTransactionRow(t)).join('')}</div>`
+                }
+            </div>
+        `;
+    }
+
+    // =================================
+    // TRANSACTIONS VIEW
+    // =================================
+    renderTransactions(windowId) {
+        const el = document.getElementById(`eb-transactions-${windowId}`);
+        if (!el) return;
+
+        const sorted = [...this.data.transactions].reverse();
+
+        el.innerHTML = `
+            <div class="eb-page-header">
+                <h2>Transactions</h2>
+                <div class="eb-header-actions">
+                    <button class="eb-add-income-btn eb-btn-green">${ElxaIcons.renderAction('plus')} Income</button>
+                    <button class="eb-add-expense-btn eb-btn-red">${ElxaIcons.renderAction('minus')} Expense</button>
+                </div>
+            </div>
+
+            ${sorted.length === 0
+                ? '<div class="eb-empty">No transactions yet. Record your first income or expense!</div>'
+                : `
+                    <div class="eb-table">
+                        <div class="eb-table-header">
+                            <div class="eb-col-date">Date</div>
+                            <div class="eb-col-desc">Description</div>
+                            <div class="eb-col-cat">Category</div>
+                            <div class="eb-col-amount">Amount</div>
+                            <div class="eb-col-action"></div>
+                        </div>
+                        <div class="eb-table-body">
+                            ${sorted.map(t => this.renderTransactionRow(t)).join('')}
+                        </div>
+                    </div>
+                `
+            }
+        `;
+    }
+
+    renderTransactionRow(t) {
+        const isIncome = t.type === 'income';
+        return `
+            <div class="eb-row eb-row-${t.type}">
+                <div class="eb-col-date">${this.formatDate(t.date)}</div>
+                <div class="eb-col-desc">${t.description}</div>
+                <div class="eb-col-cat"><span class="eb-cat-badge">${t.category || ''}</span></div>
+                <div class="eb-col-amount ${isIncome ? 'eb-positive' : 'eb-negative'}">
+                    ${isIncome ? '+' : '-'}${Math.abs(t.amount).toFixed(2)}
+                </div>
+                <div class="eb-col-action">
+                    <button class="eb-icon-btn eb-delete-transaction" data-id="${t.id}" title="Delete">${ElxaIcons.renderAction('delete')}</button>
+                </div>
+            </div>
+        `;
+    }
+
+    showTransactionForm(type, windowId) {
+        const el = document.getElementById(`eb-transactions-${windowId}`);
+        if (!el) return;
+
+        const isIncome = type === 'income';
+        const categories = isIncome ? this.incomeCategories : this.expenseCategories;
+
+        el.innerHTML = `
+            <div class="eb-page-header">
+                <h2>${isIncome ? 'Record Income' : 'Record Expense'}</h2>
+            </div>
+            <div class="eb-form-card">
+                <div class="eb-form-row">
+                    <label class="eb-label">Amount (in snakes 🐍)</label>
+                    <input type="number" class="eb-input" id="eb-txn-amount-${windowId}" placeholder="0.00" step="0.01" min="0">
+                </div>
+                <div class="eb-form-row">
+                    <label class="eb-label">Description</label>
+                    <input type="text" class="eb-input" id="eb-txn-desc-${windowId}" placeholder="${isIncome ? 'What did you earn money for?' : 'What did you buy?'}">
+                </div>
+                <div class="eb-form-row">
+                    <label class="eb-label">Category</label>
+                    <select class="eb-input eb-select" id="eb-txn-cat-${windowId}">
+                        ${categories.map(c => `<option value="${c}">${c}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="eb-form-row">
+                    <label class="eb-label">Date</label>
+                    <input type="date" class="eb-input" id="eb-txn-date-${windowId}" value="${new Date().toISOString().split('T')[0]}">
+                </div>
+                <input type="hidden" id="eb-txn-type-${windowId}" value="${type}">
+                <div class="eb-form-actions">
+                    <button class="eb-cancel-form-btn eb-btn-sm eb-btn-gray">Cancel</button>
+                    <button class="eb-save-txn-btn eb-btn-sm ${isIncome ? 'eb-btn-green' : 'eb-btn-red'}" id="eb-save-txn-${windowId}">
+                        ${ElxaIcons.renderAction('check')} Save ${isIncome ? 'Income' : 'Expense'}
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Wire save button
+        const saveBtn = el.querySelector(`#eb-save-txn-${windowId}`);
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveTransaction(windowId));
+        }
+
+        el.querySelector(`#eb-txn-amount-${windowId}`)?.focus();
+    }
+
+    saveTransaction(windowId) {
+        const container = document.querySelector(`.eb-app[data-window-id="${windowId}"]`);
+        if (!container) return;
+
+        const amount = parseFloat(container.querySelector(`#eb-txn-amount-${windowId}`)?.value);
+        const desc = container.querySelector(`#eb-txn-desc-${windowId}`)?.value.trim();
+        const category = container.querySelector(`#eb-txn-cat-${windowId}`)?.value;
+        const date = container.querySelector(`#eb-txn-date-${windowId}`)?.value;
+        const type = container.querySelector(`#eb-txn-type-${windowId}`)?.value;
+
+        if (!amount || amount <= 0) {
+            ElxaUI.showMessage('Please enter a valid amount!', 'warning');
+            return;
+        }
+        if (!desc) {
+            ElxaUI.showMessage('Please add a description!', 'warning');
+            return;
+        }
+
+        // Check balance for expenses
+        if (type === 'expense' && amount > this.calculateBalance()) {
+            ElxaUI.showMessage(`Not enough snakes! You only have 🐍 ${this.calculateBalance().toFixed(2)}`, 'warning');
+            return;
+        }
+
+        this.data.transactions.push({
+            id: this.data.nextTransactionId++,
+            date: date || new Date().toISOString().split('T')[0],
+            description: desc,
+            amount: type === 'expense' ? -amount : amount,
+            type: type,
+            category: category
+        });
+
+        this.saveData();
+        this.renderTransactions(windowId);
+        ElxaUI.showMessage(
+            type === 'income'
+                ? `Earned 🐍 ${amount.toFixed(2)} — nice work!`
+                : `Spent 🐍 ${amount.toFixed(2)} on ${desc}`,
+            type === 'income' ? 'success' : 'info'
+        );
+    }
+
+    async deleteTransaction(id, windowId) {
+        const t = this.data.transactions.find(t => t.id === id);
+        if (!t) return;
+
+        const confirmed = await ElxaUI.showConfirmDialog(
+            `Delete "${t.description}" (${Math.abs(t.amount).toFixed(2)} snakes)?`,
+            'Delete Transaction'
+        );
+        if (!confirmed) return;
+
+        this.data.transactions = this.data.transactions.filter(t => t.id !== id);
+        this.saveData();
+        this.renderCurrentView(windowId);
+        ElxaUI.showMessage('Transaction deleted', 'info');
+    }
+
+    // =================================
+    // INVOICES VIEW
+    // =================================
+    renderInvoices(windowId) {
+        const el = document.getElementById(`eb-invoices-${windowId}`);
+        if (!el) return;
+
+        const sorted = [...this.data.invoices].reverse();
+
+        el.innerHTML = `
+            <div class="eb-page-header">
+                <h2>Invoices</h2>
+                <div class="eb-header-actions">
+                    <button class="eb-new-invoice-btn eb-btn-sm eb-btn-blue">${ElxaIcons.renderAction('plus')} New Invoice</button>
+                </div>
+            </div>
+
+            ${sorted.length === 0
+                ? '<div class="eb-empty">No invoices yet. Create one to bill someone for your hard work!</div>'
+                : `<div class="eb-invoice-list">${sorted.map(inv => this.renderInvoiceCard(inv)).join('')}</div>`
+            }
+        `;
+    }
+
+    renderInvoiceCard(inv) {
+        const statusClass = { draft: 'eb-status-draft', sent: 'eb-status-sent', paid: 'eb-status-paid' }[inv.status];
+        const statusLabel = { draft: 'Draft', sent: 'Sent', paid: 'Paid' }[inv.status];
+
+        return `
+            <div class="eb-invoice-card">
+                <div class="eb-invoice-header">
+                    <div class="eb-invoice-number">INV-${String(inv.id).padStart(4, '0')}</div>
+                    <span class="eb-status-badge ${statusClass}">${statusLabel}</span>
+                </div>
+                <div class="eb-invoice-details">
+                    <div class="eb-invoice-to"><strong>Bill To:</strong> ${inv.to}</div>
+                    <div class="eb-invoice-date"><strong>Date:</strong> ${this.formatDate(inv.createdDate)}</div>
+                    <div class="eb-invoice-total"><strong>Total:</strong> 🐍 ${inv.total.toFixed(2)}</div>
+                </div>
+                <div class="eb-invoice-items">
+                    ${inv.items.map(item => `
+                        <div class="eb-invoice-item-row">
+                            <span>${item.description}</span>
+                            <span>🐍 ${item.amount.toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="eb-invoice-actions">
+                    ${inv.status === 'draft' ? `<button class="eb-send-invoice eb-btn-sm eb-btn-blue" data-id="${inv.id}">${ElxaIcons.renderAction('send')} Send</button>` : ''}
+                    ${inv.status === 'sent' ? `<button class="eb-pay-invoice eb-btn-sm eb-btn-green" data-id="${inv.id}">${ElxaIcons.renderAction('check')} Mark Paid</button>` : ''}
+                    ${inv.status !== 'paid' ? `<button class="eb-delete-invoice eb-btn-sm eb-btn-gray" data-id="${inv.id}">${ElxaIcons.renderAction('delete')}</button>` : ''}
+                    ${inv.status === 'paid' ? `<span class="eb-paid-note">${ElxaIcons.renderAction('check-circle')} Payment received ${inv.paidDate ? this.formatDate(inv.paidDate) : ''}</span>` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    showInvoiceForm(windowId) {
+        const el = document.getElementById(`eb-invoices-${windowId}`);
+        if (!el) return;
+
+        el.innerHTML = `
+            <div class="eb-page-header">
+                <h2>Create Invoice</h2>
+            </div>
+            <div class="eb-form-card eb-invoice-form">
+                <div class="eb-invoice-form-header">
+                    <div class="eb-invoice-from">
+                        <div class="eb-invoice-logo">${ElxaIcons.render('elxabooks', 'ui')}</div>
+                        <div><strong>ElxaCorp</strong><br><span class="eb-subtle">Snakesia's Finest Company</span></div>
+                    </div>
+                    <div class="eb-invoice-form-number">INVOICE</div>
+                </div>
+                <div class="eb-form-row">
+                    <label class="eb-label">Bill To</label>
+                    <select class="eb-input eb-select" id="eb-inv-to-${windowId}">
+                        ${this.contacts.map(c => `<option value="${c}">${c}</option>`).join('')}
+                        <option value="custom">Custom...</option>
+                    </select>
+                </div>
+                <div class="eb-form-row" id="eb-inv-custom-row-${windowId}" style="display:none;">
+                    <label class="eb-label">Custom Name</label>
+                    <input type="text" class="eb-input" id="eb-inv-custom-${windowId}" placeholder="Enter name">
+                </div>
+                <div class="eb-section-title">Line Items</div>
+                <div class="eb-line-items" id="eb-inv-items-${windowId}">
+                    <div class="eb-line-item-row">
+                        <input type="text" class="eb-input eb-line-desc" placeholder="Description (e.g., Lawn mowing)">
+                        <input type="number" class="eb-input eb-line-amount" placeholder="0.00" step="0.01" min="0">
+                        <button class="eb-remove-line-item eb-icon-btn" title="Remove">${ElxaIcons.renderAction('close')}</button>
                     </div>
                 </div>
-            `;
-        }).join('');
-        
-        // Set up delete button handlers for the new content
-        this.setupDeleteButtonHandlers(windowId);
-        
-        console.log('✅ Transaction list updated');
+                <button class="eb-add-line-item eb-btn-sm eb-btn-gray">${ElxaIcons.renderAction('plus')} Add Line Item</button>
+                <div class="eb-form-actions">
+                    <button class="eb-cancel-form-btn eb-btn-sm eb-btn-gray">Cancel</button>
+                    <button class="eb-save-invoice-btn eb-btn-sm eb-btn-blue">${ElxaIcons.renderAction('check')} Create Invoice</button>
+                </div>
+            </div>
+        `;
+
+        // Handle custom contact toggle
+        const selectEl = el.querySelector(`#eb-inv-to-${windowId}`);
+        const customRow = el.querySelector(`#eb-inv-custom-row-${windowId}`);
+        if (selectEl && customRow) {
+            selectEl.addEventListener('change', () => {
+                customRow.style.display = selectEl.value === 'custom' ? 'block' : 'none';
+            });
+        }
     }
 
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    addInvoiceLineItem(windowId) {
+        const container = document.getElementById(`eb-inv-items-${windowId}`);
+        if (!container) return;
+
+        const row = document.createElement('div');
+        row.className = 'eb-line-item-row';
+        row.innerHTML = `
+            <input type="text" class="eb-input eb-line-desc" placeholder="Description">
+            <input type="number" class="eb-input eb-line-amount" placeholder="0.00" step="0.01" min="0">
+            <button class="eb-remove-line-item eb-icon-btn" title="Remove">${ElxaIcons.renderAction('close')}</button>
+        `;
+        container.appendChild(row);
     }
 
+    saveInvoice(windowId) {
+        const container = document.querySelector(`.eb-app[data-window-id="${windowId}"]`);
+        if (!container) return;
+
+        const toSelect = container.querySelector(`#eb-inv-to-${windowId}`);
+        let to = toSelect?.value;
+        if (to === 'custom') {
+            to = container.querySelector(`#eb-inv-custom-${windowId}`)?.value.trim();
+        }
+        if (!to) {
+            ElxaUI.showMessage('Please select who to bill!', 'warning');
+            return;
+        }
+
+        const rows = container.querySelectorAll('.eb-line-item-row');
+        const items = [];
+        rows.forEach(row => {
+            const desc = row.querySelector('.eb-line-desc')?.value.trim();
+            const amount = parseFloat(row.querySelector('.eb-line-amount')?.value);
+            if (desc && amount > 0) {
+                items.push({ description: desc, amount });
+            }
+        });
+
+        if (items.length === 0) {
+            ElxaUI.showMessage('Add at least one line item with a description and amount!', 'warning');
+            return;
+        }
+
+        const total = items.reduce((sum, item) => sum + item.amount, 0);
+
+        this.data.invoices.push({
+            id: this.data.nextInvoiceId++,
+            to,
+            items,
+            total,
+            status: 'draft',
+            createdDate: new Date().toISOString().split('T')[0],
+            paidDate: null
+        });
+
+        this.saveData();
+        this.renderInvoices(windowId);
+        ElxaUI.showMessage(`Invoice for 🐍 ${total.toFixed(2)} created!`, 'success');
+    }
+
+    sendInvoice(id, windowId) {
+        const inv = this.data.invoices.find(i => i.id === id);
+        if (!inv) return;
+
+        inv.status = 'sent';
+        this.saveData();
+        this.renderInvoices(windowId);
+        ElxaUI.showMessage(`Invoice sent to ${inv.to}! Now we wait for payment...`, 'success');
+    }
+
+    async markInvoicePaid(id, windowId) {
+        const inv = this.data.invoices.find(i => i.id === id);
+        if (!inv) return;
+
+        const confirmed = await ElxaUI.showConfirmDialog(
+            `Mark invoice to ${inv.to} as paid? This will add 🐍 ${inv.total.toFixed(2)} to your income.`,
+            'Confirm Payment'
+        );
+        if (!confirmed) return;
+
+        inv.status = 'paid';
+        inv.paidDate = new Date().toISOString().split('T')[0];
+
+        // Add as income transaction
+        this.data.transactions.push({
+            id: this.data.nextTransactionId++,
+            date: inv.paidDate,
+            description: `Invoice INV-${String(inv.id).padStart(4, '0')} paid by ${inv.to}`,
+            amount: inv.total,
+            type: 'income',
+            category: 'Business Sales'
+        });
+
+        this.saveData();
+        this.renderInvoices(windowId);
+        ElxaUI.showMessage(`${inv.to} paid 🐍 ${inv.total.toFixed(2)}! Money in the bank!`, 'success');
+    }
+
+    async deleteInvoice(id, windowId) {
+        const inv = this.data.invoices.find(i => i.id === id);
+        if (!inv) return;
+
+        const confirmed = await ElxaUI.showConfirmDialog(
+            `Delete invoice to ${inv.to}?`,
+            'Delete Invoice'
+        );
+        if (!confirmed) return;
+
+        this.data.invoices = this.data.invoices.filter(i => i.id !== id);
+        this.saveData();
+        this.renderInvoices(windowId);
+        ElxaUI.showMessage('Invoice deleted', 'info');
+    }
+
+    // =================================
+    // REPORTS VIEW
+    // =================================
+    renderReports(windowId) {
+        const el = document.getElementById(`eb-reports-${windowId}`);
+        if (!el) return;
+
+        const allTime = this.getAllTimeTotals();
+        const byCategory = this.getCategoryBreakdown();
+
+        el.innerHTML = `
+            <div class="eb-page-header">
+                <h2>Reports</h2>
+            </div>
+
+            <div class="eb-report-section">
+                <div class="eb-section-title">Profit & Loss Summary</div>
+                <div class="eb-pnl-grid">
+                    <div class="eb-pnl-item eb-pnl-income">
+                        <div class="eb-pnl-label">Total Income</div>
+                        <div class="eb-pnl-value eb-positive">🐍 ${allTime.income.toFixed(2)}</div>
+                    </div>
+                    <div class="eb-pnl-item eb-pnl-expense">
+                        <div class="eb-pnl-label">Total Expenses</div>
+                        <div class="eb-pnl-value eb-negative">🐍 ${allTime.expense.toFixed(2)}</div>
+                    </div>
+                    <div class="eb-pnl-item eb-pnl-net">
+                        <div class="eb-pnl-label">Net Profit</div>
+                        <div class="eb-pnl-value ${allTime.net >= 0 ? 'eb-positive' : 'eb-negative'}">🐍 ${allTime.net.toFixed(2)}</div>
+                    </div>
+                </div>
+            </div>
+
+            ${this.renderCategoryReport('Income by Category', byCategory.income, allTime.income)}
+            ${this.renderCategoryReport('Expenses by Category', byCategory.expense, allTime.expense)}
+        `;
+    }
+
+    renderCategoryReport(title, categoryData, total) {
+        const entries = Object.entries(categoryData).sort((a, b) => b[1] - a[1]);
+        if (entries.length === 0) {
+            return `<div class="eb-report-section"><div class="eb-section-title">${title}</div><div class="eb-empty">No data yet</div></div>`;
+        }
+
+        const maxVal = Math.max(...entries.map(([, v]) => v));
+
+        return `
+            <div class="eb-report-section">
+                <div class="eb-section-title">${title}</div>
+                <div class="eb-category-bars">
+                    ${entries.map(([cat, val]) => {
+                        const pct = maxVal > 0 ? (val / maxVal) * 100 : 0;
+                        const share = total > 0 ? ((val / total) * 100).toFixed(0) : 0;
+                        return `
+                            <div class="eb-bar-row">
+                                <div class="eb-bar-label">${cat}</div>
+                                <div class="eb-bar-track">
+                                    <div class="eb-bar-fill" style="width: ${pct}%"></div>
+                                </div>
+                                <div class="eb-bar-value">🐍 ${val.toFixed(2)} (${share}%)</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // =================================
+    // STARTING BALANCE
+    // =================================
+    async promptStartingBalance(windowId) {
+        const result = await ElxaUI.showInputDialog(
+            'Enter your starting balance (in snakes):',
+            'Set Starting Balance',
+            this.data.startingBalance.toString()
+        );
+        if (result === null) return;
+
+        const amount = parseFloat(result);
+        if (isNaN(amount)) {
+            ElxaUI.showMessage('Please enter a valid number!', 'warning');
+            return;
+        }
+
+        this.data.startingBalance = amount;
+        this.saveData();
+        this.renderCurrentView(windowId);
+        ElxaUI.showMessage(`Starting balance set to 🐍 ${amount.toFixed(2)}`, 'success');
+    }
+
+    // =================================
+    // CALCULATIONS
+    // =================================
+    calculateBalance() {
+        const txnTotal = this.data.transactions.reduce((sum, t) => sum + t.amount, 0);
+        return this.data.startingBalance + txnTotal;
+    }
+
+    getMonthTotals() {
+        const now = new Date();
+        const month = now.getMonth();
+        const year = now.getFullYear();
+
+        let income = 0, expense = 0, incomeCount = 0, expenseCount = 0;
+
+        this.data.transactions.forEach(t => {
+            const d = new Date(t.date);
+            if (d.getMonth() === month && d.getFullYear() === year) {
+                if (t.type === 'income') {
+                    income += t.amount;
+                    incomeCount++;
+                } else {
+                    expense += Math.abs(t.amount);
+                    expenseCount++;
+                }
+            }
+        });
+
+        return { income, expense, incomeCount, expenseCount };
+    }
+
+    getAllTimeTotals() {
+        let income = 0, expense = 0;
+        this.data.transactions.forEach(t => {
+            if (t.type === 'income') income += t.amount;
+            else expense += Math.abs(t.amount);
+        });
+        return { income, expense, net: income - expense };
+    }
+
+    getCategoryBreakdown() {
+        const income = {};
+        const expense = {};
+
+        this.data.transactions.forEach(t => {
+            const cat = t.category || 'Other';
+            if (t.type === 'income') {
+                income[cat] = (income[cat] || 0) + t.amount;
+            } else {
+                expense[cat] = (expense[cat] || 0) + Math.abs(t.amount);
+            }
+        });
+
+        return { income, expense };
+    }
+
+    // =================================
+    // PERSISTENCE
+    // =================================
     saveData() {
         try {
-            // Create a clean copy of data to save
-            const dataToSave = {
-                startingBalance: this.data.startingBalance,
-                transactions: this.data.transactions,
-                nextId: this.nextId,
-                lastSaved: new Date().toISOString()
-            };
-            
-            const dataString = JSON.stringify(dataToSave, null, 2);
-            this.fileSystem.createFile(['root', 'Documents'], 'MyMoneyTracker.json', dataString);
-            console.log('💾 Money tracker data saved');
+            const json = JSON.stringify(this.data, null, 2);
+            this.fileSystem.createFile(['root', 'System'], 'ElxaBooksPro.json', json);
         } catch (error) {
-            console.error('❌ Failed to save data:', error);
+            console.error('💾 ElxaBooks: Failed to save:', error);
         }
     }
 
     loadData() {
         try {
-            const file = this.fileSystem.getFile(['root', 'Documents'], 'MyMoneyTracker.json');
-            if (file && file.content) {
-                const loadedData = JSON.parse(file.content);
-                
-                // Merge loaded data with defaults
-                this.data.startingBalance = loadedData.startingBalance || 0.00;
-                this.data.transactions = loadedData.transactions || [];
-                this.nextId = loadedData.nextId || 1;
-                
-                // Update next ID to be safe
-                if (this.data.transactions.length > 0) {
-                    this.nextId = Math.max(this.nextId, Math.max(...this.data.transactions.map(t => t.id)) + 1);
+            // Migrate from old location if needed
+            let file = this.fileSystem.getFile(['root', 'System'], 'ElxaBooksPro.json');
+            if (!file) {
+                file = this.fileSystem.getFile(['root', 'Documents'], 'ElxaBooksPro.json');
+                if (file) {
+                    this.fileSystem.createFile(['root', 'System'], 'ElxaBooksPro.json', file.content);
+                    this.fileSystem.deleteItem(['root', 'Documents'], 'ElxaBooksPro.json');
                 }
-                
-                console.log('📂 Money tracker data loaded, balance:', this.calculateCurrentBalance());
-            } else {
-                console.log('📂 No saved data found, starting fresh');
+            }
+            if (file && file.content) {
+                const loaded = JSON.parse(file.content);
+                this.data.startingBalance = loaded.startingBalance || 0;
+                this.data.transactions = loaded.transactions || [];
+                this.data.invoices = loaded.invoices || [];
+                this.data.nextTransactionId = loaded.nextTransactionId || 1;
+                this.data.nextInvoiceId = loaded.nextInvoiceId || 1;
+
+                // Safety: ensure IDs are unique
+                if (this.data.transactions.length > 0) {
+                    this.data.nextTransactionId = Math.max(this.data.nextTransactionId, Math.max(...this.data.transactions.map(t => t.id)) + 1);
+                }
+                if (this.data.invoices.length > 0) {
+                    this.data.nextInvoiceId = Math.max(this.data.nextInvoiceId, Math.max(...this.data.invoices.map(i => i.id)) + 1);
+                }
             }
         } catch (error) {
-            console.error('❌ Failed to load data:', error);
-            console.log('🆕 Starting with fresh data due to load error');
+            console.error('💾 ElxaBooks: Failed to load:', error);
         }
     }
 
-    clearSavedData() {
-        try {
-            // Try to delete the saved file
-            this.fileSystem.deleteFile(['root', 'Documents'], 'MyMoneyTracker.json');
-            console.log('🗑️ Saved data file deleted');
-        } catch (error) {
-            console.log('ℹ️ No saved data file to delete or deletion failed');
-        }
-    }
-
-    showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `elxa-books-message elxa-books-message-${type}`;
-        message.textContent = text;
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: ${type === 'success' ? '#d4edda' : '#d1ecf1'};
-            color: ${type === 'success' ? '#155724' : '#0c5460'};
-            padding: 12px 16px;
-            border: 2px solid ${type === 'success' ? '#c3e6cb' : '#bee5eb'};
-            border-radius: 8px;
-            z-index: 50; /* FIXED: Lower z-index to not interfere with window controls */
-            font-weight: bold;
-            font-size: 12px;
-            max-width: 300px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            pointer-events: none;
-        `;
-
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            if (message.parentNode) {
-                message.remove();
-            }
-        }, 3000);
-    }
-
-    // Debug method - can be called from console
-    debug(windowId) {
-        console.log('🐛 ElxaBooks Debug Info:');
-        console.log('Window ID:', windowId);
-        console.log('Current Data:', this.data);
-        
-        const container = document.querySelector(`[data-window-id="${windowId}"]`);
-        console.log('Container found:', !!container);
-        
-        if (container) {
-            const buttons = container.querySelectorAll('button');
-            console.log('Buttons found:', buttons.length);
-            buttons.forEach((btn, i) => {
-                console.log(`Button ${i}:`, btn.id, btn.textContent.trim());
-            });
-        }
-        
-        return {
-            windowId,
-            data: this.data,
-            containerExists: !!container,
-            buttonCount: container ? container.querySelectorAll('button').length : 0
-        };
+    // =================================
+    // UTILITIES
+    // =================================
+    formatDate(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 }

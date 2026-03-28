@@ -1143,36 +1143,7 @@ class ElxaOSSetupWizard {
     }
 
     showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `system-message ${type}`;
-        message.textContent = text;
-        
-        const colors = {
-            info: { bg: '#add8e6', color: 'black' },
-            success: { bg: '#00ff00', color: 'black' },
-            warning: { bg: '#ffff00', color: 'black' },
-            error: { bg: '#ff0000', color: 'white' }
-        };
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: ${colors[type].bg};
-            color: ${colors[type].color};
-            padding: 8px 16px;
-            border: 2px outset #c0c0c0;
-            z-index: 10000;
-            font-weight: bold;
-            font-size: 11px;
-            animation: slideIn 0.3s ease-out;
-        `;
-
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            message.remove();
-        }, 4000);
+        ElxaUI.showMessage(text, type);
     }
 }
 

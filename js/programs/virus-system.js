@@ -12,8 +12,11 @@ class VirusSystem {
         this.systemHealth = 100;
         this.lastScanTime = null;
         this.realTimeProtectionEnabled = true;
+        this.enabledViruses = new Set(); // Which viruses the user is "vulnerable" to
         
         this.initializeVirusDefinitions();
+        this.loadCustomViruses();
+        this.loadVirusSelection();
         this.setupEventHandlers();
         
         // Start the virus system after a delay
@@ -153,6 +156,17 @@ class VirusSystem {
             }
         });
 
+        // Refresh custom virus definitions when Virus Lab saves
+        this.eventBus.on('viruslab.virus.saved', () => {
+            this.loadCustomViruses();
+            this.eventBus.emit('virus.definitions.changed');
+        });
+
+        this.eventBus.on('viruslab.virus.deleted', () => {
+            this.loadCustomViruses();
+            this.eventBus.emit('virus.definitions.changed');
+        });
+
         // Handle X key for Buggyworm
         document.addEventListener('keydown', (e) => {
             if (e.key === 'x' || e.key === 'X') {
@@ -168,9 +182,17 @@ class VirusSystem {
             return;
         }
         
-        // Randomly start with one of the viruses
-        const viruses = ['buggyworm', 'veryfungame', 'lebron-james-scrambler', 'roblox-horror-jumpscare'];
-        const randomVirus = viruses[Math.floor(Math.random() * viruses.length)];
+        // Only pick from enabled viruses
+        const candidates = Array.from(this.enabledViruses).filter(id => 
+            this.virusDefinitions.has(id) && !this.infections.has(id) && !this.quarantine.has(id)
+        );
+        
+        if (candidates.length === 0) {
+            console.log('🦠 No eligible viruses to infect with (none enabled or all active/quarantined)');
+            return;
+        }
+        
+        const randomVirus = candidates[Math.floor(Math.random() * candidates.length)];
         
         setTimeout(() => {
             this.infectSystem(randomVirus);
@@ -220,6 +242,12 @@ class VirusSystem {
         if (!infection || !infection.active) return;
 
         const virusDef = infection.definition;
+
+        // Custom viruses from Virus Lab
+        if (virusDef.custom) {
+            this.activateCustomVirus(virusId, virusDef);
+            return;
+        }
 
         switch (virusDef.type) {
             case 'image_overlay':
@@ -358,12 +386,14 @@ class VirusSystem {
         if (installer) {
             installer.remove();
             
-            // Schedule reappearance if not quarantined AND real-time protection is disabled
+            // Schedule reappearance if still actively infecting (not quarantined)
+            // NOTE: Don't gate on realTimeProtectionEnabled here — the virus is
+            // already active. Protection only blocks NEW infections.
             const infection = this.infections.get('veryfungame');
-            if (infection && infection.active && !this.realTimeProtectionEnabled) {
+            if (infection && infection.active) {
                 infection.dismissed = true;
                 setTimeout(() => {
-                    if (this.infections.has('veryfungame') && this.infections.get('veryfungame').active && !this.realTimeProtectionEnabled) {
+                    if (this.infections.has('veryfungame') && this.infections.get('veryfungame').active) {
                         this.showFakeInstaller();
                     }
                 }, this.virusDefinitions.get('veryfungame').reinfectionTime);
@@ -448,12 +478,14 @@ class VirusSystem {
         if (overlay) {
             overlay.remove();
             
-            // Schedule reappearance if not quarantined AND real-time protection is disabled
+            // Schedule reappearance if still actively infecting (not quarantined)
+            // NOTE: Don't gate on realTimeProtectionEnabled here — the virus is
+            // already active. Protection only blocks NEW infections.
             const infection = this.infections.get('buggyworm');
-            if (infection && infection.active && !this.realTimeProtectionEnabled) {
+            if (infection && infection.active) {
                 infection.dismissed = true;
                 setTimeout(() => {
-                    if (this.infections.has('buggyworm') && this.infections.get('buggyworm').active && !this.realTimeProtectionEnabled) {
+                    if (this.infections.has('buggyworm') && this.infections.get('buggyworm').active) {
                         this.showBuggywormImage();
                     }
                 }, this.virusDefinitions.get('buggyworm').reinfectionTime);
@@ -554,8 +586,18 @@ class VirusSystem {
             // Clean up Lebron James effects
             document.querySelectorAll('.lebron-popup').forEach(popup => popup.remove());
         } else if (virusId === 'roblox-horror-jumpscare') {
-        // Clean up horror effects
-        document.querySelectorAll('.roblox-jumpscare, .roblox-death-screen').forEach(el => el.remove());
+            // Clean up horror effects
+            document.querySelectorAll('.roblox-jumpscare, .roblox-death-screen').forEach(el => el.remove());
+        }
+
+        // Clean up custom virus effects
+        document.querySelectorAll(`.custom-virus-effect[data-virus-id="${virusId}"]`).forEach(el => el.remove());
+
+        // Clean up custom virus message interval if running
+        const intervalKey = virusId + '-interval';
+        if (this.activeVirusInstances.has(intervalKey)) {
+            clearInterval(this.activeVirusInstances.get(intervalKey));
+            this.activeVirusInstances.delete(intervalKey);
         }
 
         // Improve system health
@@ -616,8 +658,11 @@ class VirusSystem {
     // Method to clear all infections (for testing)
     debugClearAll() {
         // Deactivate all active virus instances
-        this.activeVirusInstances.forEach((virusInstance, virusId) => {
-            if (typeof virusInstance.deactivate === 'function') {
+        this.activeVirusInstances.forEach((virusInstance, key) => {
+            if (typeof virusInstance === 'number') {
+                // It's a setInterval ID (e.g. custom virus message interval)
+                clearInterval(virusInstance);
+            } else if (typeof virusInstance.deactivate === 'function') {
                 virusInstance.deactivate();
             }
         });
@@ -628,6 +673,366 @@ class VirusSystem {
         this.systemHealth = 100;
         
         // Clean up UI elements
-        document.querySelectorAll('.buggyworm-overlay, .fake-installer, .malicious-popup, .lebron-popup, .roblox-jumpscare, .roblox-death-screen').forEach(el => el.remove());
+        document.querySelectorAll('.buggyworm-overlay, .fake-installer, .malicious-popup, .lebron-popup, .roblox-jumpscare, .roblox-death-screen, .custom-virus-effect').forEach(el => el.remove());
+    }
+
+    // =================================
+    // VIRUS SELECTION (user picks vulnerability)
+    // =================================
+    loadVirusSelection() {
+        try {
+            const saved = localStorage.getItem('elxaOS-virus-selection');
+            if (saved) {
+                this.enabledViruses = new Set(JSON.parse(saved));
+            } else {
+                // Default: all built-in viruses enabled
+                this.enabledViruses = new Set([
+                    'buggyworm', 'veryfungame', 'lebron-james-scrambler', 'roblox-horror-jumpscare'
+                ]);
+            }
+        } catch (error) {
+            console.error('💾 Failed to load virus selection:', error);
+            this.enabledViruses = new Set([
+                'buggyworm', 'veryfungame', 'lebron-james-scrambler', 'roblox-horror-jumpscare'
+            ]);
+        }
+    }
+
+    saveVirusSelection() {
+        try {
+            localStorage.setItem('elxaOS-virus-selection', JSON.stringify(Array.from(this.enabledViruses)));
+        } catch (error) {
+            console.error('💾 Failed to save virus selection:', error);
+        }
+    }
+
+    setVirusEnabled(virusId, enabled) {
+        if (enabled) {
+            this.enabledViruses.add(virusId);
+        } else {
+            this.enabledViruses.delete(virusId);
+        }
+        this.saveVirusSelection();
+    }
+
+    isVirusEnabled(virusId) {
+        return this.enabledViruses.has(virusId);
+    }
+
+    // =================================
+    // CUSTOM VIRUS INTEGRATION (Virus Lab bridge)
+    // =================================
+    loadCustomViruses() {
+        try {
+            const saved = localStorage.getItem('viruslab-saved-viruses');
+            if (!saved) return;
+
+            const virusEntries = JSON.parse(saved);
+
+            // Track which custom IDs we see so we can clean up stale ones
+            const currentCustomIds = new Set();
+
+            for (const [id, data] of virusEntries) {
+                const customId = `custom-${id}`;
+                currentCustomIds.add(customId);
+
+                // Don't overwrite if already registered (avoid resetting mid-infection)
+                if (this.virusDefinitions.has(customId)) continue;
+
+                this.virusDefinitions.set(customId, {
+                    id: customId,
+                    name: data.name || 'Custom Virus',
+                    type: data.type || 'popup',
+                    severity: data.severity || 'medium',
+                    description: data.description || 'A custom virus from the Virus Lab',
+                    author: data.author || 'Anonymous Hacker',
+                    discovered: data.created ? new Date(data.created).toLocaleDateString() : new Date().toLocaleDateString(),
+                    symptoms: this.getCustomVirusSymptoms(data.type),
+                    reinfectionTime: 30000,
+                    custom: true,
+                    labData: data // Keep full Virus Lab data for activation
+                });
+            }
+
+            // Remove definitions for custom viruses that were deleted in Virus Lab
+            // (only if not currently infecting or quarantined)
+            for (const [defId, def] of this.virusDefinitions) {
+                if (def.custom && !currentCustomIds.has(defId)
+                    && !this.infections.has(defId) && !this.quarantine.has(defId)) {
+                    this.virusDefinitions.delete(defId);
+                    this.enabledViruses.delete(defId);
+                }
+            }
+
+            console.log(`🧪 Loaded ${currentCustomIds.size} custom virus definition(s) from Virus Lab`);
+        } catch (error) {
+            console.error('🧪 Failed to load custom viruses:', error);
+        }
+    }
+
+    getCustomVirusSymptoms(type) {
+        switch (type) {
+            case 'image':   return ['Random images appearing on screen'];
+            case 'popup':   return ['Annoying popup windows'];
+            case 'message': return ['Strange messages on screen'];
+            case 'screen':  return ['Full-screen takeover effects'];
+            default:        return ['Unknown symptoms'];
+        }
+    }
+
+    // Helper: get icon for custom virus type (mirrors Virus Lab's getVirusIcon)
+    getCustomVirusIcon(type) {
+        const iconMap = {
+            'image': 'image-multiple',
+            'popup': 'alert-decagram',
+            'message': 'message-flash',
+            'screen': 'television'
+        };
+        return ElxaIcons.renderAction(iconMap[type] || 'biohazard');
+    }
+
+    activateCustomVirus(virusId, virusDef) {
+        const labData = virusDef.labData;
+        if (!labData) return;
+
+        console.log(`🧪 Activating custom virus: ${virusDef.name}`);
+
+        // Create the effect container (uses same wrapper as Virus Lab test effects)
+        const effect = document.createElement('div');
+        effect.className = 'custom-virus-effect';
+        effect.dataset.virusId = virusId;
+
+        switch (labData.type) {
+            case 'image':
+                this.showCustomImageVirus(effect, virusId, labData);
+                break;
+            case 'popup':
+                this.showCustomPopupVirus(effect, virusId, labData);
+                break;
+            case 'message':
+                this.showCustomMessageVirus(effect, virusId, labData);
+                break;
+            case 'screen':
+                this.showCustomScreenVirus(effect, virusId, labData);
+                break;
+        }
+
+        document.body.appendChild(effect);
+    }
+
+    // Image Bomber — cascading image popups (mirrors Virus Lab's createImageEffect)
+    showCustomImageVirus(effect, virusId, labData) {
+        const images = labData.images && labData.images.length > 0
+            ? labData.images
+            : ['hack1.png'];
+
+        let imageCount = 0;
+        const maxImages = Math.min(images.length * 2, 6);
+        const color = labData.color || '#ff0000';
+
+        const showRandomImage = () => {
+            if (imageCount >= maxImages) return;
+            if (!this.infections.has(virusId) || !this.infections.get(virusId).active) return;
+
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+            const imageElement = document.createElement('div');
+            imageElement.className = 'vlab-test-image-popup';
+            imageElement.innerHTML = `
+                <div class="vlab-test-image-overlay" style="border-color: ${color};">
+                    <div class="vlab-test-image-content">
+                        <img src="assets/hack/${randomImage}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        <div class="vlab-image-fallback" style="display:none;">
+                            <div class="vlab-fallback-icon">${this.getCustomVirusIcon(labData.type)}</div>
+                            <div class="vlab-fallback-text">${labData.name}</div>
+                        </div>
+                        <div class="vlab-test-label" style="background: ${color};">
+                            ${labData.name}
+                        </div>
+                        <button class="vlab-image-close-btn" style="background: ${color};">${ElxaIcons.renderAction('close')}</button>
+                    </div>
+                </div>
+            `;
+
+            const x = Math.random() * (window.innerWidth - 300);
+            const y = Math.random() * (window.innerHeight - 300);
+            imageElement.style.position = 'fixed';
+            imageElement.style.left = x + 'px';
+            imageElement.style.top = y + 'px';
+            imageElement.style.zIndex = '5000';
+
+            effect.appendChild(imageElement);
+
+            imageElement.querySelector('.vlab-image-close-btn').addEventListener('click', () => {
+                imageElement.remove();
+            });
+
+            // Auto-dismiss individual images
+            setTimeout(() => {
+                if (imageElement.parentNode) imageElement.remove();
+            }, Math.random() * 8000 + 5000);
+
+            imageCount++;
+            if (imageCount < maxImages) {
+                setTimeout(showRandomImage, Math.random() * 3000 + 2000);
+            } else {
+                // All images done — schedule reinfection
+                setTimeout(() => {
+                    this.scheduleCustomVirusReinfection(virusId, labData);
+                }, 10000);
+            }
+        };
+
+        showRandomImage();
+    }
+
+    // Popup Storm — cascading popup windows (mirrors Virus Lab's createPopupEffect)
+    showCustomPopupVirus(effect, virusId, labData) {
+        const messages = labData.customMessages && labData.customMessages.length > 0
+            ? labData.customMessages
+            : [
+                `${labData.target || 'You'}, you've been hacked by ${labData.author}!`,
+                `The ${labData.name} virus is taking over!`,
+                'Your computer belongs to me now!'
+            ];
+        const color = labData.color || '#ff0000';
+
+        let popupCount = 0;
+        const maxPopups = Math.min(messages.length * 2, 8);
+
+        const showPopup = () => {
+            if (popupCount >= maxPopups) return;
+            if (!this.infections.has(virusId) || !this.infections.get(virusId).active) return;
+
+            const popup = document.createElement('div');
+            popup.className = 'vlab-test-popup';
+            popup.innerHTML = `
+                <div class="vlab-popup-content" style="border-color: ${color};">
+                    <div class="vlab-popup-header" style="background: ${color};">
+                        <span>${ElxaIcons.renderAction('skull')} ${labData.name}</span>
+                        <button class="vlab-popup-close">${ElxaIcons.renderAction('close')}</button>
+                    </div>
+                    <div class="vlab-popup-body">
+                        <div class="vlab-popup-icon">${this.getCustomVirusIcon(labData.type)}</div>
+                        <div class="vlab-popup-message">${messages[popupCount % messages.length]}</div>
+                    </div>
+                </div>
+            `;
+
+            const x = Math.random() * (window.innerWidth - 350);
+            const y = Math.random() * (window.innerHeight - 200);
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+
+            effect.appendChild(popup);
+
+            popup.querySelector('.vlab-popup-close').addEventListener('click', () => {
+                popup.remove();
+            });
+
+            popupCount++;
+            if (popupCount < maxPopups) {
+                setTimeout(showPopup, 2000);
+            } else {
+                // All popups done — schedule reinfection
+                setTimeout(() => {
+                    // Clean up remaining popups
+                    effect.querySelectorAll('.vlab-test-popup').forEach(p => p.remove());
+                    this.scheduleCustomVirusReinfection(virusId, labData);
+                }, 8000);
+            }
+        };
+
+        showPopup();
+    }
+
+    // Message Spammer — full-width banner with cycling messages (mirrors Virus Lab's createMessageEffect)
+    showCustomMessageVirus(effect, virusId, labData) {
+        const messages = labData.customMessages && labData.customMessages.length > 0
+            ? labData.customMessages
+            : [
+                `Message from ${labData.author}: You've been pranked!`,
+                `${labData.name} says: ${labData.description}`,
+                'This message will self-destruct in 5 seconds...'
+            ];
+        const color = labData.color || '#ff0000';
+
+        effect.innerHTML = `
+            <div class="vlab-test-message-banner" style="background: ${color};">
+                <div class="vlab-message-content">
+                    <div class="vlab-message-icon">${this.getCustomVirusIcon(labData.type)}</div>
+                    <div class="vlab-message-text"></div>
+                </div>
+            </div>
+        `;
+
+        const messageText = effect.querySelector('.vlab-message-text');
+        let messageIndex = 0;
+        let cycleCount = 0;
+        const maxCycles = messages.length * 3;
+
+        const cycleMessages = () => {
+            if (messageText) messageText.textContent = messages[messageIndex % messages.length];
+            messageIndex++;
+        };
+        cycleMessages();
+
+        const messageInterval = setInterval(() => {
+            cycleCount++;
+            if (cycleCount < maxCycles && this.infections.has(virusId) && this.infections.get(virusId).active) {
+                cycleMessages();
+            } else {
+                clearInterval(messageInterval);
+                // Remove banner and schedule reinfection
+                const banner = effect.querySelector('.vlab-test-message-banner');
+                if (banner) banner.remove();
+                this.scheduleCustomVirusReinfection(virusId, labData);
+            }
+        }, 3000);
+
+        // Store interval for cleanup if quarantined mid-cycle
+        this.activeVirusInstances.set(virusId + '-interval', messageInterval);
+    }
+
+    // Screen Effect — fullscreen overlay with glitch text (mirrors Virus Lab's createScreenEffect)
+    showCustomScreenVirus(effect, virusId, labData) {
+        const color = labData.color || '#ff0000';
+
+        effect.innerHTML = `
+            <div class="vlab-test-screen-effect" style="background: linear-gradient(45deg, ${color}33, transparent); pointer-events: auto; cursor: pointer;">
+                <div class="vlab-effect-content">
+                    <div class="vlab-glitch-text" style="color: ${color};">
+                        ${(labData.name || 'VIRUS').toUpperCase()}
+                    </div>
+                    <div class="vlab-effect-subtitle">
+                        Created by ${labData.author || 'Anonymous Hacker'}
+                    </div>
+                    <div style="color: #888; font-size: 12px; margin-top: 12px;">Click anywhere to dismiss</div>
+                </div>
+            </div>
+        `;
+
+        // Start glitch animation
+        setTimeout(() => {
+            effect.querySelector('.vlab-glitch-text')?.classList.add('vlab-glitch-animation');
+        }, 500);
+
+        // Click anywhere to dismiss
+        effect.querySelector('.vlab-test-screen-effect').addEventListener('click', () => {
+            effect.innerHTML = '';
+            this.scheduleCustomVirusReinfection(virusId, labData);
+        });
+    }
+
+    scheduleCustomVirusReinfection(virusId, labData) {
+        const infection = this.infections.get(virusId);
+        if (infection && infection.active) {
+            infection.dismissed = true;
+            const reinfectionTime = 30000; // 30 seconds for custom viruses
+            setTimeout(() => {
+                if (this.infections.has(virusId) && this.infections.get(virusId).active) {
+                    this.activateCustomVirus(virusId, this.virusDefinitions.get(virusId));
+                }
+            }, reinfectionTime);
+        }
     }
 }

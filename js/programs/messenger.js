@@ -8,37 +8,34 @@ class MessengerProgram {
         this.eventBus = eventBus;
         this.isOpen = false;
         this.currentContact = null;
-        
+        this.documentClickHandler = null; // Track document-level listener for cleanup
+
         // Conversation history integration
         this.conversationManager = null;
         this.worldContext = null;
         this.contacts = []; // Will be loaded from world context
-        
+
         // Character responses for fallbacks
         this.characterResponses = {};
         this.defaultResponse = '';
-        
+
         this.settings = {
             username: '',
             password: '',
             about: '',
             apiKey: '',
-            selectedModel: 'gemini-pro',
+            selectedModel: 'gemini-2.5-flash',
             availableModels: [
-                'gemini-pro',
-                'gemini-pro-vision', 
-                'gemini-1.5-pro',
-                'gemini-1.5-flash',
-                'gemini-1.5-pro-latest',
-                'gemini-1.5-flash-latest'
+                'gemini-2.5-flash',
+                'gemini-2.5-flash-lite',
+                'gemini-2.5-pro'
             ],
-            // Enhanced LLM Integration Settings
             llm: {
                 enabled: true,
                 crossPlatformHistory: true,
-                historyLength: 25, // Increased for better context
-                storyProgression: 'balanced', // conservative, balanced, active
-                responseLength: 'normal', // brief, normal, detailed
+                historyLength: 25,
+                storyProgression: 'balanced',
+                responseLength: 'normal',
                 autoSummarize: true,
                 maxTokens: {
                     brief: 80,
@@ -57,8 +54,8 @@ class MessengerProgram {
             }
         };
         this.firstTimeSetup = true;
-        this.contextMenuContact = null; // Track which contact's context menu is open
-        
+        this.contextMenuContact = null;
+
         // Emoji categories for the picker
         this.emojiCategories = {
             'Smileys': ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '😍', '🤩', '😘', '😗', '😚', '😙', '😋', '😛', '😜', '🤪', '😝', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '😵', '🤯'],
@@ -68,9 +65,31 @@ class MessengerProgram {
             'Objects': ['⌚', '📱', '📲', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '🕹️', '🗜️', '💽', '💾', '💿', '📀', '📼', '📷', '📸', '📹', '🎥', '📽️', '🎬', '📺', '📻', '🎙️', '🎚️', '🎛️', '🧭', '⏱️', '⏲️', '⏰', '🕰️', '⏳', '⌛', '📡', '🔋', '🔌', '💡', '🔦', '🕯️', '🪔', '🧯', '🛢️', '💸', '💵', '💴', '💶', '💷'],
             'Snakesia': ['🐍', '🏢', '💼', '🚗', '💰', '🌟', '👑', '🎯', '🚀', '⚡', '🔥', '💎', '🏆', '🎊', '🎉', '✨', '🌈', '☀️', '🌙', '⭐', '💫', '🌸', '🌻', '🌺', '🌷', '🌹', '🎂', '🍰', '🧁', '🍪', '🍫', '🍬', '🍭', '🎪', '🎨', '🎭', '🎼', '🎵', '🎶', '🎤', '🎧', '📚', '📖', '✏️', '🖍️', '📝', '📌', '📍']
         };
-        
+
+        // Register window close handler once (not in launch)
+        this.eventBus.on('window.closed', (data) => {
+            if (data.id === 'messenger') {
+                this.isOpen = false;
+                this.cleanupOnClose();
+            }
+        });
+
         this.initializeManagers();
         this.loadSettings();
+    }
+
+    // ===== LIFECYCLE =====
+
+    cleanupOnClose() {
+        // Remove document-level click listener
+        if (this.documentClickHandler) {
+            document.removeEventListener('click', this.documentClickHandler);
+            this.documentClickHandler = null;
+        }
+
+        // Remove injected theme style tag
+        const themeStyle = document.getElementById('messengerThemeStyle');
+        if (themeStyle) themeStyle.remove();
     }
 
     // ===== INITIALIZATION =====
@@ -78,31 +97,20 @@ class MessengerProgram {
     async initializeManagers() {
         try {
             console.log('🔄 Initializing conversation managers...');
-            
-            // Try to access conversation history manager from different possible locations
+
             let conversationManager = null;
             let worldContext = null;
-            
-            // Method 1: Check if it's globally available
-            if (typeof conversationHistoryManager !== 'undefined') {
-                conversationManager = conversationHistoryManager;
-                worldContext = conversationHistoryManager.worldContext;
-                console.log('✅ Found conversation history manager globally');
-            }
-            // Method 2: Check if it's attached to window
-            else if (window.conversationHistoryManager) {
+
+            if (window.conversationHistoryManager) {
                 conversationManager = window.conversationHistoryManager;
-                worldContext = window.conversationHistoryManager.worldContext;
-                console.log('✅ Found conversation history manager on window');
-            }
-            // Method 3: Check if it's attached to elxaOS
-            else if (typeof elxaOS !== 'undefined' && elxaOS.conversationHistoryManager) {
-                conversationManager = elxaOS.conversationHistoryManager;
-                worldContext = elxaOS.conversationHistoryManager.worldContext;
-                console.log('✅ Found conversation history manager on elxaOS');
-            }
-            // Method 4: Try to load world context directly
-            else {
+                console.log('✅ Found conversation history manager globally');
+
+                // Wait for world context to finish loading (it's async)
+                if (conversationManager.worldContextReady) {
+                    await conversationManager.worldContextReady;
+                }
+                worldContext = conversationManager.worldContext;
+            } else {
                 console.log('⚠️ Conversation history manager not found, trying to load world context directly...');
                 try {
                     const response = await fetch('./assets/interwebs/exmail/world-context.json');
@@ -116,11 +124,10 @@ class MessengerProgram {
                     console.error('❌ Failed to load world context directly:', error);
                 }
             }
-            
-            // Set the manager and context
+
             this.conversationManager = conversationManager;
             this.worldContext = worldContext;
-            
+
             if (this.worldContext) {
                 console.log('🌍 World context available');
                 if (this.worldContext.keyCharacters) {
@@ -129,11 +136,8 @@ class MessengerProgram {
             } else {
                 console.log('⚠️ No world context available');
             }
-            
-            // Load characters
+
             await this.loadCharactersFromWorldContext();
-            
-            // Load character responses for fallbacks
             await this.loadCharacterResponses();
         } catch (error) {
             console.error('❌ Failed to initialize managers:', error);
@@ -169,7 +173,7 @@ class MessengerProgram {
 
         console.log('📁 Loading characters from world context...');
         this.contacts = [];
-        
+
         const characters = this.worldContext.keyCharacters;
         Object.keys(characters).forEach(characterId => {
             const char = characters[characterId];
@@ -181,10 +185,10 @@ class MessengerProgram {
                 avatarImage: `../../assets/messenger/${characterId}.png`,
                 description: char.details || char.personality || 'A friendly resident of Snakesia.',
                 personality: char.personality || 'Friendly and helpful.',
-                character: char // Store full character data for better prompts
+                character: char
             });
         });
-        
+
         console.log(`✅ Loaded ${this.contacts.length} characters from world context`);
     }
 
@@ -204,7 +208,6 @@ class MessengerProgram {
 
     loadFallbackCharacters() {
         console.log('⚠️ World context not available - using minimal fallback characters');
-        // Minimal fallback only if world context completely fails
         this.contacts = [
             {
                 id: 'mr_snake_e',
@@ -224,26 +227,20 @@ class MessengerProgram {
             return;
         }
 
-        const window = this.windowManager.createWindow(
+        const win = this.windowManager.createWindow(
             'messenger',
-            '💬 Snakesia Messenger',
+            `${ElxaIcons.render('messenger', 'ui')} Snakesia Messenger`,
             this.createInterface(),
             { width: '800px', height: '600px', x: '150px', y: '100px' }
         );
 
         this.isOpen = true;
         this.setupEventHandlers();
-        
+
         // Show setup if first time
         if (this.firstTimeSetup || !this.settings.username) {
             setTimeout(() => this.showFirstTimeSetup(), 500);
         }
-
-        this.eventBus.on('window.closed', (data) => {
-            if (data.id === 'messenger') {
-                this.isOpen = false;
-            }
-        });
     }
 
     createInterface() {
@@ -252,34 +249,34 @@ class MessengerProgram {
                 <!-- Setup Modal -->
                 <div class="messenger-setup-modal" id="messengerSetupModal" style="display: none;">
                     <div class="messenger-setup-content">
-                        <h3>Welcome to Snakesia Messenger! 🐍</h3>
+                        <h3>Welcome to Snakesia Messenger!</h3>
                         <p>Let's set up your account to chat with your friends in Snakesia!</p>
-                        
+
                         <div class="messenger-setup-form">
                             <div class="messenger-form-group">
                                 <label>Your Username:</label>
                                 <input type="text" id="setupUsername" class="messenger-input" placeholder="Enter your cool username">
                             </div>
-                            
+
                             <div class="messenger-form-group">
                                 <label>Password:</label>
                                 <input type="password" id="setupPassword" class="messenger-input" placeholder="Create a password">
                             </div>
-                            
+
                             <div class="messenger-form-group">
                                 <label>Tell us about yourself:</label>
                                 <textarea id="setupAbout" class="messenger-textarea" placeholder="What do you like? What are your hobbies? This helps your friends know you better!"></textarea>
                             </div>
-                            
+
                             <div class="messenger-form-group">
                                 <label>Gemini API Key (ask a grown-up to help):</label>
                                 <input type="password" id="setupApiKey" class="messenger-input" placeholder="Your Gemini API key">
                                 <small>This lets you chat with your Snakesia friends!</small>
                             </div>
-                            
+
                             <div class="messenger-setup-actions">
                                 <button class="messenger-btn messenger-btn-primary" onclick="elxaOS.programs.messenger.completeSetup()">
-                                    Start Chatting! 🚀
+                                    Start Chatting!
                                 </button>
                             </div>
                         </div>
@@ -292,17 +289,17 @@ class MessengerProgram {
                     <div class="messenger-sidebar">
                         <div class="messenger-header">
                             <div class="messenger-user-info">
-                                <div class="messenger-user-avatar">👤</div>
+                                <div class="messenger-user-avatar">${ElxaIcons.renderAction('account')}</div>
                                 <div class="messenger-user-details">
                                     <div class="messenger-username" id="messengerUsername">Guest</div>
                                     <div class="messenger-user-status">Online in Snakesia</div>
                                 </div>
                             </div>
                             <div class="messenger-header-actions">
-                                <button class="messenger-icon-btn" onclick="elxaOS.programs.messenger.showSettings()" title="Settings">⚙️</button>
+                                <button class="messenger-icon-btn" onclick="elxaOS.programs.messenger.showSettings()" title="Settings">${ElxaIcons.renderAction('settings')}</button>
                             </div>
                         </div>
-                        
+
                         <div class="messenger-contacts">
                             <div class="messenger-contacts-header">Snakesia Friends</div>
                             <div class="messenger-contact-list" id="messengerContactList">
@@ -314,11 +311,11 @@ class MessengerProgram {
                     <!-- Chat Area -->
                     <div class="messenger-chat-area" id="messengerChatArea">
                         <div class="messenger-welcome">
-                            <div class="messenger-welcome-icon">🐍✨</div>
+                            <div class="messenger-welcome-icon">${ElxaIcons.render('messenger', 'desktop')}</div>
                             <h3>Welcome to Snakesia Messenger!</h3>
                             <p>Select a friend to start chatting!</p>
                             <p><em>Remember: Snakesia is 2 hours and 1 minute ahead of us!</em></p>
-                            ${this.conversationManager ? '<p><small>📚 Cross-platform memory enabled - characters remember conversations from Email too!</small></p>' : ''}
+                            ${this.conversationManager ? '<p><small>Cross-platform memory enabled - characters remember conversations from Email too!</small></p>' : ''}
                         </div>
                     </div>
                 </div>
@@ -340,17 +337,17 @@ class MessengerProgram {
                 <div class="messenger-settings-modal" id="messengerSettingsModal" style="display: none;">
                     <div class="messenger-settings-content">
                         <div class="messenger-settings-header">
-                            <h3>Messenger Settings</h3>
+                            <h3>${ElxaIcons.renderAction('settings')} Messenger Settings</h3>
                             <button class="messenger-close-btn" onclick="elxaOS.programs.messenger.hideSettings()">×</button>
                         </div>
-                        
+
                         <div class="messenger-settings-tabs">
-                            <button class="messenger-tab-btn active" onclick="elxaOS.programs.messenger.switchTab('account')">Account</button>
-                            <button class="messenger-tab-btn" onclick="elxaOS.programs.messenger.switchTab('api')">API Settings</button>
-                            <button class="messenger-tab-btn" onclick="elxaOS.programs.messenger.switchTab('llm')">LLM Settings</button>
-                            <button class="messenger-tab-btn" onclick="elxaOS.programs.messenger.switchTab('appearance')">Appearance</button>
+                            <button class="messenger-tab-btn active" onclick="elxaOS.programs.messenger.switchTab('account', this)">Account</button>
+                            <button class="messenger-tab-btn" onclick="elxaOS.programs.messenger.switchTab('api', this)">API Settings</button>
+                            <button class="messenger-tab-btn" onclick="elxaOS.programs.messenger.switchTab('llm', this)">LLM Settings</button>
+                            <button class="messenger-tab-btn" onclick="elxaOS.programs.messenger.switchTab('appearance', this)">Appearance</button>
                         </div>
-                        
+
                         <div class="messenger-settings-body">
                             <!-- Account Tab -->
                             <div class="messenger-tab-content active" id="accountTab">
@@ -367,7 +364,7 @@ class MessengerProgram {
                                     <textarea id="settingsAbout" class="messenger-textarea"></textarea>
                                 </div>
                             </div>
-                            
+
                             <!-- API Tab -->
                             <div class="messenger-tab-content" id="apiTab">
                                 <div class="messenger-form-group">
@@ -384,11 +381,11 @@ class MessengerProgram {
                                 </div>
                                 <div class="messenger-form-group">
                                     <button class="messenger-btn" onclick="elxaOS.programs.messenger.refreshModels()">
-                                        🔄 Refresh Models
+                                        ${ElxaIcons.renderAction('refresh')} Refresh Models
                                     </button>
                                 </div>
                             </div>
-                            
+
                             <!-- LLM Settings Tab -->
                             <div class="messenger-tab-content" id="llmTab">
                                 <div class="messenger-form-group">
@@ -398,7 +395,7 @@ class MessengerProgram {
                                     </label>
                                     <small>Turn on/off AI responses. Characters will use template responses when disabled.</small>
                                 </div>
-                                
+
                                 <div class="messenger-form-group">
                                     <label>
                                         <input type="checkbox" id="crossPlatformHistory" class="messenger-checkbox">
@@ -406,7 +403,7 @@ class MessengerProgram {
                                     </label>
                                     <small>Characters remember conversations across both Messenger and Email.</small>
                                 </div>
-                                
+
                                 <div class="messenger-form-group">
                                     <label>Conversation Memory Length:</label>
                                     <select id="historyLength" class="messenger-select">
@@ -416,7 +413,7 @@ class MessengerProgram {
                                     </select>
                                     <small>How many recent messages to remember before summarizing older ones.</small>
                                 </div>
-                                
+
                                 <div class="messenger-form-group">
                                     <label>Story Progression Style:</label>
                                     <select id="storyProgression" class="messenger-select">
@@ -426,7 +423,7 @@ class MessengerProgram {
                                     </select>
                                     <small>How actively characters advance the story and share news.</small>
                                 </div>
-                                
+
                                 <div class="messenger-form-group">
                                     <label>Response Length:</label>
                                     <select id="responseLength" class="messenger-select">
@@ -436,7 +433,7 @@ class MessengerProgram {
                                     </select>
                                     <small>How long character responses should be.</small>
                                 </div>
-                                
+
                                 <div class="messenger-form-group">
                                     <label>
                                         <input type="checkbox" id="autoSummarize" class="messenger-checkbox">
@@ -444,16 +441,16 @@ class MessengerProgram {
                                     </label>
                                     <small>Automatically compress old messages to save memory and improve performance.</small>
                                 </div>
-                                
-                                <div class="messenger-form-group" style="background: #f0f0f0; padding: 10px; border-radius: 5px; margin-top: 15px;">
-                                    <strong>💡 Pro Tips:</strong><br>
-                                    <small>• Cross-platform memory creates more immersive conversations<br>
-                                    • Longer memory = more context but slower responses<br>
-                                    • Active story progression = more engaging but less predictable<br>
-                                    • Auto-summarize keeps the experience smooth over time</small>
+
+                                <div class="messenger-pro-tips">
+                                    <strong>Pro Tips:</strong><br>
+                                    <small>Cross-platform memory creates more immersive conversations.
+                                    Longer memory = more context but slower responses.
+                                    Active story progression = more engaging but less predictable.
+                                    Auto-summarize keeps the experience smooth over time.</small>
                                 </div>
                             </div>
-                            
+
                             <!-- Appearance Tab -->
                             <div class="messenger-tab-content" id="appearanceTab">
                                 <div class="messenger-form-group">
@@ -487,10 +484,10 @@ class MessengerProgram {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="messenger-settings-actions">
                             <button class="messenger-btn messenger-btn-primary" onclick="elxaOS.programs.messenger.saveSettings()">
-                                Save Changes
+                                ${ElxaIcons.renderAction('save')} Save Changes
                             </button>
                             <button class="messenger-btn" onclick="elxaOS.programs.messenger.hideSettings()">
                                 Cancel
@@ -502,10 +499,10 @@ class MessengerProgram {
                 <!-- Context Menu -->
                 <div class="messenger-context-menu" id="messengerContextMenu" style="display: none;">
                     <div class="messenger-context-item" onclick="elxaOS.programs.messenger.clearChatFromMenu()">
-                        🗑️ Clear Chat History
+                        ${ElxaIcons.renderAction('delete')} Clear Chat History
                     </div>
                     <div class="messenger-context-item" onclick="elxaOS.programs.messenger.hideContextMenu()">
-                        ❌ Cancel
+                        ${ElxaIcons.renderAction('close')} Cancel
                     </div>
                 </div>
             </div>
@@ -519,36 +516,33 @@ class MessengerProgram {
         this.updateUserInfo();
         this.applyTheme();
 
-        // Add click handler to close context menu and emoji picker - SCOPED to messenger container
-        document.addEventListener('click', (e) => {
+        // Document-level click handler for closing context menu and emoji picker
+        // Store ref for cleanup on window close
+        this.cleanupOnClose(); // Remove any stale handler first
+        this.documentClickHandler = (e) => {
             const contextMenu = document.getElementById('messengerContextMenu');
             const emojiPicker = document.getElementById('messengerEmojiPicker');
-            
+
             if (contextMenu && contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) {
                 this.hideContextMenu();
             }
-            
+
             if (emojiPicker && emojiPicker.style.display === 'block' && !emojiPicker.contains(e.target) && !e.target.closest('.messenger-emoji-btn')) {
                 this.hideEmojiPicker();
             }
-        });
+        };
+        document.addEventListener('click', this.documentClickHandler);
 
-        // FIXED: Scope context menu prevention to just the messenger container
+        // Scope context menu prevention to just the messenger container
         const messengerContainer = document.querySelector('.messenger-container');
         if (messengerContainer) {
             messengerContainer.addEventListener('contextmenu', (e) => {
-                // Only handle context menu within messenger
                 if (e.target.closest('.messenger-contact-item')) {
-                    // Let the contact item handle its own context menu
                     return;
                 }
-                
-                // Allow default context menu on input fields and text areas
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     return;
                 }
-                
-                // Prevent context menu on other messenger elements
                 e.preventDefault();
             });
         }
@@ -559,13 +553,12 @@ class MessengerProgram {
     populateEmojiPicker() {
         const emojiTabs = document.getElementById('messengerEmojiTabs');
         const emojiContent = document.getElementById('messengerEmojiContent');
-        
+
         if (!emojiTabs || !emojiContent) return;
 
-        // Create tabs
         emojiTabs.innerHTML = '';
         const categories = Object.keys(this.emojiCategories);
-        
+
         categories.forEach((category, index) => {
             const tab = document.createElement('button');
             tab.className = `messenger-emoji-tab ${index === 0 ? 'active' : ''}`;
@@ -574,23 +567,20 @@ class MessengerProgram {
             emojiTabs.appendChild(tab);
         });
 
-        // Show first category by default
         this.switchEmojiCategory(categories[0]);
     }
 
     switchEmojiCategory(category) {
-        // Update active tab
         document.querySelectorAll('.messenger-emoji-tab').forEach(tab => {
             tab.classList.toggle('active', tab.textContent === category);
         });
 
-        // Populate emojis
         const emojiContent = document.getElementById('messengerEmojiContent');
         if (!emojiContent) return;
 
         emojiContent.innerHTML = '';
         const emojis = this.emojiCategories[category] || [];
-        
+
         emojis.forEach(emoji => {
             const emojiBtn = document.createElement('button');
             emojiBtn.className = 'messenger-emoji-item';
@@ -605,21 +595,17 @@ class MessengerProgram {
         const emojiPicker = document.getElementById('messengerEmojiPicker');
         if (!emojiPicker || !buttonElement) return;
 
-        // Position the picker near the emoji button
         const rect = buttonElement.getBoundingClientRect();
         emojiPicker.style.left = rect.left + 'px';
-        emojiPicker.style.top = (rect.top - 200) + 'px'; // Show above the button
+        emojiPicker.style.top = (rect.top - 200) + 'px';
         emojiPicker.style.display = 'block';
         emojiPicker.style.zIndex = '5000';
-
-        console.log('😀 Emoji picker shown');
     }
 
     hideEmojiPicker() {
         const emojiPicker = document.getElementById('messengerEmojiPicker');
         if (emojiPicker) {
             emojiPicker.style.display = 'none';
-            console.log('❌ Emoji picker hidden');
         }
     }
 
@@ -627,21 +613,16 @@ class MessengerProgram {
         const messageInput = document.getElementById('messengerMessageInput');
         if (!messageInput) return;
 
-        // Insert emoji at cursor position
         const start = messageInput.selectionStart;
         const end = messageInput.selectionEnd;
         const text = messageInput.value;
-        
+
         messageInput.value = text.substring(0, start) + emoji + text.substring(end);
-        
-        // Move cursor after inserted emoji
+
         const newPosition = start + emoji.length;
         messageInput.setSelectionRange(newPosition, newPosition);
         messageInput.focus();
 
-        console.log('😀 Inserted emoji:', emoji);
-        
-        // Hide picker after selection
         this.hideEmojiPicker();
     }
 
@@ -652,20 +633,20 @@ class MessengerProgram {
         if (!contactList) return;
 
         contactList.innerHTML = '';
-        
+
         this.contacts.forEach(contact => {
             const contactElement = document.createElement('div');
             contactElement.className = 'messenger-contact-item';
-            contactElement.onclick = () => this.selectContact(contact.id);
-            
-            // FIXED: Better context menu handling with proper event stopping
+
+            // Pass the element directly to avoid relying on implicit event
+            contactElement.onclick = (e) => this.selectContact(contact.id, e.currentTarget);
+
             contactElement.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
-                e.stopPropagation(); // Prevent bubbling to parent handlers
-                console.log('🖱️ Right-click on contact:', contact.name);
+                e.stopPropagation();
                 this.showContextMenu(e, contact.id);
             });
-            
+
             contactElement.innerHTML = `
                 <div class="messenger-contact-avatar">${this.createAvatarElement(contact)}</div>
                 <div class="messenger-contact-info">
@@ -676,13 +657,12 @@ class MessengerProgram {
                     <div class="messenger-online-dot"></div>
                 </div>
             `;
-            
+
             contactList.appendChild(contactElement);
         });
     }
 
     createAvatarElement(contact) {
-        // Try to create an image element first, fallback to emoji
         if (contact.avatarImage) {
             return `<img src="${contact.avatarImage}" alt="${contact.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                     <span style="display: none;">${contact.avatar}</span>`;
@@ -690,18 +670,20 @@ class MessengerProgram {
         return contact.avatar;
     }
 
-    selectContact(contactId) {
+    selectContact(contactId, clickedElement) {
         // Remove active state from all contacts
         document.querySelectorAll('.messenger-contact-item').forEach(item => {
             item.classList.remove('active');
         });
-        
-        // Add active state to selected contact
-        event.target.closest('.messenger-contact-item').classList.add('active');
-        
+
+        // Add active state to the clicked element
+        if (clickedElement) {
+            clickedElement.classList.add('active');
+        }
+
         const contact = this.contacts.find(c => c.id === contactId);
         if (!contact) return;
-        
+
         this.currentContact = contact;
         this.showChatInterface(contact);
     }
@@ -716,61 +698,56 @@ class MessengerProgram {
                     <div class="messenger-chat-avatar">${this.createAvatarElement(contact)}</div>
                     <div class="messenger-chat-details">
                         <div class="messenger-chat-name">${contact.name}</div>
-                        <div class="messenger-chat-status">Active now • ${this.getSnakesiaTime()}</div>
+                        <div class="messenger-chat-status">Active now &bull; ${this.getSnakesiaTime()}</div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="messenger-chat-messages" id="messengerChatMessages">
                 <!-- Messages will appear here -->
             </div>
-            
+
             <div class="messenger-chat-input-area">
                 <div class="messenger-input-container">
                     <button class="messenger-emoji-btn" onclick="elxaOS.programs.messenger.showEmojiPicker(this)" title="Add Emoji">
                         😀
                     </button>
-                    <input type="text" 
-                           class="messenger-message-input" 
+                    <input type="text"
+                           class="messenger-message-input"
                            id="messengerMessageInput"
                            placeholder="Type a message to ${contact.name}..."
                            onkeypress="if(event.key==='Enter') elxaOS.programs.messenger.sendMessage()">
-                    <button class="messenger-send-btn" onclick="elxaOS.programs.messenger.sendMessage()">
-                        📤
+                    <button class="messenger-send-btn" onclick="elxaOS.programs.messenger.sendMessage()" title="Send">
+                        ${ElxaIcons.renderAction('send')}
                     </button>
                 </div>
             </div>
         `;
 
-        // Load existing messages for this contact
         this.loadMessages(contact.id);
         this.applyTheme();
-        
-        // Focus input
+
         setTimeout(() => {
             const input = document.getElementById('messengerMessageInput');
             if (input) input.focus();
         }, 100);
     }
 
-    // ===== ENHANCED MESSAGE HANDLING WITH IMPROVED PROMPTS =====
+    // ===== MESSAGE HANDLING =====
 
     async sendMessage() {
         const input = document.getElementById('messengerMessageInput');
         const messagesContainer = document.getElementById('messengerChatMessages');
-        
+
         if (!input || !messagesContainer || !this.currentContact) return;
-        
+
         const message = input.value.trim();
         if (!message) return;
-        
-        // Clear input
+
         input.value = '';
-        
-        // Add user message to display
+
         this.addMessage('user', message, this.currentContact.id);
-        
-        // Add to conversation history if available
+
         if (this.conversationManager) {
             this.conversationManager.addMessage(this.currentContact.id, {
                 type: 'message',
@@ -780,22 +757,17 @@ class MessengerProgram {
                 platform: 'messenger'
             });
         }
-        
-        // Show typing indicator
+
         this.showTypingIndicator();
-        
+
         try {
-            // Get AI response
             const response = await this.getAIResponse(message, this.currentContact);
-            
-            // Remove typing indicator
+
             this.hideTypingIndicator();
-            
-            // Add AI response
+
             if (response) {
                 this.addMessage('ai', response, this.currentContact.id);
-                
-                // Add AI response to conversation history if available
+
                 if (this.conversationManager) {
                     this.conversationManager.addMessage(this.currentContact.id, {
                         type: 'message',
@@ -817,16 +789,13 @@ class MessengerProgram {
 
     addMessage(sender, text, contactId) {
         const messagesContainer = document.getElementById('messengerChatMessages');
-        if (!messagesContainer) {
-            console.error('❌ Messages container not found when adding message');
-            return;
-        }
+        if (!messagesContainer) return;
 
         const messageElement = document.createElement('div');
         messageElement.className = `messenger-message ${sender === 'user' ? 'user' : 'ai'}`;
-        
+
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
+
         if (sender === 'user') {
             messageElement.innerHTML = `
                 <div class="messenger-message-bubble user">
@@ -843,47 +812,30 @@ class MessengerProgram {
                 </div>
             `;
         }
-        
+
         messagesContainer.appendChild(messageElement);
-        
-        // Apply theme immediately to new message
         this.applyThemeToMessage(messageElement);
-        
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        
-        console.log('💬 Message added for', contactId);
-        
-        // Note: We don't store messages locally anymore since conversation history manager handles it
-        // Save settings to maintain other data
+
         this.saveSettingsToStorage();
     }
 
     loadMessages(contactId) {
         const messagesContainer = document.getElementById('messengerChatMessages');
-        if (!messagesContainer) {
-            console.error('❌ Messages container not found when loading messages');
-            return;
-        }
+        if (!messagesContainer) return;
 
-        console.log('📖 Loading messages for contact:', contactId);
-        
         messagesContainer.innerHTML = '';
-        
+
         if (this.conversationManager) {
-            // Load from conversation history manager
             const conversationHistory = this.conversationManager.getConversationHistory(contactId, false);
             const messengerMessages = conversationHistory.filter(msg => msg.platform === 'messenger' && msg.type !== 'summary');
-            
-            console.log('📖 Found', messengerMessages.length, 'messenger messages for', contactId);
-            
-            messengerMessages.forEach((msg, index) => {
-                console.log(`📖 Loading message ${index + 1}:`, msg);
-                
+
+            messengerMessages.forEach(msg => {
                 const messageElement = document.createElement('div');
                 messageElement.className = `messenger-message ${msg.sender === 'user' ? 'user' : 'ai'}`;
-                
+
                 const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
+
                 if (msg.sender === 'user') {
                     messageElement.innerHTML = `
                         <div class="messenger-message-bubble user">
@@ -900,14 +852,12 @@ class MessengerProgram {
                         </div>
                     `;
                 }
-                
+
                 messagesContainer.appendChild(messageElement);
                 this.applyThemeToMessage(messageElement);
             });
-        } else {
-            console.log('⚠️ Conversation history manager not available, no messages to load');
         }
-        
+
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
@@ -926,7 +876,7 @@ class MessengerProgram {
                 </div>
             </div>
         `;
-        
+
         messagesContainer.appendChild(indicator);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
@@ -938,56 +888,32 @@ class MessengerProgram {
         }
     }
 
-    // ===== ENHANCED AI RESPONSE SYSTEM WITH IMPROVED CROSS-PLATFORM HISTORY =====
+    // ===== AI RESPONSE SYSTEM =====
 
     async getAIResponse(userMessage, contact) {
-        // Check if LLM is enabled
         if (!this.settings.llm.enabled) {
             return this.getFallbackResponse(contact);
         }
 
-        if (!this.settings.apiKey) {
-            return "I need an API key to chat! Ask a grown-up to help set it up in Settings. 🔑";
+        if (!window.elxaLLM || !window.elxaLLM.isAvailable()) {
+            return "I need an API key to chat! Ask a grown-up to help set it up in Settings.";
         }
 
         try {
-            // Create the enhanced prompt with cross-platform conversation history
             const prompt = this.buildEnhancedPrompt(userMessage, contact);
-            
-            // Get response length setting
             const maxTokens = this.settings.llm.maxTokens[this.settings.llm.responseLength];
-            
-            // Make API call to Gemini
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${this.settings.selectedModel}:generateContent?key=${this.settings.apiKey}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
-                    }],
-                    generationConfig: {
-                        maxOutputTokens: maxTokens,
-                        temperature: 0.85, // Slightly higher for more personality
-                        topP: 0.95,
-                        topK: 40
-                    }
-                })
+
+            const response = await window.elxaLLM.generateContent(prompt, {
+                maxTokens: maxTokens,
+                temperature: 0.85,
+                topP: 0.95,
+                topK: 40
             });
 
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            
-            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
-                return data.candidates[0].content.parts[0].text;
+            if (response) {
+                return response;
             } else {
-                throw new Error('Invalid response format');
+                throw new Error('Empty response from LLM');
             }
         } catch (error) {
             console.error('AI API Error:', error);
@@ -999,19 +925,18 @@ class MessengerProgram {
         const userName = this.settings.username || 'Friend';
         const userAbout = this.settings.about || 'a nice person';
         const snakesiaTime = this.getSnakesiaTime();
-        
-        // Get enhanced character info from world context if available
+
         let character = contact.character || contact;
         if (this.worldContext && this.worldContext.keyCharacters && this.worldContext.keyCharacters[contact.id]) {
             character = this.worldContext.keyCharacters[contact.id];
         }
-        
-        // Get FULL conversation history from shared manager (including email!)
+
+        // Get conversation history from shared manager
         let fullConversationContext = '';
         if (this.conversationManager && this.settings.llm.crossPlatformHistory) {
             const history = this.conversationManager.getConversationHistory(contact.id, true);
             const recentHistory = history.slice(-this.settings.llm.historyLength);
-            
+
             if (recentHistory.length > 0) {
                 fullConversationContext = '\n\nFULL CONVERSATION HISTORY (Email + Messenger):\n';
                 recentHistory.forEach((msg, index) => {
@@ -1028,7 +953,6 @@ class MessengerProgram {
             }
         }
 
-        // Build enhanced story progression instructions
         let storyInstructions = '';
         switch (this.settings.llm.storyProgression) {
             case 'conservative':
@@ -1042,7 +966,6 @@ class MessengerProgram {
                 break;
         }
 
-        // Build enhanced response length guidance
         let lengthGuidance = '';
         switch (this.settings.llm.responseLength) {
             case 'brief':
@@ -1055,8 +978,7 @@ class MessengerProgram {
                 lengthGuidance = '- Responses can be longer but still feel natural (2-4 sentences max)';
                 break;
         }
-        
-        // Enhanced world context information
+
         const worldInfo = this.worldContext ? `
 - You live in ${this.worldContext.world.name}, ${this.worldContext.world.location}
 - Current time in Snakesia: ${snakesiaTime}
@@ -1066,7 +988,6 @@ class MessengerProgram {
 - The current time in Snakesia is: ${snakesiaTime}
 - The currency is "snakes" (1 USD = 2 snakes)`;
 
-        // Character background and personality
         const characterDetails = character.details || character.description || contact.description || '';
         const characterPersonality = character.personality || contact.personality || '';
         const characterRole = character.role || contact.status || '';
@@ -1098,16 +1019,11 @@ Respond as ${character.fullName || character.name} would in an instant message, 
     }
 
     getFallbackResponse(contact) {
-        // Use loaded character responses from JSON
         const responses = this.characterResponses[contact.id];
         if (responses && responses.length > 0) {
-            const templateResponse = responses[Math.floor(Math.random() * responses.length)];
-            console.log('📝 Using template response from character-responses.json for messenger');
-            return templateResponse;
+            return responses[Math.floor(Math.random() * responses.length)];
         }
 
-        // Final fallback to default response
-        console.log('📝 Using default fallback response from character-responses.json for messenger');
         return this.defaultResponse
             .replace('{contactName}', contact.name)
             .replace('{contactTitle}', contact.status || '');
@@ -1117,117 +1033,69 @@ Respond as ${character.fullName || character.name} would in an instant message, 
 
     clearChat() {
         if (!this.currentContact) {
-            this.showSystemMessage('No chat selected to clear! 🤷‍♂️', 'error');
+            ElxaUI.showMessage('No chat selected to clear!', 'error');
             return;
         }
 
-        console.log('🗑️ Clearing chat for current contact:', this.currentContact.name);
-
-        // Clear from conversation history manager if available
         if (this.conversationManager) {
             this.conversationManager.clearHistory(this.currentContact.id);
         }
-        
-        // Clear the chat display
+
         const messagesContainer = document.getElementById('messengerChatMessages');
         if (messagesContainer) {
             messagesContainer.innerHTML = '';
         }
-        
-        this.showSystemMessage(`Chat with ${this.currentContact.name} cleared! 🧹`, 'success');
+
+        ElxaUI.showMessage(`Chat with ${this.currentContact.name} cleared!`, 'success');
     }
 
     showContextMenu(event, contactId) {
-        console.log('🖱️ Showing context menu for contact:', contactId);
-        
         const contextMenu = document.getElementById('messengerContextMenu');
-        if (!contextMenu) {
-            console.error('❌ Context menu element not found!');
-            return;
-        }
+        if (!contextMenu) return;
 
-        // Store which contact this menu is for
         this.contextMenuContact = contactId;
 
-        // Position the menu at the mouse cursor
         contextMenu.style.left = event.pageX + 'px';
         contextMenu.style.top = event.pageY + 'px';
         contextMenu.style.display = 'block';
-        contextMenu.style.zIndex = '5000'; // Ensure it's on top
-
-        console.log('📍 Context menu positioned at:', event.pageX, event.pageY);
-
-        // Add event listener to hide menu when clicking elsewhere
-        setTimeout(() => {
-            document.addEventListener('click', this.handleContextMenuClickAway.bind(this), { once: true });
-        }, 10);
+        contextMenu.style.zIndex = '5000';
     }
 
     hideContextMenu() {
         const contextMenu = document.getElementById('messengerContextMenu');
         if (contextMenu) {
             contextMenu.style.display = 'none';
-            console.log('❌ Context menu hidden');
         }
         this.contextMenuContact = null;
     }
 
-    handleContextMenuClickAway(event) {
-        const contextMenu = document.getElementById('messengerContextMenu');
-        if (contextMenu && !contextMenu.contains(event.target)) {
-            this.hideContextMenu();
-        }
-    }
-
     clearChatFromMenu() {
-        console.log('🗑️ Clear chat requested for contact:', this.contextMenuContact);
-        
-        if (!this.contextMenuContact) {
-            console.error('❌ No context menu contact set');
-            return;
-        }
+        if (!this.contextMenuContact) return;
 
-        // Store the contact ID BEFORE hiding the context menu
-        const contactIdToClick = this.contextMenuContact;
-        
-        const contact = this.contacts.find(c => c.id === contactIdToClick);
-        if (!contact) {
-            console.error('❌ Contact not found:', contactIdToClick);
-            return;
-        }
+        const contactIdToClear = this.contextMenuContact;
+        const contact = this.contacts.find(c => c.id === contactIdToClear);
+        if (!contact) return;
 
-        console.log('🗑️ Clearing chat for:', contact.name, 'ID:', contactIdToClick);
-
-        // Hide the context menu AFTER we've stored the contact ID
         this.hideContextMenu();
 
-        // Clear from conversation history manager if available
         if (this.conversationManager) {
-            this.conversationManager.clearHistory(contactIdToClick);
-            console.log('🗑️ Conversation history cleared for:', contactIdToClick);
+            this.conversationManager.clearHistory(contactIdToClear);
         }
-        
-        // If this contact is currently selected, clear the display too
-        if (this.currentContact && this.currentContact.id === contactIdToClick) {
+
+        if (this.currentContact && this.currentContact.id === contactIdToClear) {
             const messagesContainer = document.getElementById('messengerChatMessages');
             if (messagesContainer) {
                 messagesContainer.innerHTML = '';
-                console.log('🗑️ Chat display cleared for currently selected contact');
-            } else {
-                console.error('❌ Messages container not found');
             }
         }
-        
-        // Show success message
-        this.showSystemMessage(`Chat with ${contact.name} cleared! 🧹`, 'success');
+
+        ElxaUI.showMessage(`Chat with ${contact.name} cleared!`, 'success');
     }
 
     // ===== UTILITY METHODS =====
 
     getSnakesiaTime() {
-        const now = new Date();
-        const snakesiaTime = new Date(now.getTime() + (2 * 60 + 1) * 60 * 1000); // 2 hours 1 minute ahead
-        return snakesiaTime.toLocaleString();
+        return window.elxaLLM ? window.elxaLLM.getSnakesiaTime() : new Date().toLocaleString();
     }
 
     escapeHtml(text) {
@@ -1252,7 +1120,7 @@ Respond as ${character.fullName || character.name} would in an instant message, 
         const apiKey = document.getElementById('setupApiKey')?.value || '';
 
         if (!username.trim()) {
-            alert('Please enter a username!');
+            ElxaUI.showMessage('Please enter a username!', 'error');
             return;
         }
 
@@ -1264,8 +1132,7 @@ Respond as ${character.fullName || character.name} would in an instant message, 
 
         this.saveSettingsToStorage();
         this.updateUserInfo();
-        
-        // Update conversation history manager settings
+
         if (this.conversationManager) {
             this.conversationManager.updateSettings(this.settings.llm);
         }
@@ -1275,34 +1142,33 @@ Respond as ${character.fullName || character.name} would in an instant message, 
             modal.style.display = 'none';
         }
 
-        // Fetch models if API key provided
+        // Sync shared LLM service with new settings
+        if (window.elxaLLM) {
+            window.elxaLLM.refreshSettings();
+        }
+
         if (apiKey) {
             this.fetchAvailableModels();
         }
 
-        // Show success message
-        this.showSystemMessage('Welcome to Snakesia Messenger! 🎉', 'success');
+        ElxaUI.showMessage('Welcome to Snakesia Messenger!', 'success');
     }
 
     showSettings() {
         const modal = document.getElementById('messengerSettingsModal');
         if (!modal) return;
 
-        // Populate settings form
         document.getElementById('settingsUsername').value = this.settings.username;
         document.getElementById('settingsPassword').value = this.settings.password;
         document.getElementById('settingsAbout').value = this.settings.about;
         document.getElementById('settingsApiKey').value = this.settings.apiKey;
 
-        // Populate model dropdown and refresh available models
         this.populateModelDropdown();
-        
-        // Only auto-fetch if we have an API key
+
         if (this.settings.apiKey) {
             this.fetchAvailableModels();
         }
 
-        // Populate appearance settings
         document.getElementById('chatBackground').value = this.settings.theme.chatBackground;
         document.getElementById('myBubbleColor').value = this.settings.theme.myBubbleColor;
         document.getElementById('myTextColor').value = this.settings.theme.myTextColor;
@@ -1310,7 +1176,6 @@ Respond as ${character.fullName || character.name} would in an instant message, 
         document.getElementById('theirTextColor').value = this.settings.theme.theirTextColor;
         document.getElementById('fontSize').value = this.settings.theme.fontSize;
 
-        // Populate LLM settings
         document.getElementById('llmEnabled').checked = this.settings.llm.enabled;
         document.getElementById('crossPlatformHistory').checked = this.settings.llm.crossPlatformHistory;
         document.getElementById('historyLength').value = this.settings.llm.historyLength;
@@ -1321,85 +1186,69 @@ Respond as ${character.fullName || character.name} would in an instant message, 
         modal.style.display = 'flex';
     }
 
-    // New method to manually refresh models
     async refreshModels() {
         const apiKey = document.getElementById('settingsApiKey')?.value || this.settings.apiKey;
-        
+
         if (!apiKey) {
-            this.showSystemMessage('Please enter your API key first! 🔑', 'error');
+            ElxaUI.showMessage('Please enter your API key first!', 'error');
             return;
         }
 
-        this.showSystemMessage('Refreshing available models... 🔄', 'info');
-        
+        ElxaUI.showMessage('Refreshing available models...', 'info');
+
         try {
             await this.fetchAvailableModels(apiKey);
-            this.showSystemMessage('Models refreshed! 📡', 'success');
+            ElxaUI.showMessage('Models refreshed!', 'success');
         } catch (error) {
             console.error('Failed to refresh models:', error);
-            this.showSystemMessage('Failed to refresh models. Check your API key! ❌', 'error');
+            ElxaUI.showMessage('Failed to refresh models. Check your API key!', 'error');
         }
     }
 
     async fetchAvailableModels(customApiKey = null) {
         const apiKey = customApiKey || this.settings.apiKey;
-        if (!apiKey) {
-            console.log('⚠️ No API key available for fetching models');
-            return;
-        }
+        if (!apiKey) return;
 
         try {
-            console.log('📡 Fetching available models from Gemini API...');
-            
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
-            
-            console.log('📡 API Response status:', response.status);
-            
+
             if (response.ok) {
                 const data = await response.json();
-                console.log('📡 API Response data:', data);
-                
+
                 if (data.models && Array.isArray(data.models)) {
                     const geminiModels = data.models
-                        .filter(model => 
-                            model.name && 
+                        .filter(model =>
+                            model.name &&
                             model.name.toLowerCase().includes('gemini') &&
                             model.supportedGenerationMethods &&
                             model.supportedGenerationMethods.includes('generateContent')
                         )
                         .map(model => model.name.replace('models/', ''))
                         .sort();
-                    
-                    console.log('📡 Found Gemini models:', geminiModels);
-                    
+
                     if (geminiModels.length > 0) {
-                        // Keep existing defaults and add new ones
-                        const allModels = [...new Set([...this.settings.availableModels, ...geminiModels])];
-                        this.settings.availableModels = allModels;
+                        this.settings.availableModels = geminiModels;
+                        // If current selection isn't in the new list, default to first available
+                        if (!geminiModels.includes(this.settings.selectedModel)) {
+                            this.settings.selectedModel = geminiModels[0];
+                        }
                         this.populateModelDropdown();
-                        console.log('✅ Updated available models:', allModels);
                         return;
                     }
                 }
-            } else {
-                console.error('❌ API Error:', response.status, await response.text());
             }
         } catch (error) {
             console.error('❌ Failed to fetch models:', error);
         }
-        
-        console.log('⚠️ Using default models fallback');
     }
 
     populateModelDropdown() {
         const modelSelect = document.getElementById('settingsModel');
         if (!modelSelect) return;
-        
+
         modelSelect.innerHTML = '';
         this.settings.availableModels.forEach(model => {
             const option = document.createElement('option');
@@ -1408,8 +1257,6 @@ Respond as ${character.fullName || character.name} would in an instant message, 
             option.selected = model === this.settings.selectedModel;
             modelSelect.appendChild(option);
         });
-        
-        console.log('📋 Populated model dropdown with:', this.settings.availableModels);
     }
 
     hideSettings() {
@@ -1419,25 +1266,28 @@ Respond as ${character.fullName || character.name} would in an instant message, 
         }
     }
 
-    switchTab(tabName) {
+    switchTab(tabName, clickedBtn) {
         // Remove active from all tabs and content
         document.querySelectorAll('.messenger-tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.messenger-tab-content').forEach(content => content.classList.remove('active'));
 
         // Add active to selected tab and content
-        event.target.classList.add('active');
-        document.getElementById(tabName + 'Tab').classList.add('active');
+        if (clickedBtn) {
+            clickedBtn.classList.add('active');
+        }
+        const tabContent = document.getElementById(tabName + 'Tab');
+        if (tabContent) {
+            tabContent.classList.add('active');
+        }
     }
 
     saveSettings() {
-        // Get values from form
         this.settings.username = document.getElementById('settingsUsername').value;
         this.settings.password = document.getElementById('settingsPassword').value;
         this.settings.about = document.getElementById('settingsAbout').value;
         this.settings.apiKey = document.getElementById('settingsApiKey').value;
         this.settings.selectedModel = document.getElementById('settingsModel').value;
 
-        // Appearance settings
         this.settings.theme.chatBackground = document.getElementById('chatBackground').value;
         this.settings.theme.myBubbleColor = document.getElementById('myBubbleColor').value;
         this.settings.theme.myTextColor = document.getElementById('myTextColor').value;
@@ -1445,7 +1295,6 @@ Respond as ${character.fullName || character.name} would in an instant message, 
         this.settings.theme.theirTextColor = document.getElementById('theirTextColor').value;
         this.settings.theme.fontSize = document.getElementById('fontSize').value;
 
-        // LLM settings
         this.settings.llm.enabled = document.getElementById('llmEnabled').checked;
         this.settings.llm.crossPlatformHistory = document.getElementById('crossPlatformHistory').checked;
         this.settings.llm.historyLength = parseInt(document.getElementById('historyLength').value);
@@ -1456,15 +1305,18 @@ Respond as ${character.fullName || character.name} would in an instant message, 
         this.saveSettingsToStorage();
         this.updateUserInfo();
         this.applyTheme();
-        
-        // Update conversation history manager settings
+
         if (this.conversationManager) {
             this.conversationManager.updateSettings(this.settings.llm);
         }
-        
-        this.hideSettings();
 
-        this.showSystemMessage('Settings saved! 💾', 'success');
+        // Sync shared LLM service with new settings
+        if (window.elxaLLM) {
+            window.elxaLLM.refreshSettings();
+        }
+
+        this.hideSettings();
+        ElxaUI.showMessage('Settings saved!', 'success');
     }
 
     updateUserInfo() {
@@ -1479,16 +1331,16 @@ Respond as ${character.fullName || character.name} would in an instant message, 
     applyTheme() {
         const chatMessages = document.getElementById('messengerChatMessages');
         const chatArea = document.getElementById('messengerChatArea');
-        
+
         if (chatMessages) {
             chatMessages.style.backgroundColor = this.settings.theme.chatBackground;
         }
-        
+
         if (chatArea) {
             chatArea.style.backgroundColor = this.settings.theme.chatBackground;
         }
 
-        // Apply to message bubbles with very high specificity and using background instead of background-color
+        // Inject dynamic style for user-customizable chat bubble colors
         const style = document.createElement('style');
         style.textContent = `
             .messenger-container .messenger-chat-messages .messenger-message-bubble.user {
@@ -1511,31 +1363,27 @@ Respond as ${character.fullName || character.name} would in an instant message, 
                 background: ${this.settings.theme.theirBubbleColor} !important;
             }
         `;
-        
-        // Remove old style if exists
+
         const oldStyle = document.getElementById('messengerThemeStyle');
         if (oldStyle) oldStyle.remove();
-        
+
         style.id = 'messengerThemeStyle';
         document.head.appendChild(style);
-        
-        // Apply theme to existing messages
+
         this.applyThemeToExistingMessages();
-        
-        console.log('🎨 Theme applied:', this.settings.theme);
     }
 
     applyThemeToMessage(messageElement) {
         const userBubble = messageElement.querySelector('.messenger-message-bubble.user');
         const aiBubble = messageElement.querySelector('.messenger-message-bubble.ai');
-        
+
         if (userBubble) {
             userBubble.style.background = this.settings.theme.myBubbleColor;
             userBubble.style.color = this.settings.theme.myTextColor;
             userBubble.style.fontSize = this.settings.theme.fontSize;
             userBubble.style.fontFamily = this.settings.theme.fontFamily;
         }
-        
+
         if (aiBubble) {
             aiBubble.style.background = this.settings.theme.theirBubbleColor;
             aiBubble.style.color = this.settings.theme.theirTextColor;
@@ -1549,45 +1397,12 @@ Respond as ${character.fullName || character.name} would in an instant message, 
         messages.forEach(message => this.applyThemeToMessage(message));
     }
 
-    showSystemMessage(message, type = 'info') {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `messenger-system-message ${type}`;
-        messageDiv.textContent = message;
-        messageDiv.style.cssText = `
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            z-index: 3000;
-            animation: slideIn 0.3s ease-out;
-        `;
-
-        if (type === 'success') {
-            messageDiv.style.backgroundColor = '#28a745';
-        } else if (type === 'error') {
-            messageDiv.style.backgroundColor = '#dc3545';
-        } else {
-            messageDiv.style.backgroundColor = '#007bff';
-        }
-
-        document.body.appendChild(messageDiv);
-
-        setTimeout(() => {
-            messageDiv.style.animation = 'slideOut 0.3s ease-in';
-            setTimeout(() => messageDiv.remove(), 300);
-        }, 3000);
-    }
-
     // ===== STORAGE MANAGEMENT =====
 
     saveSettingsToStorage() {
         try {
             localStorage.setItem('snakesia-messenger-settings', JSON.stringify(this.settings));
             localStorage.setItem('snakesia-messenger-first-time', JSON.stringify(this.firstTimeSetup));
-            console.log('💾 Messenger settings saved to localStorage');
         } catch (error) {
             console.error('❌ Failed to save messenger settings:', error);
         }
@@ -1595,31 +1410,27 @@ Respond as ${character.fullName || character.name} would in an instant message, 
 
     loadSettings() {
         try {
-            // Load settings
             const savedSettings = localStorage.getItem('snakesia-messenger-settings');
             if (savedSettings) {
                 const parsed = JSON.parse(savedSettings);
-                
-                // Merge with defaults to handle new settings
+
                 this.settings = {
                     ...this.settings,
                     ...parsed,
-                    // Ensure LLM settings exist with defaults
                     llm: {
                         ...this.settings.llm,
                         ...(parsed.llm || {})
                     },
-                    // Ensure theme settings exist with defaults
                     theme: {
                         ...this.settings.theme,
                         ...(parsed.theme || {})
                     }
                 };
-                
-                console.log('📁 Messenger settings loaded from localStorage');
+
+                // Migrate deprecated models from older versions
+                this.migrateDeprecatedModels();
             }
 
-            // Load first-time setup status
             const savedFirstTime = localStorage.getItem('snakesia-messenger-first-time');
             if (savedFirstTime !== null) {
                 this.firstTimeSetup = JSON.parse(savedFirstTime);
@@ -1628,9 +1439,27 @@ Respond as ${character.fullName || character.name} would in an instant message, 
             console.error('❌ Failed to load messenger settings:', error);
         }
     }
-}
 
-// Export for ElxaOS integration
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MessengerProgram;
+    migrateDeprecatedModels() {
+        const deprecatedModels = [
+            'gemini-pro', 'gemini-pro-vision',
+            'gemini-1.5-pro', 'gemini-1.5-flash',
+            'gemini-1.5-pro-latest', 'gemini-1.5-flash-latest',
+            'gemini-2.0-flash', 'gemini-2.0-flash-lite'
+        ];
+        const freshDefaults = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro'];
+
+        // If selected model is deprecated, switch to default
+        if (deprecatedModels.includes(this.settings.selectedModel)) {
+            console.log(`🔄 Migrating deprecated model ${this.settings.selectedModel} → gemini-2.5-flash`);
+            this.settings.selectedModel = 'gemini-2.5-flash';
+        }
+
+        // If the saved list contains deprecated models, reset to fresh defaults
+        const hasDeprecated = this.settings.availableModels.some(m => deprecatedModels.includes(m));
+        if (hasDeprecated) {
+            this.settings.availableModels = freshDefaults;
+            console.log('🔄 Reset model list — old deprecated models removed');
+        }
+    }
 }

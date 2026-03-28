@@ -291,6 +291,17 @@ class InstallerService {
             // Trigger desktop refresh so the icon appears
             this.eventBus.emit('desktop.changed');
 
+            // Place the new icon in a free grid position
+            setTimeout(() => {
+                if (elxaOS.desktop && elxaOS.desktop.findFreePosition) {
+                    const pos = elxaOS.desktop.findFreePosition();
+                    const iconKey = programInfo.name; // .lnk files use display name as data-file
+                    elxaOS.desktop.iconPositions.set(iconKey + '.lnk', pos);
+                    elxaOS.desktop.saveIconPositions();
+                    elxaOS.desktop.applyIconPositions();
+                }
+            }, 200);
+
             this.showMessage(`${installData.name} installed successfully!`, 'success');
             return true;
         } catch (error) {
@@ -423,14 +434,7 @@ class InstallerService {
     }
 
     showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `system-message ${type}`;
-        message.textContent = text;
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
+        ElxaUI.showMessage(text, type);
     }
 }
 
@@ -492,6 +496,17 @@ class SimpleGame {
                 } else {
                     console.error('SussyCatGame class not found! Make sure sussy-cat-game.js is loaded.');
                     alert('Sussy Cat Adventure not available. Please check if the game files are loaded.');
+                    return null;
+                }
+
+            case 'chess':
+                // Launch Chess game
+                if (typeof ChessGame !== 'undefined') {
+                    const chessGame = new ChessGame(this.windowManager, this.gameData);
+                    return chessGame.launch(programInfo);
+                } else {
+                    console.error('ChessGame class not found! Make sure chess-game.js is loaded.');
+                    alert('Chess not available. Please check if the game files are loaded.');
                     return null;
                 }
 

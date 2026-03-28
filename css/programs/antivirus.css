@@ -2,6 +2,45 @@
    ELXAGUARD ANTIVIRUS STYLING
 ================================= */
 
+/* Pointer-events: prevent icon spans from eating clicks */
+.antivirus-container .mdi { pointer-events: none; }
+
+/* Status indicator dots (replacing emoji 🟢/🔴/🟡) */
+.antivirus-container .status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    font-size: 0; /* collapse any inherited text sizing */
+}
+.av-status-good    { background: #28a745; box-shadow: 0 0 6px rgba(40, 167, 69, 0.5); }
+.av-status-warning { background: #ffc107; box-shadow: 0 0 6px rgba(255, 193, 7, 0.5); }
+.av-status-danger  { background: #dc3545; box-shadow: 0 0 6px rgba(220, 53, 69, 0.5); }
+
+/* Threat severity dots */
+.av-threat-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.av-sev-high   { background: #dc3545; }
+.av-sev-medium { background: #ffc107; }
+.av-sev-low    { background: #28a745; }
+
+/* Dialog close button (was div, now button) */
+.virus-alert .dialog-close-btn,
+.restart-recommendation .dialog-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+}
+
 /* Container */
 .antivirus-container {
     display: flex;
@@ -33,6 +72,10 @@
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
+.shield-icon .mdi {
+    pointer-events: none;
+}
+
 .product-info h2 {
     margin: 0;
     font-size: 18px;
@@ -54,9 +97,7 @@
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-.status-indicator {
-    font-size: 16px;
-}
+/* .status-indicator font-size moved to top-level dot rules */
 
 .status-text {
     font-size: 12px;
@@ -738,7 +779,7 @@
     gap: 8px;
 }
 
-.delete-btn {
+.av-quarantine-delete-btn {
     background: linear-gradient(135deg, #dc3545, #c82333);
     border: 1px outset #dc3545;
     color: white;
@@ -749,7 +790,7 @@
     cursor: pointer;
 }
 
-.delete-btn:hover {
+.av-quarantine-delete-btn:hover {
     background: linear-gradient(135deg, #c82333, #a71e2a);
 }
 
@@ -1250,4 +1291,110 @@ input:checked + .toggle-slider:before {
 
 .restart-later-btn:hover {
     background: linear-gradient(135deg, #495057, #343a40);
+}
+
+/* =================================
+   VIRUS VULNERABILITY SELECTION
+================================= */
+.av-vuln-desc {
+    margin-bottom: 12px;
+    font-size: 11px;
+    color: #6c757d;
+}
+
+.av-vuln-empty {
+    font-size: 11px;
+    color: #adb5bd;
+    font-style: italic;
+    padding: 8px 0;
+}
+
+.av-virus-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.av-virus-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: #f8f9fa;
+}
+
+.av-virus-checkbox:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.av-virus-checkbox input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: #007bff;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.av-virus-checkbox-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.av-virus-checkbox-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.av-virus-checkbox-desc {
+    font-size: 10px;
+    color: #6c757d;
+    line-height: 1.3;
+}
+
+.av-virus-checkbox-author {
+    font-size: 9px;
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.av-custom-badge {
+    display: inline-block;
+    background: #6f42c1;
+    color: white;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+}
+
+.av-vuln-divider {
+    font-size: 10px;
+    font-weight: bold;
+    color: #6f42c1;
+    padding: 8px 0 4px 0;
+    border-top: 1px solid #dee2e6;
+    margin-top: 4px;
+}
+
+/* =================================
+   CUSTOM VIRUS EFFECTS
+   (Reuses Virus Lab's vlab-* CSS classes for the actual effects.
+    This wrapper class is for quarantine cleanup targeting.)
+================================= */
+.custom-virus-effect {
+    /* Wrapper container — child elements use vlab-test-image-popup,
+       vlab-test-popup, vlab-test-message-banner, vlab-test-screen-effect
+       classes which are styled in virus-lab.css */
 }

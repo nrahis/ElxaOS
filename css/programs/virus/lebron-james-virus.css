@@ -5,102 +5,187 @@
 
 /* Lebron James Popup Styling */
 .lebron-popup {
-    min-width: 350px;
-    max-width: 400px;
+    min-width: 320px;
+    max-width: 380px;
     z-index: 2500;
-    animation: bounce-in 0.5s ease-out;
+    animation: lebron-bounce-in 0.5s ease-out;
     border: 3px solid #FFA500; /* Lakers gold */
-    box-shadow: 0 8px 24px rgba(255, 165, 0, 0.4);
+    box-shadow:
+        0 8px 24px rgba(255, 165, 0, 0.4),
+        0 0 40px rgba(85, 37, 131, 0.3),
+        inset 0 0 30px rgba(255, 165, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .lebron-popup .dialog-content {
-    background: linear-gradient(135deg, #552583, #FFA500); /* Lakers colors */
+    background: linear-gradient(135deg, #552583 0%, #3b1560 40%, #FFA500 100%);
     color: white;
     border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Court floor line pattern overlay */
+.lebron-popup .dialog-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent, transparent 48%,
+            rgba(255, 165, 0, 0.08) 48%, rgba(255, 165, 0, 0.08) 52%,
+            transparent 52%
+        );
+    pointer-events: none;
+    z-index: 0;
+}
+
+.lebron-popup .dialog-content > * {
+    position: relative;
+    z-index: 1;
 }
 
 .lebron-popup .dialog-header {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 6px 10px;
     border-bottom: 2px solid #FFA500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .lebron-popup .dialog-title {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: lebron-title-flash 1.5s ease-in-out infinite alternate;
+    letter-spacing: 0.5px;
 }
 
+@keyframes lebron-title-flash {
+    from { color: #FFA500; }
+    to { color: #FFD700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
+}
+
+.lebron-popup .dialog-close {
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.lebron-popup .dialog-close:hover {
+    opacity: 1;
+}
+
+/* Compact layout: icon + message side by side */
 .lebron-content {
-    padding: 16px;
-    text-align: center;
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px;
 }
 
 .lebron-icon {
-    font-size: 48px;
-    margin-bottom: 12px;
-    animation: rotate-basketball 2s linear infinite;
-    width: 80px;
-    height: 80px;
+    grid-row: 1 / 3;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 12px auto;
+    align-self: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    border: 2px solid #FFA500;
+    overflow: hidden;
+    animation: lebron-icon-bounce 2s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(255, 165, 0, 0.4);
+}
+
+@keyframes lebron-icon-bounce {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.08) rotate(3deg); }
+    50% { transform: scale(1) rotate(0deg); }
+    75% { transform: scale(1.08) rotate(-3deg); }
 }
 
 .lebron-icon img {
-    width: 60px;
-    height: 60px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    border: 3px solid #FFA500;
     object-fit: cover;
-    animation: rotate-basketball 2s linear infinite;
 }
 
 .lebron-message {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
-    margin-bottom: 12px;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 6px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 3px solid #FFD700;
+    line-height: 1.3;
+    align-self: center;
 }
 
 .lebron-stats {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 16px;
-    font-size: 11px;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 8px;
+    gap: 6px;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+}
+
+.lebron-stat-badge {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.35);
     border-radius: 4px;
-    border: 1px solid rgba(255, 165, 0, 0.5);
+    padding: 3px 5px;
+    text-align: center;
+    border: 1px solid rgba(255, 165, 0, 0.4);
 }
 
-.lebron-stats div {
-    display: flex;
-    justify-content: space-between;
+.lebron-stat-badge .stat-val {
+    color: #FFD700;
+    display: block;
+    font-size: 13px;
+    line-height: 1;
 }
 
+.lebron-stat-badge .stat-lbl {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Buttons row — compact, always visible */
 .lebron-actions {
     display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 12px 10px;
+    position: relative;
+    z-index: 1;
 }
 
 .ok-lebron-btn,
 .no-lebron-btn {
-    padding: 8px 12px;
-    font-size: 11px;
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 10px;
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
 }
 
 .ok-lebron-btn {
@@ -111,46 +196,69 @@
 }
 
 .ok-lebron-btn:hover {
-    background: linear-gradient(135deg, #FF8C00, #FF7F00);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(255, 165, 0, 0.3);
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(255, 165, 0, 0.5);
+}
+
+.ok-lebron-btn:active {
+    transform: translateY(0) scale(0.98);
+    border-style: inset;
 }
 
 .no-lebron-btn {
     background: linear-gradient(135deg, #8B0000, #660000);
     border: 2px outset #8B0000;
-    color: white;
+    color: #ff9999;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 9px;
 }
 
 .no-lebron-btn:hover {
-    background: linear-gradient(135deg, #660000, #440000);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
+    background: linear-gradient(135deg, #aa0000, #880000);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.4);
+    color: white;
+}
+
+.no-lebron-btn:active {
+    transform: translateY(0) scale(0.98);
+    border-style: inset;
 }
 
 /* Animations */
-@keyframes bounce-in {
+@keyframes lebron-bounce-in {
     0% {
         opacity: 0;
-        transform: scale(0.3) rotate(-10deg);
+        transform: scale(0.2) rotate(-15deg) translateY(40px);
     }
-    50% {
+    40% {
         opacity: 1;
-        transform: scale(1.05) rotate(5deg);
+        transform: scale(1.1) rotate(4deg) translateY(-10px);
     }
-    70% {
-        transform: scale(0.9) rotate(-2deg);
+    60% {
+        transform: scale(0.95) rotate(-2deg) translateY(4px);
+    }
+    80% {
+        transform: scale(1.02) rotate(1deg) translateY(-2px);
     }
     100% {
         opacity: 1;
-        transform: scale(1) rotate(0deg);
+        transform: scale(1) rotate(0deg) translateY(0);
     }
 }
 
-@keyframes rotate-basketball {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* Even-numbered popups wiggle after appearing */
+.lebron-popup:nth-child(even) {
+    animation: lebron-bounce-in 0.5s ease-out, lebron-wiggle 2.5s ease-in-out infinite 1s;
+}
+
+@keyframes lebron-wiggle {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    20% { transform: rotate(1.5deg) translateX(2px); }
+    40% { transform: rotate(-1deg) translateX(-1px); }
+    60% { transform: rotate(0.8deg) translateX(1px); }
+    80% { transform: rotate(-0.5deg) translateX(-1px); }
 }
 
 /* Text scrambling effects */
@@ -160,29 +268,12 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: bold;
-    animation: text-glow 1.5s ease-in-out infinite alternate;
+    animation: lebron-text-glow 1.5s ease-in-out infinite alternate;
 }
 
-@keyframes text-glow {
-    from {
-        text-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
-        filter: brightness(1);
-    }
-    to {
-        text-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
-        filter: brightness(1.2);
-    }
-}
-
-/* Popup positioning randomization */
-.lebron-popup:nth-child(even) {
-    animation: bounce-in 0.5s ease-out, wiggle 3s ease-in-out infinite 2s;
-}
-
-@keyframes wiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(1deg); }
-    75% { transform: rotate(-1deg); }
+@keyframes lebron-text-glow {
+    from { filter: brightness(1); }
+    to { filter: brightness(1.2); }
 }
 
 /* Special effects for heavily infected text */
@@ -191,51 +282,26 @@
 }
 
 .lebron-infected::before {
-    content: "🏀";
+    content: "\1F3C0";
     position: absolute;
     left: -20px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 12px;
-    animation: bounce-basketball 2s ease-in-out infinite;
+    animation: lebron-bounce-basketball 2s ease-in-out infinite;
 }
 
-@keyframes bounce-basketball {
+@keyframes lebron-bounce-basketball {
     0%, 100% { transform: translateY(-50%) scale(1); }
     50% { transform: translateY(-70%) scale(1.2); }
 }
 
-/* Mobile responsiveness */
-@media (max-width: 500px) {
-    .lebron-popup {
-        min-width: 280px;
-        max-width: 320px;
-    }
-    
-    .lebron-message {
-        font-size: 12px;
-    }
-    
-    .lebron-stats {
-        font-size: 10px;
-    }
-    
-    .lebron-actions {
-        flex-direction: column;
-    }
-    
-    .ok-lebron-btn,
-    .no-lebron-btn {
-        width: 100%;
-    }
-}
-
 /* Easter egg: If too many popups appear */
 .lebron-overload {
-    animation: rainbow-chaos 1s linear infinite;
+    animation: lebron-rainbow-chaos 1s linear infinite;
 }
 
-@keyframes rainbow-chaos {
+@keyframes lebron-rainbow-chaos {
     0% { filter: hue-rotate(0deg); }
     100% { filter: hue-rotate(360deg); }
 }

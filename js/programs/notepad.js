@@ -1,6 +1,9 @@
 // =================================
 // PROFESSIONAL RICH TEXT NOTEPAD - WORDPAD STYLE (FIXED)
 // =================================
+// TODO: document.execCommand() is deprecated and may break in future browsers.
+// A future rewrite should migrate to the InputEvent API or custom Selection/Range
+// manipulation for formatting (bold, italic, fontSize, fontName, foreColor, etc.).
 class NotepadProgram {
     constructor(windowManager, fileSystem, eventBus) {
         this.windowManager = windowManager;
@@ -81,9 +84,9 @@ class NotepadProgram {
         
         const windowContent = this.createNotepadInterface(documentId);
         
-        const window = this.windowManager.createWindow(
+        const win = this.windowManager.createWindow(
             documentId,
-            `📝 ${title}`,
+            `${ElxaIcons.render('notepad', 'ui')} ${title}`,
             windowContent,
             { width: '900px', height: '700px', x: '50px', y: '50px' }
         );
@@ -110,28 +113,63 @@ class NotepadProgram {
             return;
         }
         
-        const selectedText = selection.toString();
-        
-        if (selectedText.length > 0) {
-            // Mark that user has applied formatting
-            const doc = this.documents.get(documentId);
-            doc.hasUserFormatting = true;
-            
-            // Apply only the specific formatting command
-            if (command === 'bold' || command === 'italic' || command === 'underline') {
-                document.execCommand(command, false, value);
-            } else if (command === 'fontName') {
-                document.execCommand('fontName', false, value);
-            } else if (command === 'fontSize') {
-                document.execCommand('fontSize', false, value);
-            } else if (command === 'foreColor') {
-                document.execCommand('foreColor', false, value);
-            } else if (command === 'hiliteColor' || command === 'backColor') {
-                document.execCommand(command, false, value);
+        // Make sure focus is inside the text area before executing commands
+        const container = document.querySelector(`[data-document-id="${documentId}"]`);
+        const textArea = container.querySelector('.text-area');
+        if (!textArea.contains(selection.anchorNode) && selection.anchorNode !== textArea) {
+            // Restore the saved selection if we have one (e.g. after using a <select>)
+            if (this._savedRange) {
+                this.restoreSelection(this._savedRange);
+            } else {
+                textArea.focus();
             }
         }
         
-        setTimeout(() => this.updateToolbarFromSelection(documentId), 10);
+        const hasSelection = selection.toString().length > 0;
+        
+        // Mark that user has applied formatting (only if there's selected text)
+        if (hasSelection) {
+            const doc = this.documents.get(documentId);
+            doc.hasUserFormatting = true;
+        }
+        
+        // Apply the formatting command — works both with selected text
+        // AND at an empty cursor (sets format for next typed characters)
+        if (command === 'bold' || command === 'italic' || command === 'underline') {
+            document.execCommand(command, false, null);
+        } else if (command === 'fontName') {
+            document.execCommand('fontName', false, value);
+        } else if (command === 'fontSize') {
+            document.execCommand('fontSize', false, value);
+        } else if (command === 'foreColor') {
+            document.execCommand('foreColor', false, value);
+        } else if (command === 'hiliteColor' || command === 'backColor') {
+            document.execCommand(command, false, value);
+        }
+        
+        // If text was selected, re-read formatting from the DOM after a tick.
+        // If no text was selected, the caller already updated internal state —
+        // don't let updateToolbarFromSelection overwrite it from the (unchanged) DOM.
+        if (hasSelection) {
+            setTimeout(() => this.updateToolbarFromSelection(documentId), 10);
+        }
+    }
+
+    // --- Selection save/restore (for toolbar controls that steal focus) ---
+    saveSelection() {
+        const sel = window.getSelection();
+        if (sel.rangeCount > 0) {
+            return sel.getRangeAt(0).cloneRange();
+        }
+        return null;
+    }
+
+    restoreSelection(range) {
+        if (range) {
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
     }
 
     createNotepadInterface(documentId) {
@@ -140,13 +178,13 @@ class NotepadProgram {
                 <!-- Toolbar -->
                 <div class="toolbar">
                     <div class="toolbar-section">
-                        <button class="tool-btn" data-action="new" title="New" onmousedown="event.preventDefault()">📄</button>
-                        <button class="tool-btn" data-action="open" title="Open" onmousedown="event.preventDefault()">📂</button>
-                        <button class="tool-btn" data-action="save" title="Save" onmousedown="event.preventDefault()">💾</button>
-                        <button class="tool-btn" data-action="saveas" title="Save As" onmousedown="event.preventDefault()">💾</button>
+                        <button class="tool-btn" data-action="new" title="New" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('new-file')}</button>
+                        <button class="tool-btn" data-action="open" title="Open" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('open')}</button>
+                        <button class="tool-btn" data-action="save" title="Save" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('save')}</button>
+                        <button class="tool-btn" data-action="saveas" title="Save As" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('save')}</button>
                         <div class="separator"></div>
-                        <button class="tool-btn" data-action="undo" title="Undo" onmousedown="event.preventDefault()">↶</button>
-                        <button class="tool-btn" data-action="redo" title="Redo" onmousedown="event.preventDefault()">↷</button>
+                        <button class="tool-btn" data-action="undo" title="Undo" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('undo')}</button>
+                        <button class="tool-btn" data-action="redo" title="Redo" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('redo')}</button>
                     </div>
                     
                     <div class="toolbar-section">
@@ -164,12 +202,12 @@ class NotepadProgram {
                     </div>
                     
                     <div class="toolbar-section">
-                        <button class="format-btn bold-btn" data-format="bold" title="Bold" onmousedown="event.preventDefault()"><b>B</b></button>
-                        <button class="format-btn italic-btn" data-format="italic" title="Italic" onmousedown="event.preventDefault()"><i>I</i></button>
-                        <button class="format-btn underline-btn" data-format="underline" title="Underline" onmousedown="event.preventDefault()"><u>U</u></button>
+                        <button class="format-btn bold-btn" data-format="bold" title="Bold" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('bold')}</button>
+                        <button class="format-btn italic-btn" data-format="italic" title="Italic" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('italic')}</button>
+                        <button class="format-btn underline-btn" data-format="underline" title="Underline" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('underline')}</button>
                         
                         <div class="color-picker-wrapper">
-                            <button class="color-btn text-color-btn" title="Text Color" onmousedown="event.preventDefault()">A</button>
+                            <button class="color-btn text-color-btn" title="Text Color" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('text-color')}</button>
                             <div class="color-palette text-color-palette">
                                 ${this.colors.map(color => 
                                     `<div class="color-swatch" data-color="${color.value}" style="background: ${color.value}" title="${color.name}" onmousedown="event.preventDefault()"></div>`
@@ -178,7 +216,7 @@ class NotepadProgram {
                         </div>
                         
                         <div class="color-picker-wrapper">
-                            <button class="color-btn bg-color-btn" title="Highlight" onmousedown="event.preventDefault()">🎨</button>
+                            <button class="color-btn bg-color-btn" title="Highlight" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('highlight')}</button>
                             <div class="color-palette bg-color-palette">
                                 <div class="color-swatch" data-color="transparent" style="background: white; border: 2px solid #333;" title="Remove highlight" onmousedown="event.preventDefault()">×</div>
                                 ${this.colors.filter(c => c.name !== 'Black').map(color => 
@@ -219,22 +257,34 @@ class NotepadProgram {
             });
         });
         
-        // Font selection
+        // Font selection — save caret before the <select> steals focus
         const fontSelect = container.querySelector('.font-select');
+        fontSelect.addEventListener('focus', () => {
+            this._savedRange = this.saveSelection();
+        });
         fontSelect.addEventListener('change', (e) => {
             const currentFormat = this.getCurrentFormat(documentId);
             currentFormat.fontFamily = e.target.value;
             this.setCurrentFormat(documentId, currentFormat);
+            this.restoreSelection(this._savedRange);
             this.applySpecificFormatting(documentId, 'fontName', e.target.value);
+            this._savedRange = null;
+            this.updateToolbarState(documentId);
         });
         
-        // Size selection
+        // Size selection — save caret before the <select> steals focus
         const sizeSelect = container.querySelector('.size-select');
+        sizeSelect.addEventListener('focus', () => {
+            this._savedRange = this.saveSelection();
+        });
         sizeSelect.addEventListener('change', (e) => {
             const currentFormat = this.getCurrentFormat(documentId);
             currentFormat.fontSize = parseInt(e.target.value);
             this.setCurrentFormat(documentId, currentFormat);
+            this.restoreSelection(this._savedRange);
             this.applySpecificFormatting(documentId, 'fontSize', this.convertFontSize(parseInt(e.target.value)));
+            this._savedRange = null;
+            this.updateToolbarState(documentId);
         });
         
         // Format buttons
@@ -318,11 +368,19 @@ class NotepadProgram {
             }
         });
         
-        // Close palettes when clicking elsewhere
-        document.addEventListener('click', (e) => {
+        // Close palettes when clicking elsewhere (scoped to avoid leaks)
+        const closePalettes = (e) => {
             if (!e.target.closest('.color-picker-wrapper')) {
                 textColorPalette.style.display = 'none';
                 bgColorPalette.style.display = 'none';
+            }
+        };
+        document.addEventListener('click', closePalettes);
+        
+        // Clean up on window close
+        this.eventBus.on('window.closed', (data) => {
+            if (data.id === documentId) {
+                document.removeEventListener('click', closePalettes);
             }
         });
     }
@@ -405,26 +463,35 @@ class NotepadProgram {
         if (selection.rangeCount === 0) return;
         
         const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        const currentFormat = this.getCurrentFormat(documentId);
+        if (!container) return;
+        const textArea = container.querySelector('.text-area');
         
-        // Check formatting at cursor position
+        // Only read from DOM if the selection is actually inside the text area
         const range = selection.getRangeAt(0);
-        let element = range.startContainer;
+        if (!textArea.contains(range.startContainer)) return;
         
+        let element = range.startContainer;
         if (element.nodeType === Node.TEXT_NODE) {
             element = element.parentElement;
         }
         
+        const currentFormat = this.getCurrentFormat(documentId);
+        
         // Read current formatting from DOM
         const computedStyle = window.getComputedStyle(element);
         
-        // Update format based on current selection
         currentFormat.bold = computedStyle.fontWeight === 'bold' || computedStyle.fontWeight >= 700;
         currentFormat.italic = computedStyle.fontStyle === 'italic';
         currentFormat.underline = computedStyle.textDecoration.includes('underline');
-        currentFormat.fontFamily = computedStyle.fontFamily.replace(/"/g, '').split(',')[0];
-        currentFormat.fontSize = parseInt(computedStyle.fontSize);
+        currentFormat.fontFamily = computedStyle.fontFamily.replace(/"/g, '').split(',')[0].trim();
         currentFormat.color = this.rgbToHex(computedStyle.color);
+        
+        // Snap computed font size to the nearest available dropdown value
+        const computedSize = parseInt(computedStyle.fontSize);
+        const sizeOptions = [8,9,10,11,12,14,16,18,20,24,28,32,36,48,72];
+        currentFormat.fontSize = sizeOptions.reduce((prev, curr) =>
+            Math.abs(curr - computedSize) < Math.abs(prev - computedSize) ? curr : prev
+        );
         
         const bgColor = computedStyle.backgroundColor;
         if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
@@ -452,6 +519,7 @@ class NotepadProgram {
 
     updateToolbarState(documentId) {
         const container = document.querySelector(`[data-document-id="${documentId}"]`);
+        if (!container) return;
         const currentFormat = this.getCurrentFormat(documentId);
         
         // Update format buttons
@@ -483,7 +551,13 @@ class NotepadProgram {
             if (this.hasUserFormatting(doc.content)) {
                 textArea.innerHTML = doc.content;
             } else {
-                textArea.textContent = doc.content;
+                // Convert plain text newlines to <br> so they display in contenteditable
+                const escaped = doc.content
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\n/g, '<br>');
+                textArea.innerHTML = escaped;
             }
         }
         
@@ -544,7 +618,7 @@ class NotepadProgram {
         dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="dialog-header">
-                    <div class="dialog-title">📂 Open File</div>
+                    <div class="dialog-title">${ElxaIcons.renderAction('open')} Open File</div>
                     <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
                 </div>
                 <div class="dialog-body">
@@ -564,7 +638,7 @@ class NotepadProgram {
                             }
                             
                             return `<div class="file-item" data-filename="${file.name}">
-                                📄 ${file.name}
+                                ${ElxaIcons.renderAction('open-file')} ${file.name}
                                 <div class="file-info">Modified: ${modifiedDate}</div>
                             </div>`;
                         }).join('')}
@@ -637,15 +711,15 @@ class NotepadProgram {
             let contentToSave;
             let fileExtension = this.getFileExtension(doc.filename);
             
-            // FIXED: Only save as HTML if user has actually applied formatting
+            // Only save as HTML if user has actually applied formatting
             if (doc.hasUserFormatting && this.hasUserFormatting(textArea.innerHTML)) {
                 contentToSave = textArea.innerHTML;
                 if (fileExtension === '.txt') {
                     doc.filename = doc.filename.replace('.txt', '.html');
                 }
             } else {
-                // Save as plain text
-                contentToSave = textArea.textContent || '';
+                // Save as plain text — innerText preserves line breaks from <br>/block elements
+                contentToSave = textArea.innerText || '';
                 if (fileExtension === '.html' && !doc.hasUserFormatting) {
                     // If it was HTML but has no user formatting, save as txt
                     doc.filename = doc.filename.replace('.html', '.txt');
@@ -688,7 +762,7 @@ class NotepadProgram {
         dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="dialog-header">
-                    <div class="dialog-title">💾 Save As</div>
+                    <div class="dialog-title">${ElxaIcons.renderAction('save')} Save As</div>
                     <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
                 </div>
                 <div class="dialog-body">
@@ -749,7 +823,8 @@ class NotepadProgram {
             if (!finalFilename.endsWith('.txt') && !finalFilename.includes('.')) {
                 finalFilename += '.txt';
             }
-            contentToSave = textArea.textContent || '';
+            // innerText preserves line breaks from <br>/block elements
+            contentToSave = textArea.innerText || '';
         }
         
         const savePath = this.documentPaths.get(documentId) || ['root', 'Documents'];
@@ -775,50 +850,30 @@ class NotepadProgram {
         this.showMessage(`Saved as ${finalFilename}`, 'success');
     }
 
-    // IMPROVED: Better detection of actual user formatting vs automatic spans
-    hasUserFormatting(htmlContent) {
-        if (!htmlContent) return false;
-        
-        // Remove any simple spans that might be from automatic wrapping
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlContent;
-        
-        // Look for actual formatting elements
-        const formattingElements = tempDiv.querySelectorAll('b, i, u, strong, em, font');
-        if (formattingElements.length > 0) return true;
-        
-        // Look for spans with actual styling (not just font family/size)
-        const spans = tempDiv.querySelectorAll('span');
-        for (let span of spans) {
-            const style = span.getAttribute('style') || '';
-            // Check for color, background, or weight changes
-            if (style.includes('color:') && !style.includes('color: rgb(0, 0, 0)') && !style.includes('color: #000000')) return true;
-            if (style.includes('background') && !style.includes('transparent')) return true;
-            if (style.includes('font-weight: bold')) return true;
-            if (style.includes('font-style: italic')) return true;
-            if (style.includes('text-decoration: underline')) return true;
-        }
-        
-        return false;
-    }
-
-    // IMPROVED: Better detection that considers user actions
     hasUserFormatting(htmlContent) {
         if (!htmlContent) return false;
         
         // Look for obvious formatting tags
         const formattingTags = /<(b|i|u|strong|em|font|span[^>]*style|div[^>]*style|p[^>]*style)\b[^>]*>/i;
         if (formattingTags.test(htmlContent)) {
-            // Further check if it's meaningful formatting
+            // Check for meaningful formatting — CSS properties or font tag attributes
             const hasColors = /(color|background-color):\s*(?!rgb\(0,\s*0,\s*0\)|#000000|black|transparent)/i;
             const hasWeights = /font-weight:\s*bold/i;
             const hasStyles = /font-style:\s*italic/i;
             const hasDecoration = /text-decoration:\s*underline/i;
+            const hasFontFace = /<font[^>]+face\s*=/i;
+            const hasFontSize = /<font[^>]+size\s*=/i;
+            const hasFontFamily = /font-family:/i;
+            const hasCssFontSize = /font-size:/i;
             
             return hasColors.test(htmlContent) || 
                    hasWeights.test(htmlContent) || 
                    hasStyles.test(htmlContent) || 
-                   hasDecoration.test(htmlContent);
+                   hasDecoration.test(htmlContent) ||
+                   hasFontFace.test(htmlContent) ||
+                   hasFontSize.test(htmlContent) ||
+                   hasFontFamily.test(htmlContent) ||
+                   hasCssFontSize.test(htmlContent);
         }
         
         return false;
@@ -829,36 +884,7 @@ class NotepadProgram {
     }
 
     showMessage(text, type = 'info') {
-        const message = document.createElement('div');
-        message.className = `system-message ${type}`;
-        message.textContent = text;
-        
-        const colors = {
-            info: { bg: '#add8e6', color: 'black' },
-            success: { bg: '#00ff00', color: 'black' },
-            warning: { bg: '#ffff00', color: 'black' },
-            error: { bg: '#ff0000', color: 'white' }
-        };
-        
-        message.style.cssText = `
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: ${colors[type].bg};
-            color: ${colors[type].color};
-            padding: 8px 16px;
-            border: 2px outset #c0c0c0;
-            z-index: 3000;
-            font-weight: bold;
-            font-size: 11px;
-            animation: slideIn 0.3s ease-out;
-        `;
-
-        document.body.appendChild(message);
-
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
+        ElxaUI.showMessage(text, type);
     }
 
     markUnsaved(documentId) {
@@ -870,385 +896,15 @@ class NotepadProgram {
     updateWindowTitle(documentId) {
         const doc = this.documents.get(documentId);
         const windowElement = document.getElementById(`window-${documentId}`);
+        if (!windowElement) return;
         const titleElement = windowElement.querySelector('.window-title');
         
         const title = doc.filename || `Untitled Document ${documentId.split('-').pop()}`;
         const unsavedMarker = doc.saved ? '' : '*';
         
-        titleElement.textContent = `📝 ${title}${unsavedMarker}`;
+        titleElement.innerHTML = `${ElxaIcons.render('notepad', 'ui')} ${title}${unsavedMarker}`;
     }
 }
 
-// CSS Styles (keeping the same as before since the issues were in JS)
-const notepadStyles = `
-<style>
-.notepad-pro {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: #f0f0f0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px;
-    background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
-    border-bottom: 1px solid #c0c0c0;
-    flex-wrap: wrap;
-}
-
-.toolbar-section {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 6px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background: #f5f5f5;
-}
-
-.tool-btn, .format-btn {
-    width: 32px;
-    height: 28px;
-    border: 1px solid #ccc;
-    background: linear-gradient(to bottom, #fff, #f0f0f0);
-    cursor: pointer;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-
-.tool-btn:hover, .format-btn:hover {
-    background: linear-gradient(to bottom, #f0f8ff, #e0f0ff);
-    border-color: #90c0f0;
-}
-
-.format-btn.active {
-    background: linear-gradient(to bottom, #d0e8ff, #b0d0ff);
-    border-color: #5090d0;
-}
-
-.font-select, .size-select {
-    padding: 4px;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    font-size: 12px;
-}
-
-.font-select {
-    min-width: 120px;
-}
-
-.size-select {
-    width: 50px;
-}
-
-.separator {
-    width: 1px;
-    height: 20px;
-    background: #ccc;
-    margin: 0 4px;
-}
-
-.color-picker-wrapper {
-    position: relative;
-}
-
-.color-btn {
-    width: 32px;
-    height: 28px;
-    border: 1px solid #ccc;
-    background: white;
-    cursor: pointer;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-}
-
-.color-palette {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    z-index: 1000;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 2px;
-}
-
-.color-palette[style*="block"] {
-    display: grid !important;
-}
-
-.color-swatch {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-}
-
-.color-swatch:hover {
-    border-color: #333;
-    transform: scale(1.1);
-}
-
-.editor-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: white;
-    position: relative;
-}
-
-.ruler {
-    height: 20px;
-    background: #f8f8f8;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-}
-
-.text-area {
-    flex: 1;
-    padding: 20px;
-    outline: none;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    overflow-y: auto;
-    min-height: 400px;
-    background: white;
-}
-
-.text-area:focus {
-    background: #fffffe;
-}
-
-.status-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 12px;
-    background: #f0f0f0;
-    border-top: 1px solid #c0c0c0;
-    font-size: 11px;
-    color: #666;
-}
-
-.file-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #f0f0f0;
-    border: 2px outset #c0c0c0;
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-    z-index: 2000;
-    min-width: 400px;
-    max-width: 500px;
-}
-
-.dialog-content {
-    padding: 0;
-}
-
-.dialog-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    background: linear-gradient(to bottom, #0078d4, #106ebe);
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.dialog-title {
-    font-size: 12px;
-}
-
-.dialog-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 2px;
-}
-
-.dialog-close:hover {
-    background: rgba(255,255,255,0.2);
-}
-
-.dialog-body {
-    padding: 12px;
-    max-height: 300px;
-}
-
-.file-list {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px inset #c0c0c0;
-    background: white;
-    margin-bottom: 12px;
-}
-
-.file-item {
-    padding: 8px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 11px;
-}
-
-.file-item:hover {
-    background: #e8f4ff;
-}
-
-.file-item.selected {
-    background: #cce7ff;
-    border-color: #99d6ff;
-}
-
-.file-info {
-    font-size: 9px;
-    color: #666;
-    margin-top: 2px;
-}
-
-.save-form {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.save-form label {
-    font-weight: bold;
-    font-size: 11px;
-}
-
-.filename-input {
-    padding: 6px 8px;
-    border: 1px inset #c0c0c0;
-    font-size: 11px;
-}
-
-.filename-input:focus {
-    outline: none;
-    border-color: #0066cc;
-}
-
-.save-location {
-    font-size: 10px;
-    color: #666;
-    background: #f8f8f8;
-    padding: 4px 8px;
-    border: 1px inset #e0e0e0;
-    border-radius: 2px;
-}
-
-.format-info {
-    font-size: 10px;
-    padding: 4px 8px;
-    border-radius: 2px;
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    color: #856404;
-}
-
-.dialog-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.open-btn,
-.save-btn {
-    background: linear-gradient(to bottom, #4CAF50, #45a049);
-    border: 1px outset #4CAF50;
-    padding: 6px 16px;
-    font-size: 11px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    border-radius: 2px;
-}
-
-.open-btn:hover,
-.save-btn:hover {
-    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
-}
-
-.open-btn:active,
-.save-btn:active {
-    border: 1px inset #4CAF50;
-    background: linear-gradient(to bottom, #45a049, #4CAF50);
-}
-
-.dialog-button {
-    background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
-    border: 1px outset #c0c0c0;
-    padding: 6px 16px;
-    font-size: 11px;
-    cursor: pointer;
-    border-radius: 2px;
-}
-
-.dialog-button:hover {
-    background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
-}
-
-.dialog-button:active {
-    border: 1px inset #c0c0c0;
-    background: linear-gradient(to bottom, #c0c0c0, #dfdfdf);
-}
-
-.input-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #f0f0f0;
-    border: 2px outset #c0c0c0;
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-    z-index: 2000;
-    min-width: 300px;
-}
-
-/* Animation for messages */
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-</style>
-`;
-
-// Inject styles
-if (!document.getElementById('notepad-pro-styles')) {
-    const styleElement = document.createElement('div');
-    styleElement.id = 'notepad-pro-styles';
-    styleElement.innerHTML = notepadStyles;
-    document.head.appendChild(styleElement);
-}
+// NOTE: All Notepad styles are in css/programs/notepad.css (theme-aware via CSS variables).
+// No inline style injection needed.

@@ -1,0 +1,186 @@
+// =========================================================
+// TICKET SYSTEM — DATA & ENGINE
+// Department ticket pools, career ladder, completion logic
+// =========================================================
+
+var TICKET_POOLS = {
+    'Information Technology': [
+        { title: "Mrs. Snake-E's Computer Won't Start", description: "She says the screen went black right after she spilled cookie crumbs on the keyboard. There's a faint smell of chocolate chip.", submitter: "Mrs. Snake-E", priority: "high", approaches: ["Restart the machine", "Check power connections", "Clean the keyboard", "Replace the keyboard"] },
+        { title: "ElxaOS Update Failing on Floor 3", description: "All 12 workstations on the 3rd floor are stuck at 'Updating... 99%' and have been for two hours. Employees are getting antsy.", submitter: "Rita Martinez", priority: "high", approaches: ["Force restart all machines", "Roll back the update", "Run diagnostics remotely", "Escalate to Mr. Snake-E"] },
+        { title: "Printer Keeps Printing Snake Emojis", description: "Every document from the Marketing printer comes out with random 🐍 emojis inserted between paragraphs. Nobody changed any settings.", submitter: "Marketing Dept.", priority: "medium", approaches: ["Reinstall printer drivers", "Check print queue for rogue jobs", "Factory reset the printer", "Blame Pushing Cat"] },
+        { title: "Wi-Fi Dead in the Break Room", description: "The break room Wi-Fi has been down since lunch. Mrs. Snake-E can't stream her baking tutorials and morale is plummeting.", submitter: "Break Room Staff", priority: "medium", approaches: ["Restart the access point", "Check router configuration", "Run a cable to the break room", "Set up a mobile hotspot"] },
+        { title: "Suspicious Login Attempts Detected", description: "The security dashboard flagged 47 failed login attempts on Mr. Snake-E's account in the last hour. All from IP 192.168.sus.cat.", submitter: "Security System", priority: "high", approaches: ["Lock the account temporarily", "Trace the IP address", "Enable 2FA immediately", "Check if Pushing Cat has a laptop"] },
+        { title: "New Employee Needs Workstation Setup", description: "A new hire in Customer Relations starts Monday and needs a full workstation: ElxaOS, email, portal access, and a cookie jar.", submitter: "Rita Martinez", priority: "low", approaches: ["Image a fresh machine", "Clone an existing setup", "Set up manually with checklist", "Order new hardware"] },
+        { title: "Arcade Cabinet Not Connecting to Network", description: "Remi's vintage Pac-Man cabinet won't connect to the company network for the high score leaderboard. She's very passionate about this.", submitter: "Remi Marway", priority: "medium", approaches: ["Check ethernet cable", "Configure network adapter", "Set up a dedicated VLAN", "Tell Remi to use a USB drive"] },
+        { title: "Email Server Running Slow", description: "ElxaMail is taking 30+ seconds to load emails. Multiple departments have complained. The server room temperature is also unusually warm.", submitter: "Multiple Employees", priority: "high", approaches: ["Restart the email server", "Check server room cooling", "Clear the mail queue", "Migrate to a backup server"] },
+        { title: "Someone Changed All Desktop Wallpapers", description: "Every computer on Floor 2 now has a wallpaper of Pushing Cat wearing sunglasses. It happened overnight.", submitter: "Floor 2 Staff", priority: "low", approaches: ["Push a group policy reset", "Check after-hours access logs", "Investigate Pushing Cat", "Honestly it's kind of funny, low priority"] },
+        { title: "Backup System Hasn't Run in 3 Days", description: "The automated backup failed silently. Last successful backup was 72 hours ago. If we lose data, Mr. Snake-E will be... displeased.", submitter: "Monitoring System", priority: "high", approaches: ["Run a manual backup immediately", "Check disk space on backup server", "Review backup job logs", "Escalate to Mr. Snake-E NOW"] }
+    ],
+    'Retro Gaming Division': [
+        { title: "Joystick Calibration Drift on Cabinet #7", description: "The Street Fighter II cabinet's joystick drifts left. Players keep accidentally walking into fireballs. Remi is distraught.", submitter: "Remi Marway", priority: "high", approaches: ["Recalibrate the joystick", "Replace the microswitches", "Swap in a spare joystick", "Order a new control panel"] },
+        { title: "CRT Monitor Flickering on Galaga Machine", description: "The Galaga cabinet's CRT has developed a slight flicker. Still playable but could worsen. These monitors are irreplaceable.", submitter: "Arcade Staff", priority: "medium", approaches: ["Adjust the flyback transformer", "Check capacitors for bulging", "Reduce brightness settings", "Source a replacement CRT"] },
+        { title: "High Score Board Won't Save", description: "The Donkey Kong machine resets its high scores every time it's powered off. Remi had a personal best and is devastated.", submitter: "Remi Marway", priority: "medium", approaches: ["Replace the NVRAM battery", "Check the save circuit", "Add external score backup", "Comfort Remi emotionally"] },
+        { title: "New Cabinet Arrived — Needs Setup", description: "A restored Centipede cabinet just arrived on the loading dock. Needs electrical inspection, placement, and network hookup.", submitter: "Shipping Dept.", priority: "low", approaches: ["Inspect electrical components", "Test all controls and display", "Choose optimal floor placement", "Set up network for leaderboard"] },
+        { title: "Arcade Tournament Planning", description: "The monthly ElxaCorp arcade tournament is next week. Need to set up brackets, test all machines, and prepare prize cookies.", submitter: "Remi Marway", priority: "medium", approaches: ["Create bracket system", "Test all tournament machines", "Coordinate with Mrs. Snake-E for prizes", "Set up streaming equipment"] },
+        { title: "Pinball Machine Tilt Sensor Too Sensitive", description: "The Medieval Madness pinball machine tilts if you breathe on it. Employees are afraid to play.", submitter: "Break Room Staff", priority: "low", approaches: ["Adjust the tilt bob weight", "Recalibrate tilt sensitivity", "Replace the tilt mechanism", "Add a 'play gently' sign"] },
+        { title: "Audio Board Failure on Space Invaders", description: "The Space Invaders machine has gone silent. No sound effects, no music. The descending alien march is supposed to be iconic.", submitter: "Arcade Staff", priority: "medium", approaches: ["Reseat the audio board", "Check speaker connections", "Test with a known-good amp", "Order a replacement board"] },
+        { title: "Kids From the Tour Group Jammed a Machine", description: "During yesterday's school tour, someone jammed three tokens into the Frogger coin slot simultaneously. The mechanism is stuck.", submitter: "Tour Guide", priority: "high", approaches: ["Disassemble the coin mechanism", "Use tools to extract jammed tokens", "Replace the coin acceptor", "Switch to free-play mode temporarily"] },
+        { title: "Remi's Streaming Setup Needs Upgrade", description: "Remi wants to stream retro gaming sessions for the ElxaCorp YouTube channel. Current setup has lag and poor audio.", submitter: "Remi Marway", priority: "low", approaches: ["Upgrade the capture card", "Set up a dedicated streaming PC", "Improve lighting and audio", "Test with a practice stream"] },
+        { title: "Inventory Audit for Spare Parts", description: "We haven't done an inventory of arcade spare parts in 6 months. Need to count joysticks, buttons, boards, and CRT components.", submitter: "Facilities Manager", priority: "low", approaches: ["Full physical inventory count", "Create a digital inventory system", "Order commonly low items", "Delegate to the new hire"] }
+    ],
+    'Executive Operations': [
+        { title: "Mrs. Snake-E's Garden Meeting Schedule Conflict", description: "Mrs. Snake-E has three meetings booked at the same time on Thursday. All in different garden pavilions. She seems unaware.", submitter: "Mrs. Snake-E", priority: "high", approaches: ["Reschedule two of the meetings", "Consolidate into one large meeting", "Prioritize by urgency", "Inform Mrs. Snake-E diplomatically"] },
+        { title: "Cookie Recipe Filing System Overhaul", description: "Mrs. Snake-E's recipe collection has outgrown its current binder system. 847 recipes need to be digitized and categorized.", submitter: "Mrs. Snake-E", priority: "medium", approaches: ["Create a digital database", "Scan and OCR all recipes", "Organize by category first", "Hire a temp for data entry"] },
+        { title: "Prepare Board Meeting Materials", description: "Quarterly board meeting is Friday. Need slide deck, financial summaries, cookie quality reports, and garden status update.", submitter: "Mr. Snake-E", priority: "high", approaches: ["Start with financial summaries", "Compile department reports first", "Design the slide template", "Coordinate with all department heads"] },
+        { title: "Executive Gift Baskets for Client Visit", description: "Important clients from Snakesia Partners arrive Tuesday. Need personalized gift baskets with cookies, company merch, and a handwritten note from Mrs. Snake-E.", submitter: "Mrs. Snake-E", priority: "medium", approaches: ["Order custom company merch", "Coordinate with cookie kitchen", "Draft note templates for review", "Arrange delivery logistics"] },
+        { title: "Mr. Snake-E's Denali Service Appointment", description: "The Denali is due for its 50,000 mile service. Mr. Snake-E insists on being personally updated at every stage.", submitter: "Mr. Snake-E", priority: "medium", approaches: ["Schedule with preferred dealer", "Set up status update reminders", "Arrange a loaner vehicle", "Create a service timeline document"] },
+        { title: "Garden Irrigation System Malfunction", description: "The automatic sprinklers in Mrs. Snake-E's executive garden are running at midnight instead of 6 AM. Her roses are unhappy.", submitter: "Facilities", priority: "low", approaches: ["Reset the timer controller", "Call the irrigation company", "Manually water until fixed", "Check for Pushing Cat interference"] },
+        { title: "Catering Order for Company Anniversary", description: "ElxaCorp's founding anniversary celebration is in two weeks. Need catering for 200 employees. Mrs. Snake-E insists on having her cookies as dessert.", submitter: "Mrs. Snake-E", priority: "medium", approaches: ["Get quotes from three caterers", "Plan the menu with Mrs. Snake-E", "Book the venue space", "Coordinate with all departments"] },
+        { title: "Confidential Document Shredding Backlog", description: "The executive shred bin hasn't been emptied in a month. Sensitive documents are piling up and Mr. Snake-E is concerned.", submitter: "Security", priority: "high", approaches: ["Schedule emergency shredding service", "Temporarily lock the shred room", "Sort documents by sensitivity level", "Rent an industrial shredder"] }
+    ],
+    'Gaming & Entertainment': [
+        { title: "Minecraft Server Lag Spikes", description: "The company Minecraft server (play.elxacorp.ex) is experiencing 3-5 second lag spikes every few minutes. Remi's builds keep glitching.", submitter: "Remi Marway", priority: "high", approaches: ["Increase server RAM allocation", "Check for chunk loading issues", "Review installed mods/plugins", "Restart and monitor performance"] },
+        { title: "YouTube Video Needs Editing", description: "Remi recorded a 4-hour stream that needs to be cut down to a 20-minute highlight reel. She wants 'dramatic zooms' on clutch plays.", submitter: "Remi Marway", priority: "medium", approaches: ["Start with key moment timestamps", "Edit using standard templates", "Add Remi's requested effects", "Create thumbnail and description too"] },
+        { title: "Game Review Database Needs Updating", description: "The internal game review database hasn't been updated in 3 months. 47 new games need reviews for the recommendation engine.", submitter: "Gaming Team", priority: "low", approaches: ["Divide games among the team", "Prioritize popular titles", "Set up a review template", "Schedule a review marathon day"] },
+        { title: "VR Headset Tracking Issues", description: "The VR demo station's headset keeps losing tracking. Visitors are bumping into walls. One almost knocked over a display.", submitter: "Demo Station Staff", priority: "high", approaches: ["Recalibrate the tracking sensors", "Check for reflective surfaces", "Update VR firmware", "Set up better guardian boundaries"] },
+        { title: "Esports Team Needs Practice Schedule", description: "The ElxaCorp esports team has a tournament in two weeks. Need to coordinate practice times around work schedules.", submitter: "Team Captain", priority: "medium", approaches: ["Survey team availability", "Book the gaming room evenings", "Create a rotation schedule", "Set up scrimmage matches"] },
+        { title: "Retro Game Preservation Project", description: "Remi wants to digitize the company's collection of rare game manuals and box art before they deteriorate further.", submitter: "Remi Marway", priority: "low", approaches: ["Set up a scanning station", "Prioritize rarest items first", "Create digital archive structure", "Research preservation best practices"] },
+        { title: "New Gaming PC Build for the Lab", description: "The gaming development lab needs a new high-spec PC for testing. Budget approved, just needs to be specced and built.", submitter: "IT / Gaming Joint", priority: "medium", approaches: ["Research current best components", "Build to match game requirements", "Order parts from approved vendors", "Schedule build day with IT"] },
+        { title: "Stream Overlay Design Update", description: "The ElxaCorp streaming overlay looks dated. Remi wants it refreshed with new branding and animated transitions.", submitter: "Remi Marway", priority: "low", approaches: ["Design new layout mockups", "Create animated elements", "Test in OBS before going live", "Get Remi's approval on designs"] }
+    ],
+    'Customer Relations': [
+        { title: "Angry Customer: Wrong Cookie Flavor Shipped", description: "A customer ordered snickerdoodle cookies and received oatmeal raisin. They are... very upset. Their email was in all caps.", submitter: "Customer Portal", priority: "high", approaches: ["Send replacement immediately", "Offer a full refund + extra cookies", "Call the customer personally", "Escalate to Mrs. Snake-E"] },
+        { title: "FAQ Page Needs Major Update", description: "The customer FAQ still references ElxaOS 9.0 and products we discontinued last year. Customers are getting confused.", submitter: "Support Team", priority: "medium", approaches: ["Audit all FAQ entries", "Rewrite outdated sections", "Add new common questions", "Get department heads to review"] },
+        { title: "Phone System Dropping Calls", description: "The customer support phone line has been dropping calls mid-conversation. We've lost contact with at least 8 customers today.", submitter: "Phone Support", priority: "high", approaches: ["Contact the phone provider", "Switch to backup phone system", "Use video calls as backup", "Check internal wiring"] },
+        { title: "Customer Satisfaction Survey Results", description: "Last month's survey results are in. Overall score dropped from 94% to 87%. Rita wants a breakdown by department ASAP.", submitter: "Rita Martinez", priority: "medium", approaches: ["Run the department breakdown", "Identify top complaint categories", "Draft improvement recommendations", "Schedule review meeting with Rita"] },
+        { title: "VIP Client Tour Preparation", description: "A VIP client from overseas is visiting next week. Need to prepare welcome package, tour route, and lunch with Mr. Snake-E.", submitter: "Rita Martinez", priority: "high", approaches: ["Create a detailed itinerary", "Reserve the executive dining room", "Prepare welcome materials", "Brief all departments on the visit"] },
+        { title: "Support Ticket Backlog Growing", description: "There are 34 unresolved support tickets, some over a week old. Response time has slipped to 48 hours average.", submitter: "Support Dashboard", priority: "medium", approaches: ["Triage by urgency and age", "Assign overflow to other depts", "Extend support hours this week", "Set up auto-responses for common issues"] },
+        { title: "Customer Requesting Factory Tour", description: "A loyal customer wants to tour the ElxaCorp facilities. They're particularly interested in the cookie kitchen and arcade room.", submitter: "Customer Portal", priority: "low", approaches: ["Check tour availability dates", "Get security clearance approval", "Plan the tour route", "Coordinate with Mrs. Snake-E and Remi"] },
+        { title: "Refund Policy Clarification Needed", description: "Three different support agents gave three different answers about our refund window. We need a clear, official policy document.", submitter: "Support Team Lead", priority: "medium", approaches: ["Draft a clear policy document", "Get legal team review", "Distribute to all support staff", "Update the website FAQ"] }
+    ],
+    'Security & Compliance': [
+        { title: "Pushing Cat Spotted on Security Camera", description: "Camera 7 (server room hallway) captured Pushing Cat lurking near the server room door at 3:47 AM. This is the third time this week.", submitter: "Night Security", priority: "high", approaches: ["Review all camera footage", "Increase patrols in that area", "Install additional locks", "Set up a Pushing Cat trap (humane)"] },
+        { title: "Badge Access Audit Required", description: "Quarterly badge access audit is overdue. Need to verify all 200+ employee badges are current and no former employees still have access.", submitter: "Compliance Office", priority: "medium", approaches: ["Export badge database report", "Cross-reference with HR records", "Deactivate expired badges", "Update access level assignments"] },
+        { title: "Suspicious Package in Mailroom", description: "A package addressed to 'The Most Sus Employee' arrived with no return address. It's making a faint ticking sound.", submitter: "Mailroom Staff", priority: "high", approaches: ["Evacuate the immediate area", "Call the bomb squad... wait, it's probably a clock", "Scan the package carefully", "It's probably from Pushing Cat"] },
+        { title: "Fire Drill Coordination", description: "The monthly fire drill is scheduled for Thursday. Need to coordinate with all floors, verify alarm systems, and designate assembly points.", submitter: "Safety Committee", priority: "medium", approaches: ["Send building-wide notice", "Test all alarm pull stations", "Verify fire extinguisher dates", "Brief floor wardens"] },
+        { title: "Cybersecurity Training Completion", description: "Only 62% of employees have completed the mandatory annual cybersecurity training. Deadline is next Friday.", submitter: "Compliance Office", priority: "medium", approaches: ["Send reminder emails to stragglers", "Offer lunch-and-learn sessions", "Report non-compliant managers", "Extend the deadline by one week"] },
+        { title: "Visitor Log Discrepancy", description: "Yesterday's visitor log shows 12 sign-ins but only 10 sign-outs. Two visitors may still be in the building. Or they snuck out.", submitter: "Front Desk", priority: "high", approaches: ["Review exit camera footage", "Check all common areas", "Cross-reference with escort records", "Lock down sensitive areas"] },
+        { title: "Sus Detection System Calibration", description: "The automated Sus Detection System has been flagging Mrs. Snake-E's cookie deliveries as 'suspicious activity.' It needs recalibrating.", submitter: "Security Tech", priority: "low", approaches: ["Whitelist Mrs. Snake-E's badge", "Adjust sensitivity thresholds", "Update the detection algorithms", "Add 'cookie delivery' as known activity"] },
+        { title: "Parking Lot Camera Outage", description: "Cameras 14-16 covering the east parking lot went offline overnight. Mr. Snake-E's Denali is parked there.", submitter: "Security System", priority: "high", approaches: ["Check power supply to cameras", "Review last footage before outage", "Deploy temporary mobile cameras", "Dispatch a guard to the area"] }
+    ],
+    'Fleet & Facilities': [
+        { title: "Mr. Snake-E's Denali Needs Detailing", description: "Mr. Snake-E noticed a small scratch on the driver's side door. He wants the entire vehicle detailed by end of day. It's 3 PM.", submitter: "Mr. Snake-E", priority: "high", approaches: ["Call the mobile detailing service", "Touch up the scratch in-house", "Schedule a full detail appointment", "Diplomatically manage expectations on timing"] },
+        { title: "HVAC System Acting Up on Floor 4", description: "Floor 4 (Mrs. Snake-E's wing) is alternating between 60°F and 85°F every 30 minutes. The cookies are being affected.", submitter: "Floor 4 Staff", priority: "high", approaches: ["Check the thermostat settings", "Inspect the HVAC control board", "Call the HVAC contractor", "Set up temporary fans/heaters"] },
+        { title: "Company Fleet Oil Change Schedule", description: "Three company vehicles are overdue for oil changes. The Denali, the delivery van, and Remi's gaming event transport.", submitter: "Fleet Log", priority: "medium", approaches: ["Schedule all three at once", "Prioritize the Denali (obviously)", "Check for other pending maintenance", "Set up recurring reminders"] },
+        { title: "Loading Dock Light Burned Out", description: "The main loading dock light is out, making evening deliveries unsafe. Replacement bulbs are in storage room B.", submitter: "Shipping Dept.", priority: "medium", approaches: ["Replace the bulb immediately", "Check if it's an electrical issue", "Set up temporary work lights", "Order LED replacement upgrade"] },
+        { title: "Executive Parking Reserved Signs Faded", description: "The reserved parking signs for Mr. and Mrs. Snake-E are so faded they're unreadable. Someone parked in Mr. Snake-E's spot yesterday.", submitter: "Mr. Snake-E", priority: "medium", approaches: ["Order new custom signs", "Repaint the existing signs", "Add bollards with chains", "Assign a parking attendant (overkill but impressive)"] },
+        { title: "Elevator Making Weird Noises", description: "The main elevator is making a grinding sound between floors 2 and 3. It still works but employees are nervous.", submitter: "Multiple Employees", priority: "high", approaches: ["Take the elevator out of service", "Call the elevator maintenance company", "Post 'use stairs' signs", "Inspect the motor room"] },
+        { title: "Landscaping for Client Visit", description: "The front entrance landscaping looks rough before next week's VIP client visit. Bushes need trimming, flowers need planting.", submitter: "Rita Martinez", priority: "low", approaches: ["Hire a landscaping crew", "Do basic cleanup with facilities staff", "Focus on the entrance and walkways", "Ask Mrs. Snake-E for garden advice"] },
+        { title: "Fuel Cards Need Renewal", description: "Company fuel cards expire at the end of the month. Need to renew for all 5 company vehicles before drivers get stranded.", submitter: "Fleet Admin", priority: "low", approaches: ["Contact the fuel card company", "Process all renewals at once", "Update the card numbers in the system", "Distribute new cards to drivers"] }
+    ],
+    'Quality Assurance': [
+        { title: "Cookie Batch #47 Failed Taste Test", description: "Batch #47 (snickerdoodles) came out with an unusual metallic aftertaste. Mrs. Snake-E is beside herself. The entire batch must be evaluated.", submitter: "Mrs. Snake-E", priority: "high", approaches: ["Pull the entire batch from distribution", "Test ingredient quality", "Check the oven calibration", "Taste-test with a panel for comparison"] },
+        { title: "New Chocolate Supplier Samples Arrived", description: "Six sample boxes from potential new chocolate suppliers need blind taste testing and quality scoring by end of week.", submitter: "Procurement", priority: "medium", approaches: ["Set up blind tasting panel", "Create scoring rubric", "Test melting point and texture", "Compare to current supplier benchmark"] },
+        { title: "Cookie Freshness Standards Review", description: "Current freshness guarantee is 5 days. Mrs. Snake-E wants to extend to 7 days but needs QA data to support the claim.", submitter: "Mrs. Snake-E", priority: "medium", approaches: ["Run controlled freshness tests", "Test multiple storage conditions", "Document daily quality observations", "Prepare a report for Mrs. Snake-E"] },
+        { title: "Oven Temperature Inconsistency", description: "Oven #3 runs 15 degrees hot on the left side. Cookies on the left tray are slightly overcooked. It's subtle but Mrs. Snake-E noticed.", submitter: "Kitchen Staff", priority: "high", approaches: ["Calibrate the oven thermostat", "Map temperature zones with a probe", "Schedule a repair technician", "Rotate trays during baking as a temp fix"] },
+        { title: "Allergy Label Compliance Check", description: "New regulations require updated allergy labeling on all cookie packages. Need to audit current labels against new requirements.", submitter: "Compliance", priority: "medium", approaches: ["Get the new regulation documents", "Audit all current product labels", "Identify gaps in labeling", "Draft updated labels for review"] },
+        { title: "Customer Reported Foreign Object", description: "A customer found what appears to be a small piece of packaging material in a sugar cookie. Need to investigate immediately.", submitter: "Customer Relations", priority: "high", approaches: ["Identify the batch and pull it", "Inspect the production line", "Review packaging process", "Contact the customer with apologies"] },
+        { title: "Monthly Equipment Sanitation Audit", description: "The monthly deep-clean and sanitation audit of all kitchen equipment is due. Health inspector visits next month.", submitter: "Quality Manager", priority: "medium", approaches: ["Schedule the full audit", "Prepare the inspection checklist", "Assign cleaning teams to zones", "Document everything photographically"] },
+        { title: "Experimental Cookie Recipe Testing", description: "Mrs. Snake-E has created a new 'Snakesia Sunrise' cookie recipe. It needs three rounds of QA testing before it can join the menu.", submitter: "Mrs. Snake-E", priority: "low", approaches: ["Bake a test batch", "Evaluate taste, texture, and appearance", "Test shelf life stability", "Gather employee taste-test feedback"] },
+        { title: "Sugar Cookie Glaze Consistency Issue", description: "The glaze on the sugar cookies has been too thin lately, making them look pale. Mrs. Snake-E called them 'anemic' which is never good.", submitter: "Kitchen Staff", priority: "medium", approaches: ["Check the glaze recipe ratios", "Test sugar-to-water proportions", "Evaluate the mixing process", "Run side-by-side comparison batches"] }
+    ],
+    'Technology Operations': [
+        { title: "Server Room Temperature Rising", description: "The server room is at 78°F and climbing. Normal range is 65-70°F. If it hits 85°F, systems will start shutting down.", submitter: "Monitoring System", priority: "high", approaches: ["Check the cooling unit", "Open the room for temporary airflow", "Move critical servers to backup rack", "Call emergency HVAC repair"] },
+        { title: "Database Migration Planning", description: "The customer database needs migrating from the old system to the new one. 2.3 million records. Zero downtime required.", submitter: "CTO Office", priority: "medium", approaches: ["Plan a phased migration", "Set up parallel running systems", "Test with a subset first", "Schedule for lowest-traffic window"] },
+        { title: "Software License Renewal Batch", description: "17 software licenses expire this month. Need to review which are still needed, negotiate renewals, and update license keys.", submitter: "IT Admin", priority: "medium", approaches: ["Audit current usage of each tool", "Negotiate bulk renewal discount", "Cancel unused licenses", "Update all license keys in the system"] },
+        { title: "Website Performance Degradation", description: "The company website is loading in 8+ seconds instead of the usual 2. Analytics show a 40% bounce rate increase.", submitter: "Marketing", priority: "high", approaches: ["Check server response times", "Optimize images and assets", "Review recent code deployments", "Enable CDN caching"] },
+        { title: "Automated Test Suite Failing", description: "The nightly automated test suite has been failing for 3 days. 47 of 200 tests are broken after the latest code push.", submitter: "Dev Team", priority: "medium", approaches: ["Triage which tests are critical", "Roll back the problematic commit", "Fix tests one module at a time", "Pair program with the original developer"] },
+        { title: "API Rate Limiting Issues", description: "Third-party partners are hitting our API rate limits. They're requesting a 5x increase. Need to assess if our infrastructure can handle it.", submitter: "Partner Relations", priority: "medium", approaches: ["Analyze current API usage patterns", "Load test at 5x capacity", "Propose a tiered rate limit plan", "Upgrade API server resources"] },
+        { title: "Documentation Severely Outdated", description: "Internal technical documentation hasn't been updated in 8 months. New team members are struggling to onboard.", submitter: "Dev Team Lead", priority: "low", approaches: ["Assign docs to feature owners", "Set up a documentation sprint", "Create templates for consistency", "Integrate docs into the dev workflow"] },
+        { title: "SSL Certificate Expiring Soon", description: "The main domain SSL certificate expires in 5 days. If it lapses, the website will show security warnings to all visitors.", submitter: "Monitoring System", priority: "high", approaches: ["Renew immediately", "Set up auto-renewal for the future", "Verify cert chain is complete", "Test renewal in staging first"] }
+    ]
+};
+
+var CAREER_LADDER = {
+    'Information Technology': [
+        { level: 1, title: 'IT Intern', badge: '🖥️', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Help Desk Technician', badge: '🔧', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior Sysadmin', badge: '⚙️', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'IT Manager', badge: '🛡️', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'Chief Technology Snake', badge: '👑', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Retro Gaming Division': [
+        { level: 1, title: 'Arcade Apprentice', badge: '🕹️', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Cabinet Technician', badge: '🔩', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior Arcade Engineer', badge: '🏆', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'Retro Gaming Manager', badge: '🌟', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'Legendary Arcade Master', badge: '👾', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Executive Operations': [
+        { level: 1, title: 'Junior Assistant', badge: '📋', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Executive Coordinator', badge: '📊', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior Executive Assistant', badge: '💼', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'Chief of Staff', badge: '🏛️', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'Executive Vice President', badge: '👑', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Gaming & Entertainment': [
+        { level: 1, title: 'Gaming Intern', badge: '🎮', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Content Specialist', badge: '🎬', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior Gaming Producer', badge: '🎯', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'Gaming Division Lead', badge: '🌟', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'VP of Entertainment', badge: '🎪', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Customer Relations': [
+        { level: 1, title: 'Support Trainee', badge: '📞', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Customer Advocate', badge: '🤝', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior Relations Specialist', badge: '⭐', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'Relations Manager', badge: '💎', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'Chief Customer Officer', badge: '👑', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Security & Compliance': [
+        { level: 1, title: 'Security Trainee', badge: '🔒', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Security Analyst', badge: '🕵️', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior Security Specialist', badge: '🛡️', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'Security Operations Manager', badge: '🎖️', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'Chief Security Snake', badge: '👑', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Fleet & Facilities': [
+        { level: 1, title: 'Facilities Assistant', badge: '🔨', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Maintenance Technician', badge: '🔧', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior Facilities Engineer', badge: '🏗️', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'Facilities Manager', badge: '🏢', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'VP of Operations', badge: '👑', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Quality Assurance': [
+        { level: 1, title: 'Cookie Taster Trainee', badge: '🍪', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Quality Inspector', badge: '🔍', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior QA Specialist', badge: '✅', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'QA Director', badge: '🎗️', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'Chief Cookie Officer', badge: '👑', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ],
+    'Technology Operations': [
+        { level: 1, title: 'Tech Ops Intern', badge: '💻', salaryMultiplier: 1.0, ticketsNeeded: 0 },
+        { level: 2, title: 'Systems Administrator', badge: '🖧', salaryMultiplier: 1.2, ticketsNeeded: 5 },
+        { level: 3, title: 'Senior DevOps Engineer', badge: '🚀', salaryMultiplier: 1.5, ticketsNeeded: 15 },
+        { level: 4, title: 'Tech Ops Manager', badge: '📡', salaryMultiplier: 2.0, ticketsNeeded: 30 },
+        { level: 5, title: 'VP of Technology', badge: '👑', salaryMultiplier: 3.0, ticketsNeeded: 50 }
+    ]
+};
+
+const CANNED_COMPLETIONS = [
+    "Great work! The issue has been resolved and everyone's happy. Well, almost everyone — Pushing Cat still looks suspicious.",
+    "Ticket closed! Your approach was spot-on. Mrs. Snake-E sends her regards and a fresh cookie.",
+    "Done and done! Mr. Snake-E himself nodded approvingly when he heard. That's basically a standing ovation from him.",
+    "Another one bites the dust! The team is impressed with how you handled that. Cookie break?",
+    "Resolved! Rita from Customer Relations says thanks. She's adding a gold star to your employee file. Literally.",
+    "Nicely handled! Remi saw what you did and wants you to know she thinks you're 'absolutely cracked' — that's a compliment.",
+    "Task complete! The affected parties have been notified and are satisfied. Your efficiency rating just went up.",
+    "All sorted! Mrs. Snake-E is baking a special batch in your honor. Don't tell the other employees.",
+    "Fixed! The team lead sent a thumbs-up emoji in the group chat. In corporate culture, that's basically a promotion. Oh wait...",
+    "Excellent resolution! Security cameras confirm Pushing Cat watched the whole thing and looked mildly impressed.",
+    "Wrapped up! Your solution was so clean, IT wants to add it to the training manual.",
+    "Ticket resolved with style! Even the intern is taking notes on your technique.",
+    "Mission accomplished! Mr. Snake-E's Denali approval gauge just went up a notch. Not that we track that. Okay we track that.",
+    "Successfully handled! The break room is buzzing about your problem-solving skills. Also there are fresh cookies.",
+    "Case closed! Your approach will be featured in next month's 'Employee Spotlight' newsletter. Probably."
+];

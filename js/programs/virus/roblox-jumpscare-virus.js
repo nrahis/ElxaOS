@@ -416,8 +416,8 @@ class RobloxHorrorJumpscareVirus {
     }
 
     addJumpscareHandlers(jumpscare, scenario) {
-        // Close button handler
-        const closeBtn = jumpscare.querySelector('.roblox-close');
+        // Close button handler (both .roblox-close and .roblox-notif-close)
+        const closeBtn = jumpscare.querySelector('.roblox-close, .roblox-notif-close');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
                 jumpscare.classList.add('roblox-slide-out');

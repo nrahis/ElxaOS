@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ElxaOS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 <link rel="stylesheet" href="/css/desktop.css">
 </head>
 <body>
@@ -14,16 +15,16 @@
         <!-- Desktop Icons -->
         <div class="desktop-icons" id="desktopIcons">
             <div class="desktop-icon" data-program="computer">
-                <div class="desktop-icon-image">💻</div>
+                <div class="desktop-icon-image"><span class="mdi mdi-monitor elxa-icon-desktop" style="color: #4FC3F7"></span></div>
                 <div class="desktop-icon-label">My Computer</div>
             </div>
             <div class="desktop-icon" data-program="recycle-bin">
-                <div class="desktop-icon-image">🗑️</div>
+                <div class="desktop-icon-image"><span class="mdi mdi-trash-can elxa-icon-desktop" style="color: #90A4AE"></span></div>
                 <div class="desktop-icon-label">Recycle Bin</div>
             </div>
 
             <div class="desktop-icon" data-program="notepad">
-                <div class="desktop-icon-image">📝</div>
+                <div class="desktop-icon-image"><span class="mdi mdi-note-edit elxa-icon-desktop" style="color: #FFF176"></span></div>
                 <div class="desktop-icon-label">Notepad</div>
             </div>
         </div>
@@ -34,15 +35,19 @@
     <!-- Taskbar -->
     <div class="taskbar">
         <div class="start-button" id="startButton">
-            🏠 Start
+            <span class="mdi mdi-home elxa-icon-ui"></span> Start
+        </div>
+        <div class="quick-launch" id="quickLaunch">
+            <div class="quick-launch-btn" id="quickLaunchExplorer" title="File Explorer"><span class="mdi mdi-folder elxa-icon-ui"></span></div>
         </div>
         <div class="taskbar-programs" id="taskbarPrograms">
             <!-- Active programs will appear here -->
         </div>
+        <div class="taskbar-overflow-btn" id="taskbarOverflowBtn" title="More windows" style="display: none;">»</div>
         <div class="system-tray">
-            <div class="tray-icon" id="antivirusIcon" title="ElxaGuard Antivirus">🛡️</div>
-            <div class="tray-icon" id="batteryIcon" title="Battery">🔋</div>
-            <div class="tray-icon" id="wifiIcon" title="WiFi">📶</div>
+            <div class="tray-icon" id="antivirusIcon" title="ElxaGuard Antivirus"><span class="mdi mdi-shield-check elxa-icon-ui"></span></div>
+            <div class="tray-icon" id="batteryIcon" title="Battery"><span class="mdi mdi-battery elxa-icon-ui"></span></div>
+            <div class="tray-icon" id="wifiIcon" title="WiFi"><span class="mdi mdi-wifi elxa-icon-ui"></span></div>
             <div class="clock" id="clock">00:00</div>
         </div>
     </div>
@@ -50,33 +55,41 @@
     <!-- Start Menu -->
     <div class="start-menu" id="startMenu">
         <div class="start-menu-header">ElxaOS</div>
-        <div class="start-menu-item" data-program="browser">🌐 Snoogle Browser</div>
-        <div class="start-menu-item" data-program="messenger">💬 Messenger</div>
-        <div class="start-menu-item" data-program="notepad">📝 Notepad</div>
-        <div class="start-menu-item" data-program="paint">🎨 Paint</div>
-        <div class="start-menu-item" data-program="calculator">🧮 Calculator</div>
-        <div class="start-menu-item" data-program="elxacode">💻 ElxaCode</div>
-        <div class="start-menu-item" data-program="elxabooks">💰 ElxaBooks Pro</div>
-        <div class="start-menu-item" data-program="duck-console">⚫ DUCK Console</div>
-        <div class="start-menu-item" data-program="viruslab">👨‍💻 Virus Lab</div>
+        <div class="start-menu-item" data-program="browser"><span class="mdi mdi-web elxa-icon-ui"></span> Snoogle Browser</div>
+        <div class="start-menu-item" data-program="messenger"><span class="mdi mdi-chat elxa-icon-ui"></span> Messenger</div>
+        <div class="start-menu-item" data-program="notepad"><span class="mdi mdi-note-edit elxa-icon-ui"></span> Notepad</div>
+        <div class="start-menu-item" data-program="paint"><span class="mdi mdi-palette elxa-icon-ui"></span> Paint</div>
+        <div class="start-menu-item" data-program="calculator"><span class="mdi mdi-calculator elxa-icon-ui"></span> Calculator</div>
+        <div class="start-menu-item" data-program="elxacode"><span class="mdi mdi-code-tags elxa-icon-ui"></span> ElxaCode</div>
+        <div class="start-menu-item" data-program="elxabooks"><span class="mdi mdi-cash-register elxa-icon-ui"></span> ElxaBooks Pro</div>
+        <div class="start-menu-item" data-program="duck-console"><span class="mdi mdi-console elxa-icon-ui"></span> DUCK Console</div>
+        <div class="start-menu-item" data-program="viruslab"><span class="mdi mdi-virus elxa-icon-ui"></span> Virus Lab</div>
+        <div class="start-menu-item" data-program="snakesian-cards"><span class="mdi mdi-cards-outline elxa-icon-ui"></span> Card Exchange</div>
         <div class="start-menu-separator"></div>
-        <div class="start-menu-item" data-program="computer">💻 My Computer</div>
-        <div class="start-menu-item" data-action="personalize">🎨 Personalize</div>
-        <div class="start-menu-item" data-action="userSettings">👤 User Settings</div>
-        <div class="start-menu-item" data-program="antivirus">🛡️ ElxaGuard Antivirus</div>
+        <div class="start-menu-item" data-program="computer"><span class="mdi mdi-monitor elxa-icon-ui"></span> My Computer</div>
+        <div class="start-menu-item" data-action="personalize"><span class="mdi mdi-palette elxa-icon-ui"></span> Personalize</div>
+        <div class="start-menu-item" data-action="userSettings"><span class="mdi mdi-account elxa-icon-ui"></span> User Settings</div>
+        <div class="start-menu-item" data-program="antivirus"><span class="mdi mdi-shield-check elxa-icon-ui"></span> ElxaGuard Antivirus</div>
         <div class="start-menu-separator"></div>
-        <div class="start-menu-item" data-action="logout">🚪 Log Off</div>
-        <div class="start-menu-item" data-action="shutdown">⚡ Shut Down</div>
+        <div class="start-menu-item" data-action="logout"><span class="mdi mdi-logout elxa-icon-ui"></span> Log Off</div>
+        <div class="start-menu-item" data-action="shutdown"><span class="mdi mdi-power elxa-icon-ui"></span> Shut Down</div>
     </div>
 
+<script src="js/services/elxa-db.js"></script>
 <script src="js/elxa-core.js"></script>
+<script src="js/services/elxa-registry.js"></script>
+<script src="js/elxa-ui.js"></script>
+<script src="js/icon-config.js"></script>
 
 <script src="js/file-manager.js"></script>
 <script src="js/services/battery-service.js"></script>
 <script src="js/services/wifi-service.js"></script>
 <script src="js/services/theme-service.js"></script>
+<script src="js/services/avatar-sprites.js"></script>
 <script src="js/services/login-service.js"></script>
 <script src="js/services/installer-service.js"></script>
+<script src="js/services/llm-service.js"></script>
+<script src="js/services/conversation-history.js"></script>
 <script src="js/programs/clock-system.js"></script>
 <script src="js/elxa-debug-tools.js"></script>
 
@@ -88,10 +101,12 @@
 <script src="js/programs/calculator.js"></script>
 <script src="js/programs/elxacode.js"></script>
 <script src="js/programs/elxabooks.js"></script>
+<script src="js/libs/chess.min.js"></script>
 <script src="js/games/snake.js"></script>
 <script src="js/games/snake-deluxe.js"></script>
 <script src="js/games/sussy-cat.js"></script>
 <script src="js/games/mail-room-mayhem.js"></script>
+<script src="js/games/chess-game.js"></script>
 
 <script src="js/programs/virus/lebron-james-virus.js"></script>
 <script src="js/programs/virus/roblox-jumpscare-virus.js"></script>
@@ -102,6 +117,10 @@
 <script src="js/update-popup.js"></script>
 <script src="js/boot-system.js"></script>
 <script src="js/desktop.js"></script>
+<script src="js/taskbar.js"></script>
+<script src="js/shutdown-manager.js"></script>
+<script src="js/default-files.js"></script>
+<script src="js/elxaos.js"></script>
 <script src="js/task-manager.js"></script>
 <script src="js/services/setup-wizard.js"></script>
 <script src="js/programs/system0.js"></script>

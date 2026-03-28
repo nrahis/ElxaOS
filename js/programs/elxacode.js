@@ -9,10 +9,7 @@ class ElxaCodeProgram {
         this.activeWindows = new Map();
         
         // Program state for code execution
-        this.variables = new Map();
         this.isRunning = false;
-        this.currentFile = null;
-        this.currentPath = null;
         
         // Special code responses
         this.specialResponses = {
@@ -53,6 +50,14 @@ class ElxaCodeProgram {
         };
     }
 
+    // =========================================================
+    // Window state helpers — per-window file/variable tracking
+    // =========================================================
+
+    getWindowState(windowId) {
+        return this.activeWindows.get(windowId);
+    }
+
     toggleConsole(windowId) {
         const windowElement = document.getElementById(`window-${windowId}`);
         if (!windowElement) return;
@@ -60,74 +65,89 @@ class ElxaCodeProgram {
         const container = windowElement.querySelector('.elxacode-container');
         if (!container) return;
         
+        const consoleOutput = container.querySelector(`#console-${windowId}`);
         const consoleSection = container.querySelector('.console-section');
         const splitter = container.querySelector(`#console-splitter-${windowId}`);
         const minimizeBtn = container.querySelector('.minimize-console');
         
-        if (consoleSection && minimizeBtn && splitter) {
-            if (consoleSection.style.display === 'none') {
-                consoleSection.style.display = 'flex';
+        if (consoleOutput && consoleSection && minimizeBtn && splitter) {
+            if (consoleOutput.style.display === 'none') {
+                // Expand — show output, restore flex sizing, show splitter
+                consoleOutput.style.display = 'block';
+                consoleSection.style.flex = '';
+                consoleSection.style.minHeight = '';
+                consoleSection.style.height = '';
                 splitter.style.display = 'flex';
                 minimizeBtn.textContent = '−';
             } else {
-                consoleSection.style.display = 'none';
+                // Collapse — hide output, shrink section to header only, hide splitter
+                consoleOutput.style.display = 'none';
+                consoleSection.style.flex = 'none';
+                consoleSection.style.minHeight = '0';
+                consoleSection.style.height = 'auto';
                 splitter.style.display = 'none';
                 minimizeBtn.textContent = '+';
             }
         }
     }
 
+    // =========================================================
+    // Launch
+    // =========================================================
+
     launch(filePath = null, fileName = null) {
         const windowId = `elxacode-${Date.now()}`;
         
-        if (filePath && fileName) {
-            this.currentPath = filePath;
-            this.currentFile = fileName;
-        }
+        const windowContent = this.createElxaCodeInterface(windowId, fileName);
         
-        const windowContent = this.createElxaCodeInterface(windowId);
-        
-        const window = this.windowManager.createWindow(
+        const win = this.windowManager.createWindow(
             windowId,
-            `💻 ElxaCode - ${this.currentFile || 'Untitled'}`,
+            `${ElxaIcons.render('elxacode', 'ui')} ElxaCode - ${fileName || 'Untitled'}`,
             windowContent,
             { width: '800px', height: '600px', x: '50px', y: '50px' }
         );
         
-        this.setupEventHandlers(windowId);
+        // Per-window state: variables, file info, console history
         this.activeWindows.set(windowId, {
             variables: new Map(),
-            console: []
+            console: [],
+            currentFile: fileName || null,
+            currentPath: filePath || null
         });
         
-        // Load file if specified
-        if (this.currentFile && this.currentPath) {
-            this.loadFile(windowId);
+        this.setupEventHandlers(windowId);
+        
+        // Load file if specified, otherwise show welcome code
+        if (filePath && fileName) {
+            this.loadFileIntoEditor(windowId, filePath, fileName);
         } else {
-            // Set welcome code
             this.setWelcomeCode(windowId);
         }
         
         return windowId;
     }
 
-    createElxaCodeInterface(windowId) {
+    // =========================================================
+    // Interface
+    // =========================================================
+
+    createElxaCodeInterface(windowId, fileName) {
         return `
             <div class="elxacode-container" data-window-id="${windowId}">
                 <!-- Toolbar -->
                 <div class="elxacode-toolbar">
                     <div class="toolbar-group">
-                        <button class="toolbar-btn new-btn" title="New File">📄 New</button>
-                        <button class="toolbar-btn open-btn" title="Open File">📂 Open</button>
-                        <button class="toolbar-btn save-btn" title="Save File">💾 Save</button>
+                        <button class="toolbar-btn new-btn" title="New File" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('new-file')} New</button>
+                        <button class="toolbar-btn open-btn" title="Open File" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('open')} Open</button>
+                        <button class="toolbar-btn save-btn" title="Save File" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('save')} Save</button>
                     </div>
                     <div class="toolbar-group">
-                        <button class="toolbar-btn run-btn" title="Run Code">▶️ Run</button>
-                        <button class="toolbar-btn stop-btn" title="Stop" disabled>⏹️ Stop</button>
-                        <button class="toolbar-btn clear-btn" title="Clear Console">🗑️ Clear</button>
+                        <button class="toolbar-btn run-btn" title="Run Code" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('play')} Run</button>
+                        <button class="toolbar-btn stop-btn" title="Stop" disabled onmousedown="event.preventDefault()">${ElxaIcons.renderAction('stop')} Stop</button>
+                        <button class="toolbar-btn clear-btn" title="Clear Console" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('clear')} Clear</button>
                     </div>
                     <div class="toolbar-group">
-                        <span class="toolbar-text">ElxaCode v1.0 - For Young Coders! 🚀</span>
+                        <span class="toolbar-text">ElxaCode v1.0 - For Young Coders!</span>
                     </div>
                 </div>
 
@@ -138,7 +158,7 @@ class ElxaCodeProgram {
                         <div class="editor-header">
                             <div class="editor-tabs">
                                 <div class="editor-tab active">
-                                    <span class="tab-name">${this.currentFile || 'Untitled.elxa'}</span>
+                                    <span class="tab-name">${fileName || 'Untitled.elxa'}</span>
                                     <span class="tab-close">×</span>
                                 </div>
                             </div>
@@ -158,7 +178,7 @@ class ElxaCodeProgram {
                     <!-- Console -->
                     <div class="console-section" id="console-section-${windowId}">
                         <div class="console-header">
-                            <span>📟 ElxaCode Console</span>
+                            <span>${ElxaIcons.renderAction('terminal')} ElxaCode Console</span>
                             <div class="console-controls">
                                 <button class="console-btn minimize-console">−</button>
                             </div>
@@ -186,6 +206,10 @@ class ElxaCodeProgram {
         `;
     }
 
+    // =========================================================
+    // Event handlers
+    // =========================================================
+
     setupEventHandlers(windowId) {
         // Use setTimeout to ensure DOM is fully rendered
         setTimeout(() => {
@@ -201,7 +225,7 @@ class ElxaCodeProgram {
                 return;
             }
 
-            // Toolbar buttons with null checks
+            // Toolbar buttons
             const newBtn = container.querySelector('.new-btn');
             const openBtn = container.querySelector('.open-btn');
             const saveBtn = container.querySelector('.save-btn');
@@ -210,28 +234,30 @@ class ElxaCodeProgram {
             const clearBtn = container.querySelector('.clear-btn');
             
             if (newBtn) newBtn.addEventListener('click', () => this.newFile(windowId));
-            if (openBtn) openBtn.addEventListener('click', () => this.openFile(windowId));
+            if (openBtn) openBtn.addEventListener('click', () => this.showOpenDialog(windowId));
             if (saveBtn) saveBtn.addEventListener('click', () => this.saveFile(windowId));
             if (runBtn) runBtn.addEventListener('click', () => this.runCode(windowId));
             if (stopBtn) stopBtn.addEventListener('click', () => this.stopCode(windowId));
             if (clearBtn) clearBtn.addEventListener('click', () => this.clearConsole(windowId));
 
-            // Code editor with null checks
+            // Code editor
             const codeInput = container.querySelector(`#code-input-${windowId}`);
             if (codeInput) {
                 codeInput.addEventListener('input', () => this.updateLineNumbers(windowId));
                 codeInput.addEventListener('scroll', () => this.syncLineNumbers(windowId));
                 codeInput.addEventListener('keydown', (e) => this.handleKeyDown(e, windowId));
-                codeInput.addEventListener('input', () => this.applySyntaxHighlighting(windowId));
+                // Update cursor position on clicks and key presses
+                codeInput.addEventListener('click', () => this.updateStatusBar(windowId, codeInput));
+                codeInput.addEventListener('keyup', () => this.updateStatusBar(windowId, codeInput));
             }
 
-            // Console minimize with null check
+            // Console minimize
             const minimizeConsole = container.querySelector('.minimize-console');
             if (minimizeConsole) {
                 minimizeConsole.addEventListener('click', () => this.toggleConsole(windowId));
             }
 
-            // Tab close with null check
+            // Tab close
             const tabClose = container.querySelector('.tab-close');
             if (tabClose) {
                 tabClose.addEventListener('click', () => {
@@ -244,9 +270,12 @@ class ElxaCodeProgram {
 
             // Initial setup
             this.updateLineNumbers(windowId);
-            this.applySyntaxHighlighting(windowId);
-        }, 100); // 100ms delay to ensure DOM is ready
+        }, 100);
     }
+
+    // =========================================================
+    // Welcome code
+    // =========================================================
 
     setWelcomeCode(windowId) {
         setTimeout(() => {
@@ -279,10 +308,13 @@ else
     print "Keep coding!"
 end`;
                 this.updateLineNumbers(windowId);
-                this.applySyntaxHighlighting(windowId);
             }
-        }, 150); // Slightly longer delay for welcome code
+        }, 150);
     }
+
+    // =========================================================
+    // Editor utilities
+    // =========================================================
 
     updateLineNumbers(windowId) {
         const codeInput = document.querySelector(`#code-input-${windowId}`);
@@ -301,16 +333,6 @@ end`;
         
         if (codeInput && lineNumbers) {
             lineNumbers.scrollTop = codeInput.scrollTop;
-        }
-    }
-
-    applySyntaxHighlighting(windowId) {
-        // Note: Real syntax highlighting would require a more complex implementation
-        // For now, we'll use CSS classes and simple text styling
-        const codeInput = document.querySelector(`#code-input-${windowId}`);
-        if (codeInput) {
-            // Update status bar with cursor position
-            this.updateStatusBar(windowId, codeInput);
         }
     }
 
@@ -367,27 +389,35 @@ end`;
         }
     }
 
+    // =========================================================
+    // File operations
+    // =========================================================
+
     newFile(windowId) {
         const codeInput = document.querySelector(`#code-input-${windowId}`);
-        if (codeInput) {
-            codeInput.value = '';
-            this.currentFile = null;
-            this.currentPath = null;
-            this.updateWindowTitle(windowId, 'Untitled.elxa');
-            this.updateLineNumbers(windowId);
-            this.clearConsole(windowId);
+        if (!codeInput) return;
+        
+        codeInput.value = '';
+        
+        const state = this.getWindowState(windowId);
+        if (state) {
+            state.currentFile = null;
+            state.currentPath = null;
         }
+        
+        this.updateWindowTitle(windowId, 'Untitled.elxa');
+        this.updateLineNumbers(windowId);
+        this.clearConsole(windowId);
     }
 
-    openFile(windowId) {
-        // Create file browser dialog
+    showOpenDialog(windowId) {
         const dialog = document.createElement('div');
         dialog.className = 'file-browser-dialog';
         dialog.innerHTML = `
             <div class="dialog-overlay">
                 <div class="dialog-content">
                     <div class="dialog-header">
-                        <span>📂 Open ElxaCode File</span>
+                        <span>${ElxaIcons.renderAction('open')} Open ElxaCode File</span>
                         <button class="dialog-close">×</button>
                     </div>
                     <div class="dialog-body">
@@ -405,7 +435,7 @@ end`;
         
         document.body.appendChild(dialog);
         
-        // Populate with .elxa files
+        // Populate with .elxa and .txt files
         this.populateFileList(windowId, dialog);
         
         // Setup dialog events
@@ -416,7 +446,7 @@ end`;
             if (selected) {
                 const fileName = selected.dataset.filename;
                 const filePath = JSON.parse(selected.dataset.filepath);
-                this.loadFileFromPath(windowId, filePath, fileName);
+                this.loadFileIntoEditor(windowId, filePath, fileName);
             }
             dialog.remove();
         });
@@ -424,7 +454,7 @@ end`;
 
     populateFileList(windowId, dialog) {
         const fileList = dialog.querySelector(`#file-list-${windowId}`);
-        const folders = [['root', 'Desktop'], ['root', 'Documents']];
+        const folders = [['root', 'Documents', 'Code'], ['root', 'Documents'], ['root', 'Desktop']];
         
         folders.forEach(folderPath => {
             const files = this.fileSystem.listContents(folderPath);
@@ -436,7 +466,7 @@ end`;
                     fileItem.dataset.filepath = JSON.stringify(folderPath);
                     
                     fileItem.innerHTML = `
-                        <div class="file-icon">💻</div>
+                        <div class="file-icon">${ElxaIcons.getFileIcon(file.name, 'ui')}</div>
                         <div class="file-info">
                             <div class="file-name">${file.name}</div>
                             <div class="file-path">${folderPath.slice(1).join(' > ')}</div>
@@ -449,57 +479,161 @@ end`;
                         dialog.querySelector('.btn-open').disabled = false;
                     });
                     
+                    fileItem.addEventListener('dblclick', () => {
+                        this.loadFileIntoEditor(windowId, folderPath, file.name);
+                        dialog.remove();
+                    });
+                    
                     fileList.appendChild(fileItem);
                 }
             });
         });
     }
 
-    loadFileFromPath(windowId, filePath, fileName) {
+    /**
+     * Load a file into the editor of an existing window.
+     * Used by both the Open dialog and external launch (file manager).
+     */
+    loadFileIntoEditor(windowId, filePath, fileName) {
         const file = this.fileSystem.getFile(filePath, fileName);
-        if (file) {
-            setTimeout(() => {
-                const codeInput = document.querySelector(`#code-input-${windowId}`);
-                if (codeInput) {
-                    codeInput.value = file.content;
-                    this.currentFile = fileName;
-                    this.currentPath = filePath;
-                    this.updateWindowTitle(windowId, fileName);
-                    this.updateLineNumbers(windowId);
-                    this.applySyntaxHighlighting(windowId);
-                    
-                    this.addToConsole(windowId, `📂 Opened: ${fileName}`, 'info');
-                }
-            }, 100);
+        if (!file) {
+            this.addToConsole(windowId, `❌ File not found: ${fileName}`, 'error');
+            return;
         }
+        
+        setTimeout(() => {
+            const codeInput = document.querySelector(`#code-input-${windowId}`);
+            if (codeInput) {
+                codeInput.value = file.content || '';
+                
+                const state = this.getWindowState(windowId);
+                if (state) {
+                    state.currentFile = fileName;
+                    state.currentPath = [...filePath];
+                }
+                
+                this.updateWindowTitle(windowId, fileName);
+                this.updateLineNumbers(windowId);
+                
+                this.addToConsole(windowId, `📂 Opened: ${fileName}`, 'info');
+            }
+        }, 100);
     }
 
     saveFile(windowId) {
         const codeInput = document.querySelector(`#code-input-${windowId}`);
         if (!codeInput) return;
         
-        if (!this.currentFile) {
-            // Save As dialog
-            const fileName = prompt('Save as:', 'mycode.elxa');
-            if (fileName) {
-                this.currentFile = fileName;
-                this.currentPath = ['root', 'Desktop'];
-            } else {
-                return;
-            }
+        const state = this.getWindowState(windowId);
+        if (!state) return;
+        
+        if (!state.currentFile) {
+            // Show Save As dialog
+            this.showSaveAsDialog(windowId);
+            return;
         }
         
-        if (this.currentFile && this.currentPath) {
-            if (this.fileSystem.getFile(this.currentPath, this.currentFile)) {
-                this.fileSystem.updateFileContent(this.currentPath, this.currentFile, codeInput.value);
-            } else {
-                this.fileSystem.createFile(this.currentPath, this.currentFile, codeInput.value, 'elxa');
+        // Save to existing file
+        if (this.fileSystem.getFile(state.currentPath, state.currentFile)) {
+            this.fileSystem.updateFileContent(state.currentPath, state.currentFile, codeInput.value);
+        } else {
+            this.fileSystem.createFile(state.currentPath, state.currentFile, codeInput.value, 'elxa');
+        }
+        
+        this.updateWindowTitle(windowId, state.currentFile);
+        this.addToConsole(windowId, `💾 Saved: ${state.currentFile}`, 'success');
+    }
+
+    showSaveAsDialog(windowId) {
+        const state = this.getWindowState(windowId);
+        if (!state) return;
+        
+        const dialog = document.createElement('div');
+        dialog.className = 'file-browser-dialog';
+        dialog.innerHTML = `
+            <div class="dialog-overlay">
+                <div class="dialog-content">
+                    <div class="dialog-header">
+                        <span>${ElxaIcons.renderAction('save')} Save As</span>
+                        <button class="dialog-close">×</button>
+                    </div>
+                    <div class="dialog-body">
+                        <div class="save-form">
+                            <label>Filename:</label>
+                            <input type="text" class="filename-input" value="${state.currentFile || 'mycode.elxa'}" placeholder="Enter filename">
+                            <div class="save-location">Save to: Documents > Code</div>
+                        </div>
+                        <div class="dialog-actions">
+                            <button class="btn-cancel">Cancel</button>
+                            <button class="btn-open">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(dialog);
+        
+        const filenameInput = dialog.querySelector('.filename-input');
+        filenameInput.focus();
+        filenameInput.select();
+        
+        const doSave = () => {
+            const fileName = filenameInput.value.trim();
+            if (!fileName) {
+                ElxaUI.showMessage('Please enter a filename', 'warning');
+                return;
             }
             
-            this.updateWindowTitle(windowId, this.currentFile);
-            this.addToConsole(windowId, `💾 Saved: ${this.currentFile}`, 'success');
-        }
+            let finalName = fileName;
+            if (!finalName.includes('.')) {
+                finalName += '.elxa';
+            }
+            
+            const savePath = ['root', 'Documents', 'Code'];
+            const codeInput = document.querySelector(`#code-input-${windowId}`);
+            if (!codeInput) return;
+            
+            const existingFile = this.fileSystem.getFile(savePath, finalName);
+            
+            if (existingFile) {
+                ElxaUI.showConfirmDialog({
+                    title: `${ElxaIcons.renderAction('save')} Overwrite File`,
+                    message: `File "${finalName}" already exists. Overwrite it?`,
+                    confirmText: 'Overwrite',
+                    cancelText: 'Cancel',
+                    confirmClass: 'elxa-dialog-btn-danger'
+                }).then(confirmed => {
+                    if (confirmed) {
+                        this.fileSystem.updateFileContent(savePath, finalName, codeInput.value);
+                        state.currentFile = finalName;
+                        state.currentPath = savePath;
+                        this.updateWindowTitle(windowId, finalName);
+                        this.addToConsole(windowId, `💾 Saved: ${finalName}`, 'success');
+                        dialog.remove();
+                    }
+                });
+            } else {
+                this.fileSystem.createFile(savePath, finalName, codeInput.value, 'elxa');
+                state.currentFile = finalName;
+                state.currentPath = savePath;
+                this.updateWindowTitle(windowId, finalName);
+                this.addToConsole(windowId, `💾 Saved: ${finalName}`, 'success');
+                dialog.remove();
+            }
+        };
+        
+        dialog.querySelector('.dialog-close').addEventListener('click', () => dialog.remove());
+        dialog.querySelector('.btn-cancel').addEventListener('click', () => dialog.remove());
+        dialog.querySelector('.btn-open').addEventListener('click', doSave);
+        filenameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') doSave();
+        });
     }
+
+    // =========================================================
+    // Code execution
+    // =========================================================
 
     runCode(windowId) {
         const codeInput = document.querySelector(`#code-input-${windowId}`);
@@ -519,7 +653,7 @@ end`;
         this.addToConsole(windowId, '═'.repeat(50), 'separator');
         
         // Reset variables for this run
-        const windowState = this.activeWindows.get(windowId);
+        const windowState = this.getWindowState(windowId);
         if (windowState) {
             windowState.variables.clear();
         }
@@ -595,7 +729,7 @@ end`;
     }
 
     executePseudoCode(line, allLines, currentIndex, windowId) {
-        const windowState = this.activeWindows.get(windowId);
+        const windowState = this.getWindowState(windowId);
         const tokens = this.tokenize(line);
         
         if (tokens.length === 0) return { skip: false };
@@ -626,7 +760,6 @@ end`;
                 return this.executeIf(tokens.slice(1), allLines, currentIndex, windowId, windowState);
                 
             default:
-                // Try to evaluate as expression or unknown command
                 this.addToConsole(windowId, `❓ Unknown command: ${command}`, 'warning');
         }
         
@@ -677,13 +810,10 @@ end`;
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
             
-            if (token === '+') {
-                // Skip concatenation operator
-                continue;
-            }
+            if (token === '+') continue;
             
             // Check if it's a variable
-            if (windowState.variables.has(token)) {
+            if (windowState && windowState.variables.has(token)) {
                 const value = windowState.variables.get(token);
                 if (Array.isArray(value)) {
                     output += value.join(', ');
@@ -694,7 +824,6 @@ end`;
                 output += token;
             }
             
-            // Add space between tokens (except for the last one)
             if (i < tokens.length - 1 && tokens[i + 1] !== '+') {
                 output += ' ';
             }
@@ -745,11 +874,9 @@ end`;
         
         // Check if it's a list
         if (tokens[2] === '[' && tokens[tokens.length - 1] === ']') {
-            // Parse list
             const listContent = tokens.slice(3, -1).join(' ');
             value = listContent.split(',').map(item => item.trim());
         } else {
-            // Regular value
             value = tokens.slice(2).join(' ');
         }
         
@@ -773,7 +900,6 @@ end`;
         const value = windowState.variables.get(varName);
         
         if (Array.isArray(value)) {
-            // Check if requesting specific index
             if (tokens.length > 1) {
                 const index = parseInt(tokens[1]);
                 if (index >= 0 && index < value.length) {
@@ -790,7 +916,6 @@ end`;
     }
 
     executeIf(tokens, allLines, currentIndex, windowId, windowState) {
-        // Simple if condition parsing
         if (tokens.length < 3) {
             this.addToConsole(windowId, '❌ If syntax: if variable == value', 'error');
             return { skip: false };
@@ -863,23 +988,31 @@ end`;
         this.addToConsole(windowId, '⏹️ Code execution stopped', 'warning');
     }
 
+    // =========================================================
+    // Console
+    // =========================================================
+
     clearConsole(windowId) {
-        const console = document.querySelector(`#console-${windowId}`);
-        if (console) {
-            console.innerHTML = '<div class="console-line welcome">Console cleared! Ready for new code! 🚀</div>';
+        const consoleEl = document.querySelector(`#console-${windowId}`);
+        if (consoleEl) {
+            consoleEl.innerHTML = '<div class="console-line welcome">Console cleared! Ready for new code! 🚀</div>';
         }
     }
 
     addToConsole(windowId, message, type = 'output') {
-        const console = document.querySelector(`#console-${windowId}`);
-        if (console) {
+        const consoleEl = document.querySelector(`#console-${windowId}`);
+        if (consoleEl) {
             const line = document.createElement('div');
             line.className = `console-line ${type}`;
             line.textContent = message;
-            console.appendChild(line);
-            console.scrollTop = console.scrollHeight;
+            consoleEl.appendChild(line);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
         }
     }
+
+    // =========================================================
+    // UI helpers
+    // =========================================================
 
     updateRunButtons(windowId, isRunning) {
         const windowElement = document.getElementById(`window-${windowId}`);
@@ -897,15 +1030,15 @@ end`;
 
     updateWindowTitle(windowId, fileName) {
         const windowElement = document.getElementById(`window-${windowId}`);
-        if (windowElement) {
-            const titleElement = windowElement.querySelector('.window-title');
-            if (titleElement) {
-                titleElement.textContent = `💻 ElxaCode - ${fileName}`;
-            }
+        if (!windowElement) return;
+        
+        const titleElement = windowElement.querySelector('.window-title');
+        if (titleElement) {
+            titleElement.innerHTML = `${ElxaIcons.render('elxacode', 'ui')} ElxaCode - ${fileName}`;
         }
         
         // Update tab name
-        const container = windowElement?.querySelector('.elxacode-container');
+        const container = windowElement.querySelector('.elxacode-container');
         if (container) {
             const tabName = container.querySelector('.tab-name');
             if (tabName) {
@@ -915,9 +1048,12 @@ end`;
     }
 
     setupConsoleResizer(windowId) {
-        const splitter = document.querySelector(`#console-splitter-${windowId}`);
-        const codeEditor = document.querySelector(`#code-editor-${windowId}`);
-        const consoleSection = document.querySelector(`#console-section-${windowId}`);
+        const windowElement = document.getElementById(`window-${windowId}`);
+        if (!windowElement) return;
+        
+        const splitter = windowElement.querySelector(`#console-splitter-${windowId}`);
+        const codeEditor = windowElement.querySelector(`#code-editor-${windowId}`);
+        const consoleSection = windowElement.querySelector(`#console-section-${windowId}`);
         
         if (!splitter || !codeEditor || !consoleSection) return;
         
@@ -930,7 +1066,6 @@ end`;
             isResizing = true;
             startY = e.clientY;
             
-            // Get current heights
             const editorRect = codeEditor.getBoundingClientRect();
             const consoleRect = consoleSection.getBoundingClientRect();
             startEditorHeight = editorRect.height;
@@ -939,7 +1074,6 @@ end`;
             document.addEventListener('mousemove', doResize);
             document.addEventListener('mouseup', stopResize);
             
-            // Add resizing class for visual feedback
             splitter.classList.add('resizing');
             document.body.style.cursor = 'ns-resize';
         };
@@ -951,14 +1085,11 @@ end`;
             const newEditorHeight = startEditorHeight + deltaY;
             const newConsoleHeight = startConsoleHeight - deltaY;
             
-            // Minimum heights to prevent sections from disappearing
             const minHeight = 100;
             
             if (newEditorHeight >= minHeight && newConsoleHeight >= minHeight) {
                 codeEditor.style.height = newEditorHeight + 'px';
                 consoleSection.style.height = newConsoleHeight + 'px';
-                
-                // Remove flex properties to use fixed heights
                 codeEditor.style.flex = 'none';
                 consoleSection.style.flex = 'none';
             }
@@ -974,27 +1105,18 @@ end`;
         };
         
         splitter.addEventListener('mousedown', startResize);
-        
-        // Set initial reasonable heights
-        setTimeout(() => {
-            const container = windowElement.querySelector('.elxacode-container');
-            const mainHeight = container.querySelector('.elxacode-main').getBoundingClientRect().height;
-            const toolbarHeight = 60; // Approximate toolbar + header height
-            const availableHeight = mainHeight - toolbarHeight;
-            
-            const editorHeight = Math.max(200, availableHeight * 0.6); // 60% for editor
-            const consoleHeight = Math.max(150, availableHeight * 0.4); // 40% for console
-            
-            codeEditor.style.height = editorHeight + 'px';
-            consoleSection.style.height = consoleHeight + 'px';
-            codeEditor.style.flex = 'none';
-            consoleSection.style.flex = 'none';
-        }, 200);
     }
 
-    // Method to open a file from file manager
+    // =========================================================
+    // Entry point for file manager — opens a NEW window with the file
+    // Called as: elxaOS.programs.elxacode.openFile(filename, path)
+    // =========================================================
+
     openFile(fileName, filePath) {
-        const windowId = this.launch(filePath, fileName);
-        return windowId;
+        return this.launch(filePath, fileName);
     }
 }
+
+// NOTE: All ElxaCode styles are in css/programs/elxacode.css.
+// The editor/console use a dark VS Code–style theme intentionally.
+// Toolbar and dialog chrome use OS theme variables.

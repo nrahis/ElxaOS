@@ -100,6 +100,8 @@
 }
 
 .user-avatar {
+    width: 48px;
+    height: 48px;
     font-size: 32px;
     margin-bottom: 4px;
 }
@@ -132,6 +134,8 @@
 }
 
 .selected-avatar {
+    width: 32px;
+    height: 32px;
     font-size: 24px;
 }
 
@@ -385,3 +389,517 @@
 .save-btn:active {
     border: 1px inset #4CAF50;
 }
+
+/* =================================
+   LOGIN SCREEN BUTTONS — pointer-events
+================================= */
+.hint-button .mdi,
+.guest-button .mdi,
+.new-user-button .mdi,
+.login-btn .mdi,
+.login-btn-primary .mdi,
+.login-btn-warning .mdi {
+    pointer-events: none;
+}
+
+.new-user-button {
+    padding: 4px 8px;
+    font-size: 10px;
+    border: 1px outset #c0c0c0;
+    background: #f0f0f0;
+    cursor: pointer;
+    border-radius: 2px;
+    color: #333;
+}
+
+.new-user-button:hover {
+    background: #e0e0e0;
+}
+
+.new-user-button:active {
+    border: 1px inset #c0c0c0;
+    background: #d0d0d0;
+}
+
+/* =================================
+   USER SETTINGS DIALOG
+================================= */
+.user-settings-dialog {
+    min-width: 340px;
+}
+
+.user-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.avatar-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.avatar-input {
+    width: 40px;
+    padding: 4px;
+    border: 1px inset var(--windowBorder);
+    text-align: center;
+    font-size: 16px;
+    background: var(--windowBg);
+    color: var(--menuText);
+}
+
+.avatar-options {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+}
+
+.avatar-option {
+    cursor: pointer;
+    padding: 4px;
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    background: var(--buttonBg, #e0e0e0);
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    transition: background 0.1s, border 0.1s;
+    border-radius: 2px;
+}
+
+.avatar-option:hover {
+    background: var(--buttonHoverBg, #f0f0f0);
+}
+
+.avatar-option.selected {
+    background: var(--menuHoverBg, #b0d0ff);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    color: var(--menuHoverText, #000);
+}
+
+.user-stats {
+    border: 1px inset var(--windowBorder);
+    background: var(--menuBg);
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.user-stats-title {
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 6px;
+    color: var(--menuText);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.user-stats-title .mdi {
+    pointer-events: none;
+}
+
+.stat-item {
+    font-size: 11px;
+    color: var(--menuText);
+    padding: 2px 0;
+}
+
+/* =================================
+   LOGIN SCREEN DIALOGS
+   (Version Edit, Create User)
+   Hardcoded Win95 colors because
+   these appear before login/theming
+================================= */
+.login-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-dialog-box {
+    background: #c0c0c0;
+    border: 3px outset #c0c0c0;
+    width: 420px;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.login-dialog-header {
+    background: linear-gradient(90deg, #0000ff, #008080);
+    color: white;
+    padding: 6px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.login-dialog-title {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.login-dialog-title .mdi {
+    pointer-events: none;
+}
+
+.login-dialog-close-btn {
+    cursor: pointer;
+    padding: 2px 4px;
+    border: 1px outset #c0c0c0;
+    background: #c0c0c0;
+    color: black;
+    font-size: 10px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-dialog-close-btn:hover {
+    background: #d0d0d0;
+}
+
+.login-dialog-close-btn:active {
+    border: 1px inset #c0c0c0;
+    background: #b0b0b0;
+}
+
+.login-dialog-close-btn .mdi {
+    pointer-events: none;
+    font-size: 12px;
+}
+
+.login-dialog-body {
+    padding: 16px;
+    font-size: 11px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.login-dialog-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #808080;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    background: #c0c0c0;
+}
+
+.login-dialog-hint {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #666;
+    font-size: 10px;
+}
+
+.login-dialog-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+/* =================================
+   LOGIN DIALOG FORM ELEMENTS
+================================= */
+.login-form-group {
+    margin-bottom: 12px;
+}
+
+.login-form-label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.login-form-input {
+    width: calc(100% - 8px);
+    padding: 6px 4px;
+    border: 2px inset #c0c0c0;
+    font-family: 'MS Sans Serif', sans-serif;
+    font-size: 11px;
+    background: white;
+    color: #000;
+}
+
+.login-form-input:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.login-form-help {
+    font-size: 9px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.login-avatar-input {
+    width: 40px;
+    padding: 4px;
+    border: 2px inset #c0c0c0;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 6px;
+    display: block;
+    background: white;
+}
+
+.login-avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    max-height: 80px;
+    overflow-y: auto;
+    border: 1px inset #c0c0c0;
+    padding: 4px;
+    background: white;
+}
+
+/* Avatar options in login dialogs — unthemed */
+.login-dialog-box .avatar-option {
+    background: #e0e0e0;
+    border: 1px outset #c0c0c0;
+}
+
+.login-dialog-box .avatar-option:hover {
+    background: #f0f0f0;
+}
+
+.login-dialog-box .avatar-option.selected {
+    background: #b0d0ff;
+    border: 1px inset #c0c0c0;
+}
+
+/* =================================
+   LOGIN DIALOG BUTTONS
+================================= */
+.login-btn {
+    padding: 6px 16px;
+    border: 2px outset #c0c0c0;
+    background: #c0c0c0;
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 2px;
+    color: #000;
+}
+
+.login-btn:hover {
+    background: #d0d0d0;
+}
+
+.login-btn:active {
+    border: 2px inset #c0c0c0;
+    background: #b0b0b0;
+}
+
+.login-btn-primary {
+    padding: 6px 16px;
+    border: 2px outset #4CAF50;
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 11px;
+    border-radius: 2px;
+}
+
+.login-btn-primary:hover {
+    background: linear-gradient(to bottom, #5CBF60, #4CAF50);
+}
+
+.login-btn-primary:active {
+    border: 2px inset #4CAF50;
+}
+
+.login-btn-warning {
+    padding: 6px 16px;
+    border: 2px outset #ff8800;
+    background: linear-gradient(to bottom, #ff8800, #ff6600);
+    color: white;
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 2px;
+}
+
+.login-btn-warning:hover {
+    background: linear-gradient(to bottom, #ff9922, #ff7700);
+}
+
+.login-btn-warning:active {
+    border: 2px inset #ff8800;
+}
+
+/* =================================
+   VERSION PREVIEW
+================================= */
+.version-preview-box {
+    border: 1px inset #c0c0c0;
+    background: #f8f8f8;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 2px;
+}
+
+.version-preview-label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 11px;
+}
+
+.version-preview-content {
+    font-size: 12px;
+    color: #0066cc;
+    text-align: center;
+    background: white;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+.preview-build {
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+}
+
+/* =================================
+   AVATAR SPRITE SYSTEM
+   ================================= */
+
+/* Avatar image rendering */
+.avatar-sprite {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Emoji fallback rendering (same sizing as sprite) */
+.avatar-emoji {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0.6em;
+    line-height: 1;
+}
+
+/* --- Avatar Picker (used in Create User + User Settings dialogs) --- */
+
+.avatar-picker-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.avatar-picker-label {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+/* Preview of currently selected avatar */
+.avatar-picker-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.avatar-picker-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    overflow: hidden;
+    flex-shrink: 0;
+    font-size: 48px;
+}
+
+.avatar-picker-preview-name {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Sprite icon grid */
+.avatar-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+}
+
+.avatar-picker-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.15s, transform 0.15s;
+    font-size: 40px;
+}
+
+.avatar-picker-option:hover {
+    border-color: #5b9bd5;
+    transform: scale(1.1);
+}
+
+.avatar-picker-option.selected {
+    border-color: #2a6cb6;
+    box-shadow: 0 0 0 2px rgba(42, 108, 182, 0.3);
+}
+
+/* Custom emoji input row */
+.avatar-picker-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.avatar-picker-custom-label {
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.avatar-picker-custom-input {
+    width: 42px;
+    height: 32px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.avatar-picker-custom-input:focus {
+    border-color: #5b9bd5;
+    outline: none;
+}
+

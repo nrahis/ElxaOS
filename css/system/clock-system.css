@@ -132,6 +132,11 @@
     background: var(--buttonActiveBg, linear-gradient(to bottom, #c0c0c0, #dfdfdf));
 }
 
+/* Prevent icon spans from stealing clicks */
+.clock-system .mdi {
+    pointer-events: none;
+}
+
 /* =================================
    STOPWATCH SECTION
 ================================= */
@@ -746,7 +751,7 @@
    EVENT MODAL
 ================================= */
 .event-modal {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -755,7 +760,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: 100;
 }
 
 .event-modal-content {
@@ -776,6 +781,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.event-modal-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--menuHoverText, white);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.event-modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+.event-modal-close-btn .mdi {
+    pointer-events: none;
 }
 
 .event-modal-body {
@@ -907,6 +930,22 @@
     border-radius: 2px;
 }
 
+.event-control-btn .mdi {
+    pointer-events: none;
+}
+
+.no-events {
+    text-align: center;
+    color: var(--menuText, #666);
+    font-style: italic;
+    padding: 12px;
+}
+
+.event-indicator-overflow {
+    font-size: 8px;
+    color: var(--titlebarBg, #ff6b35);
+}
+
 /* =================================
    WORLD CLOCK PANEL
 ================================= */
@@ -1001,80 +1040,7 @@
     border: 1px inset var(--titlebarBg, #32cd32);
 }
 
-/* =================================
-   NOTIFICATIONS
-================================= */
-.clock-notification {
-    position: fixed;
-    top: 60px;
-    right: 20px;
-    background: var(--menuBg, white);
-    border: 2px outset var(--windowBorder, #c0c0c0);
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-    z-index: 9999;
-    min-width: 250px;
-    max-width: 400px;
-    border-radius: 4px;
-    animation: slideInRight 0.3s ease-out;
-}
-
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.clock-notification.timer {
-    border-color: var(--titlebarBg, #ff4500);
-    background: var(--systemTrayBg, linear-gradient(to bottom, #fff5ee, #ffeee6));
-}
-
-.clock-notification.alarm {
-    border-color: #ff0000;
-    background: linear-gradient(to bottom, #fff0f0, #ffe6e6);
-    animation: pulseAlarm 0.5s ease-in-out infinite alternate;
-}
-
-@keyframes pulseAlarm {
-    from { transform: scale(1); }
-    to { transform: scale(1.05); }
-}
-
-.notification-title {
-    background: var(--titlebarBg, linear-gradient(to bottom, #4080ff, #0040ff));
-    color: var(--menuHoverText, white);
-    padding: 6px 12px;
-    font-weight: bold;
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.notification-message {
-    padding: 12px;
-    font-size: 11px;
-    color: var(--menuText, #333);
-}
-
-.notification-close {
-    background: transparent;
-    border: none;
-    color: var(--menuHoverText, white);
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 0 4px;
-}
-
-.notification-close:hover {
-    background: rgba(255,255,255,0.2);
-}
+/* Notifications now use ElxaUI.showMessage() — custom notification CSS removed */
 
 /* =================================
    RESPONSIVE DESIGN

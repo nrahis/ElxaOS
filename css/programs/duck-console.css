@@ -2,6 +2,9 @@
    DUCK CONSOLE STYLING
    ================================= */
 
+/* Pointer-events: prevent icon spans from eating clicks */
+.duck-console .mdi { pointer-events: none; }
+
 .duck-console {
     display: flex;
     flex-direction: column;
@@ -64,6 +67,9 @@
     background: rgba(255, 0, 0, 0.1);
     border: 1px solid #ff0000;
 }
+
+/* Override theme icon color — inherit from status parent */
+.network-status .elxa-icon-ui { color: inherit; }
 
 /* Console Output Area */
 .console-output {

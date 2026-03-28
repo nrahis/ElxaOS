@@ -64,17 +64,50 @@
 }
 
 /* Close Button Styling */
-.roblox-close {
-    color: #666;
+.roblox-close,
+.roblox-notif-close {
+    color: #999;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
     transition: color 0.2s ease;
     user-select: none;
+    margin-left: auto; /* always push to far right in flex headers */
+    flex-shrink: 0;
+    line-height: 1;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
 }
 
-.roblox-close:hover {
+.roblox-close:hover,
+.roblox-notif-close:hover {
     color: #ff4444;
+    background: rgba(255, 68, 68, 0.15);
+}
+
+/* Close on dark / colored headers — make it visible */
+.roblox-chat-header .roblox-close,
+.roblox-server-header .roblox-close,
+.roblox-notification .roblox-notif-close,
+.roblox-friend-header .roblox-close,
+.roblox-invite-header .roblox-close,
+.roblox-trade-header .roblox-close,
+.roblox-popup-header .roblox-close {
+    color: rgba(255, 255, 255, 0.7);
+}
+.roblox-chat-header .roblox-close:hover,
+.roblox-server-header .roblox-close:hover,
+.roblox-notification .roblox-notif-close:hover,
+.roblox-friend-header .roblox-close:hover,
+.roblox-invite-header .roblox-close:hover,
+.roblox-trade-header .roblox-close:hover,
+.roblox-popup-header .roblox-close:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
 }
 
 /* Chat Bubble Styling */
@@ -191,9 +224,7 @@
     opacity: 0.9;
 }
 
-.roblox-notif-close {
-    padding: 4px;
-}
+/* .roblox-notif-close merged into unified close button rules above */
 
 /* Server Message Styling */
 .roblox-server-msg {

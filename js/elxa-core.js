@@ -35,6 +35,10 @@ class WindowManager {
         this.activeWindow = null;
         this.nextZIndex = 100;
         this.dragData = null;
+
+        // Store bound references so addEventListener/removeEventListener use the same function
+        this._boundHandleDrag = this.handleDrag.bind(this);
+        this._boundStopDrag = this.stopDrag.bind(this);
     }
 
     createWindow(id, title, content, options = {}) {
@@ -134,8 +138,8 @@ class WindowManager {
             startTop: rect.top
         };
 
-        document.addEventListener('mousemove', this.handleDrag.bind(this));
-        document.addEventListener('mouseup', this.stopDrag.bind(this));
+        document.addEventListener('mousemove', this._boundHandleDrag);
+        document.addEventListener('mouseup', this._boundStopDrag);
     }
 
     handleDrag(e) {
@@ -151,8 +155,8 @@ class WindowManager {
 
     stopDrag() {
         this.dragData = null;
-        document.removeEventListener('mousemove', this.handleDrag.bind(this));
-        document.removeEventListener('mouseup', this.stopDrag.bind(this));
+        document.removeEventListener('mousemove', this._boundHandleDrag);
+        document.removeEventListener('mouseup', this._boundStopDrag);
     }
 
     showWindow(id) {
@@ -280,7 +284,7 @@ class WindowManager {
         const button = document.createElement('div');
         button.className = 'taskbar-program';
         button.id = `taskbar-${id}`;
-        button.textContent = title;
+        button.innerHTML = title;
         
         button.addEventListener('click', () => {
             const windowData = this.windows.get(id);
@@ -338,7 +342,7 @@ class FileSystem {
             }
         };
         this.currentPath = ['root'];
-        this.loadFromStorage();
+        this.ready = false; // true after async load completes
     }
 
     createFile(path, name, content, type = 'txt') {
@@ -480,35 +484,60 @@ class FileSystem {
     }
 
     saveToStorage() {
-        try {
-            localStorage.setItem('elxaOS-files', JSON.stringify(this.root));
-            console.log('💾 FileSystem saved to localStorage');
-        } catch (error) {
-            console.error('❌ Failed to save to localStorage:', error);
-        }
+        // Fire-and-forget async save to IndexedDB.
+        // The in-memory tree is always the source of truth.
+        elxaDB.put('elxaOS-files', this.root).then(() => {
+            console.log('💾 FileSystem saved to IndexedDB');
+        }).catch(error => {
+            console.error('❌ Failed to save to IndexedDB:', error);
+        });
     }
 
-    loadFromStorage() {
+    // Async load — call once at startup, before using the filesystem.
+    // Automatically migrates from localStorage on first run.
+    async loadFromStorage() {
         try {
-            const saved = localStorage.getItem('elxaOS-files');
+            // Try IndexedDB first
+            const saved = await elxaDB.get('elxaOS-files');
             if (saved) {
-                this.root = JSON.parse(saved);
-                
-                // FIX: Convert date strings back to Date objects
+                this.root = saved;
+                // IndexedDB preserves Date objects via structured clone,
+                // but run restore just in case of migrated data
                 this.restoreDateObjects(this.root);
-                
-                console.log('📂 FileSystem loaded from localStorage');
+                console.log('📂 FileSystem loaded from IndexedDB');
+                this.ready = true;
+                return;
+            }
+
+            // No IndexedDB data — check localStorage for migration
+            const legacy = localStorage.getItem('elxaOS-files');
+            if (legacy) {
+                this.root = JSON.parse(legacy);
+                this.restoreDateObjects(this.root);
+                console.log('📂 FileSystem migrated from localStorage → IndexedDB');
+
+                // Save to IndexedDB so future loads are fast
+                await elxaDB.put('elxaOS-files', this.root);
+
+                // Remove from localStorage to free space
+                localStorage.removeItem('elxaOS-files');
+                console.log('🗑️ Cleared legacy localStorage filesystem data');
             } else {
                 console.log('📂 No saved FileSystem found, using defaults');
             }
+
+            this.ready = true;
         } catch (error) {
-            console.error('❌ Failed to load from localStorage:', error);
+            console.error('❌ Failed to load FileSystem:', error);
+            // Fall back to defaults (already set in constructor)
+            this.ready = true;
         }
     }
 
-    // NEW METHOD: Clear all data (for testing)
-    clearStorage() {
-        localStorage.removeItem('elxaOS-files');
+    // Clear all filesystem data
+    async clearStorage() {
+        await elxaDB.delete('elxaOS-files');
+        localStorage.removeItem('elxaOS-files'); // clean up legacy too
         console.log('🗑️ FileSystem storage cleared');
     }
 
@@ -558,8 +587,4 @@ class FileSystem {
         return 'Unknown';
     }
 
-    clearStorage() {
-        localStorage.removeItem('elxaOS-files');
-        console.log('🗑️ FileSystem storage cleared');
-    }
 }

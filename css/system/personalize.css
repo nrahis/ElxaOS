@@ -800,3 +800,41 @@
 .dark-theme .paint-file-location {
     opacity: 0.6;
 }
+
+/* =================================
+   POINTER-EVENTS ON ICON SPANS
+================================= */
+.theme-dialog .mdi,
+.import-dialog .mdi,
+.paint-browser-dialog .mdi,
+.context-menu .mdi,
+.apply-btn .mdi,
+.reset-btn .mdi,
+.dialog-button .mdi,
+.dialog-close .mdi,
+.import-image-btn .mdi,
+.browse-paint-btn .mdi,
+.theme-tab .mdi,
+.paint-file-icon .mdi {
+    pointer-events: none;
+}
+
+.asset-badge {
+    font-size: 7px;
+    background: var(--menuHoverBg, #316AC5);
+    color: var(--menuHoverText, white);
+    padding: 1px 3px;
+    border-radius: 2px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-weight: bold;
+}
+
+.wallpaper-stats {
+    text-align: center;
+    font-size: 10px;
+    color: var(--menuText);
+    opacity: 0.7;
+    margin-bottom: 8px;
+}

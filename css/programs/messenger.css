@@ -1,5 +1,6 @@
 /* =================================
-   SNAKESIA MESSENGER - AIM RETRO STYLES
+   SNAKESIA MESSENGER - HYBRID THEME
+   Chrome follows OS theme, chat area stays retro/customizable
 ================================= */
 
 .messenger-container {
@@ -7,23 +8,27 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: #c0c0c0;
+    background: var(--windowBg);
     font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 11px;
     overflow: hidden;
-    border: 2px outset #c0c0c0;
+}
+
+/* pointer-events: none on icon spans inside buttons */
+.messenger-container .mdi {
+    pointer-events: none;
 }
 
 /* =================================
-   SETUP MODAL
+   SETUP MODAL (THEMED CHROME)
 ================================= */
 .messenger-setup-modal {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,10 +36,10 @@
 }
 
 .messenger-setup-content {
-    background: #c0c0c0;
+    background: var(--windowBg);
     padding: 20px;
-    border: 2px outset #c0c0c0;
-    color: black;
+    border: 2px outset var(--windowBorder);
+    color: var(--menuText);
     max-width: 450px;
     width: 90%;
     font-family: 'MS Sans Serif', Arial, sans-serif;
@@ -45,7 +50,7 @@
     margin: 0 0 15px 0;
     font-size: 12px;
     font-weight: bold;
-    color: #000080;
+    color: var(--menuText);
     text-align: center;
 }
 
@@ -70,20 +75,20 @@
 .messenger-form-group label {
     font-weight: bold;
     font-size: 11px;
-    color: #000;
+    color: var(--menuText);
 }
 
 .messenger-input, .messenger-textarea, .messenger-select {
     padding: 3px 5px;
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder);
     font-size: 11px;
-    background: white;
-    color: #000;
+    background: var(--windowBg);
+    color: var(--menuText);
     font-family: 'MS Sans Serif', Arial, sans-serif;
 }
 
 .messenger-input:focus, .messenger-textarea:focus, .messenger-select:focus {
-    outline: 1px dotted #000;
+    outline: 1px dotted var(--menuText);
     outline-offset: -2px;
 }
 
@@ -95,7 +100,8 @@
 
 .messenger-form-group small {
     font-size: 10px;
-    color: #666;
+    color: var(--menuText);
+    opacity: 0.7;
 }
 
 .messenger-setup-actions {
@@ -103,28 +109,32 @@
     text-align: center;
 }
 
+/* =================================
+   BUTTONS (THEMED)
+================================= */
 .messenger-btn {
     padding: 4px 12px;
-    border: 2px outset #c0c0c0;
+    border: 2px outset var(--windowBorder);
     font-size: 11px;
     font-weight: normal;
     cursor: pointer;
-    background: #c0c0c0;
-    color: black;
+    background: var(--buttonBg);
+    color: var(--menuText);
     font-family: 'MS Sans Serif', Arial, sans-serif;
 }
 
 .messenger-btn:hover {
-    background: #d4d0c8;
+    background: var(--buttonHoverBg);
 }
 
 .messenger-btn:active {
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder);
+    background: var(--buttonActiveBg);
 }
 
 .messenger-btn-primary {
-    background: #c0c0c0;
-    color: black;
+    background: var(--buttonBg);
+    color: var(--menuText);
     font-weight: bold;
 }
 
@@ -138,21 +148,21 @@
 }
 
 /* =================================
-   SIDEBAR (BUDDY LIST)
+   SIDEBAR (THEMED CHROME)
 ================================= */
 .messenger-sidebar {
     width: 200px;
-    background: #c0c0c0;
-    border-right: 2px inset #c0c0c0;
+    background: var(--windowBg);
+    border-right: 2px inset var(--windowBorder);
     display: flex;
     flex-direction: column;
-    color: black;
+    color: var(--menuText);
 }
 
 .messenger-header {
     padding: 8px;
-    background: #000080;
-    color: white;
+    background: var(--titlebarBg);
+    color: var(--titlebarText);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -169,13 +179,11 @@
 .messenger-user-avatar {
     width: 16px;
     height: 16px;
-    background: white;
-    border: 1px inset #c0c0c0;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 10px;
-    color: black;
+    color: inherit;
 }
 
 .messenger-user-avatar img {
@@ -206,12 +214,12 @@
 }
 
 .messenger-icon-btn {
-    width: 16px;
-    height: 16px;
-    background: #c0c0c0;
-    border: 1px outset #c0c0c0;
-    color: black;
-    font-size: 9px;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: inherit;
+    font-size: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -219,21 +227,22 @@
 }
 
 .messenger-icon-btn:hover {
-    background: #d4d0c8;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px outset rgba(255, 255, 255, 0.3);
 }
 
 .messenger-icon-btn:active {
-    border: 1px inset #c0c0c0;
+    border: 1px inset rgba(255, 255, 255, 0.3);
 }
 
 /* =================================
-   CONTACTS (BUDDY LIST)
+   CONTACTS (THEMED CHROME)
 ================================= */
 .messenger-contacts {
     flex: 1;
     overflow-y: auto;
-    background: white;
-    border: 2px inset #c0c0c0;
+    background: var(--windowBg);
+    border: 2px inset var(--windowBorder);
     margin: 4px;
 }
 
@@ -241,9 +250,9 @@
     padding: 4px 8px;
     font-weight: bold;
     font-size: 11px;
-    background: #c0c0c0;
-    border-bottom: 1px solid #808080;
-    color: black;
+    background: var(--windowBg);
+    border-bottom: 1px solid var(--windowBorder);
+    color: var(--menuText);
 }
 
 .messenger-contact-list {
@@ -258,29 +267,30 @@
     cursor: pointer;
     border: 1px solid transparent;
     font-size: 11px;
+    color: var(--menuText);
 }
 
 .messenger-contact-item:hover {
-    background: #316ac5;
-    color: white;
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
 }
 
 .messenger-contact-item.active {
-    background: #0a246a;
-    color: white;
+    background: var(--titlebarBg);
+    color: var(--titlebarText);
 }
 
 .messenger-contact-avatar {
     width: 16px;
     height: 16px;
-    background: #c0c0c0;
-    border: 1px inset #c0c0c0;
+    background: var(--windowBg);
+    border: 1px inset var(--windowBorder);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 10px;
     margin-right: 6px;
-    color: black;
+    color: var(--menuText);
     overflow: hidden;
 }
 
@@ -321,14 +331,14 @@
 }
 
 /* =================================
-   CHAT AREA
+   CHAT AREA (THEMED CHROME, RETRO CONTENT)
 ================================= */
 .messenger-chat-area {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #c0c0c0;
-    border: 2px inset #c0c0c0;
+    background: var(--windowBg);
+    border: 2px inset var(--windowBorder);
     margin: 4px 4px 4px 0;
 }
 
@@ -339,9 +349,9 @@
     justify-content: center;
     height: 100%;
     text-align: center;
-    color: #000;
-    background: white;
-    border: 2px inset #c0c0c0;
+    color: var(--menuText);
+    background: var(--windowBg);
+    border: 2px inset var(--windowBorder);
     margin: 4px;
 }
 
@@ -352,7 +362,7 @@
 
 .messenger-welcome h3 {
     margin: 0 0 8px 0;
-    color: #000080;
+    color: var(--menuText);
     font-size: 12px;
     font-weight: bold;
 }
@@ -363,17 +373,17 @@
 }
 
 .messenger-welcome em {
-    color: #800000;
     font-style: italic;
+    opacity: 0.7;
 }
 
 /* =================================
-   CHAT HEADER
+   CHAT HEADER (THEMED)
 ================================= */
 .messenger-chat-header {
     padding: 6px 8px;
-    background: #000080;
-    color: white;
+    background: var(--titlebarBg);
+    color: var(--titlebarText);
     display: flex;
     align-items: center;
     font-size: 11px;
@@ -389,13 +399,13 @@
 .messenger-chat-avatar {
     width: 24px;
     height: 24px;
-    background: white;
-    border: 1px inset #c0c0c0;
+    background: var(--windowBg);
+    border: 1px inset var(--windowBorder);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
-    color: black;
+    color: var(--menuText);
     overflow: hidden;
 }
 
@@ -422,7 +432,7 @@
 }
 
 /* =================================
-   MESSAGES
+   MESSAGES (RETRO — user-customizable)
 ================================= */
 .messenger-chat-messages {
     flex: 1;
@@ -431,8 +441,8 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    background: white;
-    border: 2px inset #c0c0c0;
+    background: var(--windowBg);
+    border: 2px inset var(--windowBorder);
     margin: 4px;
     font-size: 11px;
 }
@@ -512,7 +522,7 @@
 }
 
 /* =================================
-   TYPING INDICATOR
+   TYPING INDICATOR (RETRO)
 ================================= */
 .messenger-typing-indicator {
     display: flex;
@@ -538,13 +548,13 @@
     width: 4px;
     height: 4px;
     background: #666;
-    animation: typingDot 1.4s infinite ease-in-out;
+    animation: messengerTypingDot 1.4s infinite ease-in-out;
 }
 
 .messenger-typing-dots span:nth-child(1) { animation-delay: -0.32s; }
 .messenger-typing-dots span:nth-child(2) { animation-delay: -0.16s; }
 
-@keyframes typingDot {
+@keyframes messengerTypingDot {
     0%, 80%, 100% {
         transform: scale(0.8);
         opacity: 0.5;
@@ -556,12 +566,12 @@
 }
 
 /* =================================
-   CHAT INPUT
+   CHAT INPUT (THEMED CHROME)
 ================================= */
 .messenger-chat-input-area {
     padding: 4px 8px;
-    background: #c0c0c0;
-    border-top: 1px solid #808080;
+    background: var(--windowBg);
+    border-top: 1px solid var(--windowBorder);
 }
 
 .messenger-input-container {
@@ -573,9 +583,9 @@
 .messenger-emoji-btn {
     width: 24px;
     height: 24px;
-    background: #c0c0c0;
-    border: 2px outset #c0c0c0;
-    color: black;
+    background: var(--buttonBg);
+    border: 2px outset var(--windowBorder);
+    color: var(--menuText);
     font-size: 12px;
     cursor: pointer;
     font-family: 'MS Sans Serif', Arial, sans-serif;
@@ -586,61 +596,65 @@
 }
 
 .messenger-emoji-btn:hover {
-    background: #d4d0c8;
+    background: var(--buttonHoverBg);
 }
 
 .messenger-emoji-btn:active {
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder);
 }
 
 .messenger-message-input {
     flex: 1;
-    border: 2px inset #c0c0c0;
-    background: white;
+    border: 2px inset var(--windowBorder);
+    background: var(--windowBg);
     padding: 4px 6px;
     font-size: 11px;
-    color: black;
+    color: var(--menuText);
     font-family: 'MS Sans Serif', Arial, sans-serif;
 }
 
 .messenger-message-input:focus {
-    outline: 1px dotted #000;
+    outline: 1px dotted var(--menuText);
     outline-offset: -2px;
 }
 
 .messenger-message-input::placeholder {
-    color: #808080;
+    color: var(--menuText);
+    opacity: 0.5;
 }
 
 .messenger-send-btn {
     width: 50px;
     height: 24px;
-    background: #c0c0c0;
-    border: 2px outset #c0c0c0;
-    color: black;
+    background: var(--buttonBg);
+    border: 2px outset var(--windowBorder);
+    color: var(--menuText);
     font-size: 10px;
     cursor: pointer;
     font-family: 'MS Sans Serif', Arial, sans-serif;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .messenger-send-btn:hover {
-    background: #d4d0c8;
+    background: var(--buttonHoverBg);
 }
 
 .messenger-send-btn:active {
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder);
 }
 
 /* =================================
-   EMOJI PICKER
+   EMOJI PICKER (THEMED CHROME)
 ================================= */
 .messenger-emoji-picker {
     position: fixed;
     width: 280px;
     height: 200px;
-    background: #c0c0c0;
-    border: 2px outset #c0c0c0;
+    background: var(--windowBg);
+    border: 2px outset var(--windowBorder);
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     z-index: 4500;
     font-family: 'MS Sans Serif', Arial, sans-serif;
@@ -650,8 +664,8 @@
 }
 
 .messenger-emoji-header {
-    background: #000080;
-    color: white;
+    background: var(--titlebarBg);
+    color: var(--titlebarText);
     padding: 4px 6px;
     display: flex;
     align-items: center;
@@ -667,12 +681,12 @@
 }
 
 .messenger-emoji-tab {
-    background: #c0c0c0;
+    background: var(--buttonBg);
     border: none;
-    border-right: 1px solid #808080;
+    border-right: 1px solid var(--windowBorder);
     padding: 3px 6px;
     font-size: 9px;
-    color: black;
+    color: var(--menuText);
     cursor: pointer;
     font-family: 'MS Sans Serif', Arial, sans-serif;
     white-space: nowrap;
@@ -680,18 +694,19 @@
 }
 
 .messenger-emoji-tab:hover {
-    background: #d4d0c8;
+    background: var(--buttonHoverBg);
 }
 
 .messenger-emoji-tab.active {
-    background: white;
-    border-bottom: 1px solid white;
+    background: var(--windowBg);
+    border-bottom: 1px solid var(--windowBg);
     font-weight: bold;
+    color: var(--menuText);
 }
 
 .messenger-emoji-content {
     flex: 1;
-    background: white;
+    background: var(--windowBg);
     padding: 4px;
     overflow-y: auto;
     display: grid;
@@ -714,20 +729,20 @@
 }
 
 .messenger-emoji-item:hover {
-    border: 1px solid #316ac5;
+    border: 1px solid var(--menuHoverBg);
     background: #e6f2ff;
 }
 
 .messenger-emoji-item:active {
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder);
     background: #d0d0d0;
 }
 
 /* =================================
-   SETTINGS MODAL
+   SETTINGS MODAL (THEMED CHROME)
 ================================= */
 .messenger-settings-modal {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -740,8 +755,8 @@
 }
 
 .messenger-settings-content {
-    background: #c0c0c0;
-    border: 2px outset #c0c0c0;
+    background: var(--windowBg);
+    border: 2px outset var(--windowBorder);
     width: 90%;
     max-width: 500px;
     max-height: 70vh;
@@ -754,8 +769,8 @@
 
 .messenger-settings-header {
     padding: 8px 12px;
-    background: #000080;
-    color: white;
+    background: var(--titlebarBg);
+    color: var(--titlebarText);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -765,14 +780,17 @@
 .messenger-settings-header h3 {
     margin: 0;
     font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .messenger-close-btn {
     width: 16px;
     height: 16px;
-    background: #c0c0c0;
-    border: 1px outset #c0c0c0;
-    color: black;
+    background: var(--buttonBg);
+    border: 1px outset var(--windowBorder);
+    color: var(--menuText);
     font-size: 10px;
     font-weight: bold;
     cursor: pointer;
@@ -782,131 +800,116 @@
 }
 
 .messenger-close-btn:hover {
-    background: #d4d0c8;
+    background: var(--buttonHoverBg);
 }
 
 .messenger-close-btn:active {
-    border: 1px inset #c0c0c0;
+    border: 1px inset var(--windowBorder);
 }
 
 .messenger-settings-tabs {
     display: flex;
-    background: #c0c0c0;
-    border-bottom: 1px solid #808080;
+    background: var(--windowBg);
+    border-bottom: 1px solid var(--windowBorder);
 }
 
 .messenger-tab-btn {
     flex: 1;
     padding: 6px 8px;
     border: none;
-    background: #c0c0c0;
+    background: var(--buttonBg);
     font-size: 11px;
-    color: black;
+    color: var(--menuText);
     cursor: pointer;
-    border-right: 1px solid #808080;
+    border-right: 1px solid var(--windowBorder);
     font-family: 'MS Sans Serif', Arial, sans-serif;
 }
 
 .messenger-tab-btn:hover {
-    background: #d4d0c8;
+    background: var(--buttonHoverBg);
 }
 
 .messenger-tab-btn.active {
-    background: white;
-    border-bottom: 1px solid white;
+    background: var(--windowBg);
+    border-bottom: 1px solid var(--windowBg);
+    color: var(--menuText);
 }
 
 .messenger-settings-body {
     flex: 1;
     overflow-y: auto;
-    background: white;
+    background: var(--windowBg);
 }
 
 .messenger-tab-content {
     display: none;
     padding: 12px;
+    color: var(--menuText);
 }
 
 .messenger-tab-content.active {
     display: block;
 }
 
+.messenger-tab-content label {
+    color: var(--menuText);
+}
+
+.messenger-tab-content small {
+    color: var(--menuText);
+    opacity: 0.7;
+}
+
+.messenger-pro-tips {
+    background: var(--buttonBg);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    color: var(--menuText);
+}
+
 .messenger-color-input {
     width: 40px;
     height: 20px;
-    border: 2px inset #c0c0c0;
+    border: 2px inset var(--windowBorder);
     cursor: pointer;
 }
 
 .messenger-settings-actions {
     padding: 8px 12px;
-    background: #c0c0c0;
-    border-top: 1px solid #808080;
+    background: var(--windowBg);
+    border-top: 1px solid var(--windowBorder);
     display: flex;
     gap: 8px;
     justify-content: center;
 }
 
 /* =================================
-   SYSTEM MESSAGE
-================================= */
-.messenger-system-message {
-    position: fixed;
-    top: 30px;
-    right: 20px;
-    padding: 6px 12px;
-    border: 2px outset #c0c0c0;
-    background: #ffffcc;
-    color: black;
-    font-weight: bold;
-    z-index: 3000;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
-    font-size: 11px;
-}
-
-.messenger-system-message.success {
-    background: #ccffcc;
-    border-color: #00ff00;
-}
-
-.messenger-system-message.error {
-    background: #ffcccc;
-    border-color: #ff0000;
-}
-
-/* =================================
-   CONTEXT MENU
+   CONTEXT MENU (THEMED)
 ================================= */
 .messenger-context-menu {
     position: fixed;
-    background: #c0c0c0;
-    border: 2px outset #c0c0c0;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    background: var(--menuBg);
+    border: 2px outset var(--windowBorder);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     z-index: 4000;
     font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 11px;
-    min-width: 140px;
+    min-width: 160px;
 }
 
 .messenger-context-item {
     padding: 4px 8px;
     cursor: pointer;
-    color: black;
-    border-bottom: 1px solid #808080;
-}
-
-.messenger-context-item:last-child {
-    border-bottom: none;
+    color: var(--menuText);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .messenger-context-item:hover {
-    background: #316ac5;
-    color: white;
-}
-
-.messenger-context-item:active {
-    background: #0a246a;
-    color: white;
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
 }
 
 /* =================================
@@ -916,16 +919,16 @@
     .messenger-sidebar {
         width: 180px;
     }
-    
+
     .messenger-message {
         margin-left: 30px;
         margin-right: 30px;
     }
-    
+
     .messenger-message-bubble {
         max-width: 85%;
     }
-    
+
     .messenger-emoji-picker {
         width: 240px;
         height: 180px;
@@ -936,33 +939,33 @@
     .messenger-main {
         flex-direction: column;
     }
-    
+
     .messenger-sidebar {
         width: 100%;
         height: 40%;
     }
-    
+
     .messenger-chat-area {
         height: 60%;
     }
-    
+
     .messenger-contacts {
         padding: 2px;
     }
-    
+
     .messenger-contact-item {
         padding: 3px 6px;
     }
-    
+
     .messenger-chat-messages {
         padding: 6px;
     }
-    
+
     .messenger-message {
         margin-left: 10px;
         margin-right: 10px;
     }
-    
+
     .messenger-emoji-picker {
         width: 200px;
         height: 160px;
@@ -971,7 +974,7 @@
 }
 
 /* =================================
-   CUSTOM SCROLLBARS
+   CUSTOM SCROLLBARS (THEMED)
 ================================= */
 .messenger-contacts::-webkit-scrollbar,
 .messenger-chat-messages::-webkit-scrollbar,
@@ -987,8 +990,8 @@
 .messenger-settings-body::-webkit-scrollbar-track,
 .messenger-emoji-content::-webkit-scrollbar-track,
 .messenger-emoji-tabs::-webkit-scrollbar-track {
-    background: #c0c0c0;
-    border: 2px inset #c0c0c0;
+    background: var(--windowBg);
+    border: 2px inset var(--windowBorder);
 }
 
 .messenger-contacts::-webkit-scrollbar-thumb,
@@ -996,8 +999,8 @@
 .messenger-settings-body::-webkit-scrollbar-thumb,
 .messenger-emoji-content::-webkit-scrollbar-thumb,
 .messenger-emoji-tabs::-webkit-scrollbar-thumb {
-    background: #808080;
-    border: 2px outset #c0c0c0;
+    background: var(--buttonBg);
+    border: 2px outset var(--windowBorder);
 }
 
 .messenger-contacts::-webkit-scrollbar-thumb:hover,
@@ -1005,11 +1008,5 @@
 .messenger-settings-body::-webkit-scrollbar-thumb:hover,
 .messenger-emoji-content::-webkit-scrollbar-thumb:hover,
 .messenger-emoji-tabs::-webkit-scrollbar-thumb:hover {
-    background: #606060;
-}
-
-/* Remove modern animations */
-* {
-    animation: none !important;
-    transition: none !important;
+    background: var(--buttonHoverBg);
 }
