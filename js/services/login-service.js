@@ -32,9 +32,23 @@ class LoginService {
             }
         };
 
+        // Cached primary user (loaded async in init, used sync in showLoginScreen)
+        this._primaryUser = null;
+
         this.setupEvents();
-        this.loadSavedUsers();
-        this.loadVersionInfo();
+        // NOTE: User data and version info are loaded asynchronously in init()
+        // after IndexedDB is open. Constructor keeps defaults until then.
+    }
+
+    // =================================
+    // ASYNC INITIALIZATION (called from ElxaOS.asyncInit after DB is open)
+    // =================================
+
+    async init() {
+        await this._loadUsersFromDB();
+        await this._loadVersionFromDB();
+        await this._loadPrimaryUserFromDB();
+        console.log('🔑 Login service initialized from IndexedDB');
     }
 
     setupEvents() {
@@ -780,36 +794,40 @@ class LoginService {
         this.eventBus.emit('version.updated', this.versionInfo);
     }
 
-    // NEW METHOD: Save version info to storage
+    // Save version info to IndexedDB
     saveVersionInfo() {
-        try {
-            localStorage.setItem('elxaOS-version', JSON.stringify(this.versionInfo));
-            console.log('📱 Version info saved to localStorage');
-        } catch (error) {
-            console.error('❌ Failed to save version info:', error);
-        }
+        elxaDB.put('system:version', this.versionInfo)
+            .then(() => console.log('📱 Version info saved to IndexedDB'))
+            .catch(err => console.error('❌ Failed to save version info:', err));
     }
 
-    // NEW METHOD: Load version info from storage
-    loadVersionInfo() {
+    // Load version info from IndexedDB (called from init)
+    async _loadVersionFromDB() {
         try {
-            const saved = localStorage.getItem('elxaOS-version');
+            const saved = await elxaDB.get('system:version');
             if (saved) {
-                this.versionInfo = JSON.parse(saved);
-                console.log('📱 Version info loaded from localStorage');
+                this.versionInfo = saved;
+                console.log('📱 Version info loaded from IndexedDB');
             } else {
-                console.log('📱 No saved version info found, using defaults');
+                // One-time migration from localStorage
+                const legacy = localStorage.getItem('elxaOS-version');
+                if (legacy) {
+                    this.versionInfo = JSON.parse(legacy);
+                    await elxaDB.put('system:version', this.versionInfo);
+                    console.log('📱 Version info migrated from localStorage to IndexedDB');
+                }
             }
         } catch (error) {
             console.error('❌ Failed to load version info:', error);
         }
     }
 
-    // NEW METHOD: Clear user data (for testing/reset)
-    clearUserData() {
+    // Clear user data (for testing/reset)
+    async clearUserData() {
         try {
-            localStorage.removeItem('elxaOS-users');
-            console.log('🗑️ User data cleared from localStorage');
+            await elxaDB.delete('system:users');
+            await elxaDB.delete('system:primaryUser');
+            console.log('🗑️ User data cleared from IndexedDB');
             
             // Reset to defaults
             this.users = {
@@ -823,7 +841,7 @@ class LoginService {
                     loginCount: 0
                 }
             };
-            
+            this._primaryUser = null;
             this.currentUser = null;
             this.isLoggedIn = false;
             
@@ -852,48 +870,76 @@ class LoginService {
         }
     }
 
+    // Save users to IndexedDB (fire-and-forget — in-memory is always current)
     saveUsers() {
-        try {
-            localStorage.setItem('elxaOS-users', JSON.stringify(this.users));
-            console.log('👤 User data saved to localStorage');
-        } catch (error) {
-            console.error('❌ Failed to save user data:', error);
-            // Fallback to memory storage
-            this.savedUsers = JSON.parse(JSON.stringify(this.users));
-        }
+        // Serialize dates for storage, then save
+        const toStore = JSON.parse(JSON.stringify(this.users));
+        elxaDB.put('system:users', toStore)
+            .then(() => console.log('👤 User data saved to IndexedDB'))
+            .catch(err => console.error('❌ Failed to save user data:', err));
     }
 
-    loadSavedUsers() {
+    // Load users from IndexedDB with localStorage migration (called from init)
+    async _loadUsersFromDB() {
         try {
-            const saved = localStorage.getItem('elxaOS-users');
+            const saved = await elxaDB.get('system:users');
             if (saved) {
-                this.users = JSON.parse(saved);
-                
-                // FIX: Convert date strings back to Date objects
-                Object.values(this.users).forEach(user => {
-                    if (user.created && typeof user.created === 'string') {
-                        user.created = new Date(user.created);
-                    }
-                    if (user.lastLogin && typeof user.lastLogin === 'string') {
-                        user.lastLogin = new Date(user.lastLogin);
-                    }
-                });
-                
-                console.log('👤 User data loaded from localStorage');
+                this.users = saved;
+                this._fixUserDates();
+                console.log('👤 User data loaded from IndexedDB');
             } else {
-                console.log('👤 No saved user data found, using defaults');
+                // One-time migration from localStorage
+                const legacy = localStorage.getItem('elxaOS-users');
+                if (legacy) {
+                    this.users = JSON.parse(legacy);
+                    this._fixUserDates();
+                    await elxaDB.put('system:users', JSON.parse(JSON.stringify(this.users)));
+                    console.log('👤 User data migrated from localStorage to IndexedDB');
+                } else {
+                    console.log('👤 No saved user data found, using defaults');
+                }
             }
         } catch (error) {
             console.error('❌ Failed to load user data:', error);
-            // Fallback to memory storage
-            if (this.savedUsers) {
-                this.users = this.savedUsers;
-                Object.values(this.users).forEach(user => {
-                    if (user.created) user.created = new Date(user.created);
-                    if (user.lastLogin) user.lastLogin = new Date(user.lastLogin);
-                });
-            }
         }
+    }
+
+    // Load primary user from IndexedDB with localStorage migration
+    async _loadPrimaryUserFromDB() {
+        try {
+            const saved = await elxaDB.get('system:primaryUser');
+            if (saved) {
+                this._primaryUser = saved;
+            } else {
+                // One-time migration from localStorage
+                const legacy = localStorage.getItem('elxaOS-primary-user');
+                if (legacy) {
+                    this._primaryUser = legacy;
+                    await elxaDB.put('system:primaryUser', legacy);
+                    console.log('👤 Primary user migrated from localStorage to IndexedDB');
+                }
+            }
+        } catch (error) {
+            console.error('❌ Failed to load primary user:', error);
+        }
+    }
+
+    // Public reload method (called by setup wizard after creating a user)
+    async loadSavedUsers() {
+        await this._loadUsersFromDB();
+        await this._loadPrimaryUserFromDB();
+    }
+
+    // Convert date strings back to Date objects after deserialization
+    _fixUserDates() {
+        Object.values(this.users).forEach(user => {
+            if (user.created && typeof user.created === 'string') {
+                user.created = new Date(user.created);
+            }
+            if (user.lastLogin && typeof user.lastLogin === 'string') {
+                user.lastLogin = new Date(user.lastLogin);
+            }
+        });
     }
 
     showMessage(text, type = 'info') {
@@ -1089,35 +1135,39 @@ class LoginService {
         }));
     }
 
-    // NEW METHOD: Clear version data (for testing/reset)
-    clearVersionData() {
+    // Clear version data (for testing/reset)
+    async clearVersionData() {
         try {
-            localStorage.removeItem('elxaOS-version');
-            console.log('🗑️ Version data cleared from localStorage');
+            await elxaDB.delete('system:version');
+            console.log('🗑️ Version data cleared from IndexedDB');
             
-            // Reset to defaults
             this.versionInfo = {
                 name: 'ElxaOS',
                 version: '1.0',
                 codename: 'KitKat',
                 build: '2024.01'
             };
-            
         } catch (error) {
             console.error('❌ Failed to clear version data:', error);
         }
     }
 
-    // Add this method to detect the primary user after setup
+    // Detect the primary user (uses cached value from init)
     getPrimaryUser() {
-        const setupUser = localStorage.getItem('elxaOS-primary-user');
-        if (setupUser && this.users[setupUser]) {
-            return setupUser;
+        if (this._primaryUser && this.users[this._primaryUser]) {
+            return this._primaryUser;
         }
         // Fallback to first non-default user, then 'user'
         const usernames = Object.keys(this.users);
         const nonDefaultUser = usernames.find(username => !this.users[username].isDefault && this.users[username].isSetupUser);
         return nonDefaultUser || 'user';
+    }
+
+    // Set the primary user (called by setup wizard)
+    setPrimaryUser(username) {
+        this._primaryUser = username;
+        elxaDB.put('system:primaryUser', username)
+            .catch(err => console.error('❌ Failed to save primary user:', err));
     }
 
     // NEW METHOD: Get current version info

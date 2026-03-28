@@ -4,6 +4,79 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
+## Finance Service — Phase 2: Credit Card System
+
+### Changes
+- **`js/services/finance-service.js`** — Added full credit card system:
+  - `createCreditCard(options)` — create cards with name, limit, APR, minimum payment, due day
+  - `getCreditCards()` / `getCreditCardsSync()` — list all cards
+  - `getCreditCard(cardId)` — get single card by ID
+  - `chargeCredit()` / `chargeCreditSync()` — charge purchases, checks credit limit
+  - `payCredit(cardId, amount, fromAccount)` — pay down card balance from bank account
+  - `getCreditSummarySync()` — quick overview for UIs
+  - Data auto-initializes `creditCards: []` on existing finance data (backward compatible)
+  - Financial summary (`getFinancialSummary()`) now includes credit card info
+  - Debug tools: `debug.addCreditCard(name, limit)`, `debug.listCards()`
+  - Events: `finance.creditCardCreated`, `finance.creditCharged`, `finance.creditLimitExceeded`, `finance.creditPayment`
+
+- **`js/services/payment-system.js`** — Payment dialog now shows THREE payment methods:
+  1. Bank Account (Debit) — if logged into bank, shows balance (existing behavior)
+  2. My Credit Card — dropdown of real cards from finance service, charges on purchase
+  3. Enter Card Info — type any random numbers, always works (the fun/immersion option for kids)
+  - `setupFormValidation()` updated: bank + creditcard both hide manual card form; only "Enter Card Info" shows it
+  - `processPayment()` handles `creditcard` method via `financeService.chargeCreditSync()`
+  - Success receipt shows credit card name + last 4 digits
+  - CSS added for `.elxa-payment-cc-picker` and `.elxa-payment-cc-select`
+
+### Registry Key Addition
+```
+finance: {
+  ...existing...,
+  creditCards: [
+    { id, name, number, last4, creditLimit, balance, apr, minimumPayment, dueDay, opened, status }
+  ]
+}
+```
+
+---
+
+## Finance Service — Phase 1 (finance-service.js)
+
+### New Files
+- `js/services/finance-service.js` — FinanceService class, central money management for all of ElxaOS
+
+### What It Does
+- **Account Management**: checking, savings, trust accounts with balances, account numbers, and open dates
+- **Payment API**: `processPayment(amount, options)` — single entry point for all purchases across ElxaOS
+- **Core Operations**: `deposit()`, `withdraw()`, `transfer()` — all async, all validated, all event-emitting
+- **Transaction Ledger**: full history stored in registry (up to 200 transactions, increased from old 50 cap)
+- **Bank Data Migration**: auto-migrates from old `localStorage` bank-system format to registry on first load
+- **Sync Bridge Methods**: `processPaymentSync()`, `checkFundsSync()`, `getAccountBalancesSync()` for backward compat with bank-system.js
+- **LLM Context API**: `getFinancialSummary()` returns plain-English financial status for messenger/email
+- **Debug Tools**: `debug.dump()`, `debug.setBalance()`, `debug.resetFinance()`, `debug.addMoney()`
+
+### Storage
+- All data under `finance` key in registry user state (per-user, IndexedDB)
+- Structure: `{ accounts: {...}, transactions: [...], lastProcessedDate, migrated }`
+- Writes through to registry which debounces at 300ms
+
+### Events Emitted
+- `finance.transactionCompleted` — any payment, deposit, withdrawal, or transfer
+- `finance.accountUpdated` — balance changed on any account
+- `finance.insufficientFunds` — payment/withdrawal attempted without enough money
+
+### Integration
+- `index.html` — added `<script>` tag for finance-service.js (after elxa-registry.js)
+- `js/elxaos.js` — `financeService` created in constructor, `init()` called in asyncInit step 2.6
+- `js/services/bank-system.js` — `processPayment()`, `checkFunds()`, `getAccountBalances()` now delegate to financeService when available, with legacy fallback
+- Added `_syncFromFinanceService()` to bank-system.js to keep bank dashboard in sync after payments
+
+### Migration Strategy
+- On first load for a user, checks `localStorage['elxaOS-bank-user-{username}']`
+- If found: reads accounts + transactions, writes to registry, sets `migrated: true`
+- Bank website UI unchanged — still manages its own login/session, but balance operations go through financeService
+- Old localStorage data is NOT deleted (safe rollback)
+
 ## Central Data Registry (elxa-registry.js)
 
 ### New Files
@@ -65,6 +138,17 @@ elxaOS.registry.debug()
 - **One-time migration**: Pulls existing localStorage conversation data into registry on first login
 - **Backward compatible**: Same public API — messenger and email don't need changes
 - `elxaos.js` updated: calls `conversationHistoryManager.init()` in asyncInit, flushes on shutdown
+
+### Login Service Migrated to IndexedDB
+- **Users** stored at `system:users` in IndexedDB (was `elxaOS-users` in localStorage)
+- **Version info** stored at `system:version` (was `elxaOS-version`)
+- **Primary user** stored at `system:primaryUser` (was `elxaOS-primary-user`)
+- Constructor no longer calls sync load methods — async `init()` called from ElxaOS.asyncInit
+- `saveUsers()` is fire-and-forget (async write, callers don't await) — in-memory state is always current
+- One-time migration from localStorage for all three keys
+- Setup wizard compatibility: `loadSavedUsers()` public wrapper preserved, setup still writes to localStorage and migration picks it up
+- Added `setPrimaryUser(username)` method for future setup wizard migration
+- `clearUserData()` and `clearVersionData()` now async, clear from IndexedDB
 
 ### NOT YET DONE (future sessions)
 - Migrate messenger to read user profile from registry instead of its own settings

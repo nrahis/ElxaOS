@@ -91,36 +91,30 @@ window.ElxaMockPayment = class ElxaMockPayment {
         // Check if bank system is available and user is logged in
         const bankAvailable = typeof window.bankSystem !== 'undefined';
         const bankLoggedIn = bankAvailable && window.bankSystem.isLoggedIn;
+
+        // Check for credit cards from finance service
+        const financeReady = typeof elxaOS !== 'undefined' && elxaOS.financeService && elxaOS.financeService.isReady();
+        const creditCards = financeReady ? elxaOS.financeService.getCreditCardsSync().filter(c => c.status === 'active') : [];
+        const hasCreditCards = creditCards.length > 0;
         
         let bankNotice = '';
         let paymentMethodSection = '';
-        
-        if (bankAvailable && bankLoggedIn) {
-            const balances = window.bankSystem.getAccountBalances();
-            
-            // Determine which account to use based on the order
+
+        // --- Build payment method options ---
+        let methodOptions = '';
+        let defaultMethod = 'card'; // fake card is always the fallback default
+
+        // Option 1: Bank account (debit)
+        if (bankLoggedIn) {
             const targetAccount = this.currentOrder.preferredAccount;
+            const balances = window.bankSystem.getAccountBalances();
             const fundsCheck = window.bankSystem.checkFunds(this.currentOrder.priceValue, targetAccount);
             
-            // Create account-specific display
-            let accountDisplayName = targetAccount;
+            let accountDisplayName = 'Checking Account';
             let accountIcon = '🏛️';
-            let accountDescription = 'Standard bank account payment';
-            
-            if (targetAccount === 'trust') {
-                accountDisplayName = 'Trust Account';
-                accountIcon = '👑';
-                accountDescription = 'Parent-managed trust account payment';
-            } else if (targetAccount === 'savings') {
-                accountDisplayName = 'Savings Account';
-                accountIcon = '🏦';
-                accountDescription = 'Savings account payment';
-            } else {
-                accountDisplayName = 'Checking Account';
-                accountIcon = '🏛️';
-                accountDescription = 'Checking account payment';
-            }
-            
+            if (targetAccount === 'trust') { accountDisplayName = 'Trust Account'; accountIcon = '👑'; }
+            else if (targetAccount === 'savings') { accountDisplayName = 'Savings Account'; accountIcon = '🏦'; }
+
             bankNotice = `
                 <div class="elxa-payment-bank-notice ${fundsCheck.hasEnough ? 'sufficient' : 'insufficient'}">
                     <div class="elxa-payment-bank-title">${accountIcon} First Snakesian Bank - ${accountDisplayName}</div>
@@ -138,25 +132,17 @@ window.ElxaMockPayment = class ElxaMockPayment {
                     }
                 </div>
             `;
-            
-            paymentMethodSection = `
-                <div class="elxa-payment-section">
-                    <h3>💳 Payment Method</h3>
-                    <div class="elxa-payment-method-options">
-                        <label class="elxa-payment-method-option">
-                            <input type="radio" name="paymentMethod" value="bank" ${fundsCheck.hasEnough ? 'checked' : 'disabled'}>
-                            <span>${accountIcon} First Snakesian Bank - ${accountDisplayName}</span>
-                            <small>${accountDescription}</small>
-                        </label>
-                        <label class="elxa-payment-method-option">
-                            <input type="radio" name="paymentMethod" value="card" ${!fundsCheck.hasEnough ? 'checked' : ''}>
-                            <span>💳 Credit/Debit Card</span>
-                            <small>Standard card payment</small>
-                        </label>
-                    </div>
-                </div>
+
+            if (fundsCheck.hasEnough) defaultMethod = 'bank';
+
+            methodOptions += `
+                <label class="elxa-payment-method-option">
+                    <input type="radio" name="paymentMethod" value="bank" ${fundsCheck.hasEnough ? 'checked' : 'disabled'}>
+                    <span>${accountIcon} Bank Account (Debit)</span>
+                    <small>Pay from ${accountDisplayName} — $${balances[targetAccount].toFixed(2)} available</small>
+                </label>
             `;
-        } else if (bankAvailable && !bankLoggedIn) {
+        } else if (bankAvailable) {
             bankNotice = `
                 <div class="elxa-payment-bank-notice login-required">
                     <div class="elxa-payment-bank-title">🏛️ First Snakesian Bank</div>
@@ -166,33 +152,50 @@ window.ElxaMockPayment = class ElxaMockPayment {
                     </div>
                 </div>
             `;
-            
-            paymentMethodSection = `
-                <div class="elxa-payment-section">
-                    <h3>💳 Payment Method</h3>
-                    <div class="elxa-payment-method-options">
-                        <label class="elxa-payment-method-option">
-                            <input type="radio" name="paymentMethod" value="card" checked>
-                            <span>💳 Credit/Debit Card</span>
-                            <small>Standard card payment</small>
-                        </label>
-                    </div>
-                </div>
-            `;
-        } else {
-            paymentMethodSection = `
-                <div class="elxa-payment-section">
-                    <h3>💳 Payment Method</h3>
-                    <div class="elxa-payment-method-options">
-                        <label class="elxa-payment-method-option">
-                            <input type="radio" name="paymentMethod" value="card" checked>
-                            <span>💳 Credit/Debit Card</span>
-                            <small>Standard card payment</small>
-                        </label>
-                    </div>
+        }
+
+        // Option 2: Credit card (from finance service)
+        if (hasCreditCards) {
+            let cardDropdown = '<select id="creditCardSelect" class="elxa-payment-cc-select">';
+            creditCards.forEach(card => {
+                const avail = (card.creditLimit - card.balance).toFixed(2);
+                cardDropdown += `<option value="${card.id}">${card.name} (****${card.last4}) — $${avail} available</option>`;
+            });
+            cardDropdown += '</select>';
+
+            const ccChecked = (defaultMethod !== 'bank') ? 'checked' : '';
+            if (ccChecked) defaultMethod = 'creditcard';
+
+            methodOptions += `
+                <label class="elxa-payment-method-option">
+                    <input type="radio" name="paymentMethod" value="creditcard" ${ccChecked}>
+                    <span>💳 My Credit Card</span>
+                    <small>Charge to one of your credit cards</small>
+                </label>
+                <div class="elxa-payment-cc-picker" id="creditCardPicker" style="${ccChecked ? '' : 'display:none;'}">
+                    ${cardDropdown}
                 </div>
             `;
         }
+
+        // Option 3: Enter card info (always available)
+        const fakeChecked = (defaultMethod !== 'bank' && defaultMethod !== 'creditcard') ? 'checked' : '';
+        methodOptions += `
+            <label class="elxa-payment-method-option">
+                <input type="radio" name="paymentMethod" value="card" ${fakeChecked}>
+                <span>⌨️ Enter Card Info</span>
+                <small>Type in any card details${hasCreditCards || bankLoggedIn ? '' : ' (just make something up!)'}</small>
+            </label>
+        `;
+
+        paymentMethodSection = `
+            <div class="elxa-payment-section">
+                <h3>💳 Payment Method</h3>
+                <div class="elxa-payment-method-options">
+                    ${methodOptions}
+                </div>
+            </div>
+        `;
 
         const dialog = document.createElement('div');
         dialog.className = 'elxa-payment-modal';
@@ -342,34 +345,37 @@ window.ElxaMockPayment = class ElxaMockPayment {
         
         // Handle payment method changes
         const paymentMethods = dialog.querySelectorAll('input[name="paymentMethod"]');
+        const ccPicker = dialog.querySelector('#creditCardPicker');
+        
+        const hideCardForm = () => {
+            cardSection.style.display = 'none';
+            billingSection.style.display = 'none';
+            cardSection.querySelectorAll('input[required]').forEach(input => input.removeAttribute('required'));
+            billingSection.querySelectorAll('input[required], select[required]').forEach(input => input.removeAttribute('required'));
+        };
+        
+        const showCardForm = () => {
+            cardSection.style.display = 'block';
+            billingSection.style.display = 'block';
+            cardSection.querySelectorAll('input').forEach(input => {
+                if (input.id !== 'address2') input.setAttribute('required', 'required');
+            });
+            billingSection.querySelectorAll('input, select').forEach(input => {
+                if (input.id !== 'address2') input.setAttribute('required', 'required');
+            });
+        };
+        
         paymentMethods.forEach(method => {
             method.addEventListener('change', () => {
-                if (method.value === 'bank') {
-                    cardSection.style.display = 'none';
-                    billingSection.style.display = 'none';
-                    
-                    // Make card fields non-required
-                    cardSection.querySelectorAll('input[required]').forEach(input => {
-                        input.removeAttribute('required');
-                    });
-                    billingSection.querySelectorAll('input[required], select[required]').forEach(input => {
-                        input.removeAttribute('required');
-                    });
+                // Show/hide credit card picker
+                if (ccPicker) ccPicker.style.display = (method.value === 'creditcard') ? '' : 'none';
+                
+                if (method.value === 'bank' || method.value === 'creditcard') {
+                    // Bank debit or credit card from finance service — no manual card form needed
+                    hideCardForm();
                 } else {
-                    cardSection.style.display = 'block';
-                    billingSection.style.display = 'block';
-                    
-                    // Make card fields required again
-                    cardSection.querySelectorAll('input').forEach(input => {
-                        if (input.id !== 'address2') { // address2 is optional
-                            input.setAttribute('required', 'required');
-                        }
-                    });
-                    billingSection.querySelectorAll('input, select').forEach(input => {
-                        if (input.id !== 'address2') { // address2 is optional
-                            input.setAttribute('required', 'required');
-                        }
-                    });
+                    // "Enter card info" — show the manual card form
+                    showCardForm();
                 }
             });
         });
@@ -443,7 +449,39 @@ window.ElxaMockPayment = class ElxaMockPayment {
         const paymentData = Object.fromEntries(formData.entries());
         const paymentMethod = paymentData.paymentMethod || 'card';
         
-        // Check if using bank payment and if bank system is available
+        // --- Credit card payment (from finance service) ---
+        if (paymentMethod === 'creditcard') {
+            const cardSelect = document.getElementById('creditCardSelect');
+            const cardId = cardSelect ? cardSelect.value : null;
+            
+            if (!cardId) {
+                this.showPaymentError('Please select a credit card.');
+                return;
+            }
+            
+            const financeReady = typeof elxaOS !== 'undefined' && elxaOS.financeService && elxaOS.financeService.isReady();
+            if (!financeReady) {
+                this.showPaymentError('Finance service not available.');
+                return;
+            }
+            
+            const description = `${this.currentOrder.productName} - ${this.currentOrder.orderNumber}`;
+            const ccResult = elxaOS.financeService.chargeCreditSync(cardId, this.currentOrder.priceValue, description);
+            
+            if (!ccResult.success) {
+                console.log('❌ Credit card payment failed:', ccResult.message);
+                this.showPaymentError(ccResult.message);
+                return;
+            }
+            
+            console.log(`✅ Credit card payment successful: ${ccResult.cardName} ****${ccResult.cardLast4}`);
+            paymentData.paymentMethod = 'creditcard';
+            paymentData.cardName = ccResult.cardName;
+            paymentData.cardLast4 = ccResult.cardLast4;
+            paymentData.email = 'customer@snakesia.ex';
+        }
+        
+        // --- Bank (debit) payment ---
         if (paymentMethod === 'bank' && typeof window.bankSystem !== 'undefined' && window.bankSystem.isLoggedIn) {
             console.log(`🏛️ Processing bank payment from ${this.currentOrder.preferredAccount} account...`);
             
@@ -541,7 +579,9 @@ window.ElxaMockPayment = class ElxaMockPayment {
         
         // Create payment method text with account info
         let paymentMethodText = 'Credit/Debit Card';
-        if (paymentData.paymentMethod === 'bank') {
+        if (paymentData.paymentMethod === 'creditcard') {
+            paymentMethodText = `💳 ${paymentData.cardName || 'Credit Card'} (****${paymentData.cardLast4 || '????'})`;
+        } else if (paymentData.paymentMethod === 'bank') {
             const accountUsed = paymentData.accountUsed || this.currentOrder.preferredAccount;
             let accountDisplayName = 'Bank Account';
             
@@ -1018,6 +1058,24 @@ window.ElxaMockPayment = class ElxaMockPayment {
                 .elxa-payment-method-option:has(input:disabled) {
                     opacity: 0.6;
                     cursor: not-allowed;
+                }
+                
+                .elxa-payment-cc-picker {
+                    margin: -5px 0 10px 30px;
+                    padding: 8px;
+                    background: #f0f4ff;
+                    border: 1px solid #c0cfe0;
+                    border-radius: 4px;
+                }
+                
+                .elxa-payment-cc-select {
+                    width: 100%;
+                    padding: 6px 8px;
+                    border: 1px solid #bbb;
+                    border-radius: 3px;
+                    font-size: 11px;
+                    background: white;
+                    cursor: pointer;
                 }
                 
                 .elxa-payment-download-section {

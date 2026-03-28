@@ -559,11 +559,394 @@
         }
 
         /* =============================================
+           Credit Score Widget
+           ============================================= */
+
+        .bank-score-card {
+            background: #f0f5ff;
+            border: 2px solid #4169e1;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .bank-score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .bank-score-header h3 {
+            margin: 0;
+            color: #000080;
+            font-size: 14px;
+        }
+
+        .bank-score-trend {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .bank-score-display {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .bank-score-number {
+            font-size: 48px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .bank-score-rating {
+            display: inline-block;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 12px;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+
+        .bank-score-gauge {
+            margin: 12px 0 8px;
+        }
+
+        .bank-score-gauge-track {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+
+        .bank-score-gauge-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .bank-score-gauge-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .bank-score-inquiries {
+            font-size: 10px;
+            color: #b8860b;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .bank-score-tips {
+            margin-top: 10px;
+            background: #ffffcc;
+            border: 1px solid #daa520;
+            padding: 8px 10px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+
+        .bank-score-tips strong {
+            color: #b8860b;
+        }
+
+        .bank-score-tips ul {
+            margin: 4px 0 0 15px;
+            padding: 0;
+        }
+
+        .bank-score-tips li {
+            margin-bottom: 3px;
+        }
+
+        .bank-score-history {
+            margin-top: 10px;
+        }
+
+        .bank-score-history strong {
+            font-size: 11px;
+            color: #000080;
+        }
+
+        .bank-score-bars {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            height: 50px;
+            margin-top: 5px;
+            padding: 2px 0;
+        }
+
+        .bank-score-bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bank-score-bar {
+            width: 100%;
+            border-radius: 2px 2px 0 0;
+            min-height: 3px;
+        }
+
+        .bank-score-bar-col span {
+            font-size: 8px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .bank-score-unavailable {
+            font-size: 11px;
+            color: #666;
+            font-style: italic;
+            padding: 10px;
+        }
+
+        /* =============================================
+           My Credit Cards Section
+           ============================================= */
+
+        .bank-my-cards {
+            margin-bottom: 20px;
+        }
+
+        .bank-my-cards h3 {
+            color: #000080;
+            font-size: 14px;
+            margin: 0 0 10px 0;
+        }
+
+        .bank-my-cards-empty {
+            background: #f9f9ff;
+            border: 1px dashed #4169e1;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .bank-my-cards-empty h3 {
+            color: #000080;
+            font-size: 14px;
+            margin: 0 0 8px 0;
+        }
+
+        .bank-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .bank-card-item {
+            background: linear-gradient(135deg, #1a1a3e 0%, #2d2d6b 50%, #1a1a3e 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #4169e1;
+            font-size: 11px;
+        }
+
+        .bank-card-name {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #ffd700;
+        }
+
+        .bank-card-number {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .bank-card-details {
+            margin-bottom: 8px;
+        }
+
+        .bank-card-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2px;
+            font-size: 10px;
+        }
+
+        .bank-card-detail span {
+            opacity: 0.7;
+        }
+
+        .bank-card-util {
+            margin: 8px 0;
+        }
+
+        .bank-card-util-label {
+            font-size: 9px;
+            margin-bottom: 3px;
+            opacity: 0.8;
+        }
+
+        .bank-card-util-track {
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .bank-card-util-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .bank-card-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .bank-card-actions .bank-btn {
+            font-size: 10px;
+            padding: 4px 10px;
+        }
+
+        .bank-card-actions .bank-btn-secondary {
+            font-size: 10px;
+            padding: 4px 10px;
+        }
+
+        .bank-card-close-note {
+            font-size: 9px;
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        /* =============================================
+           Card Application Section
+           ============================================= */
+
+        .bank-card-tiers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .bank-tier-card {
+            border: 2px solid #4169e1;
+            border-radius: 5px;
+            padding: 15px;
+            background: #f9f9ff;
+        }
+
+        .bank-tier-card.available {
+            background: #f0fff0;
+            border-color: #006400;
+        }
+
+        .bank-tier-card.owned {
+            background: #fffacd;
+            border-color: #daa520;
+        }
+
+        .bank-tier-card.locked {
+            background: #f5f5f5;
+            border-color: #ccc;
+            opacity: 0.7;
+        }
+
+        .bank-tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bank-tier-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000080;
+        }
+
+        .bank-tier-card.locked .bank-tier-name {
+            color: #999;
+        }
+
+        .bank-tier-badge {
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .locked-badge {
+            background: #ddd;
+            color: #666;
+        }
+
+        .owned-badge {
+            background: #ffd700;
+            color: #654321;
+        }
+
+        .bank-tier-details {
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .bank-tier-detail {
+            margin-bottom: 3px;
+        }
+
+        .bank-tier-actions {
+            text-align: right;
+        }
+
+        .bank-tier-reason {
+            font-size: 10px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .bank-tier-card.owned .bank-tier-reason {
+            color: #006400;
+            font-style: normal;
+        }
+
+        /* Card Payment Section */
+
+        .bank-card-pay-info {
+            background: #f9f9ff;
+            border: 1px solid #4169e1;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+        .bank-card-pay-info div {
+            margin-bottom: 3px;
+        }
+
+        /* =============================================
            Responsive
            ============================================= */
 
         @media (max-width: 800px) {
             .bank-accounts-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .bank-cards-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -667,6 +1050,9 @@
                         Last login: <span id="lastLogin"></span>
                     </div>
 
+                    <!-- Credit Score Widget -->
+                    <div id="creditScoreWidget"></div>
+
                     <div class="bank-accounts-overview">
                         <div class="bank-account-card">
                             <div class="bank-account-type"><span data-icon="credit-card"></span> Checking Account</div>
@@ -689,14 +1075,21 @@
                         </div>
                     </div>
 
+                    <!-- My Credit Cards -->
+                    <div id="myCardsSection"></div>
+
                     <div class="bank-actions">
                         <h3><span data-icon="cash-multiple"></span> Account Actions</h3>
                         <button class="bank-btn" data-action="show-deposit"><span data-icon="cash-plus"></span> Deposit Funds</button>
                         <button class="bank-btn" data-action="show-withdraw"><span data-icon="cash-minus"></span> Withdraw Funds</button>
                         <button class="bank-btn" data-action="show-transfer"><span data-icon="bank-transfer"></span> Transfer Money</button>
                         <button class="bank-btn-protected" data-action="show-trust"><span data-icon="crown"></span> Trust Account</button>
+                        <button class="bank-btn" data-action="show-apply-cards"><span data-icon="credit-card-plus"></span> Apply for Credit Card</button>
                         <button class="bank-btn-secondary" data-action="refresh"><span data-icon="refresh"></span> Refresh Balance</button>
                     </div>
+
+                    <!-- Card Payment Section (shown/hidden dynamically) -->
+                    <div id="cardPaymentSection" class="bank-transaction-form hidden"></div>
 
                     <!-- Regular Transaction Forms -->
                     <div id="depositForm" class="bank-transaction-form hidden">
@@ -833,6 +1226,9 @@
                     </div>
                 </div>
 
+                <!-- Credit Card Application Page -->
+                <div id="cardApplySection" class="hidden"></div>
+
                 <!-- About Page -->
                 <div id="aboutSection" class="hidden">
                     <h2 class="bank-heading">About First Snakesian Bank</h2>
@@ -843,7 +1239,9 @@
                         <li>Personal and Business Checking Accounts</li>
                         <li>High-Yield Savings Accounts</li>
                         <li>Protected Trust Accounts for Families</li>
-                        <li>Currency Exchange (USD ↔ Snakes)</li>
+                        <li>Credit Cards — From Starter to exclusive Black Card</li>
+                        <li>Credit Score Monitoring and Reports</li>
+                        <li>Currency Exchange (USD &#x2194; Snakes)</li>
                         <li>Online Banking and Mobile Access</li>
                         <li>24/7 Customer Support</li>
                     </ul>
@@ -884,6 +1282,16 @@
 
                     <h3 class="bank-heading">Frequently Asked Questions</h3>
                     <div class="bank-faq-item">
+                        <strong>Q: How do I get a credit card?</strong><br>
+                        <span class="bank-faq-answer">A: Log into your account and click "Apply for Credit Card" in Account Actions. Cards are approved based on your credit score. Better scores unlock better cards with higher limits and lower rates!</span>
+                    </div>
+
+                    <div class="bank-faq-item">
+                        <strong>Q: What is a credit score and how do I improve it?</strong><br>
+                        <span class="bank-faq-answer">A: Your credit score (300-850) reflects your financial responsibility. Make payments on time, keep credit card balances low, and avoid applying for too many cards at once. Your score updates monthly.</span>
+                    </div>
+
+                    <div class="bank-faq-item">
                         <strong>Q: What is a Trust Account?</strong><br>
                         <span class="bank-faq-answer">A: A Trust Account is a special protected account that requires banker authorization for transactions. Perfect for family savings and rewards!</span>
                     </div>
@@ -906,7 +1314,7 @@
                     <h3 class="bank-heading">Contact Information</h3>
                     <p class="bank-contact-info">
                         <span data-icon="phone"></span> Customer Service: 1-800-BANK-SNK<br>
-                        <span data-icon="email"></span> Email: support@firstsnakesianbank.ex<br>
+                        <span data-icon="email"></span> Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c0b3b5b0b0afb2b480a6a9b2b3b4b3aea1aba5b3a9a1aea2a1aeabeea5b8">[email&#160;protected]</a><br>
                         <span data-icon="send"></span> Live Chat: Available Mon-Fri 8AM-8PM
                     </p>
                 </div>
@@ -920,6 +1328,14 @@
         </div>
     </div>
 
-    <script src="../../../js/services/bank-system.js"></script>
+    <script>
+        // Bank system auto-initializes via bank-system.js
+        if (typeof BankSystem !== 'undefined' && !window.bankSystem) {
+            window.bankSystem = new BankSystem();
+        }
+        if (window.bankSystem) {
+            window.bankSystem.init();
+        }
+    </script>
 </body>
 </html>

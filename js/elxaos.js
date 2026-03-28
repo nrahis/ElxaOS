@@ -14,6 +14,7 @@ class ElxaOS {
         this.themeService = new ThemeService(this.eventBus);
         this.loginService = new LoginService(this.eventBus);
         this.registry = new ElxaRegistry(this.eventBus);
+        this.financeService = new FinanceService(this.eventBus, this.registry);
         this.installerService = new InstallerService(this.eventBus, this.fileSystem, this.windowManager, this);
         this.bootSystem = new BootSystem();
         this.updatePopup = new UpdatePopup();
@@ -59,6 +60,12 @@ class ElxaOS {
 
             // 2. Initialize the central registry (loads world context)
             await this.registry.init();
+
+            // 2.5. Load login service data from IndexedDB
+            await this.loginService.init();
+
+            // 2.6. Initialize finance service (loads/migrates financial data)
+            await this.financeService.init();
 
             // 3. Connect conversation history manager to registry
             if (window.conversationHistoryManager) {

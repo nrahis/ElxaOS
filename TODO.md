@@ -155,6 +155,18 @@ Goal: Make the File Manager solid, fix bugs, add missing features, and establish
 - [ ] **ElxaTech icon migration** — Phase 5
 - [ ] **Remaining interwebs sites** — audit all other sites for icon migration opportunities
 
+## 🔲 Finance & Inventory System
+- [x] **Phase 1: Finance Service Foundation** — COMPLETE
+- [x] **Phase 2: Credit Card System** — COMPLETE. Credit cards in finance-service.js, 3-way payment dialog (debit/credit/fake card)
+
+- [ ] **Phase 3: Loan System** — mortgages, personal loans, linked assets, repossession on default
+- [ ] **Phase 4: Monthly Cycle Engine** — recurring payments, interest accrual, consequence chain for missed payments, debug time tools
+- [ ] **Phase 5: Inventory Service** — `inventory-service.js` for properties, cards, future collectibles
+- [ ] **Phase 6: Paycheck System** — ElxaCorp salary → recurring deposits, pay stubs
+- [ ] **Phase 7: Full Integration Pass** — wire payment-system, bank website, Mallard Realty, card exchange, LLM context to new services
+- [ ] **Bank login merge** — should bank login = ElxaOS login? (leaning yes)
+- [ ] **Registry migration** — wire remaining systems (messenger, email-llm, card collection) to use registry
+
 ## 🔲 Future Ideas
 - Notepad `execCommand` full rewrite (see Phase 1 #3 TODO)
 - Have InstallerService use `registerProgram()` instead of the `installed_` prefix convention
