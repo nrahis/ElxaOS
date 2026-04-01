@@ -12,6 +12,7 @@ class ElxaCorpJobSystem {
         // Initialize and try to connect to ElxaMail
         this.initializeEmailIntegration();
         this.loadApplicationData();
+        this.loadUserProfiles();
         
         console.log('🏢 ElxaCorp Job System initialized');
     }
@@ -55,6 +56,9 @@ class ElxaCorpJobSystem {
         this.userProfiles[applicationId] = userProfile;
         this.saveUserProfiles();
         
+        // Bridge to OS employment service
+        this._bridgeToEmploymentService(application, userProfile);
+
         // Send confirmation email immediately
         await this.sendApplicationConfirmationEmail(application);
         
@@ -64,7 +68,7 @@ class ElxaCorpJobSystem {
             this.sendHiringEmail(application);
         }, hiringDelay);
         
-        console.log(`✅ Application ${applicationId} processed successfully`);
+        console.log('✅ Application ' + applicationId + ' processed successfully');
         return application;
     }
 
@@ -115,55 +119,45 @@ class ElxaCorpJobSystem {
     async sendApplicationConfirmationEmail(application) {
         const email = this.generateConfirmationEmail(application);
         await this.sendEmailToSystem(email);
-        console.log(`📧 Confirmation email sent for application ${application.id}`);
+        console.log('📧 Confirmation email sent for application ' + application.id);
     }
 
     async sendHiringEmail(application) {
         const userProfile = this.userProfiles[application.id];
         const email = this.generateHiringEmail(application, userProfile);
         await this.sendEmailToSystem(email);
-        console.log(`🎉 Hiring email sent for application ${application.id}`);
+        console.log('🎉 Hiring email sent for application ' + application.id);
     }
 
     generateConfirmationEmail(application) {
-        const positionTitle = this.getPositionTitle(application.position);
-        const applicationNumber = application.applicationNumber;
+        var positionTitle = this.getPositionTitle(application.position);
+        var applicationNumber = application.applicationNumber;
         
-        const subject = `Application Received - ${positionTitle} Position (#${applicationNumber})`;
+        var subject = 'Application Received - ' + positionTitle + ' Position (#' + applicationNumber + ')';
         
-        const body = `Dear ${application.name},
-
-Thank you for your interest in joining the ElxaCorp family!
-
-We have successfully received your application for the ${positionTitle} position. Here are the details we have on file:
-
-APPLICATION DETAILS:
-• Application #: ${applicationNumber}
-• Position: ${positionTitle}
-• Department: ${this.getPositionDepartment(application.position)}
-• Submitted: ${new Date(application.submittedAt).toLocaleDateString()}
-
-ABOUT YOUR APPLICATION:
-• Location: ${this.getLocationDescription(application.location)}
-• ElxaOS Experience: ${this.getExperienceDescription(application.elxaos)}
-• Sus Detection Level: ${this.getSusDescription(application.sus)}
-${application.cookie ? `• Cookie Preference: ${this.getCookieDescription(application.cookie)} (Mrs. Snake-E is delighted!)` : ''}
-
-Our HR team is currently reviewing your application. Given your qualifications and enthusiasm, we expect to have a decision very soon!
-
-${this.getPositionSpecificMessage(application.position)}
-
-We appreciate your patience during the review process.
-
-Best regards,
-
-ElxaCorp Human Resources Department
-Rita Martinez, HR Director
-📧 hr@elxacorp.ex | 📞 (555) SNAKE-HR
-
----
-ElxaCorp - "Innovation Through Excellence™"
-1 Snake-E Boulevard, Snakesia City, Snakesia`;
+        var body = 'Dear ' + application.name + ',\n\n' +
+            'Thank you for your interest in joining the ElxaCorp family!\n\n' +
+            'We have successfully received your application for the ' + positionTitle + ' position. Here are the details we have on file:\n\n' +
+            'APPLICATION DETAILS:\n' +
+            '• Application #: ' + applicationNumber + '\n' +
+            '• Position: ' + positionTitle + '\n' +
+            '• Department: ' + this.getPositionDepartment(application.position) + '\n' +
+            '• Submitted: ' + new Date(application.submittedAt).toLocaleDateString() + '\n\n' +
+            'ABOUT YOUR APPLICATION:\n' +
+            '• Location: ' + this.getLocationDescription(application.location) + '\n' +
+            '• ElxaOS Experience: ' + this.getExperienceDescription(application.elxaos) + '\n' +
+            '• Sus Detection Level: ' + this.getSusDescription(application.sus) + '\n' +
+            (application.cookie ? '• Cookie Preference: ' + this.getCookieDescription(application.cookie) + ' (Mrs. Snake-E is delighted!)\n' : '') +
+            '\nOur HR team is currently reviewing your application. Given your qualifications and enthusiasm, we expect to have a decision very soon!\n\n' +
+            this.getPositionSpecificMessage(application.position) + '\n\n' +
+            'We appreciate your patience during the review process.\n\n' +
+            'Best regards,\n\n' +
+            'ElxaCorp Human Resources Department\n' +
+            'Rita Martinez, HR Director\n' +
+            '📧 hr@elxacorp.ex | 📞 (555) SNAKE-HR\n\n' +
+            '---\n' +
+            'ElxaCorp - "Innovation Through Excellence™"\n' +
+            '1 Snake-E Boulevard, Snakesia City, Snakesia';
 
         return {
             from: 'hr@elxacorp.ex',
@@ -180,63 +174,46 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     generateHiringEmail(application, userProfile) {
-        const positionTitle = userProfile.position.title;
-        const startDate = new Date(userProfile.position.startDate).toLocaleDateString();
-        const salary = userProfile.position.salary;
+        var positionTitle = userProfile.position.title;
+        var startDate = new Date(userProfile.position.startDate).toLocaleDateString();
+        var salary = userProfile.position.salary;
         
-        const subject = `🎉 Welcome to ElxaCorp! You're Hired - ${positionTitle}`;
+        var subject = '🎉 Welcome to ElxaCorp! You\'re Hired - ' + positionTitle;
         
-        const body = `Dear ${application.name},
-
-CONGRATULATIONS! 🎉
-
-We are thrilled to offer you the position of ${positionTitle} at ElxaCorp! Your application impressed our entire team, and we believe you'll be a fantastic addition to our innovative family.
-
-POSITION DETAILS:
-• Title: ${positionTitle}
-• Department: ${userProfile.position.department}
-• Employee ID: ${userProfile.employeeId}
-• Start Date: ${startDate}
-• Salary: ${salary}
-• Reports to: ${this.getManagerName(application.position)}
-
-EMPLOYEE PORTAL ACCESS:
-Your employee portal credentials are:
-• Username: ${userProfile.credentials.username}
-• Temporary Password: ${userProfile.credentials.temporaryPassword}
-• Portal URL: Access through ElxaCorp website → Employee Portal
-
-IMPORTANT: Please change your password on first login for security.
-
-WHAT TO EXPECT ON YOUR FIRST DAY:
-${this.getFirstDayInstructions(application.position)}
-
-SPECIAL NOTES:
-${this.getPersonalizedWelcomeMessage(application)}
-
-NEXT STEPS:
-1. Log into the Employee Portal using your credentials above
-2. Complete your employee onboarding checklist
-3. Review your benefits package
-4. Report to ${this.getDepartmentLocation(application.position)} on ${startDate}
-
-We're so excited to have you join our team! If you have any questions before your start date, please don't hesitate to reach out.
-
-Welcome to the ElxaCorp family!
-
-Best regards,
-
-Mr. Snake-E
-Chief Executive Officer
-ElxaCorp
-
-Rita Martinez
-HR Director
-📧 hr@elxacorp.ex | 📞 (555) SNAKE-HR
-
----
-ElxaCorp - "Innovation Through Excellence™"
-"Your journey to innovation starts here!"`;
+        var body = 'Dear ' + application.name + ',\n\n' +
+            'CONGRATULATIONS! 🎉\n\n' +
+            'We are thrilled to offer you the position of ' + positionTitle + ' at ElxaCorp! Your application impressed our entire team, and we believe you\'ll be a fantastic addition to our innovative family.\n\n' +
+            'POSITION DETAILS:\n' +
+            '• Title: ' + positionTitle + '\n' +
+            '• Department: ' + userProfile.position.department + '\n' +
+            '• Employee ID: ' + userProfile.employeeId + '\n' +
+            '• Start Date: ' + startDate + '\n' +
+            '• Salary: ' + salary + '\n' +
+            '• Reports to: ' + this.getManagerName(application.position) + '\n\n' +
+            'EMPLOYEE PORTAL ACCESS:\n' +
+            'Your employee portal credentials are:\n' +
+            '• Username: ' + userProfile.credentials.username + '\n' +
+            '• Temporary Password: ' + userProfile.credentials.temporaryPassword + '\n' +
+            '• Portal URL: Access through ElxaCorp website → Employee Portal\n\n' +
+            'IMPORTANT: Please change your password on first login for security.\n\n' +
+            'WHAT TO EXPECT ON YOUR FIRST DAY:\n' +
+            this.getFirstDayInstructions(application.position) + '\n\n' +
+            'SPECIAL NOTES:\n' +
+            this.getPersonalizedWelcomeMessage(application) + '\n\n' +
+            'NEXT STEPS:\n' +
+            '1. Log into the Employee Portal using your credentials above\n' +
+            '2. Complete your employee onboarding checklist\n' +
+            '3. Review your benefits package\n' +
+            '4. Report to ' + this.getDepartmentLocation(application.position) + ' on ' + startDate + '\n\n' +
+            'We\'re so excited to have you join our team! If you have any questions before your start date, please don\'t hesitate to reach out.\n\n' +
+            'Welcome to the ElxaCorp family!\n\n' +
+            'Best regards,\n\n' +
+            'Mr. Snake-E\nChief Executive Officer\nElxaCorp\n\n' +
+            'Rita Martinez\nHR Director\n' +
+            '📧 hr@elxacorp.ex | 📞 (555) SNAKE-HR\n\n' +
+            '---\n' +
+            'ElxaCorp - "Innovation Through Excellence™"\n' +
+            '"Your journey to innovation starts here!"';
 
         return {
             from: 'mr.snake.e@elxacorp.ex',
@@ -261,7 +238,7 @@ ElxaCorp - "Innovation Through Excellence™"
             this.emailIntegration.updateEmailList();
 
             if (this.emailIntegration.currentFolder === 'inbox') {
-                this.emailIntegration.showSuccess(`📧 New message from ${emailData.fromName}!`);
+                this.emailIntegration.showSuccess('📧 New message from ' + emailData.fromName + '!');
             }
             return;
         }
@@ -279,19 +256,19 @@ ElxaCorp - "Innovation Through Excellence™"
 
     injectEmailToStorage(emailData) {
         try {
-            const toEmail = emailData.to || '';
-            const username = toEmail.includes('@') ? toEmail.split('@')[0] : toEmail;
+            var toEmail = emailData.to || '';
+            var username = toEmail.includes('@') ? toEmail.split('@')[0] : toEmail;
             if (!username) return false;
 
-            const raw = localStorage.getItem(`elxaOS-mail-user-${username}`);
+            var raw = localStorage.getItem('elxaOS-mail-user-' + username);
             if (!raw) return false;
 
-            const userData = JSON.parse(raw);
+            var userData = JSON.parse(raw);
             if (!userData.folders) userData.folders = { inbox: [], sent: [], drafts: [], trash: [] };
             if (!userData.folders.inbox) userData.folders.inbox = [];
 
             userData.folders.inbox.unshift(emailData);
-            localStorage.setItem(`elxaOS-mail-user-${username}`, JSON.stringify(userData));
+            localStorage.setItem('elxaOS-mail-user-' + username, JSON.stringify(userData));
             return true;
         } catch (error) {
             console.error('❌ Failed to inject email to storage:', error);
@@ -301,7 +278,7 @@ ElxaCorp - "Innovation Through Excellence™"
 
     queueEmail(emailData) {
         // Store queued emails in localStorage for later delivery
-        const queuedEmails = JSON.parse(localStorage.getItem('elxacorp-queued-emails') || '[]');
+        var queuedEmails = JSON.parse(localStorage.getItem('elxacorp-queued-emails') || '[]');
         queuedEmails.push(emailData);
         localStorage.setItem('elxacorp-queued-emails', JSON.stringify(queuedEmails));
     }
@@ -311,14 +288,14 @@ ElxaCorp - "Innovation Through Excellence™"
     getUserEmailAddress() {
         // Try to get email from logged-in ElxaMail user
         if (this.emailIntegration && this.emailIntegration.isLoggedIn && this.emailIntegration.currentUser) {
-            const userEmail = this.emailIntegration.currentUser.email;
-            console.log(`📧 Using ElxaMail user email: ${userEmail}`);
+            var userEmail = this.emailIntegration.currentUser.email;
+            console.log('📧 Using ElxaMail user email: ' + userEmail);
             return userEmail;
         }
         
         // Try to get from stored application email if we added it to the form
         if (this.currentApplicationEmail) {
-            console.log(`📧 Using application email: ${this.currentApplicationEmail}`);
+            console.log('📧 Using application email: ' + this.currentApplicationEmail);
             return this.currentApplicationEmail;
         }
         
@@ -331,10 +308,56 @@ ElxaCorp - "Innovation Through Excellence™"
         this.currentApplicationEmail = email;
     }
 
+    // ===== EMPLOYMENT SERVICE BRIDGE =====
+
+    _bridgeToEmploymentService(application, userProfile) {
+        if (typeof elxaOS === 'undefined' || !elxaOS.employmentService) {
+            console.log('⚠️ Employment service not available — hire not registered at OS level');
+            return;
+        }
+
+        var annualSalary = this._parseSalaryNumeric(application.position, application.salary);
+
+        elxaOS.employmentService.hire({
+            employeeId: userProfile.employeeId,
+            employer: 'ElxaCorp',
+            position: userProfile.position.title,
+            department: userProfile.position.department,
+            annualSalary: annualSalary,
+            salaryDisplay: userProfile.position.salary,
+            hireDate: userProfile.position.startDate,
+            manager: this.getManagerName(application.position),
+            payFrequency: 'weekly'
+        });
+
+        console.log('✅ Employment bridged to OS: ' + userProfile.position.title + ' at ' + annualSalary.toLocaleString() + '/yr');
+    }
+
+    /**
+     * Extract the numeric USD annual salary for a given position.
+     * Reuses the same base salary table as calculateSalary() but
+     * returns a raw number instead of a display string.
+     * Snake currency is converted to USD at a 2:1 ratio.
+     */
+    _parseSalaryNumeric(position, currency) {
+        var baseSalaries = {
+            'it': 75000,
+            'arcade': 55000,
+            'assistant-mrs': 65000,
+            'gaming': 70000,
+            'customer': 45000,
+            'security': 60000,
+            'denali': 50000,
+            'cookie': 40000
+        };
+
+        return baseSalaries[position] || 50000;
+    }
+
     // ===== HELPER METHODS FOR EMAIL CONTENT =====
 
     getPositionTitle(position) {
-        const titles = {
+        var titles = {
             'it': 'IT Specialist',
             'arcade': 'Retro Arcade Technician',
             'assistant-mrs': 'Executive Assistant to Mrs. Snake-E',
@@ -349,7 +372,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getPositionDepartment(position) {
-        const departments = {
+        var departments = {
             'it': 'Information Technology',
             'arcade': 'Retro Gaming Division',
             'assistant-mrs': 'Executive Operations',
@@ -364,7 +387,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getManagerName(position) {
-        const managers = {
+        var managers = {
             'it': 'Mr. Snake-E (CEO)',
             'arcade': 'Remi Marway (Gaming Division Head)',
             'assistant-mrs': 'Mrs. Snake-E (CIO)',
@@ -379,7 +402,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getLocationDescription(location) {
-        const descriptions = {
+        var descriptions = {
             'snakesia': 'Snakesia (Local hire - excellent!)',
             'tennessee': 'Tennessee (Our friendly neighbor!)',
             'usa': 'United States',
@@ -390,7 +413,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getExperienceDescription(level) {
-        const descriptions = {
+        var descriptions = {
             'expert': 'Expert Level (Impressive!)',
             'advanced': 'Advanced User',
             'intermediate': 'Intermediate',
@@ -401,7 +424,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getSusDescription(level) {
-        const descriptions = {
+        var descriptions = {
             'expert': 'Expert Sus Detective (Pushing Cat approved!)',
             'good': 'Good Sus Awareness',
             'average': 'Average Detection Skills',
@@ -412,7 +435,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getCookieDescription(type) {
-        const descriptions = {
+        var descriptions = {
             'chocolate-chip': 'Chocolate Chip (A classic choice!)',
             'oatmeal': 'Oatmeal Raisin (Mrs. Snake-E\'s personal favorite!)',
             'snickerdoodle': 'Snickerdoodle (Fancy taste!)',
@@ -424,7 +447,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getPositionSpecificMessage(position) {
-        const messages = {
+        var messages = {
             'it': 'Given the high demand for IT specialists, your position is likely to be approved very quickly!',
             'arcade': 'Remi is personally excited to review your arcade technician application!',
             'assistant-mrs': 'Mrs. Snake-E is looking forward to having garden conversations with you!',
@@ -438,7 +461,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getFirstDayInstructions(position) {
-        const instructions = {
+        var instructions = {
             'it': '• Report to IT Department at 9:00 AM\n• Bring your favorite debugging snacks\n• Mr. Snake-E will personally welcome you\n• Your workstation is pre-configured with ElxaOS 11.0',
             'arcade': '• Meet Remi in the Gaming Division at 9:30 AM\n• Tour the arcade room and testing facilities\n• Learn about our retro game preservation mission\n• Get hands-on with classic arcade machines',
             'assistant-mrs': '• Garden tour with Mrs. Snake-E at 8:00 AM\n• Introduction to executive scheduling system\n• Cookie tasting orientation (mandatory!)\n• Meet the executive team',
@@ -452,7 +475,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getPersonalizedWelcomeMessage(application) {
-        const messages = [];
+        var messages = [];
         
         if (application.sus === 'expert') {
             messages.push('• Mr. Snake-E is impressed by your sus detection expertise!');
@@ -467,7 +490,7 @@ ElxaCorp - "Innovation Through Excellence™"
         }
         
         if (application.gaming) {
-            messages.push(`• Remi saw that you enjoy ${application.gaming} and wants to chat about retro gaming!`);
+            messages.push('• Remi saw that you enjoy ' + application.gaming + ' and wants to chat about retro gaming!');
         }
         
         if (application.location === 'snakesia') {
@@ -482,7 +505,7 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     getDepartmentLocation(position) {
-        const locations = {
+        var locations = {
             'it': 'IT Department (3rd Floor, East Wing)',
             'arcade': 'Gaming Division (Basement Level, Arcade Room)',
             'assistant-mrs': 'Executive Suite (5th Floor, Garden Wing)',
@@ -502,35 +525,35 @@ ElxaCorp - "Innovation Through Excellence™"
     }
 
     generateEmployeeId(name) {
-        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-        const number = String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0');
+        var initials = name.split(' ').map(function(n) { return n[0]; }).join('').toUpperCase();
+        var number = String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0');
         return 'EMP-' + initials + number;
     }
 
     generateUsername(name) {
-        const firstName = name.split(' ')[0].toLowerCase();
-        const lastName = name.split(' ').slice(-1)[0].toLowerCase();
-        const number = Math.floor(Math.random() * 999) + 1;
+        var firstName = name.split(' ')[0].toLowerCase();
+        var lastName = name.split(' ').slice(-1)[0].toLowerCase();
+        var number = Math.floor(Math.random() * 999) + 1;
         return firstName + '.' + lastName + number;
     }
 
     generateTempPassword() {
-        const words = ['Snake', 'Elxa', 'Corp', 'Tech', 'Code'];
-        const word = words[Math.floor(Math.random() * words.length)];
-        const number = Math.floor(Math.random() * 999) + 100;
+        var words = ['Snake', 'Elxa', 'Corp', 'Tech', 'Code'];
+        var word = words[Math.floor(Math.random() * words.length)];
+        var number = Math.floor(Math.random() * 999) + 100;
         return word + number;
     }
 
     calculateStartDate() {
         // Start next Monday
-        const today = new Date();
-        const nextMonday = new Date(today);
+        var today = new Date();
+        var nextMonday = new Date(today);
         nextMonday.setDate(today.getDate() + (8 - today.getDay()) % 7);
         return nextMonday.toISOString();
     }
 
     calculateSalary(position, currency) {
-        const baseSalaries = {
+        var baseSalaries = {
             'it': { usd: 75000, snakes: 150000 },
             'arcade': { usd: 55000, snakes: 110000 },
             'assistant-mrs': { usd: 65000, snakes: 130000 },
@@ -541,16 +564,16 @@ ElxaCorp - "Innovation Through Excellence™"
             'cookie': { usd: 40000, snakes: 80000 }
         };
         
-        const salary = baseSalaries[position] || { usd: 50000, snakes: 100000 };
+        var salary = baseSalaries[position] || { usd: 50000, snakes: 100000 };
         
         if (currency === 'snakes') {
-            return `${salary.snakes.toLocaleString()} 🐍 per year`;
+            return salary.snakes.toLocaleString() + ' 🐍 per year';
         } else if (currency === 'mixed') {
-            return `$${(salary.usd / 2).toLocaleString()} + ${salary.snakes / 2} 🐍 per year`;
+            return '$' + (salary.usd / 2).toLocaleString() + ' + ' + (salary.snakes / 2) + ' 🐍 per year';
         } else if (currency === 'cookies') {
-            return `$${salary.usd.toLocaleString()} + unlimited 🍪 per year`;
+            return '$' + salary.usd.toLocaleString() + ' + unlimited 🍪 per year';
         } else {
-            return `$${salary.usd.toLocaleString()} per year`;
+            return '$' + salary.usd.toLocaleString() + ' per year';
         }
     }
 
@@ -571,10 +594,10 @@ ElxaCorp - "Innovation Through Excellence™"
 
     loadApplicationData() {
         try {
-            const data = localStorage.getItem('elxacorp-applications');
+            var data = localStorage.getItem('elxacorp-applications');
             if (data) {
                 this.applications = JSON.parse(data);
-                console.log(`📁 Loaded ${this.applications.length} applications from storage`);
+                console.log('📁 Loaded ' + this.applications.length + ' applications from storage');
             }
         } catch (error) {
             console.error('❌ Failed to load applications:', error);
@@ -593,10 +616,10 @@ ElxaCorp - "Innovation Through Excellence™"
 
     loadUserProfiles() {
         try {
-            const data = localStorage.getItem('elxacorp-user-profiles');
+            var data = localStorage.getItem('elxacorp-user-profiles');
             if (data) {
                 this.userProfiles = JSON.parse(data);
-                console.log(`📁 Loaded ${Object.keys(this.userProfiles).length} user profiles from storage`);
+                console.log('📁 Loaded ' + Object.keys(this.userProfiles).length + ' user profiles from storage');
             }
         } catch (error) {
             console.error('❌ Failed to load user profiles:', error);
@@ -610,8 +633,39 @@ ElxaCorp - "Innovation Through Excellence™"
         return await this.processJobApplication(formData);
     }
 
+    /**
+     * Re-send the hiring email for the most recent application.
+     * Safety valve for when the original setTimeout-based email fails.
+     * Also re-bridges to the employment service in case that was missed.
+     */
+    resendHiringEmail() {
+        if (this.applications.length === 0) {
+            console.warn('No applications found to resend hiring email for');
+            return false;
+        }
+
+        var lastApp = this.applications[this.applications.length - 1];
+        var profile = this.userProfiles[lastApp.id];
+
+        if (!profile) {
+            // Create profile if it somehow doesn't exist
+            profile = this.createUserProfile(lastApp);
+            this.userProfiles[lastApp.id] = profile;
+            this.saveUserProfiles();
+        }
+
+        // Bridge to employment service (in case it didn't fire before)
+        this._bridgeToEmploymentService(lastApp, profile);
+
+        // Send the hiring email
+        this.sendHiringEmail(lastApp);
+
+        console.log('\u2705 Hiring email re-sent for ' + lastApp.name + ' (application ' + lastApp.id + ')');
+        return true;
+    }
+
     getApplicationById(id) {
-        return this.applications.find(app => app.id === id);
+        return this.applications.find(function(app) { return app.id === id; });
     }
 
     getUserProfileById(id) {
@@ -632,12 +686,13 @@ ElxaCorp - "Innovation Through Excellence™"
         if (!this.emailIntegration || !this.emailIntegration.isLoggedIn) return;
         
         try {
-            const queuedEmails = JSON.parse(localStorage.getItem('elxacorp-queued-emails') || '[]');
+            var queuedEmails = JSON.parse(localStorage.getItem('elxacorp-queued-emails') || '[]');
             if (queuedEmails.length > 0) {
-                console.log(`📮 Processing ${queuedEmails.length} queued emails`);
+                console.log('📮 Processing ' + queuedEmails.length + ' queued emails');
                 
-                queuedEmails.forEach(email => {
-                    this.emailIntegration.emails.inbox.unshift(email);
+                var self = this;
+                queuedEmails.forEach(function(email) {
+                    self.emailIntegration.emails.inbox.unshift(email);
                 });
                 
                 this.emailIntegration.saveCurrentUser();
@@ -646,7 +701,7 @@ ElxaCorp - "Innovation Through Excellence™"
                 // Clear queue
                 localStorage.removeItem('elxacorp-queued-emails');
                 
-                this.emailIntegration.showSuccess(`📧 ${queuedEmails.length} queued email(s) delivered!`);
+                this.emailIntegration.showSuccess('📧 ' + queuedEmails.length + ' queued email(s) delivered!');
             }
         } catch (error) {
             console.error('❌ Failed to process queued emails:', error);
@@ -662,7 +717,7 @@ window.handleJobApplication = async function(event) {
     event.preventDefault();
     
     // Collect form data
-    const formData = {
+    var formData = {
         name: document.getElementById('app-name').value.trim(),
         age: parseInt(document.getElementById('app-age').value),
         location: document.getElementById('app-location').value,
@@ -679,43 +734,33 @@ window.handleJobApplication = async function(event) {
     
     try {
         // Process application through job system
-        const application = await elxaCorpJobSystem.submitApplication(formData);
+        var application = await elxaCorpJobSystem.submitApplication(formData);
         
-        // Show success message
-        const status = document.getElementById('application-status');
-        status.style.display = 'block';
-        status.className = 'snakee-status-message snakee-status-success';
-        status.innerHTML = `🎉 SUCCESS! Application submitted successfully!<br><br>
-            <strong>Application ID:</strong> ${application.id}<br>
-            <strong>Application Number:</strong> #${application.applicationNumber}<br><br>
-            📧 Check your ElxaMail inbox - you should receive a confirmation email shortly, followed by our hiring decision!<br><br>
-            Welcome to the ElxaCorp family, ${formData.name}! 🏢`;
-        
-        // Clear form
-        document.getElementById('jobApplication').reset();
-        
-        // Auto-hide status after 15 seconds
-        setTimeout(() => {
-            status.style.display = 'none';
-        }, 15000);
+        console.log('\u2705 Application processed, switching to post-apply view');
+
+        // Let checkEmploymentStatus() handle the view from here.
+        // It will detect the new application/profile and show the
+        // proper State 2 (pending + inquire) or State 3 (employed).
+        if (typeof checkEmploymentStatus === 'function') {
+            checkEmploymentStatus();
+        } else {
+            // Fallback if checkEmploymentStatus isn't available
+            var status = document.getElementById('application-status');
+            var form = document.getElementById('jobApplication');
+            form.style.display = 'none';
+            status.style.display = 'block';
+            status.className = 'snakee-status-message snakee-status-success';
+            status.innerHTML = '\uD83C\uDF89 Application submitted! Check your ElxaMail for your hiring confirmation.';
+        }
         
     } catch (error) {
-        console.error('❌ Application submission failed:', error);
+        console.error('\u274c Application submission failed:', error);
         
-        const status = document.getElementById('application-status');
+        var status = document.getElementById('application-status');
         status.style.display = 'block';
         status.className = 'snakee-status-message snakee-status-warning';
-        status.innerHTML = `⚠️ There was an issue processing your application. Please try again or contact HR at hr@elxacorp.ex`;
-        
-        setTimeout(() => {
-            status.style.display = 'none';
-        }, 8000);
+        status.innerHTML = '\u26a0\ufe0f There was an issue processing your application. Please try again or contact HR at hr@elxacorp.ex';
     }
 };
 
 console.log('🏢 ElxaCorp Job Application Integration System loaded and ready!');
-
-// Export for use in other systems
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ElxaCorpJobSystem;
-}

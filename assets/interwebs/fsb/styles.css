@@ -1,0 +1,1302 @@
+/* =============================================
+   FIRST SNAKESIAN BANK — Late 90s/Early 2000s Style
+   ============================================= */
+
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: Arial, sans-serif !important;
+    background: #f0f8ff !important;
+    color: #000080 !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    min-height: 100vh !important;
+}
+
+/* =============================================
+   Icon overrides — bank-themed colors
+   ============================================= */
+
+.bank-website-root .elxa-icon-ui {
+    color: #000080;
+}
+
+.bank-header .elxa-icon-ui {
+    color: white;
+}
+
+.bank-form-header .elxa-icon-ui,
+.bank-account-type .elxa-icon-ui {
+    color: inherit;
+}
+
+.bank-actions .elxa-icon-ui {
+    color: inherit;
+}
+
+.bank-contact-info .elxa-icon-ui {
+    color: #000080;
+}
+
+/* pointer-events: none on icon spans inside buttons */
+.bank-website-root button .mdi,
+.bank-website-root a .mdi {
+    pointer-events: none;
+}
+
+/* =============================================
+   Layout
+   ============================================= */
+
+.bank-website-root {
+    background: #f0f8ff !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.bank-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff !important;
+    border: 2px solid #4169e1;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+}
+
+/* =============================================
+   Header & Nav
+   ============================================= */
+
+.bank-header {
+    background: linear-gradient(180deg, #4169e1 0%, #191970 100%);
+    color: white;
+    padding: 15px 20px;
+    border-bottom: 3px solid #000080;
+}
+
+.bank-logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+}
+
+.bank-tagline {
+    font-size: 11px;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.bank-nav {
+    background: #e6f2ff;
+    border-bottom: 1px solid #4169e1;
+    padding: 8px 20px;
+    font-size: 11px;
+}
+
+.bank-nav a {
+    color: #000080;
+    text-decoration: underline;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.bank-nav a:hover {
+    color: #ff6347;
+}
+
+/* =============================================
+   Content Area
+   ============================================= */
+
+.bank-content {
+    padding: 20px;
+    min-height: 400px;
+}
+
+.bank-heading {
+    color: #000080;
+}
+
+/* =============================================
+   Forms — Login & Register
+   ============================================= */
+
+.bank-login-form,
+.bank-register-form {
+    max-width: 400px;
+    margin: 20px auto;
+    background: #f9f9ff;
+    border: 2px solid #4169e1;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.bank-form-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000080;
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 1px solid #4169e1;
+    padding-bottom: 8px;
+}
+
+.bank-form-subtitle {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 11px;
+    color: #666;
+}
+
+.bank-form-group {
+    margin-bottom: 12px;
+}
+
+.bank-form-group label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: bold;
+    color: #000080;
+}
+
+.bank-form-group input,
+.bank-form-group select {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px inset #c0c0c0;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+.bank-form-actions {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.bank-form-links {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 10px;
+}
+
+.bank-link {
+    color: #4169e1;
+}
+
+/* =============================================
+   Buttons
+   ============================================= */
+
+.bank-btn {
+    background: linear-gradient(180deg, #4169e1 0%, #191970 100%);
+    color: white;
+    border: 2px outset #4169e1;
+    padding: 6px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    margin: 5px;
+}
+
+.bank-btn:hover {
+    background: linear-gradient(180deg, #5179f1 0%, #292980 100%);
+}
+
+.bank-btn:active {
+    border: 2px inset #4169e1;
+}
+
+.bank-btn-secondary {
+    background: #f0f0f0;
+    color: #000080;
+    border: 2px outset #c0c0c0;
+    padding: 6px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    margin: 5px;
+}
+
+.bank-btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.bank-btn-protected {
+    background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
+    color: white;
+    border: 2px outset #8b4513;
+    padding: 6px 16px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    margin: 5px;
+}
+
+.bank-btn-protected:hover {
+    background: linear-gradient(180deg, #a0522d 0%, #704530 100%);
+}
+
+/* =============================================
+   Dashboard
+   ============================================= */
+
+.bank-welcome {
+    background: #e6ffe6;
+    border: 1px solid #00aa00;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid #00aa00;
+}
+
+.bank-accounts-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.bank-account-card {
+    background: #f9f9ff;
+    border: 2px solid #4169e1;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.bank-account-card.trust-account {
+    background: #fff8dc;
+    border: 2px solid #8b4513;
+    position: relative;
+}
+
+.trust-badge {
+    position: absolute;
+    top: -8px;
+    right: 8px;
+    background: #8b4513;
+    color: white;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.bank-account-type {
+    font-weight: bold;
+    color: #000080;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.bank-account-type.trust {
+    color: #8b4513;
+}
+
+.bank-account-balance {
+    font-size: 18px;
+    font-weight: bold;
+    color: #006400;
+    margin-bottom: 5px;
+}
+
+.bank-account-number {
+    font-size: 10px;
+    color: #666;
+    font-family: 'Courier New', monospace;
+}
+
+.bank-trust-note {
+    font-size: 9px;
+    color: #8b4513;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* =============================================
+   Account Actions & Transaction Forms
+   ============================================= */
+
+.bank-actions {
+    background: #fff8dc;
+    border: 1px solid #daa520;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.bank-actions h3 {
+    margin: 0 0 10px 0;
+    color: #b8860b;
+    font-size: 14px;
+}
+
+.bank-transaction-form {
+    background: #fffacd;
+    border: 2px solid #daa520;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+.bank-transaction-form.trust-form {
+    background: #faf0e6;
+    border: 2px solid #8b4513;
+}
+
+.bank-form-header {
+    margin: 0 0 10px 0;
+    color: #b8860b;
+}
+
+.bank-form-header.trust {
+    color: #8b4513;
+}
+
+.password-required {
+    background: #ffe4b5;
+    border: 1px solid #daa520;
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 3px;
+    font-size: 10px;
+    text-align: center;
+}
+
+/* =============================================
+   Currency Converter
+   ============================================= */
+
+.bank-currency-converter {
+    background: #f0f8ff;
+    border: 1px solid #4169e1;
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 3px;
+}
+
+.bank-converter-header {
+    margin: 0 0 10px 0;
+    color: #4169e1;
+    font-size: 13px;
+}
+
+.bank-converter-rate {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.bank-conversion-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0;
+}
+
+.bank-converter-input {
+    flex: 1;
+    padding: 4px;
+}
+
+/* =============================================
+   Transaction History
+   ============================================= */
+
+.bank-transactions {
+    background: white;
+    border: 1px solid #4169e1;
+    margin-top: 20px;
+}
+
+.bank-transactions h3 {
+    background: #e6f2ff;
+    margin: 0;
+    padding: 10px 15px;
+    color: #000080;
+    font-size: 14px;
+    border-bottom: 1px solid #4169e1;
+}
+
+.bank-transaction-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.bank-transaction-item {
+    padding: 8px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 11px;
+    overflow: hidden;
+}
+
+.bank-transaction-item:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.bank-transaction-date {
+    font-weight: bold;
+    color: #666;
+}
+
+.bank-transaction-desc {
+    margin: 2px 0;
+}
+
+.bank-transaction-amount {
+    font-weight: bold;
+    float: right;
+}
+
+.bank-transaction-amount.positive {
+    color: #006400;
+}
+
+.bank-transaction-amount.negative {
+    color: #dc143c;
+}
+
+.bank-no-transactions {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 11px;
+}
+
+/* =============================================
+   Info Pages — Locations, Help, About
+   ============================================= */
+
+.bank-branch-card {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.bank-branch-name {
+    margin: 0 0 8px 0;
+    color: #000080;
+}
+
+.bank-branch-details {
+    margin: 0;
+    font-size: 11px;
+}
+
+.bank-faq-item {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin: 8px 0;
+}
+
+.bank-faq-answer {
+    font-size: 11px;
+}
+
+.bank-contact-info {
+    font-size: 11px;
+}
+
+/* =============================================
+   Messages & Notices
+   ============================================= */
+
+.bank-security-notice {
+    background: #ffffcc;
+    border: 1px solid #ffcc00;
+    padding: 10px;
+    margin: 15px 0;
+    font-size: 10px;
+    border-left: 4px solid #ffcc00;
+}
+
+.bank-error {
+    background: #ffe6e6;
+    border: 1px solid #ff6b6b;
+    color: #cc0000;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+.bank-success {
+    background: #e6ffe6;
+    border: 1px solid #4caf50;
+    color: #2e7d32;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+/* =============================================
+   Footer
+   ============================================= */
+
+.bank-footer {
+    background: #e6f2ff;
+    border-top: 1px solid #4169e1;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 10px;
+    color: #666;
+}
+
+/* =============================================
+   Utility
+   ============================================= */
+
+.hidden {
+    display: none !important;
+}
+
+/* =============================================
+   Credit Score Widget
+   ============================================= */
+
+.bank-score-card {
+    background: #f0f5ff;
+    border: 2px solid #4169e1;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.bank-score-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.bank-score-header h3 {
+    margin: 0;
+    color: #000080;
+    font-size: 14px;
+}
+
+.bank-score-trend {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.bank-score-display {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.bank-score-number {
+    font-size: 48px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.bank-score-rating {
+    display: inline-block;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 12px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.bank-score-gauge {
+    margin: 12px 0 8px;
+}
+
+.bank-score-gauge-track {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+.bank-score-gauge-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.bank-score-gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.bank-score-inquiries {
+    font-size: 10px;
+    color: #b8860b;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+.bank-score-tips {
+    margin-top: 10px;
+    background: #ffffcc;
+    border: 1px solid #daa520;
+    padding: 8px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+}
+
+.bank-score-tips strong {
+    color: #b8860b;
+}
+
+.bank-score-tips ul {
+    margin: 4px 0 0 15px;
+    padding: 0;
+}
+
+.bank-score-tips li {
+    margin-bottom: 3px;
+}
+
+.bank-score-history {
+    margin-top: 10px;
+}
+
+.bank-score-history strong {
+    font-size: 11px;
+    color: #000080;
+}
+
+.bank-score-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 50px;
+    margin-top: 5px;
+    padding: 2px 0;
+}
+
+.bank-score-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.bank-score-bar {
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+    min-height: 3px;
+}
+
+.bank-score-bar-col span {
+    font-size: 8px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.bank-score-unavailable {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+    padding: 10px;
+}
+
+/* =============================================
+   My Credit Cards Section
+   ============================================= */
+
+.bank-my-cards {
+    margin-bottom: 20px;
+}
+
+.bank-my-cards h3 {
+    color: #000080;
+    font-size: 14px;
+    margin: 0 0 10px 0;
+}
+
+.bank-my-cards-empty {
+    background: #f9f9ff;
+    border: 1px dashed #4169e1;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 11px;
+}
+
+.bank-my-cards-empty h3 {
+    color: #000080;
+    font-size: 14px;
+    margin: 0 0 8px 0;
+}
+
+.bank-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.bank-card-item {
+    background: linear-gradient(135deg, #1a1a3e 0%, #2d2d6b 50%, #1a1a3e 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #4169e1;
+    font-size: 11px;
+}
+
+.bank-card-name {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #ffd700;
+}
+
+.bank-card-number {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.bank-card-details {
+    margin-bottom: 8px;
+}
+
+.bank-card-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    font-size: 10px;
+}
+
+.bank-card-detail span {
+    opacity: 0.7;
+}
+
+.bank-card-util {
+    margin: 8px 0;
+}
+
+.bank-card-util-label {
+    font-size: 9px;
+    margin-bottom: 3px;
+    opacity: 0.8;
+}
+
+.bank-card-util-track {
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bank-card-util-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.bank-card-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.bank-card-actions .bank-btn {
+    font-size: 10px;
+    padding: 4px 10px;
+}
+
+.bank-card-actions .bank-btn-secondary {
+    font-size: 10px;
+    padding: 4px 10px;
+}
+
+.bank-card-close-note {
+    font-size: 9px;
+    opacity: 0.6;
+    font-style: italic;
+}
+
+/* =============================================
+   Card Application Section
+   ============================================= */
+
+.bank-card-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.bank-tier-card {
+    border: 2px solid #4169e1;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f9f9ff;
+}
+
+.bank-tier-card.available {
+    background: #f0fff0;
+    border-color: #006400;
+}
+
+.bank-tier-card.owned {
+    background: #fffacd;
+    border-color: #daa520;
+}
+
+.bank-tier-card.locked {
+    background: #f5f5f5;
+    border-color: #ccc;
+    opacity: 0.7;
+}
+
+.bank-tier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.bank-tier-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000080;
+}
+
+.bank-tier-card.locked .bank-tier-name {
+    color: #999;
+}
+
+.bank-tier-badge {
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.locked-badge {
+    background: #ddd;
+    color: #666;
+}
+
+.owned-badge {
+    background: #ffd700;
+    color: #654321;
+}
+
+.bank-tier-details {
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.bank-tier-detail {
+    margin-bottom: 3px;
+}
+
+.bank-tier-actions {
+    text-align: right;
+}
+
+.bank-tier-reason {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+}
+
+.bank-tier-card.owned .bank-tier-reason {
+    color: #006400;
+    font-style: normal;
+}
+
+/* Secured Card Section */
+
+.bank-secured-section {
+    margin: 20px 0 15px 0;
+    border: 2px solid #546e7a;
+    border-radius: 5px;
+    padding: 15px;
+    background: linear-gradient(to bottom, #eceff1, #f5f5f5);
+}
+
+.bank-secured-header {
+    font-size: 15px;
+    font-weight: bold;
+    color: #37474f;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #b0bec5;
+}
+
+.bank-secured-info {
+    font-size: 11px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.bank-secured-info p {
+    margin: 0 0 8px 0;
+}
+
+.bank-secured-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bank-secured-perks li {
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+
+.bank-secured-perks li .mdi {
+    color: #006400;
+}
+
+.bank-secured-apply-form {
+    background: #fff;
+    border: 1px inset #c0c0c0;
+    padding: 12px;
+    margin-top: 8px;
+}
+
+.bank-secured-deposit-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 10px;
+    color: #666;
+}
+
+.bank-secured-deposit-input {
+    width: 70px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 4px;
+    border: 1px inset #c0c0c0;
+}
+
+#securedDepositSlider {
+    width: 100%;
+    margin-top: 6px;
+}
+
+.bank-secured-limit-preview {
+    font-size: 11px;
+    margin-top: 8px;
+    color: #333;
+    text-align: center;
+}
+
+.bank-secured-limit-preview strong {
+    color: #000080;
+}
+
+.bank-secured-apply-btn {
+    width: 100%;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Secured card active status */
+
+.bank-secured-status {
+    font-size: 11px;
+}
+
+.bank-secured-active-badge {
+    font-size: 12px;
+    font-weight: bold;
+    color: #006400;
+    margin-bottom: 8px;
+}
+
+.bank-secured-active-badge .mdi {
+    color: #006400;
+}
+
+.bank-secured-details {
+    background: #fff;
+    border: 1px inset #c0c0c0;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+}
+
+.bank-secured-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    border-bottom: 1px dotted #e0e0e0;
+}
+
+.bank-secured-detail:last-child {
+    border-bottom: none;
+}
+
+.bank-secured-graduation {
+    margin-top: 8px;
+}
+
+.bank-secured-grad-label {
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #37474f;
+}
+
+.bank-secured-grad-track {
+    width: 100%;
+    height: 14px;
+    background: #fff;
+    border: 1px inset #c0c0c0;
+    overflow: hidden;
+}
+
+.bank-secured-grad-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #2e7d32);
+    transition: width 0.3s ease;
+}
+
+.bank-secured-grad-hint {
+    font-size: 10px;
+    color: #666;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+/* Card Payment Section */
+
+.bank-card-pay-info {
+    background: #f9f9ff;
+    border: 1px solid #4169e1;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+.bank-card-pay-info div {
+    margin-bottom: 3px;
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+
+@media (max-width: 800px) {
+    .bank-accounts-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .bank-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bank-conversion-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* ==============================================
+   LOAN SYSTEM — Phase 3
+   ============================================== */
+
+/* Dashboard: My Loans Section */
+.bank-my-loans {
+    margin: 15px 0;
+    padding: 12px;
+    background: white;
+    border: 1px inset #c0c0c0;
+}
+
+.bank-my-loans h3 {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: #003366;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+}
+
+.bank-my-loans-empty {
+    margin: 15px 0;
+    padding: 12px;
+    background: white;
+    border: 1px inset #c0c0c0;
+}
+
+.bank-my-loans-empty h3 {
+    margin: 0 0 6px 0;
+    font-size: 13px;
+    color: #003366;
+}
+
+.bank-my-loans-empty p {
+    font-size: 11px;
+    margin: 4px 0;
+    color: #555;
+}
+
+.bank-loans-summary {
+    font-size: 11px;
+    margin-bottom: 10px;
+    padding: 6px 8px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+.bank-loans-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bank-loan-item {
+    background: #fafafa;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 11px;
+}
+
+/* Loan type badges */
+.bank-loan-type-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.bank-loan-type-personal {
+    background: #4a90e2;
+}
+
+.bank-loan-type-auto {
+    background: #e67e22;
+}
+
+.bank-loan-type-mortgage {
+    background: #27ae60;
+}
+
+/* Loan detail rows */
+.bank-loan-details {
+    margin-bottom: 8px;
+}
+
+.bank-loan-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    font-size: 11px;
+    border-bottom: 1px dotted #e0e0e0;
+}
+
+.bank-loan-detail:last-child {
+    border-bottom: none;
+}
+
+.bank-loan-detail span {
+    color: #555;
+}
+
+/* Loan progress bar */
+.bank-loan-progress {
+    margin: 8px 0;
+}
+
+.bank-loan-progress-label {
+    font-size: 10px;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.bank-loan-progress-track {
+    height: 10px;
+    background: #e0e0e0;
+    border: 1px inset #c0c0c0;
+    overflow: hidden;
+}
+
+.bank-loan-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+    transition: width 0.3s ease;
+}
+
+/* Missed payment warning */
+.bank-loan-warning {
+    background: #fff0f0;
+    border: 1px solid #e0b0b0;
+    border-left: 3px solid #dc143c;
+    padding: 5px 8px;
+    margin: 6px 0;
+    font-size: 10px;
+    color: #b22222;
+    font-weight: bold;
+}
+
+/* Loan action buttons */
+.bank-loan-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+/* Loan application page: tier cards (reuses .bank-tier-card from credit) */
+.bank-loan-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Loan estimate calculator */
+.bank-estimate-box {
+    background: #f0f8ff;
+    border: 1px solid #b0c4de;
+    padding: 10px 12px;
+    margin: 10px 0;
+    font-size: 11px;
+}
+
+.bank-estimate-box strong {
+    display: block;
+    font-size: 12px;
+    color: #003366;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #b0c4de;
+    padding-bottom: 4px;
+}
+
+.bank-estimate-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px dotted #d0d8e0;
+}
+
+.bank-estimate-row:last-child {
+    border-bottom: none;
+}
+
+.bank-estimate-row strong {
+    display: inline;
+    font-size: 11px;
+    color: #000080;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}

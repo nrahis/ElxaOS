@@ -15,7 +15,7 @@
        category: "Pushing Cat",
        type: "Creature — Cat",
        flavor: "Just a regular cat...",
-       image: "pushing_cat.png",  // filename in images/ folder (or null)
+       image: "pushing_cat.png",  // filename in images/sets/{SET}/ folder (or null)
        stats: { atk: 2, hp: 3, spd: 1 },
        set: "SCE",
        number: "001"
@@ -64,8 +64,9 @@ function renderCard(cardData, options = {}) {
   card.dataset.rarity = cardData.rarity;
 
   // Art content: image or placeholder
+  // Images live in sets/{SET_KEY}/ subfolders (e.g. images/sets/SCE/rita_001.png)
   const artContent = cardData.image
-    ? `<img src="${imagePath}${cardData.image}" alt="${cardData.name}" loading="lazy">`
+    ? `<img src="${imagePath}sets/${cardData.set}/${cardData.image}" alt="${cardData.name}" loading="lazy">`
     : `<span class="sce-card__art-placeholder">[ ${cardData.name} ]</span>`;
 
   // Stats

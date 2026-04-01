@@ -1,0 +1,92 @@
+/* =================================
+   CUSTOM CURSOR SET - ElxaOS
+   Windows Aero No Tail by benjy2429
+   License: CC Attribution
+================================= */
+
+/* ---- Default cursor (everything inherits this) ---- */
+html {
+    cursor: url('../../assets/cursor/arrow.cur'), default;
+}
+
+/* ---- Clickable elements ---- */
+a,
+button,
+select,
+label[for],
+[role="button"],
+[onclick],
+.start-button,
+.start-menu-item,
+.desktop-icon,
+.window-control,
+.taskbar-program,
+.taskbar-overflow-btn,
+.bios-tab,
+.fun-button,
+.move-up,
+.move-down,
+.test-close,
+.fm-context-menu-item,
+.boot-screen,
+.boot-skip-prompt {
+    cursor: url('../../assets/cursor/link.cur'), pointer;
+}
+
+/* ---- Text selection (I-beam) ---- */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="url"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+input[type="datetime-local"],
+textarea,
+[contenteditable="true"],
+.bios-input {
+    cursor: url('../../assets/cursor/select.cur'), text;
+}
+
+/* ---- Disabled / not-allowed ---- */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+[disabled],
+.disabled {
+    cursor: url('../../assets/cursor/unavail.cur'), not-allowed !important;
+}
+
+/* ---- Move / drag (window title bars) ---- */
+.window-titlebar {
+    cursor: url('../../assets/cursor/move.cur'), move;
+}
+
+/* Title bar controls should still be pointer, not move */
+.window-titlebar .window-control {
+    cursor: url('../../assets/cursor/link.cur'), pointer;
+}
+
+/* ---- Help ---- */
+[data-tooltip],
+.help-cursor {
+    cursor: url('../../assets/cursor/helpsel.cur'), help;
+}
+
+/* ---- Precision / crosshair ---- */
+.precision-cursor,
+.canvas-drawing {
+    cursor: url('../../assets/cursor/prec.cur'), crosshair;
+}
+
+/* ---- Wait / busy (.ani not supported in browsers — fallback only) ---- */
+.wait-cursor,
+.loading {
+    cursor: wait;
+}
+
+.progress-cursor {
+    cursor: progress;
+}

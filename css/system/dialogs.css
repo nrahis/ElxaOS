@@ -87,85 +87,7 @@
     flex: 1; /* Take remaining space */
 }
 
-/* =================================
-   THEME DIALOG SPECIFIC
-================================= */
-.theme-dialog {
-    min-width: 580px;
-    max-width: 680px; /* Reduced max width */
-    max-height: 85vh; /* Better height management */
-}
-
-.theme-dialog .dialog-content {
-    height: auto;
-    max-height: 85vh;
-}
-
-.theme-dialog .dialog-body {
-    min-height: 420px; /* Increased to prevent cut-off */
-    max-height: calc(85vh - 60px); /* Account for header and controls */
-    padding: 12px;
-    overflow-y: auto;
-}
-
-.theme-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--windowBorder);
-    margin-bottom: 12px;
-    flex-shrink: 0; /* Prevent tabs from shrinking */
-}
-
-.theme-tab {
-    padding: 6px 16px;
-    cursor: pointer;
-    background: var(--buttonBg);
-    border: 1px outset var(--windowBorder);
-    border-bottom: none;
-    font-size: 11px;
-    font-weight: bold;
-    color: var(--menuText);
-    transition: background 0.2s ease;
-}
-
-.theme-tab.active {
-    background: var(--windowBg);
-    border: 1px inset var(--windowBorder);
-    border-bottom: 1px solid var(--windowBg);
-    margin-bottom: -1px;
-}
-
-.theme-tab:hover:not(.active) {
-    background: var(--buttonHoverBg);
-}
-
-.theme-content {
-    min-height: 280px;
-    max-height: 320px; 
-    overflow-y: auto;
-    border: 1px inset var(--windowBorder);
-    background: var(--windowBg);
-    padding: 12px;
-    flex: 1; /* Take available space */
-}
-
-.tab-panel {
-    display: none;
-}
-
-.tab-panel.active {
-    display: block;
-}
-
-.theme-controls {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 12px;
-    padding: 8px;
-    border-top: 1px solid var(--windowBorder);
-    background: var(--menuBg);
-    flex-shrink: 0; /* Prevent controls from shrinking */
-}
+/* Theme dialog now uses WindowManager — see personalize.css */
 
 /* =================================
    SYSTEM MESSAGES
@@ -466,54 +388,7 @@
     transform: translateY(0);
 }
 
-/* =================================
-   RESPONSIVE SIZING FIXES
-================================= */
-@media (max-height: 700px) {
-    .theme-dialog {
-        max-height: 95vh;
-    }
-    
-    .theme-dialog .dialog-body {
-        min-height: 300px;
-        max-height: calc(95vh - 100px);
-    }
-    
-    .theme-content {
-        max-height: 250px;
-    }
-}
-
-@media (max-width: 700px) {
-    .theme-dialog {
-        min-width: 300px;
-        width: 95vw; /* Only use viewport width on mobile */
-        max-width: 95vw;
-    }
-    
-    .theme-dialog .dialog-body {
-        padding: 8px;
-    }
-    
-    .theme-content {
-        padding: 8px;
-    }
-    
-    .theme-controls {
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-    
-    .theme-grid {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-        gap: 6px;
-    }
-    
-    .wallpaper-grid {
-        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
-        gap: 6px;
-    }
-}
+/* Responsive rules for theme dialog now in personalize.css */
 
 /* =================================
    DARK THEME ADJUSTMENTS

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snake Valley Stock Exchange</title>
+</head>
+<body>
+    <div class="svse-root">
+        <div class="svse-container">
+
+            <!-- Header -->
+            <div class="svse-header">
+                <div class="svse-logo">
+                    <span data-icon="chart-line"></span>
+                    <div class="svse-logo-text">
+                        <span class="svse-title">SNAKE VALLEY STOCK EXCHANGE</span>
+                        <span class="svse-subtitle">Snakesia's Premier Trading Floor</span>
+                    </div>
+                </div>
+                <div class="svse-header-stats" id="headerStats"></div>
+            </div>
+
+            <!-- Scrolling Ticker -->
+            <div class="svse-ticker-bar">
+                <div class="svse-ticker-track" id="tickerTrack"></div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="svse-nav">
+                <a class="svse-nav-tab active" data-tab="market"><span data-icon="chart-bar"></span> Market</a>
+                <a class="svse-nav-tab" data-tab="portfolio"><span data-icon="briefcase-outline"></span> Portfolio</a>
+            </div>
+
+            <!-- ============================== -->
+            <!-- MARKET TAB -->
+            <!-- ============================== -->
+            <div id="marketTab" class="svse-tab-content active">
+                <!-- Sector filter bar -->
+                <div class="svse-filters">
+                    <div class="svse-filter-group">
+                        <label for="filterSector">Sector</label>
+                        <select id="filterSector">
+                            <option value="all">All Sectors</option>
+                        </select>
+                    </div>
+                    <div class="svse-filter-group">
+                        <label for="filterSort">Sort By</label>
+                        <select id="filterSort">
+                            <option value="ticker-asc">Ticker: A–Z</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="change-desc">Change: Best First</option>
+                            <option value="change-asc">Change: Worst First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Stock table -->
+                <div class="svse-table-wrap">
+                    <table class="svse-table" id="stockTable">
+                        <thead>
+                            <tr>
+                                <th class="col-ticker">Ticker</th>
+                                <th class="col-name">Company</th>
+                                <th class="col-sector">Sector</th>
+                                <th class="col-price">Price</th>
+                                <th class="col-change">Change</th>
+                                <th class="col-chart">12-Mo</th>
+                                <th class="col-div">Div</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- PORTFOLIO TAB -->
+            <!-- ============================== -->
+            <div id="portfolioTab" class="svse-tab-content">
+                <div id="portfolioContent" class="svse-portfolio"></div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- DETAIL OVERLAY -->
+            <!-- ============================== -->
+            <div id="detailOverlay" class="svse-detail-overlay hidden">
+                <div class="svse-detail-panel">
+                    <button class="svse-detail-close" data-action="close-detail">&times;</button>
+                    <div id="detailContent"></div>
+                </div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- TRADE DIALOG OVERLAY -->
+            <!-- ============================== -->
+            <div id="tradeOverlay" class="svse-trade-overlay hidden">
+                <div class="svse-trade-panel">
+                    <button class="svse-detail-close" data-action="close-trade">&times;</button>
+                    <div id="tradeContent"></div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="svse-footer">
+                <p>&copy; 2025 Snake Valley Stock Exchange &bull; All prices in § (Snakesian Snakes)</p>
+                <p>Market data updates monthly. Past performance does not guarantee future results.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="market.js"></script>
+</body>
+</html>

@@ -149,7 +149,7 @@ class ElxaMailSystem {
 
     async loadCharacters() {
         try {
-            const response = await fetch('./assets/interwebs/exmail/world-context.json');
+            const response = await fetch('./data/world-context.json');
             if (!response.ok) throw new Error(`Failed to load world context: ${response.status}`);
             const worldData = await response.json();
 
@@ -759,6 +759,40 @@ class ElxaMailSystem {
         this.updateUserInfo();
         this.updateContactsList();
         this.selectFolder(this.currentFolder);
+
+        // Check for pending compose request (e.g. from Employee Portal "Email Supervisor")
+        this.checkPendingCompose();
+    }
+
+    /**
+     * Check localStorage for a pending compose request.
+     * Used by the Employee Portal to hand off a pre-filled email.
+     */
+    checkPendingCompose() {
+        try {
+            var raw = localStorage.getItem('elxamail-pending-compose');
+            if (!raw) return;
+            localStorage.removeItem('elxamail-pending-compose');
+
+            var data = JSON.parse(raw);
+            this.showCompose();
+
+            // Small delay to ensure compose DOM is ready
+            setTimeout(() => {
+                var toField = document.getElementById('composeTo');
+                var subjectField = document.getElementById('composeSubject');
+                var bodyField = document.getElementById('composeBody');
+                if (toField && data.to) toField.value = data.to;
+                if (subjectField && data.subject) subjectField.value = data.subject;
+                if (bodyField && data.body) bodyField.value = data.body;
+                // Focus the body so user can start typing
+                if (bodyField) bodyField.focus();
+            }, 150);
+
+            console.log('ElxaMail: opened compose from pending request (to: ' + data.to + ')');
+        } catch (e) {
+            console.warn('ElxaMail: failed to process pending compose:', e);
+        }
     }
 
     hideAllSections() {
@@ -1687,37 +1721,45 @@ class ElxaMailSystem {
     // ===== QUEUED EMAIL PROCESSING =====
 
     processQueuedExternalEmails() {
-        try {
-            const queuedEmails = JSON.parse(localStorage.getItem('elxacorp-queued-emails') || '[]');
-            if (queuedEmails.length === 0) return;
+        // Process all external email queues (ElxaCorp + Finance notifications)
+        const queueKeys = ['elxacorp-queued-emails', 'finance-queued-emails'];
+        let totalDelivered = 0;
 
-            const myEmail = this.currentUser.email;
-            const delivered = [];
-            const remaining = [];
+        for (const key of queueKeys) {
+            try {
+                const queuedEmails = JSON.parse(localStorage.getItem(key) || '[]');
+                if (queuedEmails.length === 0) continue;
 
-            queuedEmails.forEach(email => {
-                if (email.to === myEmail || email.to === 'user@elxamail.ex') {
-                    email.to = myEmail;
-                    this.emails.inbox.unshift(email);
-                    delivered.push(email);
+                const myEmail = this.currentUser.email;
+                const delivered = [];
+                const remaining = [];
+
+                queuedEmails.forEach(email => {
+                    if (email.to === myEmail || email.to === 'user@elxamail.ex') {
+                        email.to = myEmail;
+                        this.emails.inbox.unshift(email);
+                        delivered.push(email);
+                    } else {
+                        remaining.push(email);
+                    }
+                });
+
+                if (remaining.length > 0) {
+                    localStorage.setItem(key, JSON.stringify(remaining));
                 } else {
-                    remaining.push(email);
+                    localStorage.removeItem(key);
                 }
-            });
 
-            if (delivered.length > 0) {
-                this.saveCurrentUser();
-                this.updateEmailList();
-                this.showSuccess(`📧 ${delivered.length} queued email(s) delivered!`);
+                totalDelivered += delivered.length;
+            } catch (error) {
+                console.error('❌ Failed to process queued emails from ' + key + ':', error);
             }
+        }
 
-            if (remaining.length > 0) {
-                localStorage.setItem('elxacorp-queued-emails', JSON.stringify(remaining));
-            } else {
-                localStorage.removeItem('elxacorp-queued-emails');
-            }
-        } catch (error) {
-            console.error('❌ Failed to process queued external emails:', error);
+        if (totalDelivered > 0) {
+            this.saveCurrentUser();
+            this.updateEmailList();
+            this.showSuccess(`📧 ${totalDelivered} queued email(s) delivered!`);
         }
     }
 

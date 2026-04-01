@@ -167,6 +167,16 @@ Goal: Make the File Manager solid, fix bugs, add missing features, and establish
 - [ ] **Bank login merge** — should bank login = ElxaOS login? (leaning yes)
 - [ ] **Registry migration** — wire remaining systems (messenger, email-llm, card collection) to use registry
 
+## 🔲 Pato & Sons Auto (Dealership)
+- [x] **Phase 1: Finance Service Updates** — AUTO_LOAN_TIERS constant, LOAN_TYPES.auto updated (300k max, 3 active, 60mo terms, 12% APR), auto branch in _calculateLoanTerms(), getAutoLoanMaxForScore() helper
+- [x] **Phase 2: Vehicle Data** — 23 vehicles in vehicles.js across 5 tiers
+- [x] **Phase 3: Website Build** — index.html, styles.css, dealership.js, registry entry for pato.ex. Browse/filter/sort, detail views, tiers info, my vehicles tab. Warm mustard/charcoal/cream styling.
+- [x] **Phase 4: Lease Flow** — Lease button functional on tiers 1-3. Confirmation dialog (vehicle preview, monthly cost, balance before/after). Creates recurring payment + first month withdrawal + acquires vehicle as 'leased'. Return vehicle flow (cancels lease, removes vehicle). Keys handover ceremony overlay with sparkles + salesperson quotes. Return farewell overlay. Toast helper. loseVehicle() now auto-cancels linked lease payment.
+- [x] **Phase 5: Buy Flow** — Buy button active on all listings. Down payment check (10%), inline auto loan application with term selector (1-5 years), monthly payment preview with live recalculation. On approval: create loan + acquire vehicle as 'financed'. Purchase ceremony overlay with title transfer deed, loan terms, salesperson quote. Refunds down payment on denial. Active auto loan count check (max 3).
+- [x] **Phase 6: Insurance + Depreciation** — finance cycle steps 6.5 (insurance) + 6.75 (depreciation). Owned/financed vehicles charged monthly insurance based on current value. 3 missed → impoundment. All vehicles depreciate monthly (compound, 20% floor). In-character emails from Snakesian Auto Insurance Authority. Credit score penalties for missed insurance.
+- [x] **Phase 7: Sell Flow** — Current value + depreciation % display in My Vehicles. Sell button for owned/financed. Sell overlay with valuation, loan payoff, net proceeds, underwater detection (blocks if can't cover shortfall). Sale ceremony with financial summary + salesperson farewell. Vehicle returns to lot after sale.
+- [ ] **Phase 8: World Integration + Polish** — world-context.json, LLM context, tiers page, bank UI
+
 ## 🔲 Future Ideas
 - Notepad `execCommand` full rewrite (see Phase 1 #3 TODO)
 - Have InstallerService use `registerProgram()` instead of the `installed_` prefix convention

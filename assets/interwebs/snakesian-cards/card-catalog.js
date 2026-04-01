@@ -457,7 +457,8 @@ window.SERIES_CONFIG = {
   SCE: {
     name: "Series 1",
     key: "SCE",
-    image: "./assets/interwebs/snakesian-cards/series_1.png",
+    image: "./assets/interwebs/snakesian-cards/images/sets/SCE/series_1.png",
+    banner: "./assets/interwebs/snakesian-cards/images/banners/SCE_banner.jpg",
     description: "The original collection — meet the characters, creatures, and legends of Snakesia.",
     cardCount: CARD_CATALOG.filter(function(c) { return c.set === 'SCE'; }).length
   }

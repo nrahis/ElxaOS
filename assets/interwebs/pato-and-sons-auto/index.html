@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pato & Sons Auto — Quality Rides for Every Snake</title>
+</head>
+<body>
+    <div class="pato-root">
+        <div class="pato-container">
+
+            <!-- Banner -->
+            <div class="pato-banner">
+                <img src="./assets/interwebs/pato-and-sons-auto/banner.png" alt="Pato &amp; Sons Auto">
+            </div>
+
+            <!-- Navigation -->
+            <div class="pato-nav">
+                <a class="pato-nav-tab active" data-tab="browse"><span data-icon="car-side"></span> Browse</a>
+                <a class="pato-nav-tab" data-tab="tiers"><span data-icon="trophy-outline"></span> Tiers</a>
+                <a class="pato-nav-tab" data-tab="my-vehicles"><span data-icon="key-variant"></span> My Vehicles</a>
+            </div>
+
+            <!-- ============================== -->
+            <!-- BROWSE TAB -->
+            <!-- ============================== -->
+            <div id="browseTab" class="pato-tab-content active">
+
+                <!-- Auto loan qualification banner -->
+                <div id="loanBanner" class="pato-loan-banner"></div>
+
+                <!-- Filter bar -->
+                <div class="pato-filters">
+                    <div class="pato-filter-group">
+                        <label for="filterTier">Tier</label>
+                        <select id="filterTier">
+                            <option value="all">All Tiers</option>
+                            <option value="beaters">Beaters &amp; Budget</option>
+                            <option value="reliable">Reliable Rides</option>
+                            <option value="midrange">Mid-Range</option>
+                            <option value="premium">Premium</option>
+                            <option value="elite">Showroom Elite</option>
+                        </select>
+                    </div>
+
+                    <div class="pato-filter-group">
+                        <label for="filterPrice">Price Range</label>
+                        <select id="filterPrice">
+                            <option value="all">Any Price</option>
+                            <option value="0-5000">Under 10,000 §</option>
+                            <option value="5000-15000">10k–30k §</option>
+                            <option value="15000-40000">30k–80k §</option>
+                            <option value="40000-100000">80k–200k §</option>
+                            <option value="100000-9999999">200k+ §</option>
+                        </select>
+                    </div>
+
+                    <div class="pato-filter-group">
+                        <label for="filterType">Type</label>
+                        <select id="filterType">
+                            <option value="all">All Types</option>
+                        </select>
+                    </div>
+
+                    <div class="pato-filter-group">
+                        <label for="filterSort">Sort By</label>
+                        <select id="filterSort">
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="year-desc">Newest First</option>
+                            <option value="name-asc">Name: A–Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Results count -->
+                <div id="resultsCount" class="pato-results-count"></div>
+
+                <!-- Vehicle grid -->
+                <div id="vehicleGrid" class="pato-grid"></div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- TIERS TAB -->
+            <!-- ============================== -->
+            <div id="tiersTab" class="pato-tab-content">
+                <div class="pato-tiers-intro">
+                    <h2>Vehicle Tiers at Pato &amp; Sons</h2>
+                    <p>From honest beaters to dream machines — we've got a ride for every budget. Your credit score determines what you can finance, so keep building that score!</p>
+                </div>
+                <div id="tiersList" class="pato-tiers-list"></div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- MY VEHICLES TAB -->
+            <!-- ============================== -->
+            <div id="myVehiclesTab" class="pato-tab-content">
+                <div id="myVehiclesContent" class="pato-my-vehicles"></div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- DETAIL VIEW (overlay) -->
+            <!-- ============================== -->
+            <div id="detailOverlay" class="pato-detail-overlay hidden">
+                <div class="pato-detail-panel">
+                    <button class="pato-detail-close" data-action="close-detail">&times;</button>
+                    <div id="detailContent"></div>
+                </div>
+            </div>
+
+            <!-- Confirmation dialog overlay -->
+            <div id="confirmOverlay" class="pato-confirm-overlay hidden">
+                <div class="pato-confirm-dialog">
+                    <div id="confirmContent"></div>
+                </div>
+            </div>
+
+            <!-- Ceremony overlay -->
+            <div id="ceremonyOverlay" class="pato-ceremony-overlay hidden">
+                <div id="ceremonyContent"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="pato-footer">
+                <p>&copy; 2025 Pato &amp; Sons Auto LLC &bull; Family-Owned Since 1985<br>
+                Licensed in Snakesia &bull; All Sales Final* &bull; (*Not really, we're nice about it)</p>
+                <p>Sales Team: Pato Sr. &bull; Pato Jr. &bull; Sal</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="vehicles.js"></script>
+    <script src="dealership.js"></script>
+</body>
+</html>

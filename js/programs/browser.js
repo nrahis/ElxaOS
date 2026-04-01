@@ -405,15 +405,19 @@ class BrowserProgram {
         }, 500);
     }
 
-    loadPage(url) {
+    loadPage(url, options) {
         if (!this.isConnected) {
             this.showNoInternetPage();
             return;
         }
 
+        const skipHistory = options && options.skipHistory;
+
         console.log(`🌐 Loading page: ${url}`);
 
-        this.addToHistory(url);
+        if (!skipHistory) {
+            this.addToHistory(url);
+        }
         this.currentUrl = url;
         this.updateAddressBar();
         this.updateNavigationButtons();
@@ -673,15 +677,23 @@ class BrowserProgram {
         this.loadPage(`search:${query}`);
     }
 
+    // Sanitize user input for safe HTML insertion
+    escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     showSearchResults(query) {
         const results = this.searchWebsites(query);
         const resultCount = results.length;
+        const safeQuery = this.escapeHtml(query);
 
         let content = `
             <div class="search-results-page">
                 <div class="search-header">
                     <div class="search-logo">Snoogle</div>
-                    <div class="search-stats">Results 1-${Math.min(10, resultCount)} of about ${resultCount} for <b>${query}</b> (0.${Math.floor(Math.random() * 89) + 10} seconds)</div>
+                    <div class="search-stats">Results 1-${Math.min(10, resultCount)} of about ${resultCount} for <b>${safeQuery}</b> (0.${Math.floor(Math.random() * 89) + 10} seconds)</div>
                 </div>
         `;
 
@@ -708,7 +720,7 @@ class BrowserProgram {
         } else {
             content += `
                 <div class="no-results">
-                    <h3>Your search - <b>${query}</b> - did not match any documents.</h3>
+                    <h3>Your search - <b>${safeQuery}</b> - did not match any documents.</h3>
                     <p>Suggestions:</p>
                     <ul style="text-align: left; display: inline-block;">
                         <li>Make sure all words are spelled correctly.</li>
@@ -789,7 +801,8 @@ class BrowserProgram {
             'Personal': 'Regional and Personal',
             'Education': 'Education',
             'Technology': 'Computers and Internet',
-            'Utilities': 'Reference'
+            'Utilities': 'Reference',
+            'Charity': 'Charity and Nonprofit'
         };
 
         const categorizedSites = {};
@@ -870,6 +883,7 @@ class BrowserProgram {
 
         if (site.type === 'file') {
             console.log(`📄 Loading website file: ${site.path}`);
+            this.showLoading();
 
             try {
                 const response = await fetch(site.path);
@@ -895,6 +909,7 @@ class BrowserProgram {
 
                     const content = css ? `<style>${css}</style>${html}` : html;
                     this.setPageContent(content);
+                    this.hideLoading();
 
                     // Execute any scripts in the loaded content
                     await this.executePageScripts();
@@ -910,6 +925,7 @@ class BrowserProgram {
                 }
             } catch (error) {
                 console.error('Error loading website:', error);
+                this.hideLoading();
                 this.showFileNotFoundPage(site, url);
             }
         }
@@ -920,108 +936,100 @@ class BrowserProgram {
         if (!container) return;
 
         const scripts = Array.from(container.getElementsByTagName('script'));
+        if (scripts.length === 0) return;
 
+        // Patch timers ONCE before all scripts run — tracks timers created
+        // during synchronous script execution for cleanup on page navigation
+        const originalSetInterval = window.setInterval;
+        const originalSetTimeout = window.setTimeout;
+        const pageIntervals = [];
+        const pageTimeouts = [];
+
+        window.setInterval = function(fn, delay) {
+            const intervalId = originalSetInterval(function() {
+                try {
+                    if (document.querySelector('#browserPage')) {
+                        fn();
+                    } else {
+                        clearInterval(intervalId);
+                    }
+                } catch (e) {
+                    console.warn('Page script error (interval):', e);
+                    clearInterval(intervalId);
+                }
+            }, delay);
+            pageIntervals.push(intervalId);
+            return intervalId;
+        };
+
+        window.setTimeout = function(fn, delay) {
+            const timeoutId = originalSetTimeout(function() {
+                try {
+                    if (document.querySelector('#browserPage')) {
+                        fn();
+                    }
+                } catch (e) {
+                    console.warn('Page script error (timeout):', e);
+                }
+            }, delay);
+            pageTimeouts.push(timeoutId);
+            return timeoutId;
+        };
+
+        // Register cleanup (runs when browser navigates away from page)
+        if (!window.browserPageCleanup) {
+            window.browserPageCleanup = [];
+        }
+        window.browserPageCleanup.push(function() {
+            pageIntervals.forEach(id => clearInterval(id));
+            pageTimeouts.forEach(id => clearTimeout(id));
+        });
+
+        // Execute each script in global scope — classes/functions survive
+        // across scripts (no try-block wrapping that kills block-scoped decls)
         for (const script of scripts) {
             try {
-                // Get script content — fetch from src if external, otherwise use inline text
                 let scriptCode = script.textContent;
                 const srcAttr = script.getAttribute('src');
 
                 if (srcAttr) {
                     try {
-                        // Resolve relative paths against the current site's base path
+                        // Resolve relative paths using URL API for proper ../  handling
                         let fetchUrl = srcAttr;
                         if (!srcAttr.startsWith('http') && !srcAttr.startsWith('/')) {
-                            // Relative path — resolve from current site's directory
                             const site = this.websiteRegistry[this.currentUrl];
                             if (site && site.path) {
                                 const basePath = site.path.substring(0, site.path.lastIndexOf('/') + 1);
-                                fetchUrl = basePath + srcAttr;
+                                fetchUrl = new URL(basePath + srcAttr, window.location.href).href;
                             }
                         }
-                        const srcResponse = await fetch(fetchUrl);
+                        const srcResponse = await fetch(fetchUrl + (fetchUrl.includes('?') ? '&' : '?') + '_v=' + Date.now());
                         if (srcResponse.ok) {
                             scriptCode = await srcResponse.text();
                         } else {
-                            console.warn(`Failed to load script: ${fetchUrl} (HTTP ${srcResponse.status})`);
+                            console.warn('Failed to load script: ' + fetchUrl + ' (HTTP ' + srcResponse.status + ')');
                             continue;
                         }
                     } catch (e) {
-                        console.warn(`Failed to fetch script src: ${srcAttr}`, e);
+                        console.warn('Failed to fetch script src: ' + srcAttr, e);
                         continue;
                     }
                 }
 
+                // Create a fresh script element with the fetched code — runs
+                // in global scope so class/let/const declarations are visible
+                // to subsequent scripts
                 const newScript = document.createElement('script');
-                // Copy attributes but skip src (we already fetched the content)
-                Array.from(script.attributes).forEach(attr => {
-                    if (attr.name !== 'src') {
-                        newScript.setAttribute(attr.name, attr.value);
-                    }
-                });
-
-                const wrappedContent = `
-                    try {
-                        const originalSetInterval = window.setInterval;
-                        const originalSetTimeout = window.setTimeout;
-                        const pageIntervals = [];
-                        const pageTimeouts = [];
-
-                        window.setInterval = function(fn, delay) {
-                            const intervalId = originalSetInterval(function() {
-                                try {
-                                    if (document.querySelector('#browserPage')) {
-                                        fn();
-                                    } else {
-                                        clearInterval(intervalId);
-                                    }
-                                } catch (e) {
-                                    console.warn('Page script error (interval):', e);
-                                    clearInterval(intervalId);
-                                }
-                            }, delay);
-                            pageIntervals.push(intervalId);
-                            return intervalId;
-                        };
-
-                        window.setTimeout = function(fn, delay) {
-                            const timeoutId = originalSetTimeout(function() {
-                                try {
-                                    if (document.querySelector('#browserPage')) {
-                                        fn();
-                                    }
-                                } catch (e) {
-                                    console.warn('Page script error (timeout):', e);
-                                }
-                            }, delay);
-                            pageTimeouts.push(timeoutId);
-                            return timeoutId;
-                        };
-
-                        if (!window.browserPageCleanup) {
-                            window.browserPageCleanup = [];
-                        }
-                        window.browserPageCleanup.push(function() {
-                            pageIntervals.forEach(id => clearInterval(id));
-                            pageTimeouts.forEach(id => clearTimeout(id));
-                        });
-
-                        ${scriptCode}
-
-                        window.setInterval = originalSetInterval;
-                        window.setTimeout = originalSetTimeout;
-
-                    } catch (e) {
-                        console.warn('Page script execution error:', e);
-                    }
-                `;
-
-                newScript.textContent = wrappedContent;
+                newScript.textContent = scriptCode;
                 script.parentNode.replaceChild(newScript, script);
             } catch (e) {
                 console.error('Error setting up page script:', e);
             }
         }
+
+        // Restore timer functions after all scripts have initialized
+        window.setInterval = originalSetInterval;
+        window.setTimeout = originalSetTimeout;
     }
 
     showFileNotFoundPage(site, url) {
@@ -1232,7 +1240,7 @@ class BrowserProgram {
             this.currentHistoryIndex--;
             const item = this.history[this.currentHistoryIndex];
             this.currentUrl = item.url;
-            this.loadPage(item.url);
+            this.loadPage(item.url, { skipHistory: true });
         }
     }
 
@@ -1241,12 +1249,12 @@ class BrowserProgram {
             this.currentHistoryIndex++;
             const item = this.history[this.currentHistoryIndex];
             this.currentUrl = item.url;
-            this.loadPage(item.url);
+            this.loadPage(item.url, { skipHistory: true });
         }
     }
 
     refresh() {
-        this.loadPage(this.currentUrl);
+        this.loadPage(this.currentUrl, { skipHistory: true });
     }
 
     navigateToHome() {
@@ -1258,7 +1266,7 @@ class BrowserProgram {
     }
 
     toggleFavorite() {
-        if (!this.currentUrl || this.currentUrl === 'snoogle.com') return;
+        if (!this.currentUrl || this.currentUrl === 'snoogle.ex') return;
 
         const existingIndex = this.favorites.findIndex(f => f.url === this.currentUrl);
 
@@ -1440,16 +1448,20 @@ class BrowserProgram {
     }
 
     saveUserData() {
-        try {
-            const userData = {
-                favorites: this.favorites,
-                history: this.history.slice(-20)
-            };
+        // Debounce — coalesce rapid navigations into a single write
+        clearTimeout(this._saveTimer);
+        this._saveTimer = setTimeout(() => {
+            try {
+                const userData = {
+                    favorites: this.favorites,
+                    history: this.history.slice(-20)
+                };
 
-            this.fileSystem.createFile(['root', 'System'], 'browser-data.json', JSON.stringify(userData));
-        } catch (error) {
-            console.error('Failed to save browser data:', error);
-        }
+                this.fileSystem.createFile(['root', 'System'], 'browser-data.json', JSON.stringify(userData));
+            } catch (error) {
+                console.error('Failed to save browser data:', error);
+            }
+        }, 500);
     }
 
     loadUserData() {
@@ -1480,6 +1492,7 @@ class BrowserProgram {
     // Cleanup method for when the browser is destroyed
     destroy() {
         console.log('🌐 Browser: Destroying browser instance...');
+        clearTimeout(this._saveTimer);
         this.clearPageScripts();
         this.cleanupDocumentListeners();
         this.windowId = null;

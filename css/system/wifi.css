@@ -2,88 +2,26 @@
    WIFI SERVICE - THEMED STYLES
    All classes prefixed with 'wifi-' to avoid conflicts
    Using theme service CSS custom properties
+   Now uses WindowManager — no custom positioning needed
 ================================= */
 
 /* =================================
-   MAIN WIFI DIALOG
+   APP CONTAINER (inside .window-content)
 ================================= */
-.wifi-main-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2000;
-    min-width: 480px;
-    max-width: 600px;
-    border: 2px outset var(--windowBorder, #c0c0c0);
-    background: var(--windowBg, #c0c0c0);
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-}
-
-/* Prevent icon spans from stealing clicks */
-.wifi-main-dialog .mdi,
-.wifi-password-dialog .mdi,
-.wifi-create-dialog .mdi,
-.wifi-info-dialog .mdi {
-    pointer-events: none;
-}
-
-.wifi-dialog-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.wifi-dialog-header {
-    background: var(--titlebarBg, linear-gradient(to right, #0080ff, #004080));
-    color: white;
-    padding: 8px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #000;
-}
-
-.wifi-dialog-title {
-    font-weight: bold;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.wifi-dialog-close {
-    background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
-    border: 1px outset var(--windowBorder, #c0c0c0);
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    color: var(--menuText, #333333);
-}
-
-.wifi-dialog-close:hover {
-    background: var(--buttonHoverBg, linear-gradient(to bottom, #e8e8e8, #d0d0d0));
-}
-
-.wifi-dialog-close:active {
-    border: 1px inset var(--windowBorder, #c0c0c0);
-}
-
-/* =================================
-   DIALOG BODY
-================================= */
-.wifi-dialog-body {
-    padding: 16px;
-    background: var(--windowBg, #c0c0c0);
-    min-height: 450px;
+.wifi-app {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    padding: 12px;
+    height: 100%;
+    font-size: 11px;
+    color: var(--menuText, #333);
+    overflow: hidden;
+}
+
+/* Prevent icon spans from stealing clicks */
+.wifi-app .mdi {
+    pointer-events: none;
 }
 
 /* =================================
@@ -94,13 +32,14 @@
     border: 2px inset var(--windowBorder, #c0c0c0);
     padding: 12px;
     border-radius: 4px;
+    flex-shrink: 0;
 }
 
 .wifi-status-header {
     font-weight: bold;
     font-size: 11px;
     margin-bottom: 8px;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -117,26 +56,26 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 8px;
-    background: rgba(255,255,255,0.5);
+    background: color-mix(in srgb, var(--menuBg, #fff) 50%, transparent);
     border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .wifi-status-label {
     font-weight: bold;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-status-value {
-    color: #008000;
+    color: var(--menuText, #333);
 }
 
 .wifi-value-connected {
-    color: #008000;
+    color: #22aa44;
     font-weight: bold;
 }
 
 .wifi-value-disconnected {
-    color: #800000;
+    color: #cc3333;
     font-weight: bold;
 }
 
@@ -145,8 +84,9 @@
 ================================= */
 .wifi-tabs {
     display: flex;
-    border-bottom: 2px solid #808080;
+    border-bottom: 2px solid var(--windowBorder, #808080);
     margin-bottom: 8px;
+    flex-shrink: 0;
 }
 
 .wifi-tab {
@@ -158,7 +98,7 @@
     font-size: 10px;
     font-weight: bold;
     margin-right: 2px;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-tab:hover {
@@ -166,11 +106,12 @@
 }
 
 .wifi-tab.wifi-tab-active {
-    background: var(--menuBg, #c0c0c0);
-    border-bottom: 2px solid var(--menuBg, #c0c0c0);
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    border-bottom: 1px solid var(--windowBg, #c0c0c0);
     position: relative;
     top: 1px;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 /* =================================
@@ -180,7 +121,24 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 250px;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* Themed Scrollbar for tab container */
+.wifi-network-container::-webkit-scrollbar {
+    width: 16px;
+}
+.wifi-network-container::-webkit-scrollbar-track {
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+}
+.wifi-network-container::-webkit-scrollbar-thumb {
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+}
+.wifi-network-container::-webkit-scrollbar-thumb:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
 }
 
 .wifi-tab-content {
@@ -198,19 +156,43 @@
     flex: 1;
     overflow-y: auto;
     border: 2px inset var(--windowBorder, #c0c0c0);
-    background: var(--menuBg, #ffffff);
+    background: var(--menuBg, #fff);
     max-height: 200px;
+}
+
+/* Themed Scrollbars */
+.wifi-network-list::-webkit-scrollbar,
+.wifi-history-list::-webkit-scrollbar,
+.wifi-info-content::-webkit-scrollbar {
+    width: 16px;
+}
+.wifi-network-list::-webkit-scrollbar-track,
+.wifi-history-list::-webkit-scrollbar-track,
+.wifi-info-content::-webkit-scrollbar-track {
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+}
+.wifi-network-list::-webkit-scrollbar-thumb,
+.wifi-history-list::-webkit-scrollbar-thumb,
+.wifi-info-content::-webkit-scrollbar-thumb {
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+}
+.wifi-network-list::-webkit-scrollbar-thumb:hover,
+.wifi-history-list::-webkit-scrollbar-thumb:hover,
+.wifi-info-content::-webkit-scrollbar-thumb:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
 }
 
 .wifi-network-item {
     display: flex;
     align-items: center;
     padding: 8px 12px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
     cursor: pointer;
     font-size: 10px;
     transition: background-color 0.2s;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-network-item:hover {
@@ -219,9 +201,9 @@
 }
 
 .wifi-network-item.wifi-network-connected {
-    background: linear-gradient(to right, #e8ffe8, #d0ffd0);
-    border-left: 4px solid #00aa00;
-    color: var(--menuText, #333333);
+    background: color-mix(in srgb, #22aa44 20%, var(--menuBg, #fff));
+    border-left: 4px solid #22aa44;
+    color: var(--menuText, #333);
 }
 
 .wifi-network-icon {
@@ -250,53 +232,37 @@
     display: flex;
     gap: 12px;
     font-size: 9px;
-    color: #666;
+    color: color-mix(in srgb, var(--menuText, #333) 60%, transparent);
 }
 
 .wifi-network-item:hover .wifi-network-details {
-    color: rgba(255,255,255,0.8);
+    color: color-mix(in srgb, var(--menuHoverText, white) 80%, transparent);
 }
 
 .wifi-network-signal {
     font-family: 'Courier New', monospace;
-    color: #008000;
-}
-
-.wifi-network-item:hover .wifi-network-signal {
-    color: rgba(255,255,255,0.9);
+    color: inherit;
 }
 
 .wifi-network-security {
-    color: #800080;
     font-weight: bold;
-}
-
-.wifi-network-item:hover .wifi-network-security {
-    color: rgba(255,255,255,0.9);
+    color: inherit;
 }
 
 .wifi-network-frequency {
     font-weight: bold;
-}
-
-.wifi-freq-5ghz {
-    color: #0080ff;
-}
-
-.wifi-freq-2ghz {
-    color: #008000;
-}
-
-.wifi-network-item:hover .wifi-network-frequency {
-    color: rgba(255,255,255,0.9) !important;
+    color: inherit;
 }
 
 .wifi-network-channel {
-    color: #666;
+    color: inherit;
 }
 
+.wifi-network-item:hover .wifi-network-signal,
+.wifi-network-item:hover .wifi-network-security,
+.wifi-network-item:hover .wifi-network-frequency,
 .wifi-network-item:hover .wifi-network-channel {
-    color: rgba(255,255,255,0.8);
+    color: color-mix(in srgb, var(--menuHoverText, white) 90%, transparent);
 }
 
 .wifi-network-actions {
@@ -309,39 +275,39 @@
    BUTTONS
 ================================= */
 .wifi-btn-connect {
-    background: linear-gradient(to bottom, #80ff80, #40ff40);
-    border: 1px outset #40ff40;
+    background: color-mix(in srgb, #22aa44 60%, var(--buttonBg, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
     padding: 4px 8px;
     font-size: 9px;
     cursor: pointer;
-    color: black;
+    color: var(--menuText, #333);
     font-weight: bold;
 }
 
 .wifi-btn-connect:hover {
-    background: linear-gradient(to bottom, #a0ffa0, #80ff80);
+    filter: brightness(1.1);
 }
 
 .wifi-btn-connect:active {
-    border: 1px inset #40ff40;
+    border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .wifi-btn-disconnect {
-    background: linear-gradient(to bottom, #ff8080, #ff4040);
-    border: 1px outset #ff4040;
+    background: color-mix(in srgb, #cc3333 60%, var(--buttonBg, #c0c0c0));
+    border: 1px outset var(--windowBorder, #c0c0c0);
     padding: 4px 8px;
     font-size: 9px;
     cursor: pointer;
-    color: white;
+    color: var(--menuText, #333);
     font-weight: bold;
 }
 
 .wifi-btn-disconnect:hover {
-    background: linear-gradient(to bottom, #ffa0a0, #ff8080);
+    filter: brightness(1.1);
 }
 
 .wifi-btn-disconnect:active {
-    border: 1px inset #ff4040;
+    border: 1px inset var(--windowBorder, #c0c0c0);
 }
 
 .wifi-btn-info {
@@ -350,7 +316,7 @@
     padding: 2px 6px;
     font-size: 8px;
     cursor: pointer;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-btn-info:hover {
@@ -367,7 +333,7 @@
     padding: 6px 12px;
     font-size: 10px;
     cursor: pointer;
-    color: white;
+    color: var(--menuHoverText, white);
     font-weight: bold;
 }
 
@@ -385,7 +351,7 @@
     padding: 6px 12px;
     font-size: 10px;
     cursor: pointer;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-btn-secondary:hover {
@@ -408,6 +374,7 @@
     background: var(--buttonBg, linear-gradient(to bottom, #dfdfdf, #c0c0c0));
     border: 1px inset var(--windowBorder, #c0c0c0);
     border-radius: 4px;
+    flex-shrink: 0;
 }
 
 /* =================================
@@ -418,7 +385,7 @@
 }
 
 .wifi-panel-title {
-    color: var(--menuText, #000080);
+    color: var(--menuText, #333);
     margin: 0 0 16px 0;
     font-size: 13px;
 }
@@ -437,7 +404,7 @@
     cursor: pointer;
     text-align: center;
     font-size: 10px;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-tool-item:hover {
@@ -453,7 +420,7 @@
 }
 
 .wifi-advanced-title {
-    color: var(--menuText, #800080);
+    color: var(--menuText, #333);
     margin: 12px 0 8px 0;
     font-size: 12px;
 }
@@ -483,7 +450,7 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 0;
-    border-bottom: 1px solid var(--systemTrayBg, #eee);
+    border-bottom: 1px solid var(--windowBorder, #c0c0c0);
     font-size: 10px;
     color: var(--menuText, #333);
 }
@@ -497,20 +464,20 @@
 }
 
 .wifi-history-date {
-    color: var(--menuText, #666);
+    color: color-mix(in srgb, var(--menuText, #333) 70%, transparent);
 }
 
 .wifi-history-success {
-    color: #008000;
+    color: #22aa44;
 }
 
 .wifi-history-fail {
-    color: #800000;
+    color: #cc3333;
 }
 
 .wifi-history-empty {
     text-align: center;
-    color: var(--menuText, #666);
+    color: color-mix(in srgb, var(--menuText, #333) 60%, transparent);
     font-style: italic;
     padding: 12px;
 }
@@ -528,26 +495,14 @@
 
 .wifi-stat-item {
     padding: 6px;
-    background: rgba(255,255,255,0.7);
+    background: color-mix(in srgb, var(--menuBg, #fff) 70%, transparent);
     border: 1px inset var(--windowBorder, #c0c0c0);
     color: var(--menuText, #333);
 }
 
 /* =================================
-   PASSWORD DIALOG
+   PASSWORD DIALOG (content inside WindowManager)
 ================================= */
-.wifi-password-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2100;
-    min-width: 320px;
-    border: 2px outset var(--windowBorder, #c0c0c0);
-    background: var(--windowBg, #c0c0c0);
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-}
-
 .wifi-password-content {
     padding: 16px;
 }
@@ -556,11 +511,11 @@
     margin-bottom: 12px;
     font-size: 11px;
     font-weight: bold;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-password-meta {
-    color: var(--menuText, #666);
+    color: color-mix(in srgb, var(--menuText, #333) 60%, transparent);
     font-weight: normal;
 }
 
@@ -588,31 +543,19 @@
 
 .wifi-password-hint {
     font-size: 9px;
-    color: #666;
+    color: var(--menuText, #333);
     font-style: italic;
     text-align: center;
     margin-top: 8px;
     padding: 6px;
-    background: #ffffc0;
-    border: 1px solid #ffff80;
+    background: color-mix(in srgb, var(--windowBg, #c0c0c0) 80%, #ffff00);
+    border: 1px solid var(--windowBorder, #c0c0c0);
     border-radius: 2px;
 }
 
 /* =================================
-   CREATE NETWORK DIALOG
+   CREATE NETWORK DIALOG (content inside WindowManager)
 ================================= */
-.wifi-create-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2100;
-    min-width: 380px;
-    border: 2px outset var(--windowBorder, #c0c0c0);
-    background: var(--windowBg, #c0c0c0);
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-}
-
 .wifi-create-content {
     padding: 16px;
 }
@@ -632,7 +575,7 @@
 .wifi-form-label {
     font-size: 11px;
     font-weight: bold;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-form-input {
@@ -661,7 +604,7 @@
     align-items: center;
     gap: 6px;
     font-size: 10px;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-form-checkbox input[type="checkbox"] {
@@ -671,15 +614,15 @@
 
 .wifi-advanced-section {
     padding: 8px;
-    border: 1px solid #808080;
+    border: 1px solid var(--windowBorder, #c0c0c0);
     border-radius: 4px;
-    background: rgba(255,255,255,0.3);
+    background: color-mix(in srgb, var(--menuBg, #fff) 30%, transparent);
 }
 
 .wifi-advanced-header {
     font-size: 10px;
     font-weight: bold;
-    color: var(--menuText, #800080);
+    color: var(--menuText, #333);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -696,29 +639,17 @@
 }
 
 /* =================================
-   NETWORK INFO DIALOG
+   NETWORK INFO DIALOG (content inside WindowManager)
 ================================= */
-.wifi-info-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2100;
-    min-width: 400px;
-    border: 2px outset var(--windowBorder, #c0c0c0);
-    background: var(--windowBg, #c0c0c0);
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-}
-
 .wifi-info-content {
     padding: 16px;
     max-height: 400px;
     overflow-y: auto;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-info-network-name {
-    color: var(--menuText, #000080);
+    color: var(--menuText, #333);
     margin: 0 0 12px 0;
     font-size: 14px;
 }
@@ -734,7 +665,7 @@
     display: flex;
     flex-direction: column;
     padding: 6px;
-    background: rgba(255,255,255,0.7);
+    background: color-mix(in srgb, var(--menuBg, #fff) 70%, transparent);
     border: 1px inset var(--windowBorder, #c0c0c0);
     border-radius: 2px;
 }
@@ -742,13 +673,13 @@
 .wifi-info-label {
     font-size: 9px;
     font-weight: bold;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
     margin-bottom: 2px;
 }
 
 .wifi-info-value {
     font-size: 10px;
-    color: #008000;
+    color: var(--menuText, #333);
     font-family: 'Courier New', monospace;
 }
 
@@ -767,7 +698,7 @@
     gap: 8px;
     padding: 16px;
     font-size: 11px;
-    color: var(--menuText, #333333);
+    color: var(--menuText, #333);
 }
 
 .wifi-scanning-dots {
@@ -814,53 +745,18 @@
 }
 
 .connection-status.online {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: color-mix(in srgb, #22aa44 20%, var(--windowBg, #fff));
+    color: #22aa44;
+    border: 1px solid color-mix(in srgb, #22aa44 40%, var(--windowBorder, #c0c0c0));
 }
 
 .connection-status.offline {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: color-mix(in srgb, #cc3333 20%, var(--windowBg, #fff));
+    color: #cc3333;
+    border: 1px solid color-mix(in srgb, #cc3333 40%, var(--windowBorder, #c0c0c0));
     cursor: pointer;
 }
 
 .connection-status.offline:hover {
-    background: #f5c6cb;
-}
-
-/* =================================
-   DARK THEME ADJUSTMENTS
-================================= */
-.dark-theme .wifi-password-hint {
-    background: #4a4a00;
-    border-color: #666600;
-    color: #cccc00;
-}
-
-.dark-theme .wifi-network-details {
-    color: #999;
-}
-
-.dark-theme .wifi-network-item:hover .wifi-network-details {
-    color: rgba(255,255,255,0.7);
-}
-
-/* =================================
-   RESPONSIVE
-================================= */
-@media (max-width: 640px) {
-    .wifi-main-dialog {
-        min-width: 320px;
-        max-width: 95vw;
-    }
-
-    .wifi-status-details {
-        grid-template-columns: 1fr;
-    }
-
-    .wifi-tools-grid {
-        grid-template-columns: 1fr;
-    }
+    background: color-mix(in srgb, #cc3333 30%, var(--windowBg, #fff));
 }

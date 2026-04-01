@@ -197,6 +197,23 @@ FinanceService.prototype.recalculateCreditScore = function() {
         }
     }
 
+    // Employment bonus — rewards having stable income
+    if (typeof elxaOS !== 'undefined' && elxaOS.employmentService &&
+        elxaOS.employmentService.isEmployed()) {
+        totalDelta += 2;
+        reasons.push('Stable employment (' + elxaOS.employmentService.getEmploymentData().employer + ')');
+    }
+
+    // Savings behavior bonus — rewards maintaining a healthy savings balance
+    const savingsBalance = this._data.accounts?.savings?.balance || 0;
+    for (let i = 0; i < SAVINGS_SCORE_TIERS.length; i++) {
+        if (savingsBalance >= SAVINGS_SCORE_TIERS[i].threshold) {
+            totalDelta += SAVINGS_SCORE_TIERS[i].bonus;
+            reasons.push(SAVINGS_SCORE_TIERS[i].label);
+            break; // Only apply the highest tier
+        }
+    }
+
     // --- Apply clamping ---
     totalDelta = Math.max(-100, Math.min(30, totalDelta));
 
@@ -481,4 +498,266 @@ FinanceService.prototype.applyForCreditCard = async function(tierKey) {
     }
 
     return { success: false, approved: false, message: 'An error occurred processing your application.' };
+};
+
+// =================================
+// SECURED CREDIT CARD SYSTEM
+// =================================
+
+/**
+ * Check if the user currently has an active secured card.
+ * @returns {object|null} — the secured card object, or null
+ */
+FinanceService.prototype.getSecuredCard = function() {
+    if (!this._data?.creditCards) return null;
+    return this._data.creditCards.find(c => c.secured === true && c.status === 'active') || null;
+};
+
+/**
+ * Apply for a secured credit card.
+ * No credit check — anyone can get one as long as they have the deposit.
+ * The deposit amount becomes the credit limit.
+ *
+ * @param {number} depositAmount — how much to deposit (min: SECURED_CARD_CONFIG.minDeposit, max: SECURED_CARD_CONFIG.maxDeposit)
+ * @returns {{ success, approved, message, card?, deposit? }}
+ */
+FinanceService.prototype.applyForSecuredCard = async function(depositAmount) {
+    await this._ensureReady();
+
+    const config = SECURED_CARD_CONFIG;
+
+    // Check: already has a secured card
+    if (this.getSecuredCard()) {
+        return {
+            success: true,
+            approved: false,
+            message: 'You already have an active secured card. Graduate it first or close it before applying for a new one.'
+        };
+    }
+
+    // Validate deposit amount
+    if (!depositAmount || depositAmount < config.minDeposit) {
+        return {
+            success: false,
+            approved: false,
+            message: 'Minimum deposit for a secured card is $' + config.minDeposit.toFixed(2) + '.'
+        };
+    }
+    if (depositAmount > config.maxDeposit) {
+        return {
+            success: false,
+            approved: false,
+            message: 'Maximum deposit for a secured card is $' + config.maxDeposit.toFixed(2) + '.'
+        };
+    }
+
+    // Check: sufficient funds in checking
+    const checking = this._data.accounts.checking;
+    if (checking.balance < depositAmount) {
+        return {
+            success: false,
+            approved: false,
+            message: 'Insufficient funds in checking. You need $' + depositAmount.toFixed(2) + ' for the deposit but only have $' + checking.balance.toFixed(2) + '.'
+        };
+    }
+
+    // Deduct deposit from checking
+    checking.balance -= depositAmount;
+
+    this._addTransaction({
+        type: 'secured-card-deposit',
+        account: 'checking',
+        amount: -depositAmount,
+        description: 'Security deposit for ' + config.name + ' (held as collateral)'
+    });
+
+    this.eventBus.emit('finance.accountUpdated', {
+        account: 'checking',
+        newBalance: checking.balance
+    });
+
+    // Create the secured card — NO hard inquiry
+    const result = await this.createCreditCard({
+        name: config.name,
+        creditLimit: depositAmount,
+        apr: config.apr,
+        annualFee: config.annualFee,
+        minimumPayment: Math.max(15, Math.round(depositAmount * 0.05)),
+        dueDay: 15,
+        tier: 'secured',
+        perks: ['Build your credit history', 'Graduate to a real card']
+    });
+
+    if (result.success) {
+        // Mark the card as secured with extra tracking fields
+        const card = this._data.creditCards.find(c => c.id === result.card.id);
+        if (card) {
+            card.secured = true;
+            card.securedDeposit = depositAmount;
+            card.onTimePayments = 0;
+            card.graduationTarget = config.graduationMonths;
+        }
+
+        await this._save();
+
+        console.log('\ud83d\udd12 Secured card opened: deposit=$' + depositAmount + ', limit=$' + depositAmount);
+
+        this.eventBus.emit('finance.securedCardOpened', {
+            cardId: result.card.id,
+            deposit: depositAmount,
+            creditLimit: depositAmount
+        });
+
+        return {
+            success: true,
+            approved: true,
+            message: 'Your ' + config.name + ' has been approved! A deposit of $' + depositAmount.toFixed(2) + ' has been held as collateral and is your credit limit.',
+            card: { ...card },
+            deposit: depositAmount,
+            graduationInfo: 'Make ' + config.graduationMonths + ' on-time payment(s) to graduate to a real Starter card and get your deposit back!'
+        };
+    }
+
+    // If card creation failed, refund the deposit
+    checking.balance += depositAmount;
+    this._addTransaction({
+        type: 'secured-card-deposit-refund',
+        account: 'checking',
+        amount: depositAmount,
+        description: 'Refund: ' + config.name + ' application failed'
+    });
+    await this._save();
+
+    return { success: false, approved: false, message: 'An error occurred processing your secured card application.' };
+};
+
+/**
+ * Process secured card graduation during monthly cycle.
+ * Checks if any secured card has met the on-time payment requirement.
+ * If so: closes the secured card, refunds the deposit, and opens a real Starter card.
+ *
+ * @param {string} cycleMonth — 'YYYY-MM' for logging
+ * @returns {{ graduated: boolean, details: object|null }}
+ */
+FinanceService.prototype._processSecuredCardGraduation = function(cycleMonth) {
+    var securedCard = this.getSecuredCard();
+    if (!securedCard) return { graduated: false, details: null };
+
+    var config = SECURED_CARD_CONFIG;
+
+    // Check if the card has enough on-time payments
+    if ((securedCard.onTimePayments || 0) < config.graduationMonths) {
+        return { graduated: false, details: null };
+    }
+
+    console.log('\ud83c\udf93 Secured card graduation! ' + securedCard.onTimePayments + '/' + config.graduationMonths + ' on-time payments met.');
+
+    var deposit = securedCard.securedDeposit || config.minDeposit;
+    var oldCardId = securedCard.id;
+
+    // 1. Close the secured card (force-close even with balance — pay it from deposit)
+    var remainingBalance = securedCard.balance;
+    if (remainingBalance > 0) {
+        // Deduct any remaining balance from the deposit refund
+        deposit = Math.max(0, deposit - remainingBalance);
+    }
+    securedCard.status = 'graduated';
+    securedCard.closedDate = new Date().toISOString();
+    securedCard.graduatedDate = new Date().toISOString();
+
+    this._addTransaction({
+        type: 'secured-card-graduated',
+        account: 'credit',
+        amount: 0,
+        description: config.name + ' graduated! Card closed, deposit refunded.'
+    });
+
+    // 2. Refund deposit to checking
+    if (deposit > 0) {
+        this._data.accounts.checking.balance += deposit;
+
+        this._addTransaction({
+            type: 'secured-card-deposit-refund',
+            account: 'checking',
+            amount: deposit,
+            description: 'Security deposit refund from ' + config.name + ' graduation'
+        });
+
+        this.eventBus.emit('finance.accountUpdated', {
+            account: 'checking',
+            newBalance: this._data.accounts.checking.balance
+        });
+    }
+
+    // 3. Score boost for graduation
+    this._adjustScore(config.graduationBonus, 'Secured card graduation \u2014 promoted to Starter card');
+
+    // 4. Create a real Starter card (using current score for terms)
+    var score = this._data.creditScore?.score || 500;
+    var starterTier = CARD_TIERS.starter;
+    var terms = this._calculateCardTerms(starterTier, score);
+
+    // Generate a new card directly (bypass application flow — this is an automatic promotion)
+    var last4 = Math.floor(1000 + Math.random() * 9000).toString();
+    var seg = function() { return Math.floor(1000 + Math.random() * 9000).toString(); };
+    var fullNumber = seg() + ' ' + seg() + ' ' + seg() + ' ' + last4;
+
+    var starterCard = {
+        id: 'cc-' + Date.now() + '-' + Math.random().toString(36).slice(2, 5),
+        name: starterTier.name,
+        number: fullNumber,
+        last4: last4,
+        creditLimit: terms.limit,
+        balance: 0,
+        apr: terms.apr,
+        annualFee: starterTier.annualFee,
+        minimumPayment: Math.max(25, Math.round(terms.limit * 0.05)),
+        dueDay: 15,
+        tier: 'starter',
+        perks: starterTier.perks,
+        opened: new Date().toISOString(),
+        status: 'active',
+        promotedFrom: oldCardId
+    };
+
+    this._data.creditCards.push(starterCard);
+
+    this._addTransaction({
+        type: 'credit-card-opened',
+        account: 'credit',
+        amount: 0,
+        description: 'Promoted to ' + starterTier.name + ' (limit: $' + terms.limit.toFixed(2) + ') from secured card graduation'
+    });
+
+    this._save();
+
+    this.eventBus.emit('finance.securedCardGraduated', {
+        oldCardId: oldCardId,
+        newCardId: starterCard.id,
+        newCardName: starterCard.name,
+        depositRefunded: deposit,
+        scoreBoost: config.graduationBonus,
+        newCreditLimit: terms.limit
+    });
+
+    this.eventBus.emit('finance.creditCardCreated', {
+        cardId: starterCard.id,
+        name: starterCard.name,
+        creditLimit: starterCard.creditLimit
+    });
+
+    var details = {
+        graduated: true,
+        oldCardName: config.name,
+        newCardName: starterCard.name,
+        newCardId: starterCard.id,
+        depositRefunded: deposit,
+        balanceDeducted: remainingBalance,
+        scoreBoost: config.graduationBonus,
+        newCreditLimit: terms.limit,
+        message: config.name + ' graduated! Deposit of $' + deposit.toFixed(2) + ' refunded. New ' + starterCard.name + ' opened with $' + terms.limit.toFixed(2) + ' limit.'
+    };
+
+    console.log('\ud83c\udf93 ' + details.message);
+    return { graduated: true, details: details };
 };

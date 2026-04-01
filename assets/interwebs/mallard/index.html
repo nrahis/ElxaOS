@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mallard Realty — Find Your Nest in Snakesia</title>
+</head>
+<body>
+    <div class="mallard-root">
+        <div class="mallard-container">
+
+            <!-- Banner -->
+            <div class="mallard-banner">
+                <img src="./assets/interwebs/mallard/banner.png" alt="Mallard Realty">
+            </div>
+
+            <!-- Navigation -->
+            <div class="mallard-nav">
+                <a class="mallard-nav-tab active" data-tab="browse"><span data-icon="home-search"></span> Browse</a>
+                <a class="mallard-nav-tab" data-tab="neighborhoods"><span data-icon="map-marker-multiple"></span> Neighborhoods</a>
+                <a class="mallard-nav-tab" data-tab="my-properties"><span data-icon="key-variant"></span> My Properties</a>
+            </div>
+
+            <!-- ============================== -->
+            <!-- BROWSE TAB -->
+            <!-- ============================== -->
+            <div id="browseTab" class="mallard-tab-content active">
+
+                <!-- Mortgage qualification banner -->
+                <div id="mortgageBanner" class="mallard-mortgage-banner"></div>
+
+                <!-- Filter bar -->
+                <div class="mallard-filters">
+                    <div class="mallard-filter-group">
+                        <label for="filterNeighborhood">Neighborhood</label>
+                        <select id="filterNeighborhood">
+                            <option value="all">All Neighborhoods</option>
+                            <option value="dusty-flats">Dusty Flats</option>
+                            <option value="pine-hollow">Pine Hollow</option>
+                            <option value="cloverfield">Cloverfield</option>
+                            <option value="downtown">Downtown Snake Valley</option>
+                            <option value="maple-heights">Maple Heights</option>
+                            <option value="serpentine-estates">Serpentine Estates</option>
+                        </select>
+                    </div>
+
+                    <div class="mallard-filter-group">
+                        <label for="filterPrice">Price Range</label>
+                        <select id="filterPrice">
+                            <option value="all">Any Price</option>
+                            <option value="0-50000">Under 100,000 &#x1f40d;</option>
+                            <option value="50000-120000">100k–240k &#x1f40d;</option>
+                            <option value="120000-400000">240k–800k &#x1f40d;</option>
+                            <option value="400000-9999999">800k+ &#x1f40d;</option>
+                        </select>
+                    </div>
+
+                    <div class="mallard-filter-group">
+                        <label for="filterAvailability">Availability</label>
+                        <select id="filterAvailability">
+                            <option value="all">All Listings</option>
+                            <option value="rent">For Rent</option>
+                            <option value="buy">For Sale</option>
+                            <option value="available">Hide Unavailable</option>
+                        </select>
+                    </div>
+
+                    <div class="mallard-filter-group">
+                        <label for="filterSort">Sort By</label>
+                        <select id="filterSort">
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="sqft-desc">Largest First</option>
+                            <option value="name-asc">Name: A–Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Results count -->
+                <div id="resultsCount" class="mallard-results-count"></div>
+
+                <!-- Property grid -->
+                <div id="propertyGrid" class="mallard-grid"></div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- NEIGHBORHOODS TAB -->
+            <!-- ============================== -->
+            <div id="neighborhoodsTab" class="mallard-tab-content">
+                <div class="mallard-neighborhoods-intro">
+                    <h2>Discover Snakesia's Neighborhoods</h2>
+                    <p>From humble shacks to gated estates, Snakesia has a neighborhood for every budget and lifestyle. Explore our communities below.</p>
+                </div>
+                <div id="neighborhoodsList" class="mallard-neighborhoods-list"></div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- MY PROPERTIES TAB -->
+            <!-- ============================== -->
+            <div id="myPropertiesTab" class="mallard-tab-content">
+                <div id="myPropertiesContent" class="mallard-my-properties"></div>
+            </div>
+
+            <!-- ============================== -->
+            <!-- DETAIL VIEW (overlay) -->
+            <!-- ============================== -->
+            <div id="detailOverlay" class="mallard-detail-overlay hidden">
+                <div class="mallard-detail-panel">
+                    <button class="mallard-detail-close" data-action="close-detail">&times;</button>
+                    <div id="detailContent"></div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mallard-footer">
+                <p>&copy; 2025 Mallard Realty LLC &bull; All rights reserved<br>
+                Licensed in Snakesia &bull; Equal Housing Opportunity &bull; NMLS #77742</p>
+                <p>Agents: Darla Duckworth &bull; Lily Featherstone &bull; Victor Quackwell &bull; Hank Pondsworth</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="properties.js"></script>
+    <script src="realty.js"></script>
+</body>
+</html>

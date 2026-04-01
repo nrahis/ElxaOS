@@ -1049,3 +1049,41 @@
         opacity: 1;
     }
 }
+
+/* =================================
+   THEMED SCROLLBARS (MATCHING BROWSER)
+================================= */
+.canvas-area::-webkit-scrollbar,
+.file-list::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+.canvas-area::-webkit-scrollbar-track,
+.file-list::-webkit-scrollbar-track {
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+}
+
+.canvas-area::-webkit-scrollbar-thumb,
+.file-list::-webkit-scrollbar-thumb {
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+}
+
+.canvas-area::-webkit-scrollbar-thumb:hover,
+.file-list::-webkit-scrollbar-thumb:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
+}
+
+.canvas-area::-webkit-scrollbar-button,
+.file-list::-webkit-scrollbar-button {
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    height: 16px;
+}
+
+.canvas-area::-webkit-scrollbar-button:hover,
+.file-list::-webkit-scrollbar-button:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
+}

@@ -1,6 +1,6 @@
 /* =================================
-   ELXABOOKS PRO — ACCOUNTING SOFTWARE
-   QuickBooks-inspired for ElxaCorp CEOs
+   ELXABOOKS PRO — FINANCIAL DASHBOARD
+   QuickBooks-inspired for ElxaCorp
 ================================= */
 
 /* Pointer-events: prevent icon spans from eating clicks */
@@ -39,11 +39,7 @@
     border-bottom: 1px solid #334155;
 }
 
-.eb-brand-icon {
-    font-size: 22px;
-}
-
-/* Override theme icon color in sidebar */
+.eb-brand-icon { font-size: 22px; }
 .eb-sidebar .elxa-icon-ui { color: #f59e0b; }
 
 .eb-brand-name {
@@ -70,14 +66,24 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 8px 0;
+    padding: 4px 0;
+    overflow-y: auto;
+}
+
+.eb-nav-section-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 16px 4px;
 }
 
 .eb-nav-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 8px 16px;
     background: none;
     border: none;
     color: #94a3b8;
@@ -128,9 +134,7 @@
     animation: ebFadeIn 0.2s ease;
 }
 
-.eb-view.active {
-    display: block;
-}
+.eb-view.active { display: block; }
 
 @keyframes ebFadeIn {
     from { opacity: 0; transform: translateY(4px); }
@@ -160,27 +164,31 @@
 }
 
 /* =================================
-   SUMMARY CARDS (Dashboard)
+   SUMMARY CARDS
 ================================= */
 .eb-summary-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
+
+.eb-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.eb-grid-4 { grid-template-columns: repeat(4, 1fr); }
 
 .eb-card {
     background: #ffffff;
-    border-radius: 8px;
+    border-radius: 2px;
     padding: 14px;
     border: 1px solid #e2e8f0;
     border-top: 3px solid #3b82f6;
 }
 
-.eb-card-balance  { border-top-color: #3b82f6; }
-.eb-card-income   { border-top-color: #10b981; }
-.eb-card-expense  { border-top-color: #ef4444; }
-.eb-card-invoices { border-top-color: #f59e0b; }
+.eb-card-balance   { border-top-color: #3b82f6; }
+.eb-card-income    { border-top-color: #10b981; }
+.eb-card-expense   { border-top-color: #ef4444; }
+.eb-card-invoices  { border-top-color: #f59e0b; }
+.eb-card-score     { border-top-color: #8b5cf6; }
+.eb-card-obligations { border-top-color: #ef4444; }
 
 .eb-card-label {
     font-size: 10px;
@@ -197,19 +205,26 @@
     margin-bottom: 2px;
 }
 
+.eb-card-value-sm {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    color: #1e293b;
+}
+
 .eb-card-sub {
     font-size: 10px;
     color: #94a3b8;
 }
 
 /* =================================
-   COLORS (positive/negative)
+   COLORS
 ================================= */
 .eb-positive { color: #059669; }
 .eb-negative { color: #dc2626; }
 
 /* =================================
-   QUICK ACTIONS (Dashboard)
+   QUICK ACTIONS
 ================================= */
 .eb-quick-actions {
     display: flex;
@@ -260,6 +275,29 @@
 }
 
 /* =================================
+   DEBT BANNER (Dashboard)
+================================= */
+.eb-debt-banner {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+}
+
+.eb-debt-row {
+    display: flex;
+    gap: 24px;
+}
+
+.eb-debt-item {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* =================================
    TRANSACTION TABLE
 ================================= */
 .eb-table {
@@ -269,9 +307,9 @@
     overflow: hidden;
 }
 
-.eb-table-header {
+.eb-table-header,
+.eb-table-header-5 {
     display: grid;
-    grid-template-columns: 90px 1fr 110px 90px 36px;
     padding: 8px 14px;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
@@ -282,36 +320,43 @@
     letter-spacing: 0.3px;
 }
 
+.eb-table-header {
+    grid-template-columns: 80px 1fr 100px 100px;
+}
+
+.eb-table-header-5 {
+    grid-template-columns: 90px 1fr 110px 90px 36px;
+}
+
 .eb-table-body {
-    max-height: 320px;
+    max-height: 360px;
     overflow-y: auto;
 }
 
 .eb-row,
 .eb-recent-list .eb-row {
     display: grid;
-    grid-template-columns: 90px 1fr 110px 90px 36px;
     padding: 8px 14px;
     border-bottom: 1px solid #f1f5f9;
     align-items: center;
     transition: background 0.1s ease;
 }
 
-.eb-row:hover {
-    background: #f8fafc;
+/* 4-col (accounts view, dashboard recent) */
+.eb-table-header ~ .eb-table-body .eb-row,
+.eb-recent-list .eb-row {
+    grid-template-columns: 80px 1fr 100px 100px;
 }
 
-.eb-row:last-child {
-    border-bottom: none;
+/* 5-col (bookkeeping with delete button) */
+.eb-table-header-5 ~ .eb-table-body .eb-row {
+    grid-template-columns: 90px 1fr 110px 90px 36px;
 }
 
-.eb-row-income {
-    border-left: 3px solid #10b981;
-}
-
-.eb-row-expense {
-    border-left: 3px solid #ef4444;
-}
+.eb-row:hover { background: #f8fafc; }
+.eb-row:last-child { border-bottom: none; }
+.eb-row-income { border-left: 3px solid #10b981; }
+.eb-row-expense { border-left: 3px solid #ef4444; }
 
 .eb-col-date {
     font-size: 11px;
@@ -329,9 +374,7 @@
     padding-right: 8px;
 }
 
-.eb-col-cat {
-    font-size: 10px;
-}
+.eb-col-cat { font-size: 10px; }
 
 .eb-cat-badge {
     display: inline-block;
@@ -350,9 +393,7 @@
     font-family: 'Segoe UI', monospace;
 }
 
-.eb-col-action {
-    text-align: center;
-}
+.eb-col-action { text-align: center; }
 
 /* =================================
    BUTTONS
@@ -373,9 +414,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
-.eb-btn-sm:active {
-    transform: translateY(0);
-}
+.eb-btn-sm:active { transform: translateY(0); }
 
 .eb-btn-green  { background: #10b981; color: white; }
 .eb-btn-red    { background: #ef4444; color: white; }
@@ -399,10 +438,7 @@
     font-size: 14px;
 }
 
-.eb-icon-btn:hover {
-    color: #ef4444;
-}
-
+.eb-icon-btn:hover { color: #ef4444; }
 .eb-icon-btn .elxa-icon-ui { color: inherit; }
 
 /* =================================
@@ -417,9 +453,7 @@
     animation: ebFadeIn 0.2s ease;
 }
 
-.eb-form-row {
-    margin-bottom: 14px;
-}
+.eb-form-row { margin-bottom: 14px; }
 
 .eb-label {
     display: block;
@@ -449,9 +483,7 @@
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
-.eb-select {
-    cursor: pointer;
-}
+.eb-select { cursor: pointer; }
 
 .eb-form-actions {
     display: flex;
@@ -480,10 +512,7 @@
     gap: 10px;
 }
 
-.eb-invoice-logo {
-    font-size: 28px;
-}
-
+.eb-invoice-logo { font-size: 28px; }
 .eb-invoice-logo .elxa-icon-ui { color: #f59e0b; }
 
 .eb-subtle {
@@ -511,14 +540,8 @@
     align-items: center;
 }
 
-.eb-line-item-row .eb-line-desc {
-    flex: 2;
-}
-
-.eb-line-item-row .eb-line-amount {
-    flex: 1;
-    max-width: 120px;
-}
+.eb-line-item-row .eb-line-desc { flex: 2; }
+.eb-line-item-row .eb-line-amount { flex: 1; max-width: 120px; }
 
 /* =================================
    INVOICE CARDS
@@ -565,11 +588,12 @@
     letter-spacing: 0.3px;
 }
 
-.eb-status-draft { background: #f1f5f9; color: #64748b; }
-.eb-status-sent  { background: #dbeafe; color: #2563eb; }
-.eb-status-paid  { background: #d1fae5; color: #059669; }
+.eb-status-draft   { background: #f1f5f9; color: #64748b; }
+.eb-status-sent    { background: #dbeafe; color: #2563eb; }
+.eb-status-paid    { background: #d1fae5; color: #059669; }
+.eb-status-overdue { background: #fee2e2; color: #dc2626; }
 
-.eb-invoice-details {
+.eb-invoice-details-row {
     display: flex;
     gap: 16px;
     font-size: 11px;
@@ -594,9 +618,7 @@
     border-bottom: 1px solid #e2e8f0;
 }
 
-.eb-invoice-item-row:last-child {
-    border-bottom: none;
-}
+.eb-invoice-item-row:last-child { border-bottom: none; }
 
 .eb-invoice-actions {
     display: flex;
@@ -611,6 +633,411 @@
 }
 
 .eb-paid-note .elxa-icon-ui { color: inherit; }
+
+/* =================================
+   BOOKKEEPING TABS
+================================= */
+.eb-bk-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 14px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.eb-bk-tab {
+    padding: 8px 20px;
+    background: none;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s ease;
+}
+
+.eb-bk-tab:hover { color: #334155; }
+
+.eb-bk-tab.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+}
+
+.eb-bk-balance-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+
+/* =================================
+   CREDIT SCORE BANNER
+================================= */
+.eb-score-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+
+.eb-score-number {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.eb-score-details {
+    flex-shrink: 0;
+}
+
+.eb-score-rating {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.eb-score-label {
+    font-size: 10px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.eb-score-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.eb-score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+/* =================================
+   CREDIT CARD CARDS
+================================= */
+.eb-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.eb-cc-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    transition: box-shadow 0.15s ease;
+}
+
+.eb-cc-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.eb-cc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.eb-cc-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    text-transform: capitalize;
+}
+
+.eb-cc-last4 {
+    font-size: 12px;
+    color: #94a3b8;
+    font-family: 'Segoe UI', monospace;
+    letter-spacing: 1px;
+}
+
+.eb-cc-balance { margin-bottom: 10px; }
+
+.eb-cc-balance-label {
+    font-size: 10px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.eb-cc-balance-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.eb-cc-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+    margin-bottom: 10px;
+}
+
+.eb-cc-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #475569;
+    padding: 2px 0;
+}
+
+.eb-cc-detail span:last-child {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.eb-cc-util-track {
+    height: 6px;
+    background: #f1f5f9;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.eb-cc-util-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.eb-cc-actions { text-align: right; }
+
+.eb-cc-paid-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: #059669;
+    text-align: center;
+    padding: 4px 0;
+}
+
+/* =================================
+   LOAN CARDS
+================================= */
+.eb-loans-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.eb-loan-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.eb-loan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.eb-loan-type {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.eb-loan-type .elxa-icon-ui { color: #3b82f6; }
+
+.eb-loan-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px 16px;
+    margin-bottom: 12px;
+}
+
+.eb-loan-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #475569;
+    padding: 3px 0;
+    border-bottom: 1px solid #f8fafc;
+}
+
+.eb-loan-detail span:last-child {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.eb-loan-progress-track {
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.eb-loan-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.eb-loan-progress-label {
+    font-size: 10px;
+    color: #94a3b8;
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.eb-loan-actions { text-align: right; }
+
+/* =================================
+   SUBSCRIPTIONS
+================================= */
+.eb-sub-total-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+}
+
+.eb-sub-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.eb-sub-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    transition: box-shadow 0.15s ease;
+}
+
+.eb-sub-card:hover { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); }
+
+.eb-sub-info { flex: 1; }
+
+.eb-sub-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.eb-sub-provider {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+.eb-sub-perks {
+    font-size: 10px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.eb-sub-cost {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.eb-sub-inactive { opacity: 0.5; }
+
+.eb-sub-cancelled .eb-sub-card { background: #f8fafc; }
+
+/* =================================
+   TAXES
+================================= */
+.eb-tax-summary { margin-bottom: 16px; }
+
+.eb-tax-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.eb-tax-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.eb-tax-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.eb-tax-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.eb-tax-name .elxa-icon-ui { color: #3b82f6; }
+
+.eb-tax-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px 16px;
+}
+
+.eb-tax-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #475569;
+    padding: 3px 0;
+}
+
+.eb-tax-detail span:last-child {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.eb-tax-warning {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 4px;
+    color: #dc2626;
+    font-size: 11px;
+    font-weight: 600;
+}
 
 /* =================================
    REPORTS
@@ -692,11 +1119,33 @@
 }
 
 .eb-bar-value {
-    width: 120px;
+    width: 130px;
     font-size: 10px;
     color: #64748b;
     font-weight: 500;
     flex-shrink: 0;
+}
+
+.eb-recurring-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.eb-recurring-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 12px;
+    color: #475569;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.eb-recurring-row:last-child { border-bottom: none; }
+
+.eb-recurring-row span:last-child {
+    font-weight: 600;
+    color: #1e293b;
 }
 
 /* =================================
@@ -711,6 +1160,10 @@
     border: 2px dashed #e2e8f0;
     border-radius: 8px;
     background: #fafbfc;
+}
+
+.eb-empty .elxa-icon-ui {
+    color: #cbd5e1;
 }
 
 /* =================================
@@ -735,4 +1188,17 @@
 .eb-main::-webkit-scrollbar-thumb:hover,
 .eb-table-body::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+.eb-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.eb-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.eb-nav::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 2px;
 }

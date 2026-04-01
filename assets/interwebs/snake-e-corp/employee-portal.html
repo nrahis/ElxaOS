@@ -152,7 +152,7 @@
                             <button class="action-btn" onclick="portalSystem.openDirectory()"><span class="act-icon mdi mdi-phone-classic"></span>Directory</button>
                             <button class="action-btn" onclick="portalSystem.openBenefits()"><span class="act-icon mdi mdi-hospital-box-outline"></span>Benefits</button>
                             <button class="action-btn" onclick="portalSystem.openTraining()"><span class="act-icon mdi mdi-school-outline"></span>Training</button>
-                            <button class="action-btn" onclick="portalSystem.openGameRoom()"><span class="act-icon mdi mdi-gamepad-variant-outline"></span>Game Room</button>
+                            <button class="action-btn" onclick="portalSystem.openManageEmployment()"><span class="act-icon mdi mdi-briefcase-edit-outline"></span>My Job</button>
                         </div>
                     </div>
                 </div>
@@ -492,6 +492,84 @@
             </div>
         </div>
     </div>
+    <!-- ===== MY JOB OVERLAY ===== -->
+    <div id="myJobOverlay" class="portal-overlay hidden">
+        <div class="overlay-panel myjob-overlay-panel">
+            <div class="overlay-header">
+                <h3><span class="mdi mdi-briefcase-edit-outline"></span> My Job</h3>
+                <button class="overlay-close" onclick="portalSystem.closeManageEmployment()">&times;</button>
+            </div>
+            <div class="overlay-body" style="padding:0;">
+                <div class="portal-overlay-panel-scroll">
+
+                    <!-- Current Position Summary -->
+                    <div class="myjob-section">
+                        <div class="myjob-current">
+                            <div class="myjob-current-title" id="mjPosition">Position</div>
+                            <div class="myjob-current-meta">
+                                <span id="mjDepartment">Department</span> &bull;
+                                <span id="mjSalary">Salary</span>
+                            </div>
+                            <div class="myjob-current-meta">Reports to: <strong id="mjManager">Manager</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Email Supervisor -->
+                    <div class="myjob-section">
+                        <div class="myjob-section-head">
+                            <span class="mdi mdi-email-edit-outline"></span> Contact Supervisor
+                        </div>
+                        <button class="myjob-action-btn myjob-email-btn" onclick="portalSystem.emailSupervisor()">
+                            <span class="mdi mdi-send"></span> Email <span id="mjManagerName">My Supervisor</span>
+                        </button>
+                    </div>
+
+                    <!-- Pay Format -->
+                    <div class="myjob-section">
+                        <div class="myjob-section-head">
+                            <span class="mdi mdi-cash-multiple"></span> Pay Format
+                        </div>
+                        <div class="myjob-pay-options">
+                            <label class="myjob-radio">
+                                <input type="radio" name="payFormat" value="snakes" onchange="portalSystem.updatePayFormat('snakes')">
+                                <span class="myjob-radio-label">Snakes Only</span>
+                            </label>
+                            <label class="myjob-radio">
+                                <input type="radio" name="payFormat" value="dollars" onchange="portalSystem.updatePayFormat('dollars')">
+                                <span class="myjob-radio-label">Dollars Only</span>
+                            </label>
+                            <label class="myjob-radio">
+                                <input type="radio" name="payFormat" value="mixed" onchange="portalSystem.updatePayFormat('mixed')">
+                                <span class="myjob-radio-label">Both</span>
+                            </label>
+                        </div>
+                        <div class="myjob-pay-preview" id="mjPayPreview">Weekly pay: ---</div>
+                    </div>
+
+                    <!-- Switch Position -->
+                    <div class="myjob-section">
+                        <div class="myjob-section-head">
+                            <span class="mdi mdi-swap-horizontal"></span> Internal Transfer
+                        </div>
+                        <div class="myjob-position-list" id="mjPositionList"></div>
+                        <div id="mjTransferMsg" class="overlay-msg" style="display:none;"></div>
+                    </div>
+
+                    <!-- Resign -->
+                    <div class="myjob-section myjob-danger-zone">
+                        <div class="myjob-section-head" style="color:var(--ec-danger);">
+                            <span class="mdi mdi-alert-outline"></span> Danger Zone
+                        </div>
+                        <button class="myjob-action-btn myjob-resign-btn" onclick="portalSystem.resignFromElxaCorp()">
+                            <span class="mdi mdi-exit-run"></span> Resign from ElxaCorp
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="ticket-data.js"></script>
     <script src="employee-data.js"></script>
     <script src="ticket-system.js"></script>

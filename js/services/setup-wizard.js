@@ -6,7 +6,7 @@ class ElxaOSSetupWizard {
         this.currentStep = 0;
         this.setupData = {
             userName: '',
-            userAvatar: '👤',
+            userAvatar: 'sprite:smiley',
             userPassword: '',
             confirmPassword: '',
             timeZone: 'Snakesia (GMT-3:01)',
@@ -25,22 +25,31 @@ class ElxaOSSetupWizard {
             { id: 'complete', title: 'Setup Complete', handler: 'renderComplete' }
         ];
         
-        this.avatars = ['👤', '👦', '👧', '🧑', '👩', '👨', '🐱', '🐍', '🦆', '🎮', '🚀', '⭐'];
+        // Avatars now use sprite system from avatar-sprites.js
+        // Icons rendered at display time via ElxaIcons
         this.programsToInstall = [
-            { name: 'ElxaOS Shell', progress: 0, icon: '🖥️' },
-            { name: 'File Manager', progress: 0, icon: '📁' },
-            { name: 'Notepad', progress: 0, icon: '📄' },
-            { name: 'Paint', progress: 0, icon: '🎨' },
-            { name: 'Calculator', progress: 0, icon: '🧮' },
-            { name: 'ElxaCode', progress: 0, icon: '💻' },
-            { name: 'Snoogle Browser', progress: 0, icon: '🌐' },
-            { name: 'ElxaGuard Antivirus', progress: 0, icon: '🛡️' },
-            { name: 'ElxaMail', progress: 0, icon: '📧' },
-            { name: 'Snakesia Messenger', progress: 0, icon: '💬' }
+            { name: 'ElxaOS Shell', progress: 0, iconId: 'computer', iconType: 'program' },
+            { name: 'File Manager', progress: 0, iconId: 'fileManager', iconType: 'program' },
+            { name: 'Notepad', progress: 0, iconId: 'notepad', iconType: 'program' },
+            { name: 'Paint', progress: 0, iconId: 'paint', iconType: 'program' },
+            { name: 'Calculator', progress: 0, iconId: 'calculator', iconType: 'program' },
+            { name: 'ElxaCode', progress: 0, iconId: 'elxacode', iconType: 'program' },
+            { name: 'Snoogle Browser', progress: 0, iconId: 'browser', iconType: 'program' },
+            { name: 'ElxaGuard Antivirus', progress: 0, iconId: 'antivirus', iconType: 'program' },
+            { name: 'ElxaMail', progress: 0, iconId: 'email', iconType: 'action' },
+            { name: 'Snakesia Messenger', progress: 0, iconId: 'messenger', iconType: 'program' }
         ];
         
         this.installationStep = 0;
         this.installationTimer = null;
+    }
+
+    // Helper to render program install icons
+    _programIcon(program) {
+        if (program.iconType === 'program') {
+            return ElxaIcons.render(program.iconId, 'ui');
+        }
+        return ElxaIcons.renderAction(program.iconId);
     }
 
     // Check if setup should run
@@ -75,7 +84,7 @@ class ElxaOSSetupWizard {
 
     // Start the setup wizard
     async startSetup() {
-        console.log('🚀 Starting ElxaOS Setup Wizard...');
+        console.log('\ud83d\ude80 Starting ElxaOS Setup Wizard...');
         
         // Hide everything else
         this.hideAllUI();
@@ -104,9 +113,9 @@ class ElxaOSSetupWizard {
                 if (el) el.style.display = 'none';
             });
             
-            console.log('🔍 UI hidden for setup wizard');
+            console.log('\ud83d\udd0d UI hidden for setup wizard');
         } catch (error) {
-            console.warn('⚠️ Error hiding UI elements:', error);
+            console.warn('\u26a0\ufe0f Error hiding UI elements:', error);
         }
     }
 
@@ -123,7 +132,7 @@ class ElxaOSSetupWizard {
             <div class="setup-window">
                 <div class="setup-header">
                     <div class="setup-logo">
-                        <div class="setup-logo-icon">🏢</div>
+                        <div class="setup-logo-icon">${ElxaIcons.renderAction('office-building')}</div>
                         <div class="setup-logo-text">
                             <div class="logo-main">ElxaOS</div>
                             <div class="logo-sub">Professional Edition</div>
@@ -141,11 +150,11 @@ class ElxaOSSetupWizard {
                 </div>
                 <div class="setup-footer">
                     <div class="setup-buttons">
-                        <button class="setup-btn" id="backBtn" disabled>⬅️ Back</button>
-                        <button class="setup-btn primary" id="nextBtn">Next ➡️</button>
+                        <button class="setup-btn" id="backBtn" disabled>${ElxaIcons.renderAction('back')} Back</button>
+                        <button class="setup-btn primary" id="nextBtn">Next ${ElxaIcons.renderAction('forward')}</button>
                     </div>
                     <div class="setup-info">
-                        <div class="elxacorp-branding">© 2024 ElxaCorp Technologies, Snakesia</div>
+                        <div class="elxacorp-branding">&copy; 2024 ElxaCorp Technologies, Snakesia</div>
                     </div>
                 </div>
             </div>
@@ -220,10 +229,10 @@ class ElxaOSSetupWizard {
         
         if (nextBtn) {
             if (this.currentStep >= this.steps.length - 1) {
-                nextBtn.textContent = '🎉 Finish';
+                nextBtn.innerHTML = ElxaIcons.renderAction('check-circle') + ' Finish';
                 nextBtn.className = 'setup-btn finish';
             } else {
-                nextBtn.textContent = 'Next ➡️';
+                nextBtn.innerHTML = 'Next ' + ElxaIcons.renderAction('forward');
                 nextBtn.className = 'setup-btn primary';
             }
             
@@ -261,10 +270,10 @@ class ElxaOSSetupWizard {
             passwordHelp.textContent = 'Please confirm your password';
             passwordHelp.style.color = '#666666';
         } else if (userPassword === confirmPassword) {
-            passwordHelp.textContent = '✅ Passwords match!';
+            passwordHelp.innerHTML = ElxaIcons.renderAction('check-circle') + ' Passwords match!';
             passwordHelp.style.color = '#00aa00';
         } else {
-            passwordHelp.textContent = '❌ Passwords do not match';
+            passwordHelp.innerHTML = '<span class="mdi mdi-close-circle elxa-icon-ui" style="color:#ff0000"></span> Passwords do not match';
             passwordHelp.style.color = '#ff0000';
         }
     }
@@ -275,7 +284,7 @@ class ElxaOSSetupWizard {
         content.innerHTML = `
             <div class="setup-step welcome-step">
                 <div class="welcome-hero">
-                    <div class="welcome-icon">🎉</div>
+                    <div class="welcome-icon">${ElxaIcons.renderAction('rocket')}</div>
                     <h1>Welcome to ElxaOS!</h1>
                     <p class="welcome-subtitle">Professional Edition</p>
                 </div>
@@ -283,30 +292,30 @@ class ElxaOSSetupWizard {
                 <div class="welcome-content">
                     <div class="feature-grid">
                         <div class="feature-item">
-                            <div class="feature-icon">🖥️</div>
+                            <div class="feature-icon">${ElxaIcons.render('computer', 'ui')}</div>
                             <div class="feature-text">
                                 <strong>Full Desktop Experience</strong>
                                 <p>Complete with windows, taskbar, and file management</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <div class="feature-icon">🌐</div>
+                            <div class="feature-icon">${ElxaIcons.render('browser', 'ui')}</div>
                             <div class="feature-text">
                                 <strong>Snoogle Browser</strong>
                                 <p>Browse the Snakesian internet with our advanced browser</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <div class="feature-icon">💬</div>
+                            <div class="feature-icon">${ElxaIcons.render('messenger', 'ui')}</div>
                             <div class="feature-text">
                                 <strong>Communication Suite</strong>
                                 <p>Stay connected with ElxaMail and Snakesia Messenger</p>
                             </div>
                         </div>
                         <div class="feature-item">
-                            <div class="feature-icon">🎮</div>
+                            <div class="feature-icon">${ElxaIcons.renderAction('gamepad')}</div>
                             <div class="feature-text">
-                                <strong>Entertainment & Games</strong>
+                                <strong>Entertainment &amp; Games</strong>
                                 <p>Install and play games from the Snakesian app store</p>
                             </div>
                         </div>
@@ -314,7 +323,7 @@ class ElxaOSSetupWizard {
                     
                     <div class="welcome-footer">
                         <p>This setup wizard will help you configure ElxaOS for the best experience.</p>
-                        <p class="snakesia-note">🐍 Proudly developed in Snakesia by ElxaCorp Technologies</p>
+                        <p class="snakesia-note">${ElxaIcons.renderAction('flag')} Proudly developed in Snakesia by ElxaCorp Technologies</p>
                     </div>
                 </div>
             </div>
@@ -333,32 +342,32 @@ class ElxaOSSetupWizard {
                     </div>
                     
                     <div class="license-content">
-                        <h3>🐍 Welcome to Snakesia!</h3>
+                        <h3>${ElxaIcons.renderAction('flag')} Welcome to Snakesia!</h3>
                         <p>By using ElxaOS, you agree to have the most amazing computer experience ever! This operating system was lovingly crafted by Mr. Snake-e and the talented team at ElxaCorp.</p>
                         
-                        <h3>📜 Terms of Awesomeness:</h3>
+                        <h3>${ElxaIcons.renderAction('file-document')} Terms of Awesomeness:</h3>
                         <ul>
-                            <li>✅ You may use ElxaOS to create, play, and explore to your heart's content</li>
-                            <li>✅ You are encouraged to try all the programs and games</li>
-                            <li>✅ Pushing Cat is allowed in the system, but please keep an eye on them</li>
-                            <li>✅ All virtual currency (Snakes 🐍) has no real-world value but infinite fun value</li>
-                            <li>✅ Rita and Remi are available for tech support via messenger</li>
-                            <li>✅ Mrs. Snake-e's garden tips are included free of charge</li>
+                            <li>${ElxaIcons.renderAction('check')} You may use ElxaOS to create, play, and explore to your heart's content</li>
+                            <li>${ElxaIcons.renderAction('check')} You are encouraged to try all the programs and games</li>
+                            <li>${ElxaIcons.renderAction('check')} Pushing Cat is allowed in the system, but please keep an eye on them</li>
+                            <li>${ElxaIcons.renderAction('check')} All virtual currency (Snakes &sect;) has no real-world value but infinite fun value</li>
+                            <li>${ElxaIcons.renderAction('check')} Rita and Remi are available for tech support via messenger</li>
+                            <li>${ElxaIcons.renderAction('check')} Mrs. Snake-e's garden tips are included free of charge</li>
                         </ul>
                         
-                        <h3>🚫 Please Don't:</h3>
+                        <h3>${ElxaIcons.renderAction('alert')} Please Don't:</h3>
                         <ul>
-                            <li>❌ Try to make real money from virtual Snakes</li>
-                            <li>❌ Feed the computer actual food (it prefers data)</li>
-                            <li>❌ Let Pushing Cat access the Sussy Lair settings</li>
+                            <li><span class="mdi mdi-close-circle elxa-icon-ui"></span> Try to make real money from virtual Snakes</li>
+                            <li><span class="mdi mdi-close-circle elxa-icon-ui"></span> Feed the computer actual food (it prefers data)</li>
+                            <li><span class="mdi mdi-close-circle elxa-icon-ui"></span> Let Pushing Cat access the Sussy Lair settings</li>
                         </ul>
                         
-                        <h3>💝 Special Thanks:</h3>
+                        <h3><span class="mdi mdi-heart elxa-icon-ui"></span> Special Thanks:</h3>
                         <p>This system exists to make computing fun and spark your imagination! Mr. Snake-e wants you to know that learning about computers should be an adventure.</p>
                         
                         <div class="license-footer">
                             <em>ElxaCorp Technologies - "Making Technology Magical Since 2024"</em><br>
-                            <em>Headquartered in Beautiful Snakesia 🏛️</em>
+                            <em>Headquartered in Beautiful Snakesia ${ElxaIcons.renderAction('office-building')}</em>
                         </div>
                     </div>
                 </div>
@@ -367,7 +376,7 @@ class ElxaOSSetupWizard {
                     <label class="checkbox-container">
                         <input type="checkbox" id="acceptLicense" ${this.setupData.acceptedLicense ? 'checked' : ''}>
                         <span class="checkmark"></span>
-                        <span class="checkbox-text">I accept the terms of this agreement and am ready for an awesome ElxaOS experience! 🎉</span>
+                        <span class="checkbox-text">I accept the terms of this agreement and am ready for an awesome ElxaOS experience! ${ElxaIcons.renderAction('check-circle')}</span>
                     </label>
                 </div>
             </div>
@@ -386,15 +395,8 @@ class ElxaOSSetupWizard {
     renderUserAccount() {
         const content = document.getElementById('setupContent');
         
-        // Build avatar options HTML
-        const avatarOptionsHTML = this.avatars.map(avatar => {
-            const isSelected = this.setupData.userAvatar === avatar ? 'selected' : '';
-            return `
-                <div class="avatar-option ${isSelected}" data-avatar="${avatar}">
-                    ${avatar}
-                </div>
-            `;
-        }).join('');
+        // Build avatar picker HTML using sprite system
+        const avatarPickerHTML = buildAvatarPicker(this.setupData.userAvatar, 'setupAvatar');
         
         content.innerHTML = `
             <div class="setup-step user-account-step">
@@ -410,10 +412,7 @@ class ElxaOSSetupWizard {
                     </div>
                     
                     <div class="form-group">
-                        <label>Choose your avatar:</label>
-                        <div class="avatar-grid">
-                            ${avatarOptionsHTML}
-                        </div>
+                        ${avatarPickerHTML}
                     </div>
                     
                     <div class="form-group">
@@ -434,16 +433,16 @@ class ElxaOSSetupWizard {
                         <label for="timeZone">Time Zone:</label>
                         <select id="timeZone" class="setup-select">
                             <option value="Snakesia (GMT-3:01)" ${this.setupData.timeZone === 'Snakesia (GMT-3:01)' ? 'selected' : ''}>
-                                🐍 Snakesia (GMT-3:01) - Recommended
+                                Snakesia (GMT-3:01) - Recommended
                             </option>
                             <option value="Eastern (GMT-5:00)" ${this.setupData.timeZone === 'Eastern (GMT-5:00)' ? 'selected' : ''}>
-                                🇺🇸 Eastern Time (GMT-5:00)
+                                Eastern Time (GMT-5:00)
                             </option>
                             <option value="Central (GMT-6:00)" ${this.setupData.timeZone === 'Central (GMT-6:00)' ? 'selected' : ''}>
-                                🇺🇸 Central Time (GMT-6:00)
+                                Central Time (GMT-6:00)
                             </option>
                             <option value="Pacific (GMT-8:00)" ${this.setupData.timeZone === 'Pacific (GMT-8:00)' ? 'selected' : ''}>
-                                🇺🇸 Pacific Time (GMT-8:00)
+                                Pacific Time (GMT-8:00)
                             </option>
                         </select>
                     </div>
@@ -451,16 +450,16 @@ class ElxaOSSetupWizard {
                     <div class="form-group">
                         <label for="language">Language:</label>
                         <select id="language" class="setup-select">
-                            <option value="English (Snakesia)">🐍 English (Snakesia)</option>
-                            <option value="English (US)">🇺🇸 English (United States)</option>
-                            <option value="Snakesian">🗣️ Snakesian (Advanced)</option>
+                            <option value="English (Snakesia)">English (Snakesia)</option>
+                            <option value="English (US)">English (United States)</option>
+                            <option value="Snakesian">Snakesian (Advanced)</option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="account-preview">
                     <div class="preview-card">
-                        <div class="preview-avatar">${this.setupData.userAvatar}</div>
+                        <div class="preview-avatar">${renderAvatar(this.setupData.userAvatar)}</div>
                         <div class="preview-info">
                             <div class="preview-name">${this.setupData.userName || 'Your Name'}</div>
                             <div class="preview-location">${this.setupData.timeZone}</div>
@@ -517,15 +516,29 @@ class ElxaOSSetupWizard {
             });
         }
         
-        // Avatar selection
-        document.querySelectorAll('.avatar-option').forEach(option => {
-            option.addEventListener('click', (e) => {
-                document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                this.setupData.userAvatar = option.dataset.avatar;
-                this.updateAccountPreview();
-            });
+        // Avatar picker (sprite system from avatar-sprites.js)
+        setupAvatarPicker(content, 'setupAvatar');
+        
+        // Sync avatar picker changes back to setupData
+        var avatarHiddenInput = document.getElementById('setupAvatar');
+        content.addEventListener('click', (e) => {
+            var option = e.target.closest('.avatar-picker-option');
+            if (option) {
+                setTimeout(() => {
+                    this.setupData.userAvatar = avatarHiddenInput.value;
+                    this.updateAccountPreview();
+                }, 0);
+            }
         });
+        var customAvatarInput = document.getElementById('setupAvatarCustom');
+        if (customAvatarInput) {
+            customAvatarInput.addEventListener('input', () => {
+                setTimeout(() => {
+                    this.setupData.userAvatar = avatarHiddenInput.value;
+                    this.updateAccountPreview();
+                }, 0);
+            });
+        }
     }
 
     updateAccountPreview() {
@@ -534,7 +547,7 @@ class ElxaOSSetupWizard {
         const previewLocation = document.querySelector('.preview-location');
         
         if (previewName) previewName.textContent = this.setupData.userName || 'Your Name';
-        if (previewAvatar) previewAvatar.textContent = this.setupData.userAvatar;
+        if (previewAvatar) previewAvatar.innerHTML = renderAvatar(this.setupData.userAvatar);
         if (previewLocation) previewLocation.textContent = this.setupData.timeZone;
     }
 
@@ -593,27 +606,27 @@ class ElxaOSSetupWizard {
                 
                 <div class="personalization-content">
                     <div class="theme-section">
-                        <h3>🎨 Color Theme</h3>
+                        <h3>${ElxaIcons.renderAction('personalize')} Color Theme</h3>
                         <div class="theme-options">
                             ${themeOptionsHTML}
                         </div>
                     </div>
                     
                     <div class="wallpaper-section">
-                        <h3>🖼️ Desktop Background</h3>
+                        <h3>${ElxaIcons.renderAction('image')} Desktop Background</h3>
                         <div class="wallpaper-options">
                             ${wallpaperOptionsHTML}
                         </div>
                     </div>
                     
                     <div class="preview-section">
-                        <h3>👀 Preview</h3>
+                        <h3>${ElxaIcons.renderAction('eye')} Preview</h3>
                         <div class="desktop-preview">
                             <div class="preview-desktop" id="desktopPreview">
                                 <div class="preview-icons">
-                                    <div class="preview-icon">🖥️<br><span>My Computer</span></div>
-                                    <div class="preview-icon">🗑️<br><span>Recycle Bin</span></div>
-                                    <div class="preview-icon">📄<br><span>Document</span></div>
+                                    <div class="preview-icon">${ElxaIcons.render('computer', 'ui')}<br><span>My Computer</span></div>
+                                    <div class="preview-icon">${ElxaIcons.render('recycle-bin', 'ui')}<br><span>Recycle Bin</span></div>
+                                    <div class="preview-icon">${ElxaIcons.renderAction('file-document')}<br><span>Document</span></div>
                                 </div>
                                 <div class="preview-taskbar" id="taskbarPreview">
                                     <div class="preview-start">Start</div>
@@ -681,7 +694,7 @@ class ElxaOSSetupWizard {
         const programListHTML = this.programsToInstall.map((program, index) => {
             return `
                 <div class="program-item" id="program-${index}">
-                    <div class="program-icon">${program.icon}</div>
+                    <div class="program-icon">${this._programIcon(program)}</div>
                     <div class="program-info">
                         <div class="program-name">${program.name}</div>
                         <div class="program-progress">
@@ -767,7 +780,7 @@ class ElxaOSSetupWizard {
                 clearInterval(installInterval);
                 
                 // Mark as complete
-                if (statusElement) statusElement.textContent = 'Complete ✅';
+                if (statusElement) statusElement.innerHTML = 'Complete ' + ElxaIcons.renderAction('check-circle');
                 if (programElement) {
                     programElement.classList.remove('installing');
                     programElement.classList.add('complete');
@@ -806,7 +819,7 @@ class ElxaOSSetupWizard {
     finishInstallation() {
         const installationStatus = document.getElementById('installationStatus');
         if (installationStatus) {
-            installationStatus.textContent = 'Installation complete! 🎉';
+            installationStatus.innerHTML = 'Installation complete! ' + ElxaIcons.renderAction('check-circle');
         }
         
         // Enable next button
@@ -823,42 +836,42 @@ class ElxaOSSetupWizard {
         content.innerHTML = `
             <div class="setup-step complete-step">
                 <div class="complete-hero">
-                    <div class="complete-icon">🎉</div>
+                    <div class="complete-icon">${ElxaIcons.renderAction('check-circle')}</div>
                     <h1>Welcome to ElxaOS!</h1>
                     <p class="complete-subtitle">Setup is now complete</p>
                 </div>
                 
                 <div class="complete-content">
                     <div class="welcome-message">
-                        <h3>Hello, ${this.setupData.userName}! 👋</h3>
+                        <h3>Hello, ${this.setupData.userName}! <span class="mdi mdi-hand-wave elxa-icon-ui"></span></h3>
                         <p>Your ElxaOS system is ready to use. Here's what we've set up for you:</p>
                     </div>
                     
                     <div class="setup-summary">
                         <div class="summary-grid">
                             <div class="summary-item">
-                                <div class="summary-icon">${this.setupData.userAvatar}</div>
+                                <div class="summary-icon">${renderAvatar(this.setupData.userAvatar)}</div>
                                 <div class="summary-text">
                                     <strong>Your Account</strong>
                                     <div>${this.setupData.userName}</div>
                                 </div>
                             </div>
                             <div class="summary-item">
-                                <div class="summary-icon">🌍</div>
+                                <div class="summary-icon">${ElxaIcons.renderAction('globe')}</div>
                                 <div class="summary-text">
                                     <strong>Location</strong>
                                     <div>${this.setupData.timeZone}</div>
                                 </div>
                             </div>
                             <div class="summary-item">
-                                <div class="summary-icon">🎨</div>
+                                <div class="summary-icon">${ElxaIcons.renderAction('personalize')}</div>
                                 <div class="summary-text">
                                     <strong>Theme</strong>
                                     <div>${elxaOS?.themeService?.themes[this.setupData.theme]?.name || 'Classic'}</div>
                                 </div>
                             </div>
                             <div class="summary-item">
-                                <div class="summary-icon">💻</div>
+                                <div class="summary-icon">${ElxaIcons.renderAction('install')}</div>
                                 <div class="summary-text">
                                     <strong>Programs</strong>
                                     <div>${this.programsToInstall.length} installed</div>
@@ -868,31 +881,31 @@ class ElxaOSSetupWizard {
                     </div>
                     
                     <div class="getting-started">
-                        <h3>🚀 Getting Started</h3>
+                        <h3>${ElxaIcons.renderAction('rocket')} Getting Started</h3>
                         <div class="tips-grid">
                             <div class="tip-item">
-                                <div class="tip-icon">🖱️</div>
+                                <div class="tip-icon"><span class="mdi mdi-cursor-default elxa-icon-ui"></span></div>
                                 <div class="tip-text">
                                     <strong>Desktop</strong>
                                     <p>Right-click the desktop to personalize themes and wallpapers</p>
                                 </div>
                             </div>
                             <div class="tip-item">
-                                <div class="tip-icon">📁</div>
+                                <div class="tip-icon">${ElxaIcons.render('fileManager', 'ui')}</div>
                                 <div class="tip-text">
                                     <strong>File Manager</strong>
                                     <p>Double-click "My Computer" to explore your files</p>
                                 </div>
                             </div>
                             <div class="tip-item">
-                                <div class="tip-icon">🌐</div>
+                                <div class="tip-icon">${ElxaIcons.render('browser', 'ui')}</div>
                                 <div class="tip-text">
                                     <strong>Internet</strong>
                                     <p>Use Snoogle Browser to explore Snakesian websites</p>
                                 </div>
                             </div>
                             <div class="tip-item">
-                                <div class="tip-icon">🎮</div>
+                                <div class="tip-icon">${ElxaIcons.renderAction('gamepad')}</div>
                                 <div class="tip-text">
                                     <strong>Games</strong>
                                     <p>Visit the Snakesian app store to download and install games</p>
@@ -904,7 +917,7 @@ class ElxaOSSetupWizard {
                     <div class="complete-footer">
                         <div class="thank-you">
                             <p>Thank you for choosing ElxaOS! We hope you have an amazing experience.</p>
-                            <p class="signature">— Mr. Snake-e and the ElxaCorp Team 🐍</p>
+                            <p class="signature">&mdash; Mr. Snake-e and the ElxaCorp Team ${ElxaIcons.renderAction('flag')}</p>
                         </div>
                     </div>
                 </div>
@@ -951,7 +964,7 @@ class ElxaOSSetupWizard {
     }
 
     async completeSetup() {
-        console.log('🎯 Completing ElxaOS setup...');
+        console.log('\ud83c\udfaf Completing ElxaOS setup...');
         
         // Save user data and create account
         this.saveSetupData();
@@ -963,7 +976,7 @@ class ElxaOSSetupWizard {
         this.initializeFileSystem();
         
         // Show completion message
-        this.showMessage('ElxaOS setup complete! Welcome! 🎉', 'success');
+        this.showMessage('ElxaOS setup complete! Welcome!', 'success');
         
         // Remove setup UI and transition to login
         setTimeout(() => {
@@ -976,7 +989,7 @@ class ElxaOSSetupWizard {
         try {
             // Check if login service is available
             if (typeof elxaOS !== 'undefined' && elxaOS.loginService) {
-                console.log('🔑 Transitioning to login service...');
+                console.log('\ud83d\udd11 Transitioning to login service...');
                 
                 // Force reload the users in the login service
                 if (elxaOS.loginService.loadSavedUsers) {
@@ -994,11 +1007,11 @@ class ElxaOSSetupWizard {
                 
             } else {
                 // Fallback: show desktop directly
-                console.log('⚠️ Login service not available, showing desktop directly');
+                console.log('\u26a0\ufe0f Login service not available, showing desktop directly');
                 this.launchElxaOS();
             }
         } catch (error) {
-            console.error('❌ Failed to transition to login:', error);
+            console.error('\u274c Failed to transition to login:', error);
             this.launchElxaOS(); // Fallback
         }
     }
@@ -1032,7 +1045,7 @@ class ElxaOSSetupWizard {
                     username: 'user',
                     password: '3722',
                     displayName: 'Default User',
-                    avatar: '👤',
+                    avatar: '\ud83d\udc64',
                     created: new Date(),
                     lastLogin: null,
                     loginCount: 0,
@@ -1060,10 +1073,10 @@ class ElxaOSSetupWizard {
             };
             localStorage.setItem('elxaOS-theme-settings', JSON.stringify(themeSettings));
             
-            console.log('💾 Setup data saved, user created:', username);
+            console.log('\ud83d\udcbe Setup data saved, user created:', username);
             
         } catch (error) {
-            console.error('❌ Failed to save setup data:', error);
+            console.error('\u274c Failed to save setup data:', error);
         }
     }
 
@@ -1073,17 +1086,17 @@ class ElxaOSSetupWizard {
             if (elxaOS && elxaOS.themeService) {
                 elxaOS.themeService.setTheme(this.setupData.theme);
                 elxaOS.themeService.setWallpaper(this.setupData.wallpaper);
-                console.log('🎨 Theme settings applied');
+                console.log('\ud83c\udfa8 Theme settings applied');
             }
         } catch (error) {
-            console.error('❌ Failed to apply settings:', error);
+            console.error('\u274c Failed to apply settings:', error);
         }
     }
 
     initializeFileSystem() {
         // The file system will be initialized by the main ElxaOS system
         // We just need to make sure it has the default structure
-        console.log('📁 File system will be initialized by ElxaOS');
+        console.log('\ud83d\udcc1 File system will be initialized by ElxaOS');
     }
 
     removeSetupUI() {
@@ -1102,15 +1115,15 @@ class ElxaOSSetupWizard {
             if (desktop) desktop.style.display = 'block';
             if (taskbar) taskbar.style.display = 'flex';
             
-            console.log('🚀 ElxaOS launched successfully!');
+            console.log('\ud83d\ude80 ElxaOS launched successfully!');
             
             // Show welcome message
             setTimeout(() => {
-                this.showMessage(`Welcome to ElxaOS, ${this.setupData.userName}! 🎉`, 'success');
+                this.showMessage(`Welcome to ElxaOS, ${this.setupData.userName}!`, 'success');
             }, 1000);
             
         } catch (error) {
-            console.error('❌ Failed to launch ElxaOS:', error);
+            console.error('\u274c Failed to launch ElxaOS:', error);
         }
     }
 
@@ -1138,7 +1151,7 @@ class ElxaOSSetupWizard {
             
         } catch (error) {
             // Sound not available, continue silently
-            console.log('🔇 Setup sound not available');
+            console.log('\ud83d\udd07 Setup sound not available');
         }
     }
 
@@ -1155,7 +1168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to check and run setup
     window.checkAndRunSetup = () => {
         if (window.elxaOSSetup && window.elxaOSSetup.shouldRunSetup()) {
-            console.log('🚀 First time setup detected - launching setup wizard');
+            console.log('\ud83d\ude80 First time setup detected - launching setup wizard');
             window.elxaOSSetup.startSetup();
             return true;
         }
@@ -1169,5 +1182,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    console.log('✅ ElxaOS Setup Wizard ready');
+    console.log('\u2705 ElxaOS Setup Wizard ready');
 });

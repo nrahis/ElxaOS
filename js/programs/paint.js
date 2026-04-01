@@ -386,7 +386,9 @@ class PaintProgram {
 
     selectTool(tool, documentId) {
         const container = document.querySelector(`[data-document-id="${documentId}"]`);
+        if (!container) return;
         const paintDoc = this.documents.get(documentId);
+        if (!paintDoc) return;
         
         // Commit any pending text before switching tools
         if (paintDoc.textInput && tool !== 'text') {
@@ -1063,6 +1065,10 @@ class PaintProgram {
     }
 
     handleKeyboardShortcuts(e, documentId) {
+        // Guard: if the paint window was closed, bail out
+        const container = document.querySelector(`[data-document-id="${documentId}"]`);
+        if (!container) return;
+
         if (e.ctrlKey) {
             switch(e.key) {
                 case 's':

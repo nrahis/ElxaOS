@@ -24,10 +24,10 @@ class MessengerProgram {
             password: '',
             about: '',
             apiKey: '',
-            selectedModel: 'gemini-2.5-flash',
+            selectedModel: 'gemini-2.5-flash-lite',
             availableModels: [
-                'gemini-2.5-flash',
                 'gemini-2.5-flash-lite',
+                'gemini-2.5-flash',
                 'gemini-2.5-pro'
             ],
             llm: {
@@ -113,7 +113,7 @@ class MessengerProgram {
             } else {
                 console.log('⚠️ Conversation history manager not found, trying to load world context directly...');
                 try {
-                    const response = await fetch('./assets/interwebs/exmail/world-context.json');
+                    const response = await fetch('./data/world-context.json');
                     if (response.ok) {
                         worldContext = await response.json();
                         console.log('✅ Loaded world context directly from JSON');
@@ -139,6 +139,9 @@ class MessengerProgram {
 
             await this.loadCharactersFromWorldContext();
             await this.loadCharacterResponses();
+
+            // Load settings from registry (overwrites localStorage if registry has data)
+            await this._loadSettingsFromRegistry();
         } catch (error) {
             console.error('❌ Failed to initialize managers:', error);
             console.log('🔄 Loading fallback characters due to error...');
@@ -179,7 +182,7 @@ class MessengerProgram {
             const char = characters[characterId];
             this.contacts.push({
                 id: characterId,
-                name: `${char.fullName || char.name} ${this.getCharacterEmoji(characterId)}`,
+                name: char.fullName || char.name,
                 status: char.role || 'Snakesia Resident',
                 avatar: this.getCharacterEmoji(characterId),
                 avatarImage: `../../assets/messenger/${characterId}.png`,
@@ -211,7 +214,7 @@ class MessengerProgram {
         this.contacts = [
             {
                 id: 'mr_snake_e',
-                name: 'Mr. Snake-e 🐍',
+                name: 'Mr. Snake-e',
                 status: 'CEO of ElxaCorp',
                 avatar: '🐍',
                 avatarImage: '../../assets/messenger/mr_snake_e.png',
@@ -701,6 +704,9 @@ class MessengerProgram {
                         <div class="messenger-chat-status">Active now &bull; ${this.getSnakesiaTime()}</div>
                     </div>
                 </div>
+                <div class="messenger-header-actions">
+                    <button class="messenger-icon-btn" onclick="if(confirm('Clear chat history with this contact?')) elxaOS.programs.messenger.clearChat()" title="Clear Chat">${ElxaIcons.renderAction('delete')}</button>
+                </div>
             </div>
 
             <div class="messenger-chat-messages" id="messengerChatMessages">
@@ -922,38 +928,63 @@ class MessengerProgram {
     }
 
     buildEnhancedPrompt(userMessage, contact) {
-        const userName = this.settings.username || 'Friend';
-        const userAbout = this.settings.about || 'a nice person';
-        const snakesiaTime = this.getSnakesiaTime();
+        var userName = this.settings.username || 'Friend';
+        var userAbout = this.settings.about || 'a nice person';
+        var snakesiaTime = this.getSnakesiaTime();
 
-        let character = contact.character || contact;
+        var character = contact.character || contact;
         if (this.worldContext && this.worldContext.keyCharacters && this.worldContext.keyCharacters[contact.id]) {
             character = this.worldContext.keyCharacters[contact.id];
         }
 
+        // --- Context Builder integration (Phase 7) ---
+        var worldBlock = '';
+        var userBlock = '';
+
+        if (typeof elxaOS !== 'undefined' && elxaOS.contextBuilder && elxaOS.contextBuilder.ready) {
+            worldBlock = elxaOS.contextBuilder.getWorldContext();
+            userBlock = elxaOS.contextBuilder.getUserContext();
+        } else {
+            // Fallback to legacy inline context
+            worldBlock = 'WORLD CONTEXT — SNAKESIA:';
+            if (this.worldContext) {
+                worldBlock += '\nYou live in ' + this.worldContext.world.name + ', ' + this.worldContext.world.location;
+                worldBlock += '\nCurrency: ' + this.worldContext.world.currency.name + ' (' + this.worldContext.world.currency.exchangeRate + ')';
+                var wc = this.worldContext;
+                worldBlock += '\nKey Characters: ' + Object.keys(wc.keyCharacters).map(function(id) {
+                    return wc.keyCharacters[id].fullName || wc.keyCharacters[id].name;
+                }).join(', ');
+            } else {
+                worldBlock += '\nYou live in Snakesia, west of Tennessee, where the timezone is exactly 2 hours and 1 minute ahead of the user\'s time';
+                worldBlock += '\nThe currency is "snakes" (1 USD = 2 snakes)';
+            }
+            userBlock = 'USER INFORMATION:\nYou\'re chatting with ' + userName + ', who is ' + userAbout;
+        }
+
         // Get conversation history from shared manager
-        let fullConversationContext = '';
+        var fullConversationContext = '';
         if (this.conversationManager && this.settings.llm.crossPlatformHistory) {
-            const history = this.conversationManager.getConversationHistory(contact.id, true);
-            const recentHistory = history.slice(-this.settings.llm.historyLength);
+            var history = this.conversationManager.getConversationHistory(contact.id, true);
+            var recentHistory = history.slice(-this.settings.llm.historyLength);
 
             if (recentHistory.length > 0) {
                 fullConversationContext = '\n\nFULL CONVERSATION HISTORY (Email + Messenger):\n';
-                recentHistory.forEach((msg, index) => {
+                for (var i = 0; i < recentHistory.length; i++) {
+                    var msg = recentHistory[i];
                     if (msg.type === 'summary') {
-                        fullConversationContext += `SUMMARY: ${msg.content}\n`;
+                        fullConversationContext += 'SUMMARY: ' + msg.content + '\n';
                     } else {
-                        const speaker = msg.sender === 'user' ? userName : (character.fullName || character.name);
-                        const platform = msg.platform === 'email' ? '[EMAIL]' : '[CHAT]';
-                        const subject = msg.subject ? ` RE: "${msg.subject}"` : '';
-                        fullConversationContext += `${index + 1}. ${speaker} ${platform}${subject}: "${msg.content}"\n`;
+                        var speaker = msg.sender === 'user' ? userName : (character.fullName || character.name);
+                        var platform = msg.platform === 'email' ? '[EMAIL]' : '[CHAT]';
+                        var subject = msg.subject ? ' RE: "' + msg.subject + '"' : '';
+                        fullConversationContext += (i + 1) + '. ' + speaker + ' ' + platform + subject + ': "' + msg.content + '"\n';
                     }
-                });
+                }
                 fullConversationContext += '\nIMPORTANT: Reference previous conversations naturally. If they mentioned something in an email, you should remember it!\n';
             }
         }
 
-        let storyInstructions = '';
+        var storyInstructions = '';
         switch (this.settings.llm.storyProgression) {
             case 'conservative':
                 storyInstructions = '- Respond naturally to what the user says\n- Stay in character and be consistent\n- Reference shared history when relevant';
@@ -966,7 +997,7 @@ class MessengerProgram {
                 break;
         }
 
-        let lengthGuidance = '';
+        var lengthGuidance = '';
         switch (this.settings.llm.responseLength) {
             case 'brief':
                 lengthGuidance = '- Keep responses SHORT like real chat messages (1-2 sentences max)';
@@ -979,43 +1010,43 @@ class MessengerProgram {
                 break;
         }
 
-        const worldInfo = this.worldContext ? `
-- You live in ${this.worldContext.world.name}, ${this.worldContext.world.location}
-- Current time in Snakesia: ${snakesiaTime}
-- Currency: ${this.worldContext.world.currency.name} (${this.worldContext.world.currency.exchangeRate})
-- Key Characters in Snakesia: ${Object.keys(this.worldContext.keyCharacters).map(id => this.worldContext.keyCharacters[id].fullName || this.worldContext.keyCharacters[id].name).join(', ')}` : `
-- You live in Snakesia, west of Tennessee, where the timezone is exactly 2 hours and 1 minute ahead of the user's time
-- The current time in Snakesia is: ${snakesiaTime}
-- The currency is "snakes" (1 USD = 2 snakes)`;
+        var characterDetails = character.details || character.description || contact.description || '';
+        var characterPersonality = character.personality || contact.personality || '';
+        var characterRole = character.role || contact.status || '';
 
-        const characterDetails = character.details || character.description || contact.description || '';
-        const characterPersonality = character.personality || contact.personality || '';
-        const characterRole = character.role || contact.status || '';
+        var charRelationships = '';
+        if (character.relationships) {
+            var relEntries = Object.keys(character.relationships);
+            var relParts = [];
+            for (var r = 0; r < relEntries.length; r++) {
+                relParts.push(relEntries[r] + ' (' + character.relationships[relEntries[r]] + ')');
+            }
+            charRelationships = relParts.join(', ');
+        }
 
-        return `You are ${character.fullName || character.name} from Snakesia. ${characterDetails} ${characterPersonality}
-
-CHARACTER BACKGROUND:
-${characterRole ? `- Role/Job: ${characterRole}` : ''}
-${character.age ? `- Age: ${character.age}` : ''}
-${character.interests ? `- Interests: ${character.interests.join(', ')}` : ''}
-${character.relationships ? `- Relationships: ${Object.entries(character.relationships).map(([name, rel]) => `${name} (${rel})`).join(', ')}` : ''}
-
-IMPORTANT CONTEXT:${worldInfo}
-- You're chatting with ${userName}, who is ${userAbout}
-- This is INSTANT MESSAGING, so be casual and conversational
-- Stay completely in character as ${character.fullName || character.name}
-- Be friendly, natural, and engaging
-- Use emojis occasionally but authentically to your character
-- Remember and reference the conversation history naturally
-- If they reference something from an email, acknowledge it!
-
-RESPONSE STYLE:
-${lengthGuidance}
-${storyInstructions}${fullConversationContext}
-
-Current message from ${userName}: "${userMessage}"
-
-Respond as ${character.fullName || character.name} would in an instant message, considering the FULL conversation history across email and chat:`;
+        return 'You are ' + (character.fullName || character.name) + ' from Snakesia. ' + characterDetails + ' ' + characterPersonality + '\n\n' +
+            'CHARACTER BACKGROUND:\n' +
+            (characterRole ? '- Role/Job: ' + characterRole + '\n' : '') +
+            (character.age ? '- Age: ' + character.age + '\n' : '') +
+            (character.interests ? '- Interests: ' + character.interests.join(', ') + '\n' : '') +
+            (charRelationships ? '- Relationships: ' + charRelationships + '\n' : '') +
+            '\n' + worldBlock + '\n' +
+            '\nCurrent time in Snakesia: ' + snakesiaTime + '\n' +
+            '\n' + userBlock + '\n' +
+            '\nMESSAGING CONTEXT:\n' +
+            '- This is INSTANT MESSAGING, so be casual and conversational\n' +
+            '- Stay completely in character as ' + (character.fullName || character.name) + '\n' +
+            '- Be friendly, natural, and engaging\n' +
+            '- Use emojis occasionally but authentically to your character\n' +
+            '- Remember and reference the conversation history naturally\n' +
+            '- If they reference something from an email, acknowledge it!\n' +
+            '- IMPORTANT: Respond ONLY with the message text itself. Do NOT prefix your response with your name, a colon, or any label.\n' +
+            '\nRESPONSE STYLE:\n' +
+            lengthGuidance + '\n' +
+            storyInstructions +
+            fullConversationContext + '\n' +
+            '\nCurrent message from ' + userName + ': "' + userMessage + '"\n' +
+            '\nRespond as ' + (character.fullName || character.name) + ' would in an instant message, considering the FULL conversation history across email and chat:';
     }
 
     getFallbackResponse(contact) {
@@ -1400,15 +1431,71 @@ Respond as ${character.fullName || character.name} would in an instant message, 
     // ===== STORAGE MANAGEMENT =====
 
     saveSettingsToStorage() {
+        // Save to localStorage (sync fallback)
         try {
             localStorage.setItem('snakesia-messenger-settings', JSON.stringify(this.settings));
             localStorage.setItem('snakesia-messenger-first-time', JSON.stringify(this.firstTimeSetup));
         } catch (error) {
-            console.error('❌ Failed to save messenger settings:', error);
+            console.error('❌ Failed to save messenger settings to localStorage:', error);
+        }
+
+        // Also save to registry (per-user, persistent)
+        this._saveSettingsToRegistry();
+    }
+
+    async _saveSettingsToRegistry() {
+        try {
+            if (typeof elxaOS !== 'undefined' && elxaOS.registry && elxaOS.registry.isLoggedIn()) {
+                await elxaOS.registry.setState('messengerSettings', {
+                    settings: this.settings,
+                    firstTimeSetup: this.firstTimeSetup
+                });
+            }
+        } catch (error) {
+            console.warn('⚠️ Failed to save messenger settings to registry:', error);
+        }
+    }
+
+    /**
+     * Async load from registry — called after initializeManagers().
+     * If registry has data, it overwrites the localStorage-loaded settings.
+     * Also migrates localStorage → registry on first load.
+     */
+    async _loadSettingsFromRegistry() {
+        try {
+            if (typeof elxaOS === 'undefined' || !elxaOS.registry || !elxaOS.registry.isLoggedIn()) return;
+
+            const saved = await elxaOS.registry.getState('messengerSettings');
+            if (saved && saved.settings) {
+                this.settings = {
+                    ...this.settings,
+                    ...saved.settings,
+                    llm: {
+                        ...this.settings.llm,
+                        ...(saved.settings.llm || {})
+                    },
+                    theme: {
+                        ...this.settings.theme,
+                        ...(saved.settings.theme || {})
+                    }
+                };
+                if (saved.firstTimeSetup !== undefined) {
+                    this.firstTimeSetup = saved.firstTimeSetup;
+                }
+                this.migrateDeprecatedModels();
+                console.log('📨 Messenger settings loaded from registry');
+            } else {
+                // No registry data yet — migrate from localStorage
+                await this._saveSettingsToRegistry();
+                console.log('📨 Messenger settings migrated to registry');
+            }
+        } catch (error) {
+            console.warn('⚠️ Failed to load messenger settings from registry:', error);
         }
     }
 
     loadSettings() {
+        // Sync load from localStorage (immediate, for constructor)
         try {
             const savedSettings = localStorage.getItem('snakesia-messenger-settings');
             if (savedSettings) {
@@ -1451,8 +1538,8 @@ Respond as ${character.fullName || character.name} would in an instant message, 
 
         // If selected model is deprecated, switch to default
         if (deprecatedModels.includes(this.settings.selectedModel)) {
-            console.log(`🔄 Migrating deprecated model ${this.settings.selectedModel} → gemini-2.5-flash`);
-            this.settings.selectedModel = 'gemini-2.5-flash';
+            console.log(`🔄 Migrating deprecated model ${this.settings.selectedModel} → gemini-2.5-flash-lite`);
+            this.settings.selectedModel = 'gemini-2.5-flash-lite';
         }
 
         // If the saved list contains deprecated models, reset to fresh defaults

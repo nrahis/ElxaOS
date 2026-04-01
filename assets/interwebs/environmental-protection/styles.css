@@ -1,0 +1,423 @@
+/* ============================================
+   SERPENTVILLE CONSERVATION INITIATIVE
+   ============================================ */
+
+.sci-root {
+    display: flex;
+    min-height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1a2e0f;
+    background: #faf7f0;
+}
+
+/* ===== SIDEBAR ===== */
+
+.sci-sidebar {
+    position: sticky;
+    top: 0;
+    width: 38%;
+    min-width: 220px;
+    max-width: 340px;
+    height: 100vh;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.sci-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.sci-sidebar-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 18px 22px;
+    background: linear-gradient(to top, rgba(20, 40, 10, 0.92) 0%, rgba(20, 40, 10, 0.7) 60%, transparent 100%);
+}
+
+.sci-logo {
+    color: #e8f0dc;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.sci-logo .mdi {
+    font-size: 22px;
+    margin-right: 6px;
+    vertical-align: -2px;
+    color: #8bc34a;
+}
+
+.sci-logo-tagline {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: #b8d4a0;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+}
+
+/* ===== MAIN CONTENT ===== */
+
+.sci-content {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 0;
+}
+
+/* ===== ACTIVE SUPPORTER BANNER ===== */
+
+.sci-active-banner {
+    background: linear-gradient(135deg, #2d6a1e 0%, #3a7a2a 100%);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.sci-active-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.sci-active-info .mdi {
+    font-size: 18px;
+    color: #8bc34a;
+}
+
+.sci-active-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.sci-active-actions button {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+}
+
+.sci-btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.5) !important;
+    color: #fff;
+}
+
+.sci-btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.sci-btn-cancel {
+    background: rgba(255,255,255,0.15);
+    color: #ffcdd2;
+}
+
+.sci-btn-cancel:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+/* ===== SECTIONS ===== */
+
+.sci-section {
+    padding: 28px 28px 24px;
+}
+
+.sci-section + .sci-section {
+    border-top: 1px solid #e0dccf;
+}
+
+/* ===== MISSION ===== */
+
+.sci-mission h1 {
+    font-size: 22px;
+    color: #2d6a1e;
+    margin: 0 0 14px 0;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.sci-mission p {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #3a4a2e;
+    margin: 0 0 10px 0;
+}
+
+.sci-mission p:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== IMPACT STATS ===== */
+
+.sci-impact h2 {
+    font-size: 17px;
+    color: #2d6a1e;
+    margin: 0 0 16px 0;
+    font-weight: 700;
+}
+
+.sci-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.sci-stat-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #d4dcc8;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.sci-stat-icon {
+    font-size: 24px;
+    color: #3a7a2a;
+    margin-bottom: 6px;
+}
+
+.sci-stat-number {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2d6a1e;
+    line-height: 1.2;
+}
+
+.sci-stat-label {
+    font-size: 11px;
+    color: #6a7a5e;
+    margin-top: 3px;
+    line-height: 1.3;
+}
+
+/* ===== DONATE SECTION ===== */
+
+.sci-donate h2 {
+    font-size: 17px;
+    color: #2d6a1e;
+    margin: 0 0 6px 0;
+    font-weight: 700;
+}
+
+.sci-donate-intro {
+    font-size: 13px;
+    color: #5a6a4e;
+    margin: 0 0 18px 0;
+    line-height: 1.5;
+}
+
+.sci-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sci-tier-card {
+    background: #fff;
+    border: 2px solid #d4dcc8;
+    border-radius: 10px;
+    padding: 18px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    position: relative;
+}
+
+.sci-tier-card:hover {
+    border-color: #3a7a2a;
+    box-shadow: 0 2px 10px rgba(45, 106, 30, 0.12);
+    transform: translateY(-1px);
+}
+
+.sci-tier-card.sci-tier-selected {
+    border-color: #2d6a1e;
+    box-shadow: 0 2px 12px rgba(45, 106, 30, 0.2);
+    background: #f5faf0;
+}
+
+.sci-tier-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.sci-tier-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2d6a1e;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.sci-tier-name .mdi {
+    font-size: 20px;
+    color: #5a9a3a;
+}
+
+.sci-tier-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #8a6d2a;
+}
+
+.sci-tier-price span {
+    font-size: 11px;
+    font-weight: 400;
+    color: #9a8a6a;
+}
+
+.sci-tier-perks {
+    font-size: 12px;
+    color: #5a6a4e;
+    line-height: 1.55;
+}
+
+.sci-tier-badge {
+    position: absolute;
+    top: -1px;
+    right: 14px;
+    background: #c9912a;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 0 0 6px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== CONFIRM BOX ===== */
+
+.sci-confirm-box {
+    background: #f0f5e8;
+    border: 2px solid #3a7a2a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.sci-confirm-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2d6a1e;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sci-confirm-title .mdi {
+    font-size: 18px;
+}
+
+.sci-confirm-details {
+    font-size: 13px;
+    color: #3a4a2e;
+    margin-bottom: 14px;
+    line-height: 1.55;
+}
+
+.sci-confirm-note {
+    font-size: 11.5px;
+    color: #7a8a6e;
+    margin-bottom: 14px;
+    font-style: italic;
+}
+
+.sci-confirm-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.sci-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.sci-btn:active {
+    transform: scale(0.97);
+}
+
+.sci-btn-primary {
+    background: linear-gradient(135deg, #3a7a2a 0%, #2d6a1e 100%);
+    color: #fff;
+}
+
+.sci-btn-primary:hover {
+    background: linear-gradient(135deg, #4a8a3a 0%, #3a7a2a 100%);
+}
+
+.sci-btn-primary:disabled {
+    background: #b0bca6;
+    cursor: not-allowed;
+}
+
+.sci-btn-secondary {
+    background: #e0dccf;
+    color: #3a4a2e;
+}
+
+.sci-btn-secondary:hover {
+    background: #d0ccbf;
+}
+
+/* ===== SUPPORTER NOTE ===== */
+
+.sci-supporter-note {
+    background: #e8f5e2;
+    border: 1px solid #a5d696;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 12.5px;
+    color: #2d6a1e;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+}
+
+.sci-supporter-note .mdi {
+    font-size: 18px;
+    color: #3a7a2a;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ===== FOOTER ===== */
+
+.sci-footer {
+    padding: 18px 28px;
+    border-top: 1px solid #e0dccf;
+    font-size: 11.5px;
+    color: #8a9a7e;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.sci-footer .mdi {
+    color: #5a9a3a;
+    margin-right: 4px;
+}

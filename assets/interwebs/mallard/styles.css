@@ -1,0 +1,2059 @@
+/* =============================================
+   MALLARD REALTY — Professional Real Estate Site
+   Warm neutrals + teal/duck-green accents
+   ============================================= */
+
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif !important;
+    background: #f5f0eb !important;
+    color: #2c2c2c !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    min-height: 100vh !important;
+}
+
+/* =============================================
+   Root & Layout
+   ============================================= */
+
+.mallard-root {
+    background: #f5f0eb !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.mallard-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* =============================================
+   Icon overrides
+   ============================================= */
+
+.mallard-root .elxa-icon-ui {
+    color: inherit;
+}
+
+.mallard-root button .mdi,
+.mallard-root a .mdi {
+    pointer-events: none;
+}
+
+/* =============================================
+   Banner
+   ============================================= */
+
+.mallard-banner {
+    width: 100%;
+    background: #1a6b5a;
+    text-align: center;
+    border-bottom: 3px solid #14544a;
+}
+
+.mallard-banner img {
+    width: 100%;
+    max-width: 900px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* =============================================
+   Navigation Tabs
+   ============================================= */
+
+.mallard-nav {
+    display: flex;
+    background: #1a6b5a;
+    border-bottom: 2px solid #14544a;
+    padding: 0;
+}
+
+.mallard-nav-tab {
+    padding: 10px 20px;
+    color: #c5e6df;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mallard-nav-tab:hover {
+    background: rgba(255,255,255,0.12);
+    color: #ffffff;
+}
+
+.mallard-nav-tab.active {
+    background: #f5f0eb;
+    color: #1a6b5a;
+}
+
+/* =============================================
+   Tab Content
+   ============================================= */
+
+.mallard-tab-content {
+    display: none;
+    padding: 16px;
+}
+
+.mallard-tab-content.active {
+    display: block;
+}
+
+/* =============================================
+   Mortgage Qualification Banner
+   ============================================= */
+
+.mallard-mortgage-banner {
+    background: linear-gradient(135deg, #e8f5f1, #d4ede6);
+    border: 1px solid #a8d5c8;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: #1a5c4e;
+    display: none;
+}
+
+.mallard-mortgage-banner.visible {
+    display: block;
+}
+
+.mallard-mortgage-banner strong {
+    color: #14544a;
+}
+
+.mallard-mortgage-banner .tier-label {
+    display: inline-block;
+    background: #1a6b5a;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+/* =============================================
+   Filter Bar
+   ============================================= */
+
+.mallard-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1px solid #d9d0c7;
+    border-radius: 6px;
+    margin-bottom: 14px;
+}
+
+.mallard-filter-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 140px;
+}
+
+.mallard-filter-group label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8a7d72;
+    margin-bottom: 4px;
+}
+
+.mallard-filter-group select {
+    padding: 6px 8px;
+    border: 1px solid #ccc3b8;
+    border-radius: 4px;
+    font-size: 12px;
+    background: #fcfaf8;
+    color: #2c2c2c;
+    cursor: pointer;
+    outline: none;
+}
+
+.mallard-filter-group select:focus {
+    border-color: #1a6b5a;
+    box-shadow: 0 0 0 2px rgba(26,107,90,0.15);
+}
+
+/* =============================================
+   Results Count
+   ============================================= */
+
+.mallard-results-count {
+    font-size: 12px;
+    color: #8a7d72;
+    margin-bottom: 12px;
+    padding-left: 2px;
+}
+
+/* =============================================
+   Property Card Grid
+   ============================================= */
+
+.mallard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+.mallard-card {
+    background: #ffffff;
+    border: 1px solid #d9d0c7;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.15s;
+}
+
+.mallard-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.mallard-card-image {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    position: relative;
+    background: #e8e2db;
+}
+
+.mallard-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Status badges on card image */
+.mallard-card-badges {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: flex;
+    gap: 4px;
+}
+
+.mallard-badge {
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mallard-badge-rent {
+    background: #2980b9;
+    color: white;
+}
+
+.mallard-badge-buy {
+    background: #1a6b5a;
+    color: white;
+}
+
+.mallard-badge-owned {
+    background: #d4a017;
+    color: white;
+}
+
+.mallard-badge-rented {
+    background: #8e44ad;
+    color: white;
+}
+
+.mallard-badge-sold {
+    background: #c0392b;
+    color: white;
+}
+
+/* Neighborhood tag on card image */
+.mallard-card-neighborhood {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.65);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.mallard-card-body {
+    padding: 12px;
+}
+
+.mallard-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a3a32;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.mallard-card-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a6b5a;
+    margin-bottom: 6px;
+}
+
+.mallard-card-price .price-usd {
+    font-size: 11px;
+    color: #8a7d72;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+.mallard-card-stats {
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    color: #6b6058;
+    margin-bottom: 6px;
+}
+
+.mallard-card-stats span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.mallard-card-rent {
+    font-size: 11px;
+    color: #2980b9;
+    font-weight: 500;
+}
+
+.mallard-card-type {
+    font-size: 11px;
+    color: #8a7d72;
+    margin-top: 2px;
+}
+
+/* =============================================
+   Detail Overlay
+   ============================================= */
+
+.mallard-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.mallard-detail-overlay.hidden {
+    display: none;
+}
+
+.mallard-detail-panel {
+    background: #ffffff;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+}
+
+.mallard-detail-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.mallard-detail-close:hover {
+    background: rgba(0,0,0,0.7);
+}
+
+/* Detail content */
+.mallard-detail-image {
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+}
+
+.mallard-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mallard-detail-body {
+    padding: 20px;
+}
+
+.mallard-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.mallard-detail-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a3a32;
+    line-height: 1.2;
+}
+
+.mallard-detail-address {
+    font-size: 13px;
+    color: #6b6058;
+    margin-top: 2px;
+}
+
+.mallard-detail-price-block {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.mallard-detail-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a6b5a;
+}
+
+.mallard-detail-price-usd {
+    font-size: 12px;
+    color: #8a7d72;
+}
+
+.mallard-detail-stats {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid #e8e2db;
+    border-bottom: 1px solid #e8e2db;
+    margin-bottom: 14px;
+}
+
+.mallard-detail-stat {
+    text-align: center;
+    flex: 1;
+}
+
+.mallard-detail-stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a3a32;
+}
+
+.mallard-detail-stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8a7d72;
+}
+
+.mallard-detail-section {
+    margin-bottom: 16px;
+}
+
+.mallard-detail-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1a6b5a;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #d4ede6;
+}
+
+.mallard-detail-description {
+    font-size: 13px;
+    color: #3d3530;
+    line-height: 1.6;
+}
+
+.mallard-detail-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mallard-detail-features li {
+    padding: 5px 0;
+    padding-left: 20px;
+    position: relative;
+    font-size: 12px;
+    color: #3d3530;
+    border-bottom: 1px solid #f0ece7;
+}
+
+.mallard-detail-features li:last-child {
+    border-bottom: none;
+}
+
+.mallard-detail-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #1a6b5a;
+    font-weight: 700;
+}
+
+.mallard-detail-quirk {
+    background: #faf6f1;
+    border-left: 3px solid #d4a017;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #5c5043;
+    font-style: italic;
+    border-radius: 0 4px 4px 0;
+}
+
+.mallard-detail-agent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f5f0eb;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.mallard-detail-agent-icon {
+    width: 36px;
+    height: 36px;
+    background: #1a6b5a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.mallard-detail-agent-info {
+    font-size: 12px;
+    color: #6b6058;
+}
+
+.mallard-detail-agent-name {
+    font-weight: 700;
+    color: #1a3a32;
+    font-size: 13px;
+}
+
+/* Action buttons in detail view */
+.mallard-detail-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e8e2db;
+}
+
+.mallard-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    flex: 1;
+    text-align: center;
+}
+
+.mallard-btn:hover {
+    opacity: 0.9;
+}
+
+.mallard-btn-buy {
+    background: #1a6b5a;
+    color: white;
+}
+
+.mallard-btn-rent {
+    background: #2980b9;
+    color: white;
+}
+
+.mallard-btn-disabled {
+    background: #ccc3b8;
+    color: #8a7d72;
+    cursor: not-allowed;
+}
+
+.mallard-btn-disabled:hover {
+    opacity: 1;
+}
+
+.mallard-detail-rent-info {
+    text-align: center;
+    font-size: 12px;
+    color: #2980b9;
+    margin-top: 6px;
+}
+
+.mallard-detail-mortgage-info {
+    background: #e8f5f1;
+    border: 1px solid #a8d5c8;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 12px;
+    color: #1a5c4e;
+    margin-top: 10px;
+}
+
+.mallard-detail-mortgage-info.warning {
+    background: #fef3e2;
+    border-color: #e8c97a;
+    color: #7a5c14;
+}
+
+/* =============================================
+   Neighborhoods Tab
+   ============================================= */
+
+.mallard-neighborhoods-intro {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.mallard-neighborhoods-intro h2 {
+    font-size: 20px;
+    color: #1a3a32;
+    margin: 0 0 6px 0;
+}
+
+.mallard-neighborhoods-intro p {
+    color: #6b6058;
+    font-size: 13px;
+}
+
+.mallard-neighborhoods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mallard-neighborhood-card {
+    background: #ffffff;
+    border: 1px solid #d9d0c7;
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.mallard-neighborhood-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.mallard-neighborhood-body {
+    flex: 1;
+}
+
+.mallard-neighborhood-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a3a32;
+    margin-bottom: 4px;
+}
+
+.mallard-neighborhood-desc {
+    font-size: 12px;
+    color: #5c5043;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.mallard-neighborhood-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 11px;
+    color: #8a7d72;
+    flex-wrap: wrap;
+}
+
+.mallard-neighborhood-stats span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.mallard-neighborhood-browse {
+    color: #1a6b5a;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 12px;
+    margin-top: 6px;
+    display: inline-block;
+}
+
+.mallard-neighborhood-browse:hover {
+    color: #14544a;
+}
+
+/* Neighborhood icon colors */
+.nh-dusty-flats { background: #e8d5b8; color: #8a6d3b; }
+.nh-pine-hollow { background: #c8e0c4; color: #3d6b36; }
+.nh-cloverfield { background: #d4e8c8; color: #4a7a3a; }
+.nh-downtown { background: #c8d4e8; color: #3a5a7a; }
+.nh-maple-heights { background: #e8d4c8; color: #7a4a3a; }
+.nh-serpentine-estates { background: #d4c8e8; color: #5a3a7a; }
+
+/* =============================================
+   My Properties Tab
+   ============================================= */
+
+.mallard-my-properties-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8a7d72;
+}
+
+.mallard-my-properties-empty h3 {
+    font-size: 18px;
+    color: #6b6058;
+    margin: 0 0 8px 0;
+}
+
+.mallard-my-properties-empty p {
+    font-size: 13px;
+    margin: 0 0 16px 0;
+}
+
+.mallard-my-properties-browse-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #1a6b5a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mallard-my-properties-browse-btn:hover {
+    background: #14544a;
+}
+
+.mallard-my-prop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.mallard-my-prop-card {
+    background: #ffffff;
+    border: 1px solid #d9d0c7;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.mallard-my-prop-image {
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+}
+
+.mallard-my-prop-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mallard-my-prop-body {
+    padding: 12px;
+}
+
+.mallard-my-prop-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a3a32;
+    margin-bottom: 4px;
+}
+
+.mallard-my-prop-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.mallard-my-prop-status.owned {
+    background: #d4ede6;
+    color: #1a6b5a;
+}
+
+.mallard-my-prop-status.mortgaged {
+    background: #fef3e2;
+    color: #7a5c14;
+}
+
+.mallard-my-prop-status.rented {
+    background: #dce8f5;
+    color: #2a5a8a;
+}
+
+.mallard-my-prop-details {
+    font-size: 11px;
+    color: #6b6058;
+    line-height: 1.6;
+}
+
+.mallard-my-prop-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.mallard-my-prop-btn {
+    padding: 6px 14px;
+    border: 1px solid #d9d0c7;
+    border-radius: 4px;
+    background: #fcfaf8;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5c5043;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+}
+
+.mallard-my-prop-btn:hover {
+    background: #f0ece7;
+}
+
+.mallard-my-prop-btn.danger {
+    border-color: #e0a0a0;
+    color: #9a3030;
+}
+
+.mallard-my-prop-btn.danger:hover {
+    background: #fef0f0;
+}
+
+/* =============================================
+   Footer
+   ============================================= */
+
+.mallard-footer {
+    text-align: center;
+    padding: 16px;
+    color: #8a7d72;
+    font-size: 11px;
+    border-top: 1px solid #d9d0c7;
+    margin-top: 20px;
+    background: #efe9e1;
+}
+
+.mallard-footer p {
+    margin: 4px 0;
+}
+
+/* =============================================
+   Utility
+   ============================================= */
+
+.hidden {
+    display: none !important;
+}
+
+/* No results state */
+.mallard-no-results {
+    text-align: center;
+    padding: 30px;
+    color: #8a7d72;
+    font-size: 14px;
+}
+
+/* Scrollbar styling for detail panel */
+.mallard-detail-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mallard-detail-panel::-webkit-scrollbar-thumb {
+    background: #ccc3b8;
+    border-radius: 3px;
+}
+
+.mallard-detail-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* =============================================
+   Phase 4: Confirmation Dialog Overlay
+   ============================================= */
+
+.mallard-confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    animation: mallard-fade-in 0.2s ease;
+}
+
+@keyframes mallard-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.mallard-confirm-dialog {
+    background: #fff;
+    border-radius: 10px;
+    width: 380px;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    animation: mallard-slide-up 0.25s ease;
+}
+
+@keyframes mallard-slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.mallard-confirm-title {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e8e2db;
+    color: #2c2c2c;
+}
+
+.mallard-confirm-body {
+    padding: 16px 20px;
+}
+
+/* Property preview in confirm dialog */
+.mallard-confirm-property {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #efe9e1;
+}
+
+.mallard-confirm-property img {
+    width: 72px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #d9d0c7;
+}
+
+.mallard-confirm-property-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c2c2c;
+}
+
+.mallard-confirm-property-address {
+    font-size: 11px;
+    color: #8a7d72;
+    margin-top: 2px;
+}
+
+/* Detail rows */
+.mallard-confirm-details {
+    margin-bottom: 12px;
+}
+
+.mallard-confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 13px;
+    color: #5a5249;
+}
+
+.mallard-confirm-row strong {
+    color: #2c2c2c;
+}
+
+.mallard-confirm-row-after {
+    border-top: 1px dashed #d9d0c7;
+    margin-top: 4px;
+    padding-top: 8px;
+}
+
+/* Info note */
+.mallard-confirm-note {
+    font-size: 11px;
+    color: #6b6159;
+    background: #f5f0eb;
+    padding: 10px 12px;
+    border-radius: 6px;
+    line-height: 1.5;
+}
+
+.mallard-confirm-note-warning {
+    background: #fef6e8;
+    color: #7a5a1a;
+}
+
+/* Action buttons */
+.mallard-confirm-actions {
+    display: flex;
+    gap: 8px;
+    padding: 14px 20px;
+    border-top: 1px solid #e8e2db;
+}
+
+.mallard-confirm-btn {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.mallard-confirm-btn:hover {
+    transform: translateY(-1px);
+}
+
+.mallard-confirm-btn:active {
+    transform: translateY(0);
+}
+
+.mallard-confirm-btn-cancel {
+    background: #e8e2db;
+    color: #5a5249;
+}
+
+.mallard-confirm-btn-cancel:hover {
+    background: #d9d0c7;
+}
+
+.mallard-confirm-btn-primary {
+    background: #1a6b5a;
+    color: #fff;
+}
+
+.mallard-confirm-btn-primary:hover {
+    background: #15574a;
+}
+
+.mallard-confirm-btn-rent {
+    background: #1a6b5a;
+    color: #fff;
+}
+
+.mallard-confirm-btn-rent:hover {
+    background: #15574a;
+}
+
+.mallard-confirm-btn-danger {
+    background: #c0392b;
+    color: #fff;
+}
+
+.mallard-confirm-btn-danger:hover {
+    background: #a93226;
+}
+
+/* =============================================
+   Phase 4: Updated Detail View Button States
+   ============================================= */
+
+.mallard-btn-renting {
+    background: #e8e2db !important;
+    color: #6b6159 !important;
+    cursor: default !important;
+}
+
+.mallard-btn-moveout {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.mallard-btn-moveout:hover {
+    background: #a93226;
+}
+
+/* My Properties — move out button enabled */
+.mallard-my-prop-btn.danger {
+    color: #c0392b;
+    border-color: #c0392b;
+}
+
+.mallard-my-prop-btn.danger:hover:not(:disabled) {
+    background: #c0392b;
+    color: #fff;
+}
+
+.mallard-my-prop-btn.danger:disabled {
+    color: #bbb;
+    border-color: #ddd;
+    cursor: not-allowed;
+}
+
+/* =============================================
+   Inline MDI Icon Sizing
+   ============================================= */
+
+/* Generic inline MDI icons in buttons, labels, stats */
+.mallard-root .mdi {
+    vertical-align: -0.1em;
+}
+
+/* Neighborhood icon MDI sizing */
+.mallard-neighborhood-icon .mdi {
+    font-size: 22px;
+    vertical-align: middle;
+}
+
+/* Neighborhood stats inline icons */
+.mallard-neighborhood-stats .mdi {
+    font-size: 13px;
+}
+
+/* Card stats inline icons */
+.mallard-card-stats .mdi {
+    font-size: 13px;
+}
+
+/* Button icons spacing */
+.mallard-btn .mdi,
+.mallard-confirm-btn .mdi,
+.mallard-my-prop-btn .mdi,
+.mallard-my-properties-browse-btn .mdi {
+    margin-right: 4px;
+    font-size: 15px;
+}
+
+/* Confirm dialog title icons */
+.mallard-confirm-title .mdi {
+    margin-right: 4px;
+    font-size: 17px;
+}
+
+/* Confirm note icons */
+.mallard-confirm-note .mdi {
+    margin-right: 3px;
+}
+
+/* Mortgage info icons */
+.mallard-detail-mortgage-info .mdi {
+    margin-right: 3px;
+}
+
+/* Agent quirk feather icon */
+.mallard-detail-quirk .mdi {
+    margin-right: 4px;
+    color: #d4a017;
+}
+
+/* Mortgage banner icon */
+.mallard-mortgage-banner .mdi {
+    margin-right: 2px;
+}
+
+/* My Properties empty state icon */
+.mallard-my-empty-icon {
+    margin-bottom: 8px;
+}
+
+.mallard-my-empty-icon .mdi {
+    font-size: 48px;
+    color: #c5b8a8;
+}
+
+/* =============================================
+   Ceremony Overlay (shared base)
+   ============================================= */
+
+.mallard-ceremony-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    animation: mallard-fade-in 0.3s ease;
+}
+
+.mallard-ceremony-card {
+    background: #fff;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 92%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    padding: 28px 24px;
+    position: relative;
+    animation: mallard-ceremony-enter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes mallard-ceremony-enter {
+    from {
+        transform: translateY(30px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* =============================================
+   Ceremony Icon Wrap
+   ============================================= */
+
+.mallard-ceremony-icon-wrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mallard-ceremony-icon-wrap .mdi {
+    font-size: 36px;
+    color: #fff;
+}
+
+/* Move-in: warm gold/green */
+.mallard-ceremony-icon-wrap.movein {
+    background: linear-gradient(135deg, #1a6b5a, #2ea88a);
+    box-shadow: 0 4px 20px rgba(26, 107, 90, 0.35);
+    animation: mallard-key-bounce 0.6s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes mallard-key-bounce {
+    from {
+        transform: scale(0) rotate(-45deg);
+    }
+    60% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    to {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Move-out: muted warm tone */
+.mallard-ceremony-icon-wrap.moveout {
+    background: linear-gradient(135deg, #8a7d72, #a69888);
+    box-shadow: 0 4px 20px rgba(138, 125, 114, 0.3);
+    animation: mallard-ceremony-enter 0.4s ease both;
+}
+
+/* =============================================
+   Ceremony Title & Subtitle
+   ============================================= */
+
+.mallard-ceremony-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a3a32;
+    margin-bottom: 4px;
+}
+
+.mallard-ceremony-title.moveout {
+    color: #5c5043;
+}
+
+.mallard-ceremony-subtitle {
+    font-size: 13px;
+    color: #8a7d72;
+    margin-bottom: 20px;
+}
+
+.mallard-ceremony-subtitle.moveout {
+    color: #a69888;
+}
+
+/* =============================================
+   Ceremony Property Preview
+   ============================================= */
+
+.mallard-ceremony-property {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    background: #f5f0eb;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.mallard-ceremony-property.farewell {
+    background: #f0ece7;
+}
+
+.mallard-ceremony-property img {
+    width: 80px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #d9d0c7;
+    flex-shrink: 0;
+}
+
+.mallard-ceremony-property-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #1a3a32;
+}
+
+.mallard-ceremony-property-address {
+    font-size: 11px;
+    color: #8a7d72;
+    margin-top: 2px;
+}
+
+.mallard-ceremony-property-rent {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a6b5a;
+    margin-top: 4px;
+}
+
+/* =============================================
+   Ceremony Agent Message / Farewell Message
+   ============================================= */
+
+.mallard-ceremony-message {
+    display: flex;
+    gap: 10px;
+    text-align: left;
+    background: #e8f5f1;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #1a5c4e;
+    line-height: 1.5;
+}
+
+.mallard-ceremony-message > .mdi {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #1a6b5a;
+}
+
+.mallard-ceremony-message.farewell {
+    background: #f5f0eb;
+    color: #5c5043;
+}
+
+.mallard-ceremony-message.farewell > .mdi {
+    color: #8a7d72;
+}
+
+.mallard-ceremony-quote {
+    font-style: italic;
+    margin-top: 4px;
+    color: #2a7a66;
+}
+
+/* =============================================
+   Ceremony Time Spent (move-out)
+   ============================================= */
+
+.mallard-ceremony-time-spent {
+    font-size: 12px;
+    color: #8a7d72;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.mallard-ceremony-time-spent .mdi {
+    font-size: 15px;
+}
+
+/* =============================================
+   Ceremony Dismiss Button
+   ============================================= */
+
+.mallard-ceremony-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.mallard-ceremony-btn:hover {
+    transform: translateY(-1px);
+}
+
+.mallard-ceremony-btn:active {
+    transform: translateY(0);
+}
+
+.mallard-ceremony-btn .mdi {
+    font-size: 17px;
+    margin-right: 0;
+}
+
+/* Move-in button: green */
+.mallard-ceremony-btn.movein {
+    background: #1a6b5a;
+    color: #fff;
+}
+
+.mallard-ceremony-btn.movein:hover {
+    background: #15574a;
+}
+
+/* Move-out button: neutral warm */
+.mallard-ceremony-btn.moveout {
+    background: #6b6058;
+    color: #fff;
+}
+
+.mallard-ceremony-btn.moveout:hover {
+    background: #5c5043;
+}
+
+/* =============================================
+   Sparkles (move-in decoration)
+   ============================================= */
+
+.mallard-ceremony-sparkles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.mallard-sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #d4a017;
+    animation: mallard-sparkle-float 2s ease-in-out infinite;
+    opacity: 0;
+}
+
+.mallard-sparkle.s1 { top: 15%; left: 10%; animation-delay: 0s; background: #d4a017; }
+.mallard-sparkle.s2 { top: 10%; right: 12%; animation-delay: 0.4s; background: #1a6b5a; }
+.mallard-sparkle.s3 { top: 25%; left: 22%; animation-delay: 0.8s; background: #2ea88a; width: 4px; height: 4px; }
+.mallard-sparkle.s4 { top: 8%; right: 28%; animation-delay: 1.2s; background: #d4a017; width: 5px; height: 5px; }
+.mallard-sparkle.s5 { top: 20%; right: 8%; animation-delay: 0.6s; background: #e8c97a; width: 4px; height: 4px; }
+.mallard-sparkle.s6 { top: 30%; left: 8%; animation-delay: 1s; background: #1a6b5a; width: 5px; height: 5px; }
+
+@keyframes mallard-sparkle-float {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+    }
+    30% {
+        opacity: 0.8;
+        transform: translateY(-8px) scale(1);
+    }
+    70% {
+        opacity: 0.6;
+        transform: translateY(-16px) scale(0.8);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-24px) scale(0);
+    }
+}
+
+/* =============================================
+   Phase 5: Buy Flow — Mortgage Application Dialog
+   ============================================= */
+
+.mallard-confirm-dialog-buy {
+    width: 420px;
+}
+
+.mallard-buy-section-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a6b5a;
+    margin: 12px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.mallard-buy-section-label .mdi {
+    font-size: 16px;
+}
+
+/* Term selector toggle buttons */
+.mallard-buy-term-section {
+    margin: 12px 0;
+}
+
+.mallard-buy-term-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5c5043;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.mallard-buy-term-options {
+    display: flex;
+    gap: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #d9d0c7;
+}
+
+.mallard-term-btn {
+    flex: 1;
+    padding: 8px 4px;
+    border: none;
+    background: #f5f0eb;
+    color: #5c5043;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    border-right: 1px solid #d9d0c7;
+}
+
+.mallard-term-btn:last-child {
+    border-right: none;
+}
+
+.mallard-term-btn:hover {
+    background: #e8e2db;
+}
+
+.mallard-term-btn.active {
+    background: #1a6b5a;
+    color: #fff;
+}
+
+/* Payment preview card */
+.mallard-buy-payment-preview {
+    background: #f0faf6;
+    border: 1px solid #b8e0d2;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 12px 0;
+    text-align: center;
+}
+
+.mallard-buy-payment-main {
+    margin-bottom: 10px;
+}
+
+.mallard-buy-payment-amount {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a6b5a;
+    line-height: 1.2;
+}
+
+.mallard-buy-payment-label {
+    font-size: 12px;
+    color: #5c5043;
+    margin-top: 2px;
+}
+
+.mallard-buy-payment-details {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    border-top: 1px solid #d0e8de;
+    padding-top: 10px;
+}
+
+.mallard-buy-payment-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.mallard-buy-payment-detail span {
+    font-size: 10px;
+    color: #8a7d72;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mallard-buy-payment-detail strong {
+    font-size: 13px;
+    color: #2c2c2c;
+}
+
+/* Buy confirm button */
+.mallard-confirm-btn-buy {
+    background: #2a7a66;
+    color: #fff;
+}
+
+.mallard-confirm-btn-buy:hover {
+    background: #1a6b5a;
+}
+
+/* =============================================
+   Phase 5: Deed Ceremony Overlay
+   ============================================= */
+
+/* Deed card — gold/parchment theme */
+.mallard-ceremony-card.mallard-ceremony-deed {
+    border-top: 4px solid #c9a227;
+}
+
+/* Deed icon wrap — gold seal */
+.mallard-ceremony-icon-wrap.deed {
+    background: linear-gradient(135deg, #c9a227, #e8c97a);
+    color: #fff;
+}
+
+/* Deed title */
+.mallard-ceremony-title.deed {
+    color: #7a6520;
+}
+
+.mallard-ceremony-subtitle.deed {
+    color: #a89060;
+    font-style: italic;
+}
+
+/* Deed document section */
+.mallard-deed-document {
+    background: #faf6ec;
+    border: 1px solid #e8dcc0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 12px;
+    color: #5c5043;
+    line-height: 1.7;
+}
+
+.mallard-deed-property-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: #7a6520;
+    margin: 6px 0;
+}
+
+.mallard-deed-line strong {
+    color: #2c2c2c;
+}
+
+/* Property preview in deed */
+.mallard-ceremony-property.deed {
+    background: #faf6ec;
+    border-color: #e8dcc0;
+}
+
+.mallard-ceremony-property-rent.deed {
+    color: #7a6520;
+    font-weight: 700;
+}
+
+/* Mortgage summary in deed */
+.mallard-deed-summary {
+    background: #f5f0eb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+}
+
+.mallard-deed-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 12px;
+    color: #5c5043;
+}
+
+.mallard-deed-summary-row strong {
+    color: #2c2c2c;
+}
+
+/* Agent message — deed variant */
+.mallard-ceremony-message.deed {
+    background: #faf6ec;
+    color: #7a6520;
+}
+
+.mallard-ceremony-message.deed > .mdi {
+    color: #c9a227;
+}
+
+.mallard-ceremony-message.deed .mallard-ceremony-quote {
+    color: #8a7520;
+}
+
+/* Deed ceremony button — gold */
+.mallard-ceremony-btn.deed {
+    background: linear-gradient(135deg, #c9a227, #b8911f);
+    color: #fff;
+}
+
+.mallard-ceremony-btn.deed:hover {
+    background: linear-gradient(135deg, #b8911f, #a68018);
+}
+
+/* =============================================
+   Phase 5: Owned Button State in Detail View
+   ============================================= */
+
+.mallard-btn-owned {
+    background: #e8e2db !important;
+    color: #5c5043 !important;
+    cursor: default !important;
+    opacity: 0.9;
+}
+
+.mallard-btn-owned .mdi {
+    color: #c9a227;
+}
+
+/* =============================================
+   Phase 6: Sell Flow + Property Appreciation
+   ============================================= */
+
+/* --- MORTGAGED badge (separate color from OWNED) --- */
+.mallard-badge-mortgaged {
+    background: #b8701a;
+    color: white;
+}
+
+/* --- Sell button in detail view --- */
+.mallard-btn-sell {
+    background: #c0392b;
+    color: white;
+}
+
+.mallard-btn-sell:hover {
+    background: #a93226;
+}
+
+/* --- Sell button in My Properties --- */
+.mallard-my-prop-btn.sell {
+    border-color: #c0392b;
+    color: #c0392b;
+}
+
+.mallard-my-prop-btn.sell:hover {
+    background: #fdf2f1;
+}
+
+/* --- Appreciation labels in My Properties --- */
+.mallard-my-prop-app-pos {
+    color: #27ae60;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.mallard-my-prop-app-neg {
+    color: #c0392b;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+/* --- Sell overlay section labels --- */
+.mallard-sell-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #8a7d72;
+    margin: 14px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.mallard-sell-section-label .mdi {
+    font-size: 14px;
+}
+
+/* --- Appreciation line in sell overlay --- */
+.mallard-sell-appreciation {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin: 4px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.mallard-sell-appreciation.positive {
+    background: #eafaf1;
+    color: #1e8449;
+}
+
+.mallard-sell-appreciation.negative {
+    background: #fdf2f1;
+    color: #c0392b;
+}
+
+/* --- Mortgage deduction (red text) --- */
+.mallard-sell-deduction {
+    color: #c0392b !important;
+}
+
+/* --- Net proceeds box --- */
+.mallard-sell-net-box {
+    background: linear-gradient(135deg, #eafaf1, #d5f5e3);
+    border: 1px solid #a9dfbf;
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: center;
+    margin: 12px 0;
+}
+
+.mallard-sell-net-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #1e8449;
+    margin-bottom: 2px;
+}
+
+.mallard-sell-net-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a6b3a;
+}
+
+/* Negative net proceeds */
+.mallard-sell-net-box.mallard-sell-net-negative {
+    background: linear-gradient(135deg, #fdf2f1, #fadbd8);
+    border-color: #e6b0aa;
+}
+
+.mallard-sell-net-negative .mallard-sell-net-label {
+    color: #922b21;
+}
+
+.mallard-sell-net-negative .mallard-sell-net-amount {
+    color: #c0392b;
+}
+
+/* --- Confirm sell button --- */
+.mallard-confirm-btn-sell {
+    background: #c0392b;
+    color: white;
+}
+
+.mallard-confirm-btn-sell:hover {
+    background: #a93226;
+}
+
+.mallard-confirm-btn-disabled {
+    background: #ccc3b8 !important;
+    color: #8a7d72 !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
+/* =============================================
+   Phase 6: Sale Ceremony Overlay
+   ============================================= */
+
+/* Card border — green gradient */
+.mallard-ceremony-card.mallard-ceremony-sale {
+    border-top: 4px solid #27ae60;
+}
+
+/* Icon circle — green */
+.mallard-ceremony-icon-wrap.sale {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    box-shadow: 0 4px 16px rgba(39, 174, 96, 0.35);
+}
+
+/* Title + subtitle */
+.mallard-ceremony-title.sale {
+    color: #1a6b3a;
+}
+
+.mallard-ceremony-subtitle.sale {
+    color: #27ae60;
+    font-style: italic;
+}
+
+/* Property preview in sale */
+.mallard-ceremony-property.sale {
+    background: #f0faf4;
+    border-color: #a9dfbf;
+}
+
+/* Financial summary table */
+.mallard-sale-summary {
+    background: #f5faf7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+}
+
+.mallard-sale-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 12px;
+    color: #5c5043;
+}
+
+.mallard-sale-summary-row strong {
+    color: #2c2c2c;
+}
+
+.mallard-sale-summary-total {
+    border-top: 1px solid #a9dfbf;
+    margin-top: 4px;
+    padding-top: 8px;
+}
+
+.mallard-sale-summary-total strong {
+    color: #1a6b3a;
+    font-size: 14px;
+}
+
+/* Profit/loss indicator */
+.mallard-sale-profit {
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.mallard-sale-profit.positive {
+    background: #eafaf1;
+    color: #1e8449;
+}
+
+.mallard-sale-profit.negative {
+    background: #fdf2f1;
+    color: #c0392b;
+}
+
+.mallard-sale-profit.neutral {
+    background: #f5f0eb;
+    color: #8a7d72;
+}
+
+/* Agent message — sale variant */
+.mallard-ceremony-message.sale {
+    background: #f0faf4;
+    color: #1a6b3a;
+}
+
+.mallard-ceremony-message.sale > .mdi {
+    color: #27ae60;
+}
+
+/* Sale ceremony button — green */
+.mallard-ceremony-btn.sale {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: #fff;
+}
+
+.mallard-ceremony-btn.sale:hover {
+    background: linear-gradient(135deg, #27ae60, #1e8449);
+}

@@ -23,6 +23,8 @@ class BatteryService {
         this.capacity = 5000;
         this.manufactureDate = 'March 2024';
 
+        this._batteryWindowId = null;
+
         this.loadSettings();
         this.setupEvents();
         this.startBatteryDrain();
@@ -120,7 +122,7 @@ class BatteryService {
             ElxaUI.showMessage('Battery calibration complete! Health improved.', 'success');
 
             // Refresh dialog if open
-            if (document.getElementById('batteryDialog')) {
+            if (this._batteryWindowId) {
                 this.showBatteryDialog();
             }
         }, 3000);
@@ -134,7 +136,7 @@ class BatteryService {
         ElxaUI.showMessage(`Power mode: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`, 'info');
 
         // Refresh dialog if open
-        if (document.getElementById('batteryDialog')) {
+        if (this._batteryWindowId) {
             this.showBatteryDialog();
         }
     }
@@ -194,10 +196,6 @@ class BatteryService {
     showBatteryDialog(isWarning = false, title = 'Battery Center', message = '') {
         this.hideBatteryDialog();
 
-        const dialog = document.createElement('div');
-        dialog.className = 'bdialog-container';
-        dialog.id = 'batteryDialog';
-
         const healthClass = this.batteryHealth >= 95 ? 'bdialog-health-good'
                           : this.batteryHealth >= 85 ? 'bdialog-health-ok'
                           : this.batteryHealth >= 70 ? 'bdialog-health-warn'
@@ -209,11 +207,7 @@ class BatteryService {
                         : this.batteryLevel > 5 ? 'bdialog-fill-warn'
                         : 'bdialog-fill-critical';
 
-        dialog.innerHTML = `
-            <div class="bdialog-header">
-                <div class="bdialog-title">${ElxaIcons.renderAction('battery-charging')} ${title}</div>
-                <button class="bdialog-close" id="bdialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
-            </div>
+        const content = `
             <div class="bdialog-body">
                 ${isWarning ? `<div class="bdialog-warning">${message}</div>` : ''}
 
@@ -249,21 +243,40 @@ class BatteryService {
                         ${ElxaIcons.renderAction('lightning-bolt')} Recharge Battery
                     </button>
                     ${!isWarning ? `<button class="bdialog-btn bdialog-btn-calibrate" id="bdialogCalibrateBtn">${ElxaIcons.renderAction('wrench')} Calibrate</button>` : ''}
-                    ${!isWarning ? `<button class="bdialog-btn bdialog-btn-close" id="bdialogCloseBtnBottom">${ElxaIcons.renderAction('close')} Close</button>` : ''}
                 </div>
             </div>
         `;
 
-        document.body.appendChild(dialog);
+        // Use WindowManager for proper draggable window
+        const windowId = 'battery-center-' + Date.now();
+        this._batteryWindowId = windowId;
 
-        // Wire buttons via addEventListener
-        dialog.querySelector('#bdialogCloseBtn').addEventListener('click', () => this.hideBatteryDialog());
-        dialog.querySelector('#bdialogRechargeBtn').addEventListener('click', () => this.rechargeBattery());
+        elxaOS.windowManager.createWindow(
+            windowId,
+            ElxaIcons.renderAction('battery-charging') + ' ' + title,
+            content,
+            { width: '600px', height: '550px', x: '120px', y: '60px' }
+        );
 
-        if (!isWarning) {
-            dialog.querySelector('#bdialogCalibrateBtn').addEventListener('click', () => this.calibrateBattery());
-            dialog.querySelector('#bdialogCloseBtnBottom').addEventListener('click', () => this.hideBatteryDialog());
-            this.setupTabs(dialog);
+        // Clean up when window is closed via titlebar X
+        this._onBatteryWindowClosed = (data) => {
+            if (data.id === windowId) {
+                this._batteryWindowId = null;
+                elxaOS.eventBus.off('window.closed', this._onBatteryWindowClosed);
+                this._onBatteryWindowClosed = null;
+            }
+        };
+        elxaOS.eventBus.on('window.closed', this._onBatteryWindowClosed);
+
+        // Wire buttons inside the window
+        const winEl = document.getElementById('window-' + windowId);
+        if (winEl) {
+            winEl.querySelector('#bdialogRechargeBtn').addEventListener('click', () => this.rechargeBattery());
+
+            if (!isWarning) {
+                winEl.querySelector('#bdialogCalibrateBtn').addEventListener('click', () => this.calibrateBattery());
+                this.setupTabs(winEl);
+            }
         }
     }
 
@@ -429,9 +442,9 @@ class BatteryService {
     }
 
     hideBatteryDialog() {
-        const dialog = document.getElementById('batteryDialog');
-        if (dialog) {
-            dialog.remove();
+        if (this._batteryWindowId) {
+            elxaOS.windowManager.closeWindow(this._batteryWindowId);
+            this._batteryWindowId = null;
         }
     }
 
@@ -504,6 +517,10 @@ class BatteryService {
     destroy() {
         this.stopBatteryDrain();
         this.hideBatteryDialog();
+        if (this._onBatteryWindowClosed) {
+            elxaOS.eventBus.off('window.closed', this._onBatteryWindowClosed);
+            this._onBatteryWindowClosed = null;
+        }
     }
 
     // =================================

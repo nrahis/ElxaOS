@@ -1,0 +1,451 @@
+<div class="swf-root">
+
+    <!-- HEADER -->
+    <div class="swf-header">
+        <div class="swf-header-inner">
+            <div class="swf-logo">
+                <span class="mdi mdi-paw"></span>
+                Snakesia Wildlife Fund
+            </div>
+            <div class="swf-tagline">Protecting Snakesia's Most Precious Creatures</div>
+        </div>
+    </div>
+
+    <!-- ACTIVE SPONSORSHIP BANNER (hidden by default) -->
+    <div class="swf-active-banner" id="swfActiveBanner" style="display: none;">
+        <div class="swf-active-inner">
+            <div class="swf-active-info">
+                <span class="mdi mdi-heart"></span>
+                <span id="swfActiveText">You are currently sponsoring...</span>
+            </div>
+            <div class="swf-active-actions">
+                <button class="swf-btn swf-btn-outline" onclick="SWFSite.scrollToAnimal()">View My Animal</button>
+                <button class="swf-btn swf-btn-cancel" onclick="SWFSite.cancelSponsorship()">Cancel Sponsorship</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO -->
+    <div class="swf-intro">
+        <p>Every creature in Snakesia deserves a chance to thrive. By sponsoring one of our sanctuary residents, you provide monthly support for their food, habitat, and veterinary care — and you'll receive heartwarming updates about your animal every month!</p>
+    </div>
+
+    <!-- ANIMAL GRID -->
+    <div class="swf-grid" id="swfAnimalGrid"></div>
+
+    <!-- SPONSOR MODAL -->
+    <div class="swf-modal-overlay" id="swfModal" style="display: none;">
+        <div class="swf-modal">
+            <div class="swf-modal-header">
+                <span class="mdi mdi-heart-outline"></span>
+                Sponsor <span id="swfModalAnimalName"></span>
+            </div>
+            <div class="swf-modal-body">
+                <p id="swfModalBio"></p>
+                <div class="swf-tier-label">Choose your monthly contribution:</div>
+                <div class="swf-tiers" id="swfTiers"></div>
+                <div class="swf-modal-note" id="swfModalNote">
+                    Your first payment will be charged immediately. Future payments will be processed monthly from your checking account.
+                </div>
+            </div>
+            <div class="swf-modal-footer">
+                <button class="swf-btn swf-btn-secondary" onclick="SWFSite.closeModal()">Cancel</button>
+                <button class="swf-btn swf-btn-primary" id="swfConfirmBtn" onclick="SWFSite.confirmSponsorship()" disabled>
+                    <span class="mdi mdi-paw"></span> Confirm Sponsorship
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="swf-footer">
+        <span class="mdi mdi-paw"></span> Snakesia Wildlife Fund &copy; 2026 &mdash; A registered Snakesian nonprofit &mdash; sponsors@snakesia-wildlife.ex
+    </div>
+
+</div>
+
+<script>
+var SWFSite = {
+
+    _selectedAnimal: null,
+    _selectedTier: null,
+
+    // ===== INIT =====
+
+    init: function() {
+        this.renderAnimals();
+        this.checkActiveSponsorship();
+    },
+
+    // ===== HELPERS =====
+
+    _financeReady: function() {
+        return typeof elxaOS !== 'undefined' &&
+               elxaOS.financeService &&
+               elxaOS.financeService.isReady();
+    },
+
+    _inventoryReady: function() {
+        return typeof elxaOS !== 'undefined' &&
+               elxaOS.inventoryService &&
+               elxaOS.inventoryService._ready;
+    },
+
+    _snakes: function(usd) {
+        return (usd * 2).toFixed(0);
+    },
+
+    _getActiveSponsorship: function() {
+        if (!this._inventoryReady()) return null;
+        var subs = elxaOS.inventoryService.getItems('subscriptions') || [];
+        for (var i = 0; i < subs.length; i++) {
+            if (subs[i].provider === 'Snakesia Wildlife Fund' && subs[i].status === 'active') {
+                return subs[i];
+            }
+        }
+        return null;
+    },
+
+    _getUserEmail: function() {
+        if (typeof elxaMailSystem !== 'undefined' && elxaMailSystem.isLoggedIn && elxaMailSystem.currentUser) {
+            return elxaMailSystem.currentUser.email || 'user@elxamail.ex';
+        }
+        return 'user@elxamail.ex';
+    },
+
+    _sendEmail: function(subject, body) {
+        var emailData = {
+            from: SWF_DATA.charityEmail,
+            fromName: SWF_DATA.charityFromName,
+            to: this._getUserEmail(),
+            subject: subject,
+            body: body,
+            date: new Date().toISOString(),
+            read: false,
+            isFinanceEmail: true
+        };
+
+        // Path A: ElxaMail is running
+        if (typeof elxaMailSystem !== 'undefined' && elxaMailSystem.isLoggedIn) {
+            elxaMailSystem.emails.inbox.unshift(emailData);
+            elxaMailSystem.saveCurrentUser();
+            if (elxaMailSystem.currentFolder === 'inbox') {
+                elxaMailSystem.updateEmailList();
+            }
+            return;
+        }
+
+        // Path B: Direct localStorage injection
+        try {
+            var toEmail = emailData.to || '';
+            var username = toEmail.includes('@') ? toEmail.split('@')[0] : toEmail;
+            if (username) {
+                var raw = localStorage.getItem('elxaOS-mail-user-' + username);
+                if (raw) {
+                    var userData = JSON.parse(raw);
+                    if (!userData.folders) userData.folders = { inbox: [], sent: [], drafts: [], trash: [] };
+                    if (!userData.folders.inbox) userData.folders.inbox = [];
+                    userData.folders.inbox.unshift(emailData);
+                    localStorage.setItem('elxaOS-mail-user-' + username, JSON.stringify(userData));
+                    return;
+                }
+            }
+        } catch (e) { /* fall through */ }
+
+        // Path C: Queue
+        try {
+            var queued = JSON.parse(localStorage.getItem('finance-queued-emails') || '[]');
+            queued.push(emailData);
+            localStorage.setItem('finance-queued-emails', JSON.stringify(queued));
+        } catch (e) { /* silent */ }
+    },
+
+    // ===== RENDER =====
+
+    renderAnimals: function() {
+        var grid = document.getElementById('swfAnimalGrid');
+        if (!grid || !window.SWF_DATA) return;
+
+        var activeSub = this._getActiveSponsorship();
+        var activeAnimalId = activeSub ? activeSub.animalId : null;
+        var html = '';
+        var animals = SWF_DATA.animals;
+
+        var keys = Object.keys(animals);
+        for (var i = 0; i < keys.length; i++) {
+            var animal = animals[keys[i]];
+            var isSponsored = (activeAnimalId === animal.id);
+
+            html += '<div class="swf-card' + (isSponsored ? ' swf-card-active' : '') + '" id="swfCard-' + animal.id + '">'
+                + '<div class="swf-card-img">'
+                + '<img src="' + animal.image + '" alt="' + animal.name + '">'
+                + (isSponsored ? '<div class="swf-sponsored-badge"><span class="mdi mdi-heart"></span> My Animal</div>' : '')
+                + '</div>'
+                + '<div class="swf-card-body">'
+                + '<div class="swf-card-name">' + animal.name + '</div>'
+                + '<div class="swf-card-species">' + animal.species + '</div>'
+                + '<div class="swf-card-bio">' + animal.bio + '</div>'
+                + '<div class="swf-card-actions">';
+
+            if (isSponsored) {
+                html += '<div class="swf-sponsored-info">'
+                    + '<span class="mdi mdi-heart"></span> You\'re sponsoring ' + animal.name
+                    + ' at <strong>$' + this._snakes(activeSub.monthlyRate) + '/mo</strong>'
+                    + '</div>'
+                    + '<button class="swf-btn swf-btn-cancel" onclick="SWFSite.cancelSponsorship()">Cancel Sponsorship</button>';
+            } else if (activeAnimalId) {
+                html += '<div class="swf-already-note">'
+                    + '<span class="mdi mdi-information-outline"></span> You\'re already sponsoring another animal. Cancel your current sponsorship to sponsor ' + animal.name + '.'
+                    + '</div>';
+            } else {
+                html += '<button class="swf-btn swf-btn-primary" onclick="SWFSite.openSponsorModal(\'' + animal.id + '\')">'
+                    + '<span class="mdi mdi-heart-outline"></span> Sponsor ' + animal.name
+                    + '</button>';
+            }
+
+            html += '</div></div></div>';
+        }
+
+        grid.innerHTML = html;
+    },
+
+    checkActiveSponsorship: function() {
+        var banner = document.getElementById('swfActiveBanner');
+        var activeSub = this._getActiveSponsorship();
+
+        if (activeSub && banner) {
+            var animal = SWF_DATA.animals[activeSub.animalId];
+            var name = animal ? animal.name : activeSub.name;
+            document.getElementById('swfActiveText').innerHTML =
+                '<strong>You are sponsoring ' + name + '!</strong> $' + this._snakes(activeSub.monthlyRate) + '/month';
+            banner.style.display = 'block';
+        } else if (banner) {
+            banner.style.display = 'none';
+        }
+    },
+
+    scrollToAnimal: function() {
+        var activeSub = this._getActiveSponsorship();
+        if (!activeSub) return;
+        var card = document.getElementById('swfCard-' + activeSub.animalId);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
+
+    // ===== SPONSOR MODAL =====
+
+    openSponsorModal: function(animalId) {
+        if (this._getActiveSponsorship()) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('You\'re already sponsoring an animal! Cancel your current sponsorship first.', 'warning');
+            }
+            return;
+        }
+
+        var animal = SWF_DATA.animals[animalId];
+        if (!animal) return;
+
+        this._selectedAnimal = animalId;
+        this._selectedTier = null;
+
+        document.getElementById('swfModalAnimalName').textContent = animal.name;
+        document.getElementById('swfModalBio').textContent = animal.bio;
+        document.getElementById('swfConfirmBtn').disabled = true;
+
+        // Render tiers
+        var tiersEl = document.getElementById('swfTiers');
+        var html = '';
+        var tiers = SWF_DATA.tiers;
+        for (var i = 0; i < tiers.length; i++) {
+            html += '<button class="swf-tier-btn" data-amount="' + tiers[i].amount + '" onclick="SWFSite.selectTier(' + tiers[i].amount + ', this)">'
+                + '<div class="swf-tier-amount">$' + this._snakes(tiers[i].amount) + '</div>'
+                + '<div class="swf-tier-per">per month</div>'
+                + '<div class="swf-tier-badge">' + tiers[i].badge + '</div>'
+                + '</button>';
+        }
+        tiersEl.innerHTML = html;
+
+        document.getElementById('swfModal').style.display = 'flex';
+    },
+
+    selectTier: function(amount, btn) {
+        this._selectedTier = amount;
+
+        // Update selection UI
+        var buttons = document.querySelectorAll('.swf-tier-btn');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove('swf-tier-selected');
+        }
+        btn.classList.add('swf-tier-selected');
+
+        document.getElementById('swfConfirmBtn').disabled = false;
+    },
+
+    closeModal: function() {
+        document.getElementById('swfModal').style.display = 'none';
+        this._selectedAnimal = null;
+        this._selectedTier = null;
+    },
+
+    // ===== CONFIRM SPONSORSHIP =====
+
+    confirmSponsorship: function() {
+        if (!this._selectedAnimal || !this._selectedTier) return;
+        if (!this._financeReady() || !this._inventoryReady()) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Financial services are not ready. Please try again in a moment.', 'error');
+            }
+            return;
+        }
+
+        var animal = SWF_DATA.animals[this._selectedAnimal];
+        var amount = this._selectedTier;
+        var tierInfo = null;
+        for (var i = 0; i < SWF_DATA.tiers.length; i++) {
+            if (SWF_DATA.tiers[i].amount === amount) { tierInfo = SWF_DATA.tiers[i]; break; }
+        }
+
+        // Check balance (sync)
+        var funds = elxaOS.financeService.checkFundsSync(amount, 'checking');
+        if (!funds.hasEnough) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Insufficient funds in checking account! You need $' + this._snakes(amount) + ' to start your sponsorship.', 'error');
+            }
+            return;
+        }
+
+        // 1. Process first month's payment (sync — handles withdrawal + transaction)
+        var payResult = elxaOS.financeService.processPaymentSync(
+            amount,
+            'Snakesia Wildlife Fund — Sponsor ' + animal.name + ' (first month)',
+            'checking'
+        );
+
+        if (!payResult || !payResult.success) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Payment failed: ' + (payResult ? payResult.message : 'Unknown error'), 'error');
+            }
+            return;
+        }
+
+        // 2. Set up recurring payment
+        var recurResult = elxaOS.financeService.addRecurringPayment({
+            description: 'SWF Sponsorship — ' + animal.name,
+            amount: amount,
+            type: 'subscription',
+            sourceAccount: 'checking',
+            linkedId: 'swf-' + animal.id
+        });
+
+        var paymentId = recurResult.success ? recurResult.payment.id : null;
+
+        // 3. Add to inventory as subscription
+        elxaOS.inventoryService.addItem('subscriptions', {
+            name: 'Sponsor ' + animal.name,
+            provider: 'Snakesia Wildlife Fund',
+            monthlyRate: amount,
+            recurringPaymentId: paymentId,
+            startDate: new Date().toISOString(),
+            status: 'active',
+            animalId: animal.id,
+            tierBadge: tierInfo ? tierInfo.badge : 'Friend',
+            perks: tierInfo ? tierInfo.badge + ' tier — Monthly updates about ' + animal.name : 'Monthly updates about ' + animal.name,
+            // Track message index so we rotate through them
+            messageIndex: 0
+        });
+
+        // 4. Send welcome email
+        this._sendEmail(
+            'Welcome to the Snakesia Wildlife Fund!',
+            animal.welcomeMessage
+        );
+
+        // 5. Show notification
+        if (typeof elxaOS !== 'undefined' && elxaOS.notificationService) {
+            elxaOS.notificationService.addNotification({
+                title: 'New Sponsorship!',
+                body: 'You\'re now sponsoring ' + animal.name + '! Check your email for a welcome message.',
+                icon: 'mdi-paw',
+                category: 'general',
+                urgency: 'info',
+                toast: true
+            });
+        }
+
+        // 6. Close modal + refresh
+        this.closeModal();
+        this.renderAnimals();
+        this.checkActiveSponsorship();
+
+        if (typeof ElxaUI !== 'undefined') {
+            ElxaUI.showMessage('You\'re now sponsoring ' + animal.name + '!', 'success');
+        }
+    },
+
+    // ===== CANCEL SPONSORSHIP =====
+
+    cancelSponsorship: function() {
+        var activeSub = this._getActiveSponsorship();
+        if (!activeSub) return;
+
+        var animal = SWF_DATA.animals[activeSub.animalId];
+        var name = animal ? animal.name : 'your animal';
+
+        // Use ElxaUI confirm dialog if available
+        if (typeof ElxaUI !== 'undefined' && ElxaUI.showConfirmDialog) {
+            var self = this;
+            ElxaUI.showConfirmDialog(
+                'Cancel your sponsorship of ' + name + '? ($' + this._snakes(activeSub.monthlyRate) + '/mo)',
+                'Cancel Sponsorship'
+            ).then(function(confirmed) {
+                if (confirmed) self._doCancel(activeSub, animal);
+            });
+        } else {
+            this._doCancel(activeSub, animal);
+        }
+    },
+
+    _doCancel: function(sub, animal) {
+        // 1. Cancel recurring payment
+        if (sub.recurringPaymentId && this._financeReady()) {
+            try { elxaOS.financeService.cancelRecurringPayment(sub.recurringPaymentId); }
+            catch (e) { /* already cancelled */ }
+        }
+
+        // 2. Update inventory subscription
+        if (this._inventoryReady()) {
+            elxaOS.inventoryService.updateItem('subscriptions', sub.id, { status: 'cancelled' });
+        }
+
+        // 3. Send farewell email
+        if (animal && animal.farewellMessage) {
+            this._sendEmail(
+                'We\'ll miss you!',
+                animal.farewellMessage
+            );
+        }
+
+        // 4. Notification
+        if (typeof elxaOS !== 'undefined' && elxaOS.notificationService) {
+            elxaOS.notificationService.addNotification({
+                title: 'Sponsorship Cancelled',
+                body: 'Your sponsorship of ' + (animal ? animal.name : 'your animal') + ' has been cancelled.',
+                icon: 'mdi-heart-off-outline',
+                category: 'general',
+                urgency: 'info',
+                toast: true
+            });
+        }
+
+        // 5. Refresh
+        this.renderAnimals();
+        this.checkActiveSponsorship();
+
+        if (typeof ElxaUI !== 'undefined') {
+            ElxaUI.showMessage('Sponsorship cancelled. You can sponsor a new animal anytime!', 'info');
+        }
+    }
+};
+
+// Auto-init when page loads
+SWFSite.init();
+</script>

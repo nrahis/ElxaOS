@@ -1,0 +1,312 @@
+/* =================================
+   NOTIFICATION SYSTEM
+   Panel, items, badge, and toast popups
+================================= */
+
+/* ----- Tray Icon Badge ----- */
+
+#notificationIcon {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    background: #e53935;
+    color: #fff;
+    font-size: 8px;
+    font-weight: bold;
+    min-width: 12px;
+    height: 12px;
+    line-height: 12px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0 2px;
+    pointer-events: none;
+}
+
+.notification-badge-pulse {
+    animation: notifBadgePulse 0.6s ease;
+}
+
+@keyframes notifBadgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+/* ----- Slide-out Panel ----- */
+
+.notification-panel {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 320px;
+    bottom: 28px; /* above taskbar */
+    background: var(--windowBg, #c0c0c0);
+    border-left: 2px outset var(--windowBorder, #c0c0c0);
+    box-shadow: -2px 0 8px rgba(0,0,0,0.25);
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.25s ease;
+    font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+.notification-panel-open {
+    right: 0;
+}
+
+/* ----- Panel Header ----- */
+
+.notification-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-bottom: 1px solid #808080;
+    background: var(--titlebarBg, linear-gradient(to right, #0000ff, #4080ff));
+    color: var(--menuHoverText, #ffffff);
+    flex-shrink: 0;
+}
+
+.notification-panel-title {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.notification-panel-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.notif-action-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: inherit;
+    font-size: 10px;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: inherit;
+}
+
+.notif-action-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ----- Notification List ----- */
+
+.notification-panel-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.notification-empty {
+    text-align: center;
+    padding: 40px 10px;
+    color: var(--menuText, #808080);
+    opacity: 0.5;
+    font-style: italic;
+}
+
+/* ----- Individual Notification Item ----- */
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    position: relative;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #000);
+}
+
+.notification-item:hover {
+    background: var(--menuHoverBg, #316AC5);
+    color: var(--menuHoverText, #fff);
+    border-color: var(--menuHoverBg, #316AC5);
+}
+
+.notification-item:hover .notification-item-time {
+    color: var(--menuHoverText, #fff);
+    opacity: 0.6;
+}
+
+.notification-item:hover .notification-item-body {
+    color: var(--menuHoverText, #fff);
+    opacity: 0.85;
+}
+
+/* Unread indicator */
+.notification-item-unread {
+    background: var(--menuHoverBg, #316AC5);
+    background: color-mix(in srgb, var(--menuHoverBg, #316AC5) 15%, var(--windowBg, #c0c0c0));
+    border-left: 3px solid var(--menuHoverBg, #1a73e8);
+}
+
+/* Urgency borders */
+.notification-item-warning {
+    border-left: 3px solid #f9a825;
+}
+
+.notification-item-critical {
+    border-left: 3px solid #e53935;
+}
+
+.notification-item-unread.notification-item-warning {
+    background: color-mix(in srgb, #f9a825 15%, var(--windowBg, #c0c0c0));
+}
+
+.notification-item-unread.notification-item-critical {
+    background: color-mix(in srgb, #e53935 15%, var(--windowBg, #c0c0c0));
+}
+
+/* Icon */
+.notification-item-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-item-icon .mdi {
+    font-size: 16px;
+}
+
+/* Content */
+.notification-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-item-title {
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+.notification-item-body {
+    font-size: 10px;
+    color: var(--menuText, #555);
+    opacity: 0.7;
+    line-height: 1.3;
+    word-wrap: break-word;
+}
+
+.notification-item-time {
+    font-size: 9px;
+    color: var(--menuText, #999);
+    opacity: 0.5;
+    margin-top: 3px;
+}
+
+/* Dismiss button */
+.notification-item-dismiss {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: var(--menuText, #aaa);
+    opacity: 0.4;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+    visibility: hidden;
+}
+
+.notification-item:hover .notification-item-dismiss {
+    visibility: visible;
+    color: var(--menuHoverText, #fff);
+    opacity: 0.7;
+}
+
+.notification-item:hover .notification-item-dismiss:hover {
+    opacity: 1;
+}
+
+/* ----- Toast Popups ----- */
+
+.notification-toast {
+    position: fixed;
+    right: -340px;
+    width: 300px;
+    padding: 10px 12px;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #000);
+    border: 2px outset var(--windowBorder, #c0c0c0);
+    box-shadow: -2px 2px 8px rgba(0,0,0,0.3);
+    z-index: 10000;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+    font-size: 11px;
+    transition: right 0.3s ease, bottom 0.3s ease, opacity 0.3s ease;
+}
+
+.notification-toast-visible {
+    right: 12px;
+}
+
+.notification-toast-fading {
+    right: 12px;
+    opacity: 0;
+}
+
+/* Urgency coloring for toasts */
+.notification-toast-warning {
+    border-left: 4px solid #f9a825;
+}
+
+.notification-toast-critical {
+    border-left: 4px solid #e53935;
+}
+
+/* Toast icon */
+.notification-toast-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-toast-icon .mdi {
+    font-size: 16px;
+}
+
+/* Toast content */
+.notification-toast-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-toast-title {
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+.notification-toast-body {
+    font-size: 10px;
+    color: var(--menuText, #555);
+    opacity: 0.75;
+    line-height: 1.3;
+    word-wrap: break-word;
+}
+
+.notification-toast:hover {
+    box-shadow: -2px 2px 12px rgba(0,0,0,0.4);
+}

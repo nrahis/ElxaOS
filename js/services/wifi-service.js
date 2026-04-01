@@ -96,6 +96,12 @@ class WiFiService {
         this.connectionAttempts = new Map();
         this.isScanning = false;
 
+        // Window IDs for WindowManager
+        this._wifiWindowId = null;
+        this._passwordWindowId = null;
+        this._createWindowId = null;
+        this._infoWindowId = null;
+
         this.loadWiFiData();
         this.setupEvents();
         this.updateWiFiIcon();
@@ -230,34 +236,59 @@ class WiFiService {
     // =================================
 
     showWiFiDialog() {
-        this.hideWiFiDialog();
+        // If window already exists, refresh its content and focus it
+        if (this._wifiWindowId) {
+            var existingWin = document.getElementById('window-' + this._wifiWindowId);
+            if (existingWin) {
+                var appEl = existingWin.querySelector('.wifi-app');
+                if (appEl) {
+                    appEl.innerHTML = this._renderWiFiBody();
+                    this._wireWiFiEvents(existingWin);
+                }
+                elxaOS.windowManager.focusWindow(this._wifiWindowId);
+                return;
+            }
+            this._wifiWindowId = null;
+        }
 
-        const dialog = document.createElement('div');
-        dialog.id = 'wifiDialog';
-        dialog.className = 'wifi-main-dialog';
+        var windowId = 'wifi-' + Date.now();
+        this._wifiWindowId = windowId;
 
-        dialog.innerHTML = `
-            <div class="wifi-dialog-content">
-                <div class="wifi-dialog-header">
-                    <div class="wifi-dialog-title">
-                        ${ElxaIcons.renderAction('antenna')} Network Control Center
-                    </div>
-                    <button class="wifi-dialog-close" id="wifiDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
-                </div>
-                <div class="wifi-dialog-body">
-                    ${this.renderConnectionStatus()}
-                    ${this.renderTabs()}
-                    ${this.renderTabContent()}
-                    ${this.renderControlPanel()}
-                </div>
-            </div>
-        `;
+        var content = '<div class="wifi-app">' + this._renderWiFiBody() + '</div>';
 
-        document.body.appendChild(dialog);
+        elxaOS.windowManager.createWindow(
+            windowId,
+            ElxaIcons.renderAction('antenna') + ' Network Control Center',
+            content,
+            { width: '550px', height: '560px', x: '150px', y: '60px' }
+        );
 
-        // Wire close button
-        dialog.querySelector('#wifiDialogCloseBtn').addEventListener('click', () => {
-            this.hideWiFiDialog();
+        var win = document.getElementById('window-' + windowId);
+        if (win) this._wireWiFiEvents(win);
+
+        var self = this;
+        this._onWifiWindowClosed = function(data) {
+            if (data.id === windowId) {
+                self._wifiWindowId = null;
+                elxaOS.eventBus.off('window.closed', self._onWifiWindowClosed);
+            }
+        };
+        elxaOS.eventBus.on('window.closed', this._onWifiWindowClosed);
+    }
+
+    _renderWiFiBody() {
+        return this.renderConnectionStatus()
+            + this.renderTabs()
+            + this.renderTabContent()
+            + this.renderControlPanel();
+    }
+
+    _wireWiFiEvents(win) {
+        // Wire tab clicks
+        win.querySelectorAll('.wifi-tab[data-tab]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                this.switchTab(tab.dataset.tab);
+            });
         });
     }
 
@@ -333,7 +364,7 @@ class WiFiService {
             <div class="wifi-tabs">
                 ${tabs.map(tab => `
                     <div class="wifi-tab ${this.currentTab === tab.id ? 'wifi-tab-active' : ''}"
-                         onclick="elxaOS.wifiService.switchTab('${tab.id}')">
+                         data-tab="${tab.id}">
                         ${tab.label}
                     </div>
                 `).join('')}
@@ -518,13 +549,27 @@ class WiFiService {
 
     switchTab(tabId) {
         this.currentTab = tabId;
-        this.showWiFiDialog();
+
+        // Find the WiFi window
+        if (!this._wifiWindowId) return;
+        var win = document.getElementById('window-' + this._wifiWindowId);
+        if (!win) return;
+
+        // Toggle tab active states
+        win.querySelectorAll('.wifi-tab').forEach(t => t.classList.remove('wifi-tab-active'));
+        var activeTab = win.querySelector('.wifi-tab[data-tab="' + tabId + '"]');
+        if (activeTab) activeTab.classList.add('wifi-tab-active');
+
+        // Toggle content panels
+        win.querySelectorAll('.wifi-tab-content').forEach(c => c.classList.remove('wifi-tab-active'));
+        var activePanel = win.querySelector('#wifi-tab-' + tabId);
+        if (activePanel) activePanel.classList.add('wifi-tab-active');
     }
 
     hideWiFiDialog() {
-        const dialog = document.getElementById('wifiDialog');
-        if (dialog) {
-            dialog.remove();
+        if (this._wifiWindowId) {
+            elxaOS.windowManager.closeWindow(this._wifiWindowId);
+            this._wifiWindowId = null;
         }
     }
 
@@ -547,19 +592,16 @@ class WiFiService {
     }
 
     showPasswordDialog(network) {
-        // Remove existing password dialog
-        const existing = document.getElementById('passwordDialog');
-        if (existing) existing.remove();
+        // Close existing password dialog
+        if (this._passwordWindowId) {
+            elxaOS.windowManager.closeWindow(this._passwordWindowId);
+            this._passwordWindowId = null;
+        }
 
-        const passwordDialog = document.createElement('div');
-        passwordDialog.id = 'passwordDialog';
-        passwordDialog.className = 'wifi-password-dialog';
+        var windowId = 'wifi-password-' + Date.now();
+        this._passwordWindowId = windowId;
 
-        passwordDialog.innerHTML = `
-            <div class="wifi-dialog-header">
-                <div class="wifi-dialog-title">${ElxaIcons.renderAction('lock')} Network Authentication</div>
-                <button class="wifi-dialog-close" id="passwordDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
-            </div>
+        var content = `
             <div class="wifi-password-content">
                 <div class="wifi-password-prompt">
                     Enter password for "${network.name}":
@@ -576,35 +618,54 @@ class WiFiService {
             </div>
         `;
 
-        document.body.appendChild(passwordDialog);
+        elxaOS.windowManager.createWindow(
+            windowId,
+            ElxaIcons.renderAction('lock') + ' Network Authentication',
+            content,
+            { width: '340px', height: '230px', x: '250px', y: '180px' }
+        );
 
-        const passwordInput = passwordDialog.querySelector('#networkPassword');
-        passwordInput.focus();
+        var win = document.getElementById('window-' + windowId);
+        if (!win) return;
 
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.connectWithPassword(network.name);
+        var passwordInput = win.querySelector('#networkPassword');
+        if (passwordInput) passwordInput.focus();
+
+        var self = this;
+        if (passwordInput) {
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') self.connectWithPassword(network.name);
+            });
+        }
+
+        win.querySelector('#passwordConnectBtn').addEventListener('click', function() {
+            self.connectWithPassword(network.name);
+        });
+
+        win.querySelector('#passwordCancelBtn').addEventListener('click', function() {
+            elxaOS.windowManager.closeWindow(windowId);
+            self._passwordWindowId = null;
+        });
+
+        // Track window close
+        var onClosed = function(data) {
+            if (data.id === windowId) {
+                self._passwordWindowId = null;
+                elxaOS.eventBus.off('window.closed', onClosed);
             }
-        });
-
-        passwordDialog.querySelector('#passwordConnectBtn').addEventListener('click', () => {
-            this.connectWithPassword(network.name);
-        });
-
-        passwordDialog.querySelector('#passwordCancelBtn').addEventListener('click', () => {
-            passwordDialog.remove();
-        });
-
-        passwordDialog.querySelector('#passwordDialogCloseBtn').addEventListener('click', () => {
-            passwordDialog.remove();
-        });
+        };
+        elxaOS.eventBus.on('window.closed', onClosed);
     }
 
     connectWithPassword(networkName) {
         const password = document.getElementById('networkPassword').value;
         const network = this.getAllNetworks().find(n => n.name === networkName);
-        const passwordDialog = document.getElementById('passwordDialog');
-        if (passwordDialog) passwordDialog.remove();
+
+        // Close password window
+        if (this._passwordWindowId) {
+            elxaOS.windowManager.closeWindow(this._passwordWindowId);
+            this._passwordWindowId = null;
+        }
 
         this.connectToNetwork(network, password);
     }
@@ -662,7 +723,7 @@ class WiFiService {
                 ElxaUI.showMessage(`Connected to ${network.name} (${network.frequency}, ${network.security})`, 'success');
                 this.saveWiFiData();
 
-                if (document.getElementById('wifiDialog')) {
+                if (this._wifiWindowId) {
                     this.showWiFiDialog();
                 }
 
@@ -696,7 +757,7 @@ class WiFiService {
 
             this.eventBus.emit('wifi.disconnected');
 
-            if (document.getElementById('wifiDialog')) {
+            if (this._wifiWindowId) {
                 this.showWiFiDialog();
             }
         }
@@ -722,25 +783,22 @@ class WiFiService {
     // =================================
 
     showCreateNetworkDialog() {
-        const existing = document.getElementById('createNetworkDialog');
-        if (existing) existing.remove();
+        // Close existing create dialog
+        if (this._createWindowId) {
+            elxaOS.windowManager.closeWindow(this._createWindowId);
+            this._createWindowId = null;
+        }
 
-        const createDialog = document.createElement('div');
-        createDialog.id = 'createNetworkDialog';
-        createDialog.className = 'wifi-create-dialog';
+        var windowId = 'wifi-create-' + Date.now();
+        this._createWindowId = windowId;
 
-        createDialog.innerHTML = `
-            <div class="wifi-dialog-header">
-                <div class="wifi-dialog-title">${ElxaIcons.renderAction('broadcast')} Create Virtual Network</div>
-                <button class="wifi-dialog-close" id="createDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
-            </div>
+        var content = `
             <div class="wifi-create-content">
                 <div class="wifi-create-form">
                     <div class="wifi-form-group">
                         <label class="wifi-form-label">Network Name (SSID):</label>
                         <input type="text" id="newNetworkName" class="wifi-form-input" placeholder="MyNetwork" maxlength="32">
                     </div>
-
                     <div class="wifi-form-group">
                         <label class="wifi-form-label">Security Type:</label>
                         <select id="securityType" class="wifi-form-select">
@@ -750,12 +808,10 @@ class WiFiService {
                             <option value="wpa3">WPA3-PSK (Most Secure)</option>
                         </select>
                     </div>
-
                     <div class="wifi-form-group" id="passwordGroup">
                         <label class="wifi-form-label">Password:</label>
                         <input type="password" id="newNetworkPassword" class="wifi-form-input" placeholder="Enter password (8+ characters)">
                     </div>
-
                     <div class="wifi-advanced-section">
                         <div class="wifi-advanced-header" id="advancedToggle">
                             ${ElxaIcons.renderAction('settings')} Advanced Settings
@@ -768,7 +824,6 @@ class WiFiService {
                                     <option value="5GHz" selected>5 GHz (Better Speed)</option>
                                 </select>
                             </div>
-
                             <div class="wifi-form-group">
                                 <label class="wifi-form-label">Channel:</label>
                                 <select id="channelSelect" class="wifi-form-select">
@@ -780,14 +835,12 @@ class WiFiService {
                                     <option value="149">Channel 149 (5GHz)</option>
                                 </select>
                             </div>
-
                             <div class="wifi-form-checkbox">
                                 <input type="checkbox" id="hideNetwork">
                                 <label>Hide network name (SSID)</label>
                             </div>
                         </div>
                     </div>
-
                     <div class="wifi-password-controls">
                         <button class="wifi-btn-connect" id="createNetworkBtn">Create Network</button>
                         <button class="wifi-btn-secondary" id="createCancelBtn">Cancel</button>
@@ -796,33 +849,46 @@ class WiFiService {
             </div>
         `;
 
-        document.body.appendChild(createDialog);
-        createDialog.querySelector('#newNetworkName').focus();
+        elxaOS.windowManager.createWindow(
+            windowId,
+            ElxaIcons.renderAction('broadcast') + ' Create Virtual Network',
+            content,
+            { width: '400px', height: '420px', x: '200px', y: '100px' }
+        );
 
-        // Security type toggle
-        createDialog.querySelector('#securityType').addEventListener('change', (e) => {
-            const passwordGroup = createDialog.querySelector('#passwordGroup');
+        var win = document.getElementById('window-' + windowId);
+        if (!win) return;
+
+        win.querySelector('#newNetworkName').focus();
+
+        var self = this;
+
+        win.querySelector('#securityType').addEventListener('change', function(e) {
+            var passwordGroup = win.querySelector('#passwordGroup');
             passwordGroup.style.display = e.target.value === 'open' ? 'none' : 'block';
         });
 
-        // Advanced toggle
-        createDialog.querySelector('#advancedToggle').addEventListener('click', () => {
-            const content = createDialog.querySelector('#advancedContent');
-            content.classList.toggle('expanded');
+        win.querySelector('#advancedToggle').addEventListener('click', function() {
+            var advContent = win.querySelector('#advancedContent');
+            advContent.classList.toggle('expanded');
         });
 
-        // Buttons
-        createDialog.querySelector('#createNetworkBtn').addEventListener('click', () => {
-            this.createNetworkFromDialog();
+        win.querySelector('#createNetworkBtn').addEventListener('click', function() {
+            self.createNetworkFromDialog();
         });
 
-        createDialog.querySelector('#createCancelBtn').addEventListener('click', () => {
-            createDialog.remove();
+        win.querySelector('#createCancelBtn').addEventListener('click', function() {
+            elxaOS.windowManager.closeWindow(windowId);
+            self._createWindowId = null;
         });
 
-        createDialog.querySelector('#createDialogCloseBtn').addEventListener('click', () => {
-            createDialog.remove();
-        });
+        var onClosed = function(data) {
+            if (data.id === windowId) {
+                self._createWindowId = null;
+                elxaOS.eventBus.off('window.closed', onClosed);
+            }
+        };
+        elxaOS.eventBus.on('window.closed', onClosed);
     }
 
     createNetworkFromDialog() {
@@ -856,7 +922,12 @@ class WiFiService {
         };
 
         this.createUserNetwork(name, password, options);
-        document.getElementById('createNetworkDialog').remove();
+
+        // Close create dialog window
+        if (this._createWindowId) {
+            elxaOS.windowManager.closeWindow(this._createWindowId);
+            this._createWindowId = null;
+        }
     }
 
     getSecurityName(type) {
@@ -890,7 +961,7 @@ class WiFiService {
 
         ElxaUI.showMessage(`Network "${name}" created successfully!`, 'success');
 
-        if (document.getElementById('wifiDialog')) {
+        if (this._wifiWindowId) {
             this.showWiFiDialog();
         }
 
@@ -905,7 +976,7 @@ class WiFiService {
         ElxaUI.showMessage('Starting deep network scan...', 'info');
         this.isScanning = true;
 
-        if (document.getElementById('wifiDialog')) {
+        if (this._wifiWindowId) {
             this.showWiFiDialog();
         }
 
@@ -936,7 +1007,7 @@ class WiFiService {
             this.isScanning = false;
             ElxaUI.showMessage(`Scan complete — found ${this.getAllNetworks().length} networks`, 'success');
 
-            if (document.getElementById('wifiDialog')) {
+            if (this._wifiWindowId) {
                 this.showWiFiDialog();
             }
         }, 3000);
@@ -1012,23 +1083,21 @@ class WiFiService {
         const network = this.getAllNetworks().find(n => n.name === networkName);
         if (!network) return;
 
-        const existing = document.getElementById('networkInfoDialog');
-        if (existing) existing.remove();
+        // Close existing info dialog
+        if (this._infoWindowId) {
+            elxaOS.windowManager.closeWindow(this._infoWindowId);
+            this._infoWindowId = null;
+        }
 
         const analytics = this.networkAnalytics[networkName];
         const avgSignal = analytics && analytics.signalHistory.length > 0 ?
             (analytics.signalHistory.reduce((sum, h) => sum + h.strength, 0) / analytics.signalHistory.length).toFixed(1) :
             'N/A';
 
-        const infoDialog = document.createElement('div');
-        infoDialog.id = 'networkInfoDialog';
-        infoDialog.className = 'wifi-info-dialog';
+        var windowId = 'wifi-info-' + Date.now();
+        this._infoWindowId = windowId;
 
-        infoDialog.innerHTML = `
-            <div class="wifi-dialog-header">
-                <div class="wifi-dialog-title">${ElxaIcons.renderAction('information')} Network Information</div>
-                <button class="wifi-dialog-close" id="infoDialogCloseBtn">${ElxaIcons.renderAction('close')}</button>
-            </div>
+        var content = `
             <div class="wifi-info-content">
                 <h3 class="wifi-info-network-name">${network.name}</h3>
                 <div class="wifi-info-grid">
@@ -1093,15 +1162,29 @@ class WiFiService {
             </div>
         `;
 
-        document.body.appendChild(infoDialog);
+        elxaOS.windowManager.createWindow(
+            windowId,
+            ElxaIcons.renderAction('information') + ' Network Information',
+            content,
+            { width: '420px', height: '380px', x: '220px', y: '120px' }
+        );
 
-        infoDialog.querySelector('#infoDialogCloseBtn').addEventListener('click', () => {
-            infoDialog.remove();
+        var win = document.getElementById('window-' + windowId);
+        if (!win) return;
+
+        var self = this;
+        win.querySelector('#infoCloseBtn').addEventListener('click', function() {
+            elxaOS.windowManager.closeWindow(windowId);
+            self._infoWindowId = null;
         });
 
-        infoDialog.querySelector('#infoCloseBtn').addEventListener('click', () => {
-            infoDialog.remove();
-        });
+        var onClosed = function(data) {
+            if (data.id === windowId) {
+                self._infoWindowId = null;
+                elxaOS.eventBus.off('window.closed', onClosed);
+            }
+        };
+        elxaOS.eventBus.on('window.closed', onClosed);
     }
 
     // =================================
@@ -1136,7 +1219,7 @@ class WiFiService {
             this.saveWiFiData();
             ElxaUI.showMessage('All network settings reset', 'success');
 
-            if (document.getElementById('wifiDialog')) {
+            if (this._wifiWindowId) {
                 this.showWiFiDialog();
             }
         }
@@ -1263,5 +1346,17 @@ class WiFiService {
             this.scanInterval = null;
         }
         this.hideWiFiDialog();
+        if (this._passwordWindowId) {
+            elxaOS.windowManager.closeWindow(this._passwordWindowId);
+            this._passwordWindowId = null;
+        }
+        if (this._createWindowId) {
+            elxaOS.windowManager.closeWindow(this._createWindowId);
+            this._createWindowId = null;
+        }
+        if (this._infoWindowId) {
+            elxaOS.windowManager.closeWindow(this._infoWindowId);
+            this._infoWindowId = null;
+        }
     }
 }

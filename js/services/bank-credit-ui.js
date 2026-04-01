@@ -227,6 +227,63 @@ BankSystem.prototype.showApplyForCards = function() {
     });
 
     html += '</div>';
+
+    // === SECURED CARD SECTION ===
+    var securedCard = fs.getSecuredCard();
+    html += '<div class="bank-secured-section">';
+    html += '<div class="bank-secured-header"><span data-icon="shield-lock"></span> Build Your Credit</div>';
+
+    if (securedCard) {
+        // User already has an active secured card — show status
+        var onTime = securedCard.onTimePayments || 0;
+        var needed = 1; // SECURED_CARD_CONFIG.graduationMonths
+        var progressPct = Math.min(100, (onTime / needed) * 100);
+        html +=
+            '<div class="bank-secured-status">' +
+                '<div class="bank-secured-active-badge"><span data-icon="check-circle"></span> Secured Card Active</div>' +
+                '<div class="bank-secured-details">' +
+                    '<div class="bank-secured-detail"><span>Security Deposit:</span> <strong>$' + (securedCard.securedDeposit || 0).toFixed(2) + '</strong></div>' +
+                    '<div class="bank-secured-detail"><span>Credit Limit:</span> <strong>$' + securedCard.creditLimit.toFixed(2) + '</strong></div>' +
+                    '<div class="bank-secured-detail"><span>Current Balance:</span> <strong>$' + securedCard.balance.toFixed(2) + '</strong></div>' +
+                    '<div class="bank-secured-detail"><span>APR:</span> <strong>' + securedCard.apr + '%</strong></div>' +
+                '</div>' +
+                '<div class="bank-secured-graduation">' +
+                    '<div class="bank-secured-grad-label">Graduation Progress: ' + onTime + '/' + needed + ' on-time payments</div>' +
+                    '<div class="bank-secured-grad-track"><div class="bank-secured-grad-fill" style="width:' + progressPct + '%"></div></div>' +
+                    '<div class="bank-secured-grad-hint">Make on-time payments to graduate to a real Snakesian Starter Card and get your deposit back!</div>' +
+                '</div>' +
+            '</div>';
+    } else {
+        // No secured card — show application form
+        html +=
+            '<div class="bank-secured-info">' +
+                '<p>Struggling with a low credit score? A <strong>secured credit card</strong> lets you rebuild. ' +
+                'Put down a refundable deposit that becomes your credit limit. Make on-time payments to graduate to a real card and get your deposit back.</p>' +
+                '<ul class="bank-secured-perks">' +
+                    '<li><span data-icon="check"></span> <strong>No credit check required</strong> — anyone can apply</li>' +
+                    '<li><span data-icon="check"></span> Deposit range: <strong>$100 – $500</strong> (your deposit = your limit)</li>' +
+                    '<li><span data-icon="check"></span> Graduate after just <strong>1 on-time payment</strong></li>' +
+                    '<li><span data-icon="check"></span> Deposit <strong>fully refunded</strong> on graduation (+15 score bonus!)</li>' +
+                    '<li><span data-icon="check"></span> No annual fee &bull; 22.99% APR</li>' +
+                '</ul>' +
+            '</div>' +
+            '<div class="bank-secured-apply-form">' +
+                '<div class="bank-form-group">' +
+                    '<label for="securedDepositAmount">Security Deposit (USD):</label>' +
+                    '<input type="range" id="securedDepositSlider" min="100" max="500" step="50" value="200">' +
+                    '<div class="bank-secured-deposit-row">' +
+                        '<span>$100</span>' +
+                        '<input type="number" id="securedDepositAmount" min="100" max="500" step="1" value="200" class="bank-secured-deposit-input">' +
+                        '<span>$500</span>' +
+                    '</div>' +
+                    '<div class="bank-secured-limit-preview">Your credit limit will be: <strong id="securedLimitPreview">$200.00</strong></div>' +
+                '</div>' +
+                '<button class="bank-btn bank-secured-apply-btn" data-action="apply-secured-card"><span data-icon="shield-lock"></span> Apply for Secured Card</button>' +
+            '</div>';
+    }
+
+    html += '</div>';
+
     html += '<div class="bank-form-actions"><button class="bank-btn-secondary" data-action="nav-dashboard">Back to Dashboard</button></div>';
 
     container.innerHTML = html;
@@ -234,6 +291,26 @@ BankSystem.prototype.showApplyForCards = function() {
     container.querySelectorAll('[data-icon]').forEach(function(el) {
         el.innerHTML = ElxaIcons.renderAction(el.dataset.icon);
     });
+
+    // Wire up deposit slider ↔ input sync (only if form is showing)
+    var slider = container.querySelector('#securedDepositSlider');
+    var input = container.querySelector('#securedDepositAmount');
+    var preview = container.querySelector('#securedLimitPreview');
+
+    if (slider && input && preview) {
+        var syncPreview = function(val) {
+            preview.textContent = '$' + parseFloat(val).toFixed(2);
+        };
+        slider.addEventListener('input', function() {
+            input.value = slider.value;
+            syncPreview(slider.value);
+        });
+        input.addEventListener('input', function() {
+            var v = Math.max(100, Math.min(500, parseInt(input.value) || 100));
+            slider.value = v;
+            syncPreview(v);
+        });
+    }
 };
 
 BankSystem.prototype.showMyCards = function() {
@@ -706,6 +783,158 @@ BankSystem.prototype.closeCardApplicationModal = function() {
     if (modal && modal.parentNode) {
         modal.parentNode.removeChild(modal);
     }
+};
+
+
+// =================================
+// SECURED CARD APPLICATION
+// =================================
+
+/**
+ * Show the secured card application modal — processing state, then result.
+ */
+BankSystem.prototype.applyForSecuredCardUI = async function() {
+    var self = this;
+    var fs = (typeof elxaOS !== 'undefined' && elxaOS.financeService && elxaOS.financeService.isReady())
+        ? elxaOS.financeService : null;
+
+    if (!fs) {
+        this.showError('Finance service unavailable.');
+        return;
+    }
+
+    // Read deposit amount from the form input
+    var depositInput = document.getElementById('securedDepositAmount');
+    var depositAmount = depositInput ? parseInt(depositInput.value) : 200;
+    if (isNaN(depositAmount) || depositAmount < 100 || depositAmount > 500) {
+        this.showError('Please enter a deposit between $100 and $500.');
+        return;
+    }
+
+    // Inject modal CSS (reuses the same styles as regular card application)
+    this._injectCardModalCSS();
+
+    var root = this._root;
+    if (!root) return;
+    root.style.position = 'relative';
+
+    var overlay = document.createElement('div');
+    overlay.className = 'bank-apply-overlay';
+    overlay.id = 'bankApplyModal';
+    overlay.innerHTML =
+        '<div class="bank-apply-backdrop"></div>' +
+        '<div class="bank-apply-dialog">' +
+            '<div class="bank-apply-titlebar">' +
+                '<span>Secured Card Application</span>' +
+                '<button class="bank-apply-close" data-action="close-apply-modal">&times;</button>' +
+            '</div>' +
+            '<div class="bank-apply-body" id="bankApplyBody">' +
+                '<div class="bank-apply-spinner"></div>' +
+                '<div style="font-size:13px;font-weight:bold;color:#000080;margin-bottom:4px;">Processing Application</div>' +
+                '<div class="bank-apply-progress-track">' +
+                    '<div class="bank-apply-progress-fill" id="bankApplyProgress"></div>' +
+                '</div>' +
+                '<div class="bank-apply-status-msg" id="bankApplyStatus">Verifying deposit funds...</div>' +
+            '</div>' +
+        '</div>';
+
+    root.appendChild(overlay);
+
+    // Pin overlay to visible area
+    var scrollContainer = root.closest('.window-content') || root.parentElement || root;
+    var scrollTop = scrollContainer.scrollTop || 0;
+    var visibleHeight = scrollContainer.clientHeight || scrollContainer.offsetHeight;
+    overlay.style.top = scrollTop + 'px';
+    overlay.style.bottom = 'auto';
+    overlay.style.height = visibleHeight + 'px';
+
+    // Processing animation
+    var messages = [
+        'Verifying deposit funds...',
+        'Setting up your account...',
+        'Issuing your card...',
+        'Almost ready...'
+    ];
+    var statusEl = document.getElementById('bankApplyStatus');
+    var progressEl = document.getElementById('bankApplyProgress');
+    var msgIndex = 0;
+    var progressPct = 0;
+
+    var messageInterval = setInterval(function() {
+        msgIndex++;
+        if (msgIndex < messages.length && statusEl) {
+            statusEl.textContent = messages[msgIndex];
+        }
+    }, 500);
+
+    var progressInterval = setInterval(function() {
+        progressPct = Math.min(progressPct + 15, 85);
+        if (progressEl) progressEl.style.width = progressPct + '%';
+    }, 300);
+
+    // Run the actual application
+    var startTime = Date.now();
+    var result = await fs.applyForSecuredCard(depositAmount);
+    var elapsed = Date.now() - startTime;
+    var remaining = Math.max(0, 2000 - elapsed);
+    await new Promise(function(r) { setTimeout(r, remaining); });
+
+    clearInterval(messageInterval);
+    clearInterval(progressInterval);
+
+    if (progressEl) progressEl.style.width = '100%';
+    await new Promise(function(r) { setTimeout(r, 300); });
+
+    var body = document.getElementById('bankApplyBody');
+    if (!body) return;
+
+    if (result.success && result.approved) {
+        var card = result.card || {};
+        var cardNumber = card.number || 'XXXX-XXXX-XXXX-????';
+        var last4 = cardNumber.slice(-4);
+        var maskedNumber = 'XXXX  XXXX  XXXX  ' + last4;
+
+        body.innerHTML =
+            '<div class="bank-apply-check">&#10004;</div>' +
+            '<div class="bank-apply-result-title approved">Secured Card Approved!</div>' +
+            '<div class="bank-apply-card-preview" style="background:linear-gradient(135deg, #2d3436 0%, #636e72 50%, #2d3436 100%)">' +
+                '<div class="card-bank-name">First Snakesian Bank</div>' +
+                '<div class="card-number">' + maskedNumber + '</div>' +
+                '<div class="card-name">Snakesian Secured Card</div>' +
+                '<div class="card-meta">' +
+                    '<span>SECURED</span>' +
+                    '<span>DEPOSIT: $' + depositAmount + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="bank-apply-detail-rows">' +
+                '<div class="bank-apply-detail-row"><span>Security Deposit:</span> <strong>$' + depositAmount.toFixed(2) + '</strong></div>' +
+                '<div class="bank-apply-detail-row"><span>Credit Limit:</span> <strong>$' + depositAmount.toFixed(2) + '</strong></div>' +
+                '<div class="bank-apply-detail-row"><span>APR:</span> <strong>22.99%</strong></div>' +
+                '<div class="bank-apply-detail-row"><span>Annual Fee:</span> <strong>None</strong></div>' +
+                '<div class="bank-apply-detail-row"><span>Graduate After:</span> <strong>1 on-time payment</strong></div>' +
+            '</div>' +
+            '<div style="font-size:10px;color:#006400;text-align:center;margin-bottom:8px;">Deposit deducted from checking &bull; No hard inquiry on your credit</div>' +
+            '<div class="bank-apply-buttons">' +
+                '<button class="bank-apply-btn-primary bank-apply-btn" data-action="apply-modal-view-cards">View My Cards</button>' +
+                '<button class="bank-apply-btn" data-action="apply-modal-back">Continue Browsing</button>' +
+            '</div>';
+    } else {
+        // Denied (insufficient funds, already has one, etc.)
+        body.innerHTML =
+            '<div class="bank-apply-denied-icon">&#10008;</div>' +
+            '<div class="bank-apply-result-title denied">Application Unsuccessful</div>' +
+            '<div class="bank-apply-denied-reason">' + (result.message || 'Unable to process your secured card application at this time.') + '</div>' +
+            '<div class="bank-apply-buttons">' +
+                '<button class="bank-apply-btn-primary bank-apply-btn" data-action="apply-modal-back">OK</button>' +
+            '</div>';
+    }
+
+    // Refresh underlying views
+    self.showApplyForCards();
+    self.renderCreditScoreWidget();
+    self.renderMyCardsSection();
+    self._syncFromFinanceService();
+    self.updateAccountDisplay();
 };
 
 

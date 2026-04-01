@@ -1,0 +1,778 @@
+/* ===================================
+   SNAKE VALLEY NATIONAL MUSEUM — STYLES
+   =================================== */
+
+.museum-root {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    background: #f5f1eb !important;
+    color: #2d2a26 !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    min-height: 100vh !important;
+}
+
+/* ===== HEADER ===== */
+
+.museum-header {
+    background: linear-gradient(135deg, #1a365d 0%, #0f2440 100%);
+    color: #fff;
+    padding: 0;
+    border-bottom: 3px solid #c9974c;
+}
+
+.museum-header-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.museum-logo {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.museum-logo .mdi {
+    font-size: 24px;
+    color: #c9974c;
+}
+
+.museum-header-nav {
+    display: flex;
+    gap: 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.museum-header-nav a {
+    color: #b8c4d4;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.museum-header-nav a:hover {
+    color: #c9974c;
+}
+
+/* ===== HERO BANNER ===== */
+
+.museum-hero {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #1a365d;
+}
+
+.museum-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.7;
+}
+
+.museum-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(26, 54, 93, 0.3) 0%, rgba(15, 36, 64, 0.6) 100%);
+}
+
+.museum-hero-overlay h1 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    letter-spacing: 0.5px;
+}
+
+.museum-hero-overlay p {
+    color: #d4c5a0;
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 1px;
+    margin: 0;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* ===== MEMBERSHIP BANNER ===== */
+
+.museum-membership-banner {
+    background: #e8f0fe;
+    border-bottom: 1px solid #b8c4d4;
+}
+
+.museum-membership-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.museum-membership-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #1a365d;
+}
+
+.museum-membership-info .mdi {
+    color: #c9974c;
+    font-size: 18px;
+}
+
+.museum-membership-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ===== SECTIONS ===== */
+
+.museum-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 20px;
+}
+
+.museum-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a365d;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.museum-section-title .mdi {
+    font-size: 22px;
+    color: #c9974c;
+}
+
+.museum-section-subtitle {
+    font-size: 12px;
+    color: #8a8079;
+    margin: 0 0 16px;
+    font-style: italic;
+}
+
+.museum-section-divider {
+    border: none;
+    border-top: 1px solid #e0d8ce;
+    margin: 0;
+}
+
+/* ===== ABOUT ===== */
+
+.museum-about p {
+    font-size: 13px;
+    color: #4a4540;
+    line-height: 1.7;
+    margin: 0 0 10px;
+}
+
+/* ===== EXHIBITS ===== */
+
+.museum-exhibit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.museum-exhibit-card {
+    background: #fff;
+    border: 1px solid #e0d8ce;
+    border-radius: 2px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.museum-exhibit-card:hover {
+    box-shadow: 0 2px 10px rgba(26, 54, 93, 0.1);
+}
+
+.museum-exhibit-card.museum-exhibit-wide {
+    grid-column: 1 / -1;
+}
+
+.museum-exhibit-img {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+}
+
+.museum-exhibit-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.museum-exhibit-img-banner {
+    background-image: url('./assets/interwebs/museum/banner.jpg');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+}
+
+.museum-exhibit-body {
+    padding: 14px 16px 16px;
+}
+
+.museum-exhibit-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f0e6d2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.museum-exhibit-icon .mdi {
+    font-size: 18px;
+    color: #1a365d;
+}
+
+.museum-exhibit-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 4px;
+}
+
+.museum-exhibit-desc {
+    font-size: 12px;
+    color: #6b6560;
+    line-height: 1.5;
+}
+
+/* ===== VISIT INFO ===== */
+
+.museum-visit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.museum-visit-card {
+    background: #fff;
+    border: 1px solid #e0d8ce;
+    border-radius: 2px;
+    padding: 16px;
+}
+
+.museum-visit-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.museum-visit-card-title .mdi {
+    font-size: 16px;
+    color: #c9974c;
+}
+
+.museum-visit-item {
+    font-size: 12px;
+    color: #4a4540;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.museum-visit-item strong {
+    color: #2d2a26;
+}
+
+.museum-visit-highlight {
+    color: #c9974c;
+    font-weight: 600;
+}
+
+/* ===== SUPPORT / DONATION TIERS ===== */
+
+.museum-support-intro {
+    font-size: 13px;
+    color: #4a4540;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.museum-tier-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.museum-tier-card {
+    background: #fff;
+    border: 2px solid #e0d8ce;
+    border-radius: 2px;
+    padding: 16px 12px;
+    text-align: center;
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.museum-tier-card:hover {
+    border-color: #1a365d;
+    box-shadow: 0 2px 10px rgba(26, 54, 93, 0.1);
+}
+
+.museum-tier-card.museum-tier-featured {
+    border-color: #c9974c;
+}
+
+.museum-tier-card.museum-tier-featured::before {
+    content: 'POPULAR';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #c9974c;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+}
+
+.museum-tier-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1a365d;
+    background: #e8f0fe;
+    padding: 3px 8px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.museum-tier-amount {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 2px;
+}
+
+.museum-tier-per {
+    font-size: 10px;
+    color: #8a8079;
+    margin-bottom: 10px;
+}
+
+.museum-tier-perks {
+    text-align: left;
+    font-size: 11px;
+    color: #4a4540;
+    line-height: 1.6;
+}
+
+.museum-tier-perk {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 3px;
+}
+
+.museum-tier-perk .mdi {
+    font-size: 13px;
+    color: #c9974c;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.museum-tier-card .museum-btn {
+    margin-top: auto;
+    width: 100%;
+}
+
+/* ===== BUTTONS ===== */
+
+.museum-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+}
+
+.museum-btn .mdi {
+    font-size: 15px;
+    pointer-events: none;
+}
+
+.museum-btn-primary {
+    background: #1a365d;
+    color: #fff;
+}
+
+.museum-btn-primary:hover {
+    background: #0f2440;
+}
+
+.museum-btn-primary:disabled {
+    background: #8a9ab0;
+    cursor: not-allowed;
+}
+
+.museum-btn-gold {
+    background: #c9974c;
+    color: #fff;
+}
+
+.museum-btn-gold:hover {
+    background: #b5863e;
+}
+
+.museum-btn-secondary {
+    background: #e0d8ce;
+    color: #4a4540;
+}
+
+.museum-btn-secondary:hover {
+    background: #d4cbbf;
+}
+
+.museum-btn-outline {
+    background: transparent;
+    color: #1a365d;
+    border: 1px solid #1a365d;
+    padding: 5px 12px;
+    font-size: 11px;
+}
+
+.museum-btn-outline:hover {
+    background: rgba(26, 54, 93, 0.06);
+}
+
+.museum-btn-cancel {
+    background: transparent;
+    color: #c1574a;
+    border: 1px solid #c1574a;
+    padding: 5px 12px;
+    font-size: 11px;
+}
+
+.museum-btn-cancel:hover {
+    background: rgba(193, 87, 74, 0.06);
+}
+
+/* ===== MODAL ===== */
+
+.museum-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.museum-modal {
+    background: #fff;
+    border-radius: 2px;
+    width: 480px;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.museum-modal-header {
+    background: #1a365d;
+    color: #fff;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.museum-modal-header .mdi {
+    font-size: 20px;
+    color: #c9974c;
+}
+
+.museum-modal-body {
+    padding: 18px;
+}
+
+.museum-modal-body p {
+    font-size: 12px;
+    color: #6b6560;
+    line-height: 1.5;
+    margin: 0 0 14px;
+}
+
+.museum-modal-tier-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #2d2a26;
+    margin-bottom: 10px;
+}
+
+.museum-modal-tiers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.museum-modal-tier-btn {
+    background: #f5f1eb;
+    border: 2px solid #e0d8ce;
+    border-radius: 2px;
+    padding: 10px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+
+.museum-modal-tier-btn:hover {
+    border-color: #1a365d;
+    background: #f0ebe3;
+}
+
+.museum-modal-tier-btn.museum-modal-tier-selected {
+    border-color: #1a365d;
+    background: #e8f0fe;
+}
+
+.museum-modal-tier-btn.museum-modal-tier-current {
+    border-color: #c9974c;
+    background: #fdf6eb;
+}
+
+.museum-modal-tier-amount {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 2px;
+}
+
+.museum-modal-tier-per {
+    font-size: 10px;
+    color: #8a8079;
+    margin-bottom: 4px;
+}
+
+.museum-modal-tier-name {
+    font-size: 9px;
+    font-weight: 700;
+    color: #1a365d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #e8f0fe;
+    padding: 2px 6px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.museum-modal-note {
+    font-size: 11px;
+    color: #8a8079;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.museum-modal-footer {
+    padding: 12px 18px;
+    border-top: 1px solid #e0d8ce;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* ===== TICKET PURCHASE ===== */
+
+.museum-ticket-box {
+    margin-top: 16px;
+    background: #fff;
+    border: 1px solid #e0d8ce;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.museum-ticket-header {
+    background: #1a365d;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.museum-ticket-header .mdi {
+    font-size: 18px;
+    color: #c9974c;
+}
+
+.museum-ticket-supporter-note {
+    background: #e8f0fe;
+    padding: 8px 16px;
+    font-size: 11px;
+    color: #1a365d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #d0daea;
+}
+
+.museum-ticket-supporter-note .mdi {
+    font-size: 16px;
+    color: #c9974c;
+    flex-shrink: 0;
+}
+
+.museum-ticket-types {
+    padding: 14px 16px;
+}
+
+.museum-ticket-type {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ebe3;
+}
+
+.museum-ticket-type:last-child {
+    border-bottom: none;
+}
+
+.museum-ticket-type-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.museum-ticket-type-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2d2a26;
+}
+
+.museum-ticket-age {
+    font-weight: 400;
+    color: #8a8079;
+    font-size: 11px;
+}
+
+.museum-ticket-type-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a365d;
+    min-width: 40px;
+}
+
+.museum-ticket-qty {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.museum-ticket-qty label {
+    font-size: 11px;
+    color: #8a8079;
+}
+
+.museum-ticket-qty select {
+    padding: 4px 6px;
+    border: 1px solid #d4cbbf;
+    border-radius: 2px;
+    font-size: 12px;
+    font-family: inherit;
+    background: #f5f1eb;
+    color: #2d2a26;
+    cursor: pointer;
+    min-width: 48px;
+}
+
+.museum-ticket-qty select:focus {
+    outline: none;
+    border-color: #1a365d;
+}
+
+.museum-ticket-footer {
+    padding: 10px 16px 14px;
+    border-top: 1px solid #e0d8ce;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.museum-ticket-total {
+    font-size: 14px;
+    color: #4a4540;
+}
+
+.museum-ticket-total strong {
+    font-size: 16px;
+    color: #1a365d;
+}
+
+/* ===== FOOTER ===== */
+
+.museum-footer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 11px;
+    color: #8a8079;
+    border-top: 1px solid #e0d8ce;
+}
+
+.museum-footer .mdi {
+    color: #c9974c;
+    font-size: 13px;
+}

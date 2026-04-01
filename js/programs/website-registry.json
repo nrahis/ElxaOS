@@ -22,9 +22,32 @@
         "title": "First Snakesian Bank - Online Banking",
         "type": "file",
         "path": "./assets/interwebs/fsb/index.html",
+        "css": "./assets/interwebs/fsb/styles.css",
         "searchData": {
             "keywords": ["bank", "banking", "money", "account", "savings", "checking", "deposit", "withdraw", "currency", "snakes", "usd", "financial", "atm"],
             "description": "Secure online banking for all your financial needs. Manage your checking and savings accounts, transfer money, and convert between USD and Snakes. FDICS insured.",
+            "category": "Business"
+        }
+    },
+    "mallard.ex": {
+        "title": "Mallard Realty \u2014 Find Your Nest in Snakesia",
+        "type": "file",
+        "path": "./assets/interwebs/mallard/index.html",
+        "css": "./assets/interwebs/mallard/styles.css",
+        "searchData": {
+            "keywords": ["real estate", "realty", "property", "house", "home", "rent", "buy", "mortgage", "apartment", "mallard", "neighborhood"],
+            "description": "Browse Snakesian properties across 6 neighborhoods. Rent affordable places or buy your dream home with mortgage financing through First Snakesian Bank.",
+            "category": "Business"
+        }
+    },
+    "pato.ex": {
+        "title": "Pato & Sons Auto \u2014 Quality Rides for Every Snake",
+        "type": "file",
+        "path": "./assets/interwebs/pato-and-sons-auto/index.html",
+        "css": "./assets/interwebs/pato-and-sons-auto/styles.css",
+        "searchData": {
+            "keywords": ["car", "cars", "auto", "vehicle", "dealership", "truck", "SUV", "sedan", "motorcycle", "lease", "buy", "pato", "auto loan", "driving"],
+            "description": "Family-owned dealership with 23 vehicles across 5 tiers. Lease affordable rides or buy with auto loan financing. From honest beaters to dream machines.",
             "category": "Business"
         }
     },
@@ -285,7 +308,7 @@
     },
 
     "pacman-xeocities.ex": {
-        "title": "PacMan Power! 👻",
+        "title": "PacMan Power! \ud83d\udc7b",
         "type": "file",
         "path": "./assets/interwebs/pp-xeocities/index.html",
         "searchData": {
@@ -377,10 +400,33 @@
             "category": "Social"
         }
     },
+    "scalestreet.ex": {
+        "title": "Snake Valley Stock Exchange — SVSE",
+        "type": "file",
+        "path": "./assets/interwebs/scalestreet/index.html",
+        "css": "./assets/interwebs/scalestreet/styles.css",
+        "searchData": {
+            "keywords": ["stocks", "stock market", "trading", "invest", "shares", "portfolio", "dividends", "SVSE", "scalestreet", "exchange", "buy", "sell", "ticker"],
+            "description": "Snakesia's premier stock exchange. Browse 14 publicly traded companies, track prices, view sparkline charts, and manage your investment portfolio.",
+            "category": "Business"
+        }
+    },
+    "ssj.ex": {
+        "title": "The ScaleStreet Journal",
+        "type": "file",
+        "path": "./assets/interwebs/ssj/index.html",
+        "css": "./assets/interwebs/ssj/styles.css",
+        "searchData": {
+            "keywords": ["news", "newspaper", "journal", "financial news", "scalestreet", "stocks", "headlines", "market", "articles", "business news", "SSJ"],
+            "description": "Snakesia's most trusted financial newspaper. Read the latest market news, company stories, and sector reports from the ScaleStreet Journal.",
+            "category": "Business"
+        }
+    },
     "sssteam.ex": {
         "title": "Sssteam - Game Store",
         "type": "file",
         "path": "./assets/interwebs/sssteam/index.html",
+        "css": "./assets/interwebs/sssteam/styles.css",
         "searchData": {
             "keywords": ["games", "game store", "steam", "sssteam", "download", "buy", "free games", "snake", "sussy cat", "mail room", "gaming", "install"],
             "description": "Your one-stop shop for ElxaOS games! Browse, buy, and install games from the Sssteam store. Featuring free-to-play titles and premium games from ElxaCorp Games Division.",
@@ -399,6 +445,50 @@
             "keywords": ["cards", "trading cards", "collectible", "collecting", "card packs", "pack opening", "snakesian cards", "SCE", "card shop", "booster", "rarity"],
             "description": "Collect trading cards featuring the characters, creatures, and legends of Snakesia! Buy packs, open cards, and complete your collection.",
             "category": "Shopping"
+        }
+    },
+    "wildlife.ex": {
+        "title": "Snakesia Wildlife Fund",
+        "type": "file",
+        "path": "./assets/interwebs/animal-charity/index.html",
+        "css": "./assets/interwebs/animal-charity/styles.css",
+        "searchData": {
+            "keywords": ["animals", "charity", "donate", "donation", "sponsor", "wildlife", "sanctuary", "elephant", "penguin", "otter", "owl", "orangutan", "snow leopard", "nonprofit", "subscription"],
+            "description": "Sponsor a sanctuary animal and receive monthly updates on their adventures! Your monthly donation supports food, habitat, and veterinary care for Snakesia's most precious creatures.",
+            "category": "Charity"
+        }
+    },
+    "museum.ex": {
+        "title": "Snake Valley National Museum",
+        "type": "file",
+        "path": "./assets/interwebs/museum/index.html",
+        "css": "./assets/interwebs/museum/styles.css",
+        "searchData": {
+            "keywords": ["museum", "natural history", "fossils", "dinosaur", "geology", "minerals", "exhibits", "science", "heritage", "snake valley", "donate", "membership"],
+            "description": "Snakesia's premier natural history museum. Explore ancient reptile fossils, geological wonders, wildlife dioramas, and more. Become a supporter to enjoy free admission and exclusive benefits.",
+            "category": "Education"
+        }
+    },
+    "aquarium.ex": {
+        "title": "Snake Valley Aquarium",
+        "type": "file",
+        "path": "./assets/interwebs/aquarium/index.html",
+        "css": "./assets/interwebs/aquarium/styles.css",
+        "searchData": {
+            "keywords": ["aquarium", "ocean", "marine", "fish", "sharks", "jellyfish", "penguins", "coral reef", "sea life", "touch tank", "donate", "membership"],
+            "description": "Snakesia's premier aquarium with over 8,000 aquatic animals. Explore shark tunnels, coral reefs, jellyfish galleries, and more. Become a supporter to enjoy free admission and exclusive benefits.",
+            "category": "Education"
+        }
+    },
+    "sci.ex": {
+        "title": "Serpentville Conservation Initiative",
+        "type": "file",
+        "path": "./assets/interwebs/environmental-protection/index.html",
+        "css": "./assets/interwebs/environmental-protection/styles.css",
+        "searchData": {
+            "keywords": ["conservation", "environment", "nature", "forest", "trees", "wildlife", "donate", "donation", "nonprofit", "ecology", "reforestation", "river", "habitat"],
+            "description": "Protecting Snakesia's forests, rivers, and wildlife through conservation, reforestation, and environmental education. Become a supporter to fund habitat protection across Snakesia.",
+            "category": "Charity"
         }
     },
     "directory": {

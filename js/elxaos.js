@@ -15,7 +15,12 @@ class ElxaOS {
         this.loginService = new LoginService(this.eventBus);
         this.registry = new ElxaRegistry(this.eventBus);
         this.financeService = new FinanceService(this.eventBus, this.registry);
-        this.installerService = new InstallerService(this.eventBus, this.fileSystem, this.windowManager, this);
+        this.inventoryService = new InventoryService(this.eventBus, this.registry);
+        this.stockService = new StockService(this.eventBus, this.registry, this.financeService, this.inventoryService);
+        this.notificationService = new NotificationService(this.eventBus, this.registry);
+        this.financeNotificationService = new FinanceNotificationService(this.eventBus);
+        this.employmentService = new EmploymentService(this.eventBus, this.registry);
+        this.installerService = new InstallerService(this.eventBus, this.fileSystem, this.windowManager, this, this.registry);
         this.bootSystem = new BootSystem();
         this.updatePopup = new UpdatePopup();
 
@@ -66,6 +71,27 @@ class ElxaOS {
 
             // 2.6. Initialize finance service (loads/migrates financial data)
             await this.financeService.init();
+
+            // 2.65. Initialize employment service (processes missed paychecks)
+            await this.employmentService.init();
+
+            // 2.7. Initialize inventory service (loads ownership data)
+            await this.inventoryService.init();
+
+            // 2.73. Initialize stock service (loads stock data, processes elapsed months)
+            await this.stockService.init();
+
+            // 2.75. Initialize context builder (reads world context + user state)
+            if (window.ContextBuilderService) {
+                this.contextBuilder = new ContextBuilderService();
+                await this.contextBuilder.init();
+            }
+
+            // 2.8. Initialize notification service (loads notification data)
+            await this.notificationService.init();
+
+            // 2.9. Initialize finance notification service (event→email/notification bridge)
+            this.financeNotificationService.init();
 
             // 3. Connect conversation history manager to registry
             if (window.conversationHistoryManager) {
@@ -208,7 +234,7 @@ class ElxaOS {
         }
 
         // Load installed programs after everything is set up
-        this.installerService.loadInstalledPrograms();
+        this.installerService.init();
         
         // Start boot sequence
         console.log('🚀 Checking boot system:', this.bootSystem);

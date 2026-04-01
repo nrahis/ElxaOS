@@ -1,0 +1,947 @@
+/* ===== SSSTEAM STORE — Steam-inspired dark theme ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.sssteam-body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
+    background: #1b2838 !important;
+    color: #c7d5e0 !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+}
+
+.sssteam-body * { box-sizing: border-box; }
+
+.sssteam-root {
+    background: #1b2838 !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    color: #c7d5e0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* --- Top Navigation Bar --- */
+.sst-topbar {
+    background: linear-gradient(to right, #171a21, #1b2838);
+    border-bottom: 1px solid #0e1721;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.sst-topbar-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 44px;
+}
+.sst-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-right: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.sst-logo-icon {
+    font-size: 22px;
+}
+.sst-nav-links {
+    display: flex;
+    gap: 4px;
+}
+.sst-nav-link {
+    color: #b8b6b4;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: color 0.15s, background 0.15s;
+}
+.sst-nav-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+.sst-nav-link.active {
+    color: #fff;
+    background: rgba(103, 193, 245, 0.12);
+}
+
+/* --- Wallet Display --- */
+.sst-wallet {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #67c1f5;
+    font-weight: 600;
+    background: rgba(103,193,245,0.08);
+    padding: 4px 12px;
+    border-radius: 2px;
+    border: 1px solid rgba(103,193,245,0.15);
+}
+.sst-wallet-icon {
+    font-size: 14px;
+}
+.sst-wallet-amount {
+    color: #beee11;
+}
+
+/* --- Main Content Area --- */
+.sst-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+}
+
+/* --- STORE VIEW --- */
+.sst-featured {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    display: flex;
+    min-height: 200px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.sst-featured:hover {
+    box-shadow: 0 0 20px rgba(103,193,245,0.15);
+}
+.sst-featured-img {
+    width: 55%;
+    background: linear-gradient(135deg, #2a475e, #1b2838);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    position: relative;
+    overflow: hidden;
+}
+.sst-featured-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.sst-featured-info {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sst-featured-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px 0;
+}
+.sst-featured-desc {
+    font-size: 12px;
+    color: #8f98a0;
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+.sst-featured-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.sst-tag {
+    background: rgba(103,193,245,0.12);
+    color: #67c1f5;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 500;
+}
+.sst-featured-price {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* --- Section Headers --- */
+.sst-section-header {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* --- Game Grid --- */
+.sst-game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+}
+.sst-game-card {
+    background: #2a475e;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+.sst-game-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.sst-card-img {
+    height: 100px;
+    background: linear-gradient(135deg, #1e3a5f, #16202c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    position: relative;
+    overflow: hidden;
+}
+.sst-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.sst-card-body {
+    padding: 10px 12px;
+}
+.sst-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sst-card-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+.sst-card-tags .sst-tag { font-size: 9px; }
+.sst-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sst-card-rating {
+    font-size: 11px;
+    color: #66c0f4;
+}
+.sst-price {
+    font-weight: 700;
+    color: #beee11;
+    font-size: 13px;
+}
+.sst-price-free {
+    color: #a4d007;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+/* --- DETAIL VIEW --- */
+.sst-detail {
+    display: none;
+}
+.sst-back-btn {
+    background: none;
+    border: none;
+    color: #67c1f5;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    padding: 4px 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.sst-back-btn:hover { color: #fff; text-decoration: underline; }
+
+.sst-detail-header {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+.sst-detail-hero {
+    width: 55%;
+    border-radius: 4px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1e3a5f, #0d1b2a);
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+    position: relative;
+}
+.sst-detail-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.sst-detail-sidebar {
+    flex: 1;
+}
+.sst-detail-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px 0;
+}
+.sst-detail-meta {
+    font-size: 11px;
+    color: #8f98a0;
+    margin-bottom: 12px;
+}
+.sst-detail-meta span {
+    display: block;
+    margin-bottom: 3px;
+}
+.sst-detail-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.sst-detail-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+.sst-stars {
+    color: #67c1f5;
+    font-size: 14px;
+}
+.sst-rating-text {
+    font-size: 12px;
+    color: #8f98a0;
+}
+
+/* Buy box */
+.sst-buy-box {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 16px;
+    margin-top: 8px;
+}
+.sst-buy-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #beee11;
+    margin-bottom: 10px;
+}
+.sst-buy-price.free { color: #a4d007; }
+.sst-buy-btn {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.15s;
+}
+.sst-buy-btn:hover { filter: brightness(1.15); }
+.sst-buy-btn-purchase {
+    background: linear-gradient(to right, #75b022, #588a1b);
+    color: #d2efa9;
+}
+.sst-buy-btn-install {
+    background: linear-gradient(to right, #4a9bd9, #2f7bbf);
+    color: #d6f0ff;
+}
+.sst-buy-btn-installed {
+    background: #3a5a3a;
+    color: #8ab88a;
+    cursor: default;
+}
+.sst-buy-btn-installed:hover { filter: none; }
+.sst-buy-btn-owned {
+    background: #3a4a5a;
+    color: #8ab8c8;
+    cursor: default;
+}
+.sst-buy-btn-owned:hover { filter: none; }
+
+/* Description & Reviews */
+.sst-detail-body {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+.sst-detail-desc {
+    background: rgba(0,0,0,0.15);
+    border-radius: 4px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+.sst-detail-desc h3 {
+    font-size: 14px;
+    color: #fff;
+    margin: 0 0 10px 0;
+}
+.sst-detail-desc p {
+    font-size: 12px;
+    color: #acb2b8;
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+}
+.sst-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+.sst-features-list li {
+    font-size: 12px;
+    color: #acb2b8;
+    padding: 3px 0;
+    padding-left: 16px;
+    position: relative;
+}
+.sst-features-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #a4d007;
+    font-weight: bold;
+}
+
+/* System Requirements panel */
+.sst-sysreq {
+    background: rgba(0,0,0,0.15);
+    border-radius: 4px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+.sst-sysreq h3 {
+    font-size: 14px;
+    color: #fff;
+    margin: 0 0 10px 0;
+}
+.sst-sysreq-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.sst-sysreq-label { color: #8f98a0; }
+.sst-sysreq-value { color: #c7d5e0; text-align: right; }
+
+/* Reviews section */
+.sst-reviews {
+    margin-top: 24px;
+}
+.sst-review {
+    background: rgba(0,0,0,0.15);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+.sst-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.sst-review-author {
+    font-size: 12px;
+    font-weight: 600;
+    color: #67c1f5;
+}
+.sst-review-rating {
+    font-size: 11px;
+    color: #67c1f5;
+}
+.sst-review-text {
+    font-size: 12px;
+    color: #acb2b8;
+    line-height: 1.5;
+}
+.sst-review-helpful {
+    font-size: 10px;
+    color: #556772;
+    margin-top: 6px;
+}
+
+/* --- LIBRARY VIEW --- */
+.sst-library { display: none; }
+.sst-library-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #556772;
+}
+.sst-library-empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+.sst-library-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(0,0,0,0.15);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.sst-library-item:hover {
+    background: rgba(103,193,245,0.08);
+}
+.sst-library-icon {
+    font-size: 28px;
+    width: 40px;
+    text-align: center;
+}
+.sst-library-info { flex: 1; }
+.sst-library-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+.sst-library-status {
+    font-size: 11px;
+    color: #8f98a0;
+}
+.sst-library-status.installed { color: #a4d007; }
+.sst-library-status.owned { color: #67c1f5; }
+.sst-library-status.not-installed { color: #8f98a0; }
+
+/* --- Screenshots section --- */
+.sst-screenshots {
+    margin-top: 16px;
+}
+.sst-screenshots h3 {
+    font-size: 14px;
+    color: #fff;
+    margin: 0 0 10px 0;
+}
+.sst-screenshot-grid {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+.sst-screenshot-thumb {
+    width: 160px;
+    height: 90px;
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #16202c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #556772;
+}
+.sst-screenshot-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- Utility --- */
+.sst-hidden { display: none !important; }
+
+/* --- Library action buttons --- */
+.sst-library-action {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #8f98a0;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.sst-library-action:hover {
+    border-color: rgba(255,255,255,0.2);
+    color: #fff;
+}
+.sst-library-action-install {
+    border-color: rgba(74,155,217,0.4);
+    color: #67c1f5;
+}
+.sst-library-action-install:hover {
+    background: rgba(74,155,217,0.15);
+    border-color: #67c1f5;
+    color: #fff;
+}
+.sst-library-action-uninstall:hover {
+    border-color: #c44;
+    color: #f66;
+    background: rgba(204,68,68,0.1);
+}
+
+/* --- Detail uninstall button --- */
+.sst-buy-btn-uninstall {
+    background: transparent;
+    color: #8f98a0;
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-top: 6px;
+    font-size: 12px;
+}
+.sst-buy-btn-uninstall:hover {
+    color: #f66;
+    border-color: #c44;
+    background: rgba(204,68,68,0.1);
+    filter: none;
+}
+
+/* ===== SSSTEAM INSTALLER DIALOGS ===== */
+
+.sst-inst-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+.sst-inst-overlay.sst-inst-visible {
+    background: rgba(0, 0, 0, 0.7);
+}
+.sst-inst-overlay.sst-inst-visible .sst-inst-dialog {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.sst-inst-dialog {
+    width: 480px;
+    max-width: 90vw;
+    max-height: 85vh;
+    background: #1e2a3a;
+    border-radius: 8px;
+    border: 1px solid rgba(103, 193, 245, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(103, 193, 245, 0.08);
+    overflow: hidden;
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.sst-inst-dialog-sm {
+    width: 400px;
+}
+
+/* Header */
+.sst-inst-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #171d2b, #1b2838);
+    border-bottom: 1px solid rgba(103, 193, 245, 0.15);
+}
+.sst-inst-header-icon {
+    font-size: 20px;
+}
+.sst-inst-header-icon .mdi {
+    color: #67c1f5;
+}
+.sst-inst-header-danger .sst-inst-header-icon .mdi {
+    color: #ff6b6b;
+}
+.sst-inst-header-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #67c1f5;
+    letter-spacing: 1.5px;
+    flex: 1;
+}
+.sst-inst-header-danger {
+    border-bottom-color: rgba(255, 80, 80, 0.25);
+}
+.sst-inst-header-danger .sst-inst-header-text {
+    color: #ff6b6b;
+}
+.sst-inst-close {
+    background: none;
+    border: none;
+    color: #556;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.sst-inst-close:hover { color: #fff; }
+
+/* Body */
+.sst-inst-body {
+    padding: 24px;
+}
+
+/* Info screen */
+.sst-inst-info {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+.sst-inst-game-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #2a3a52, #1b2838);
+    border-radius: 10px;
+    border: 1px solid rgba(103, 193, 245, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    flex-shrink: 0;
+}
+.sst-inst-game-details {
+    flex: 1;
+    min-width: 0;
+}
+.sst-inst-game-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+}
+.sst-inst-game-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: #8f98a0;
+    margin-bottom: 8px;
+}
+.sst-inst-game-meta span {
+    background: rgba(255,255,255,0.05);
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+.sst-inst-game-desc {
+    font-size: 12px;
+    color: #acb2b8;
+    line-height: 1.5;
+}
+
+/* Action buttons */
+.sst-inst-actions {
+    display: flex;
+    gap: 10px;
+}
+.sst-inst-btn {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.15s, transform 0.1s;
+}
+.sst-inst-btn:hover { filter: brightness(1.12); }
+.sst-inst-btn:active { transform: scale(0.98); }
+.sst-inst-btn-go {
+    background: linear-gradient(135deg, #5cb85c, #449d44);
+    color: #fff;
+}
+.sst-inst-btn-cancel {
+    background: rgba(255,255,255,0.08);
+    color: #acb2b8;
+}
+.sst-inst-btn-cancel:hover { color: #fff; }
+.sst-inst-btn-danger {
+    background: linear-gradient(135deg, #d9534f, #c9302c);
+    color: #fff;
+}
+
+/* Progress bar */
+.sst-inst-progress {
+    text-align: center;
+}
+.sst-inst-progress-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.sst-inst-bar-track {
+    width: 100%;
+    height: 28px;
+    background: #0e1721;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(103, 193, 245, 0.12);
+}
+.sst-inst-bar-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #3a7bd5, #67c1f5, #beee11);
+    border-radius: 14px;
+    transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 0 12px rgba(103, 193, 245, 0.3);
+    position: relative;
+}
+.sst-inst-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 8px,
+        rgba(255,255,255,0.08) 8px,
+        rgba(255,255,255,0.08) 16px
+    );
+    animation: sst-inst-stripe 0.6s linear infinite;
+    border-radius: 14px;
+}
+@keyframes sst-inst-stripe {
+    0% { background-position: 0 0; }
+    100% { background-position: 22.6px 0; }
+}
+.sst-inst-bar-fill-danger {
+    background: linear-gradient(90deg, #c9302c, #d9534f, #e87c79);
+    box-shadow: 0 0 12px rgba(217, 83, 79, 0.3);
+}
+
+.sst-inst-bar-pct {
+    font-size: 14px;
+    font-weight: 700;
+    color: #67c1f5;
+    margin-top: 10px;
+    font-variant-numeric: tabular-nums;
+}
+.sst-inst-step {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #acb2b8;
+    min-height: 24px;
+}
+.sst-inst-step-icon {
+    font-size: 15px;
+}
+.sst-inst-step-icon .mdi {
+    color: #67c1f5;
+}
+
+/* Success screen */
+.sst-inst-success {
+    text-align: center;
+    padding: 8px 0;
+}
+.sst-inst-success-burst {
+    margin-bottom: 16px;
+    animation: sst-inst-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes sst-inst-pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.sst-inst-success-icon {
+    font-size: 56px;
+}
+.sst-inst-success-icon .mdi {
+    color: #beee11;
+}
+.sst-inst-success-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #beee11;
+    margin-bottom: 12px;
+}
+.sst-inst-success-game {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+.sst-inst-success-game-icon {
+    font-size: 18px;
+}
+.sst-inst-success-msg {
+    font-size: 13px;
+    color: #acb2b8;
+    margin-bottom: 6px;
+}
+.sst-inst-success-tip {
+    font-size: 11px;
+    color: #67c1f5;
+    margin-bottom: 20px;
+}
+.sst-inst-success-tip .mdi {
+    color: inherit;
+}
+.sst-inst-btn .mdi {
+    color: inherit;
+    pointer-events: none;
+}
+
+/* Error screen */
+.sst-inst-error {
+    text-align: center;
+    padding: 16px 0;
+}
+.sst-inst-error-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+.sst-inst-error-icon .mdi {
+    color: #ff6b6b;
+}
+.sst-inst-error-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ff6b6b;
+    margin-bottom: 8px;
+}
+.sst-inst-error-msg {
+    font-size: 13px;
+    color: #acb2b8;
+    margin-bottom: 20px;
+}
+
+/* Uninstall confirm */
+.sst-inst-uninstall-confirm {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.sst-inst-uninstall-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+}
+.sst-inst-uninstall-msg {
+    font-size: 15px;
+    color: #e0e0e0;
+    margin-bottom: 8px;
+}
+.sst-inst-uninstall-note {
+    font-size: 11px;
+    color: #8f98a0;
+}

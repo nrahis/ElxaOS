@@ -215,6 +215,7 @@ class ThemeService {
             // SYNTHWAVE/RETRO THEME
             synthwave: {
                 name: 'Synthwave',
+                dark: true,
                 colors: {
                     taskbarBg: 'linear-gradient(to bottom, #FF00FF, #8A2BE2)',
                     taskbarBorder: '#00FFFF',
@@ -367,6 +368,7 @@ class ThemeService {
             },
             zune: {
                 name: 'Zune',
+                dark: true,
                 colors: {
                     taskbarBg: 'linear-gradient(to bottom, #1a1a1a, #000000)',
                     taskbarBorder: '#333333',
@@ -388,6 +390,288 @@ class ThemeService {
                     iconText: '#ffffff',
                     iconTextShadow: 'rgba(0,0,0,0.8)',
                     uiIconColor: '#FF6600'
+                }
+            },
+            slate: {
+                name: 'Slate',
+                dark: true,
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #35354a, #252538)',
+                    taskbarBorder: '#45455a',
+                    windowBg: '#2d2d3d',
+                    windowBorder: '#45455a',
+                    titlebarBg: 'linear-gradient(to right, #585868, #6a6a7a)',
+                    titlebarInactive: 'linear-gradient(to right, #404050, #4a4a5a)',
+                    buttonBg: 'linear-gradient(to bottom, #3a3a4e, #2d2d3d)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #45455a, #3a3a4e)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #2d2d3d, #3a3a4e)',
+                    desktopBg: 'linear-gradient(135deg, #1e1e2e, #2a2a3a)',
+                    menuBg: '#2d2d3d',
+                    menuHoverBg: '#585868',
+                    menuText: '#c0c0cc',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#2d2d3d',
+                    clockBg: '#2d2d3d',
+                    clockText: '#a0a0b0',
+                    iconText: '#e0e0e8',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#a0a0b0'
+                }
+            },
+            frost: {
+                name: 'Frost',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #e8eaee, #d8dade)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#f4f5f7',
+                    windowBorder: '#c8cad0',
+                    titlebarBg: 'linear-gradient(to right, #8a8e96, #a0a4ac)',
+                    titlebarInactive: 'linear-gradient(to right, #b8bcc4, #d0d2d8)',
+                    buttonBg: 'linear-gradient(to bottom, #f4f5f7, #e8eaee)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #fafbfc, #f0f1f3)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #e8eaee, #f4f5f7)',
+                    desktopBg: 'linear-gradient(135deg, #e0e2e6, #cdd0d5)',
+                    menuBg: '#f4f5f7',
+                    menuHoverBg: '#8a8e96',
+                    menuText: '#4a4d55',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#f4f5f7',
+                    clockBg: '#f4f5f7',
+                    clockText: '#5a5d65',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(0,0,0,0.6)',
+                    uiIconColor: '#6a6d75'
+                }
+            },
+            rose: {
+                name: 'Rosé',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #d8b8b8, #c0a0a0)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#faf5f3',
+                    windowBorder: '#d4b0b0',
+                    titlebarBg: 'linear-gradient(to right, #a67070, #c08888)',
+                    titlebarInactive: 'linear-gradient(to right, #c8a8a8, #dcc4c4)',
+                    buttonBg: 'linear-gradient(to bottom, #faf5f3, #f0e8e5)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #fdfaf9, #f5f0ee)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #f0e8e5, #faf5f3)',
+                    desktopBg: 'linear-gradient(135deg, #c9a0a0, #d4b0b0)',
+                    menuBg: '#faf5f3',
+                    menuHoverBg: '#a67070',
+                    menuText: '#5a3535',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#faf5f3',
+                    clockBg: '#faf5f3',
+                    clockText: '#5a3535',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(90,53,53,0.8)',
+                    uiIconColor: '#8a5555'
+                }
+            },
+            matcha: {
+                name: 'Matcha',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #98a882, #7a8a68)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#f8f6f0',
+                    windowBorder: '#a0b08a',
+                    titlebarBg: 'linear-gradient(to right, #6b7a58, #8a9a72)',
+                    titlebarInactive: 'linear-gradient(to right, #a0aa90, #c0c8b4)',
+                    buttonBg: 'linear-gradient(to bottom, #f8f6f0, #eeece4)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #fcfaf6, #f4f2ec)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #eeece4, #f8f6f0)',
+                    desktopBg: 'linear-gradient(135deg, #8a9a78, #a0b08a)',
+                    menuBg: '#f8f6f0',
+                    menuHoverBg: '#6b7a58',
+                    menuText: '#2a3520',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#f8f6f0',
+                    clockBg: '#f8f6f0',
+                    clockText: '#2a3520',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(42,53,32,0.8)',
+                    uiIconColor: '#4a5a3a'
+                }
+            },
+            mocha: {
+                name: 'Mocha',
+                dark: true,
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #2a221c, #1a1410)',
+                    taskbarBorder: '#3a3028',
+                    windowBg: '#2c241e',
+                    windowBorder: '#3e342a',
+                    titlebarBg: 'linear-gradient(to right, #7a5c40, #967050)',
+                    titlebarInactive: 'linear-gradient(to right, #4a3c30, #5a4a3a)',
+                    buttonBg: 'linear-gradient(to bottom, #3a3028, #2c241e)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #4a3e32, #3a3028)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #2c241e, #3a3028)',
+                    desktopBg: 'linear-gradient(135deg, #1e1814, #2a221c)',
+                    menuBg: '#2c241e',
+                    menuHoverBg: '#7a5c40',
+                    menuText: '#c0a888',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#2c241e',
+                    clockBg: '#2c241e',
+                    clockText: '#a08868',
+                    iconText: '#f0e8dd',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#b09070'
+                }
+            },
+            dusk: {
+                name: 'Dusk',
+                dark: true,
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #241c2a, #181220)',
+                    taskbarBorder: '#342840',
+                    windowBg: '#261e2c',
+                    windowBorder: '#3a2e44',
+                    titlebarBg: 'linear-gradient(to right, #6a4878, #806090)',
+                    titlebarInactive: 'linear-gradient(to right, #3e2e48, #4e3a58)',
+                    buttonBg: 'linear-gradient(to bottom, #342840, #261e2c)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #40304e, #342840)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #261e2c, #342840)',
+                    desktopBg: 'linear-gradient(135deg, #1e1620, #2a2030)',
+                    menuBg: '#261e2c',
+                    menuHoverBg: '#6a4878',
+                    menuText: '#b898c8',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#261e2c',
+                    clockBg: '#261e2c',
+                    clockText: '#9878a8',
+                    iconText: '#ece0f0',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#a080b8'
+                }
+            },
+            studio: {
+                name: 'Studio',
+                dark: true,
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #252540, #1a1a30)',
+                    taskbarBorder: '#0f9b8e',
+                    windowBg: '#1e1e30',
+                    windowBorder: '#2a2a45',
+                    titlebarBg: 'linear-gradient(to right, #0f9b8e, #20b2aa)',
+                    titlebarInactive: 'linear-gradient(to right, #4a5568, #5a6578)',
+                    buttonBg: 'linear-gradient(to bottom, #2a2a45, #1e1e30)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #353555, #2a2a45)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #1e1e30, #2a2a45)',
+                    desktopBg: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+                    menuBg: '#1e1e30',
+                    menuHoverBg: '#0f9b8e',
+                    menuText: '#a0aec0',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#1e1e30',
+                    clockBg: '#1e1e30',
+                    clockText: '#0f9b8e',
+                    iconText: '#c0d0e0',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#0f9b8e'
+                }
+            },
+            coastal: {
+                name: 'Coastal',
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #c8b898, #b8a888)',
+                    taskbarBorder: '#ffffff',
+                    windowBg: '#faf8f4',
+                    windowBorder: '#c8b898',
+                    titlebarBg: 'linear-gradient(to right, #3d7a6a, #5a9a88)',
+                    titlebarInactive: 'linear-gradient(to right, #8aaa98, #b0c8b8)',
+                    buttonBg: 'linear-gradient(to bottom, #faf8f4, #f0ece4)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #fcfaf6, #faf8f4)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #f0ece4, #faf8f4)',
+                    desktopBg: 'linear-gradient(135deg, #5b8a72, #7aaa90)',
+                    menuBg: '#faf8f4',
+                    menuHoverBg: '#3d7a6a',
+                    menuText: '#3a3020',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#faf8f4',
+                    clockBg: '#faf8f4',
+                    clockText: '#3a3020',
+                    iconText: 'white',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#3d7a6a'
+                }
+            },
+            aurora: {
+                name: 'Aurora',
+                dark: true,
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #161b22, #0d1117)',
+                    taskbarBorder: '#30363d',
+                    windowBg: '#161b22',
+                    windowBorder: '#30363d',
+                    titlebarBg: 'linear-gradient(to right, #4EA83E, #4C66C2)',
+                    titlebarInactive: 'linear-gradient(to right, #30363d, #3a424a)',
+                    buttonBg: 'linear-gradient(to bottom, #21262d, #161b22)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #30363d, #21262d)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #161b22, #21262d)',
+                    desktopBg: 'linear-gradient(135deg, #0d1117, #161b22)',
+                    menuBg: '#161b22',
+                    menuHoverBg: '#4EA83E',
+                    menuText: '#8b949e',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#161b22',
+                    clockBg: '#161b22',
+                    clockText: '#4EA83E',
+                    iconText: '#c9d1d9',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#4EA83E'
+                }
+            },
+            noire: {
+                name: 'Noire',
+                dark: true,
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #1a1a1a, #0a0a0a)',
+                    taskbarBorder: '#2a2518',
+                    windowBg: '#1a1a1a',
+                    windowBorder: '#2a2a2a',
+                    titlebarBg: 'linear-gradient(to right, #b08818, #d5a021)',
+                    titlebarInactive: 'linear-gradient(to right, #2a2a2a, #3a3a3a)',
+                    buttonBg: 'linear-gradient(to bottom, #2a2a2a, #1a1a1a)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #3a3a3a, #2a2a2a)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #1a1a1a, #2a2a2a)',
+                    desktopBg: 'linear-gradient(135deg, #0a0a0a, #141414)',
+                    menuBg: '#1a1a1a',
+                    menuHoverBg: '#d5a021',
+                    menuText: '#999999',
+                    menuHoverText: '#1a1200',
+                    systemTrayBg: '#1a1a1a',
+                    clockBg: '#1a1a1a',
+                    clockText: '#d5a021',
+                    iconText: '#e0e0e0',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#d5a021'
+                }
+            },
+            neonBloom: {
+                name: 'Neon Bloom',
+                dark: true,
+                colors: {
+                    taskbarBg: 'linear-gradient(to bottom, #222230, #18181f)',
+                    taskbarBorder: '#35354a',
+                    windowBg: '#1e1e28',
+                    windowBorder: '#2c2c38',
+                    titlebarBg: 'linear-gradient(to right, #d44a8a, #F564A9)',
+                    titlebarInactive: 'linear-gradient(to right, #38384a, #44445a)',
+                    buttonBg: 'linear-gradient(to bottom, #2c2c38, #1e1e28)',
+                    buttonHoverBg: 'linear-gradient(to bottom, #38384a, #2c2c38)',
+                    buttonActiveBg: 'linear-gradient(to bottom, #1e1e28, #2c2c38)',
+                    desktopBg: 'linear-gradient(135deg, #18181f, #222230)',
+                    menuBg: '#1e1e28',
+                    menuHoverBg: '#F564A9',
+                    menuText: '#a0a0b8',
+                    menuHoverText: '#ffffff',
+                    systemTrayBg: '#1e1e28',
+                    clockBg: '#1e1e28',
+                    clockText: '#F564A9',
+                    iconText: '#e0e0f0',
+                    iconTextShadow: 'rgba(0,0,0,0.8)',
+                    uiIconColor: '#F564A9'
                 }
             }
         };
@@ -432,6 +716,27 @@ class ThemeService {
                 name: 'Forest',
                 type: 'gradient',
                 value: 'linear-gradient(45deg, #134E5E, #71B280)'
+            },
+            cottonCandy: {
+                name: 'Cotton Candy',
+                type: 'gradient',
+                value: 'linear-gradient(135deg, #F9A8D4, #C4B5FD, #93C5FD)'
+            },
+            midnight: {
+                name: 'Midnight',
+                type: 'gradient',
+                value: 'linear-gradient(135deg, #020617, #0F172A, #1E293B)'
+            },
+            spotlight: {
+                name: 'Spotlight',
+                type: 'gradient',
+                value: 'radial-gradient(circle at 50% 30%, #475569, #1E293B, #020617)'
+            },
+            carbonFiber: {
+                name: 'Carbon Fiber',
+                type: 'pattern',
+                value: 'linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px, linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px, linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px, linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px, linear-gradient(90deg, #1b1b1b 10px, transparent 10px), linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424)',
+                size: '20px 20px'
             }
         };
         
@@ -466,6 +771,22 @@ class ThemeService {
              'ElxaOS Pastel': {
                  name: 'ElxaOS Pastel',
                  path: '../../assets/backgrounds/elxaos_pastel.png'
+             },
+			 'ElxaOS Strawberry': {
+                 name: 'ElxaOS Strawberry',
+                 path: '../../assets/backgrounds/elxaos_strawberry.png'
+             },
+			 'ElxaOS Pink': {
+                 name: 'ElxaOS Pink',
+                 path: '../../assets/backgrounds/elxaos_palepink.png'
+             },
+			 'ElxaOS Witchy': {
+                 name: 'ElxaOS Witchy',
+                 path: '../../assets/backgrounds/elxaos_witchy.png'
+             },
+			 'ElxaOS Colorpop': {
+                 name: 'ElxaOS Colorpop',
+                 path: '../../assets/backgrounds/elxaos_colorful.png'
              },
 			 'ElxaOS Moon': {
                  name: 'ElxaOS Moon',
@@ -582,9 +903,7 @@ class ThemeService {
     showThemeDialog() {
         this.hideThemeDialog();
 
-        const dialog = document.createElement('div');
-        dialog.id = 'themeDialog';
-        dialog.className = 'system-dialog theme-dialog';
+        var self = this;
 
         const themeOptions = Object.keys(this.themes).map(themeKey => {
             const theme = this.themes[themeKey];
@@ -636,72 +955,78 @@ class ThemeService {
             `;
         }).join('');
 
-        dialog.innerHTML = `
-            <div class="dialog-content">
-                <div class="dialog-header">
-                    <div class="dialog-title">${ElxaIcons.renderAction('personalize')} Personalize ElxaOS</div>
-                    <button class="dialog-close personalize-close-btn">${ElxaIcons.renderAction('close')}</button>
+        var contentHTML = `
+            <div class="personalize-app">
+                <div class="personalize-tabs">
+                    <div class="personalize-tab active" data-tab="themes">${ElxaIcons.renderAction('personalize')} Color Schemes</div>
+                    <div class="personalize-tab" data-tab="wallpapers">${ElxaIcons.renderAction('image')} Wallpapers</div>
                 </div>
-                <div class="dialog-body">
-                    <div class="theme-tabs">
-                        <div class="theme-tab active" data-tab="themes">${ElxaIcons.renderAction('personalize')} Color Schemes</div>
-                        <div class="theme-tab" data-tab="wallpapers">${ElxaIcons.renderAction('image')} Wallpapers</div>
-                    </div>
-                    
-                    <div class="theme-content">
-                        <div class="tab-panel active" id="themesPanel">
-                            <div class="theme-grid">
-                                ${themeOptions}
-                            </div>
-                        </div>
-                        
-                        <div class="tab-panel" id="wallpapersPanel">
-                            <div class="wallpaper-controls">
-                                <button class="import-image-btn">${ElxaIcons.renderAction('folder-image')} Import Image</button>
-                                <button class="browse-paint-btn">${ElxaIcons.renderAction('image')} Use Paint File</button>
-                            </div>
-                            <div class="wallpaper-stats">
-                                <span class="wallpaper-count">
-                                    ${Object.keys(this.wallpapers).length} built-in, 
-                                    ${Object.keys(this.assetWallpapers).length} asset, 
-                                    ${Object.keys(this.customWallpapers).length} custom
-                                </span>
-                            </div>
-                            <div class="wallpaper-grid">
-                                ${wallpaperOptions}
-                            </div>
+                
+                <div class="personalize-content">
+                    <div class="personalize-panel active" id="themesPanel">
+                        <div class="personalize-theme-grid">
+                            ${themeOptions}
                         </div>
                     </div>
                     
-                    <div class="theme-controls">
-                        <button class="apply-btn">${ElxaIcons.renderAction('check')} Apply</button>
-                        <button class="reset-btn">${ElxaIcons.renderAction('restore')} Reset</button>
-                        <button class="dialog-button personalize-close-btn">Close</button>
+                    <div class="personalize-panel" id="wallpapersPanel">
+                        <div class="personalize-wp-controls">
+                            <button class="import-image-btn">${ElxaIcons.renderAction('folder-image')} Import Image</button>
+                            <button class="browse-paint-btn">${ElxaIcons.renderAction('image')} Use Paint File</button>
+                        </div>
+                        <div class="personalize-wp-stats">
+                            ${Object.keys(this.wallpapers).length} built-in, 
+                            ${Object.keys(this.assetWallpapers).length} asset, 
+                            ${Object.keys(this.customWallpapers).length} custom
+                        </div>
+                        <div class="personalize-wp-grid">
+                            ${wallpaperOptions}
+                        </div>
                     </div>
+                </div>
+                
+                <div class="personalize-controls">
+                    <button class="elxa-dialog-btn-primary apply-btn">${ElxaIcons.renderAction('check')} Apply</button>
+                    <button class="elxa-dialog-btn reset-btn">${ElxaIcons.renderAction('restore')} Reset</button>
                 </div>
             </div>
         `;
 
-        document.body.appendChild(dialog);
+        this._personalizeWindowId = 'personalize-' + Date.now();
+        var winW = 720, winH = 520;
+        var centerX = Math.max(20, Math.round((window.innerWidth - winW) / 2));
+        var centerY = Math.max(20, Math.round((window.innerHeight - 30 - winH) / 2));
+        elxaOS.windowManager.createWindow(
+            this._personalizeWindowId,
+            ElxaIcons.render('personalize', 'ui') + ' Personalize ElxaOS',
+            contentHTML,
+            { width: winW + 'px', height: winH + 'px', x: centerX + 'px', y: centerY + 'px' }
+        );
+
+        this._onPersonalizeClose = function(data) {
+            if (data.id === self._personalizeWindowId) {
+                self._personalizeWindowId = null;
+                self.eventBus.off('window.closed', self._onPersonalizeClose);
+            }
+        };
+        this.eventBus.on('window.closed', this._onPersonalizeClose);
+
         this.setupThemeDialogEvents();
     }
 
     setupThemeDialogEvents() {
-        const dialog = document.getElementById('themeDialog');
+        const dialog = document.getElementById('window-' + this._personalizeWindowId);
+        if (!dialog) return;
         
         // Use event delegation for all dialog events
         dialog.addEventListener('click', (e) => {
             // Tab switching
-            const tab = e.target.closest('.theme-tab');
+            const tab = e.target.closest('.personalize-tab');
             if (tab) {
                 const tabName = tab.dataset.tab;
-                
-                // Update tab appearance
-                dialog.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active'));
+                dialog.querySelectorAll('.personalize-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                
-                // Show correct panel
-                dialog.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+                dialog.querySelectorAll('.personalize-panel').forEach(panel => panel.classList.remove('active'));
                 dialog.querySelector(`#${tabName}Panel`).classList.add('active');
             }
             
@@ -739,11 +1064,6 @@ class ThemeService {
                 this.refreshAssetBackgrounds();
                 this.hideThemeDialog();
                 setTimeout(() => this.showThemeDialog(), 100);
-            }
-
-            // Close buttons (header X + footer Close)
-            if (e.target.closest('.personalize-close-btn')) {
-                this.hideThemeDialog();
             }
 
             // Apply button
@@ -1156,22 +1476,22 @@ class ThemeService {
         });
 
         // Special handling for dark themes - add body class
-        if (this.currentTheme === 'zune') {
+        if (theme && theme.dark) {
             document.body.classList.add('dark-theme');
         } else {
             document.body.classList.remove('dark-theme');
         }
 
-        // Force refresh of dynamic elements
-        this.applyThemeToNewElements();
+        // Force refresh of dynamic elements — pass theme so preview uses correct colors
+        this.applyThemeToNewElements(theme);
     }
 
-    applyThemeToNewElements() {
+    applyThemeToNewElements(themeOverride) {
         // This method handles elements that are created dynamically
         // and may not automatically pick up the CSS custom properties
         
-        // Update any elements that have specific theme requirements
-        const theme = this.themes[this.currentTheme];
+        // Use passed theme (for preview) or fall back to current theme
+        var theme = themeOverride || this.themes[this.currentTheme];
         if (!theme) return;
 
         // Update window titlebars that exist now
@@ -1220,6 +1540,19 @@ class ThemeService {
             target.style.backgroundPosition = '';
             target.style.backgroundRepeat = '';
             
+        } else if (wallpaper.type === 'pattern') {
+            
+            // Clear any existing background
+            target.style.backgroundImage = '';
+            
+            // Apply the pattern background
+            target.style.background = wallpaper.value;
+            
+            // Apply background-size for tiling patterns
+            target.style.backgroundSize = wallpaper.size || '20px 20px';
+            target.style.backgroundPosition = '';
+            target.style.backgroundRepeat = '';
+            
         } else if (wallpaper.type === 'image') {
             
             // Clear any existing background gradient
@@ -1260,10 +1593,13 @@ class ThemeService {
     }
 
     hideThemeDialog() {
-        const dialog = document.getElementById('themeDialog');
-        if (dialog) {
-            dialog.remove();
+        if (this._personalizeWindowId) {
+            elxaOS.windowManager.closeWindow(this._personalizeWindowId);
+            this._personalizeWindowId = null;
         }
+        // Fallback: remove old-style dialog if it exists
+        const oldDialog = document.getElementById('themeDialog');
+        if (oldDialog) oldDialog.remove();
     }
 
     saveSettings() {

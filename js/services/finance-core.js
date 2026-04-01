@@ -95,6 +95,25 @@ const SCORE_BRACKETS = [
 
 const MAX_CREDIT_CARDS = 3;
 
+// Secured credit card configuration
+const SECURED_CARD_CONFIG = {
+    name: 'Snakesian Secured Card',
+    minDeposit: 100,
+    maxDeposit: 500,
+    apr: 22.99,
+    annualFee: 0,
+    graduationMonths: 1,       // On-time payments needed to graduate
+    graduationBonus: 15,       // Score boost on graduation
+    description: 'Put down a deposit to build your credit. Your deposit becomes your limit. Graduate to a real card after consistent on-time payments.'
+};
+
+// Savings behavior bonus tiers for credit score
+const SAVINGS_SCORE_TIERS = [
+    { threshold: 1000, bonus: 3, label: 'Strong savings balance (over $1,000)' },
+    { threshold: 500,  bonus: 2, label: 'Healthy savings balance (over $500)' },
+    { threshold: 200,  bonus: 1, label: 'Savings balance maintained (over $200)' }
+];
+
 class FinanceService {
     constructor(eventBus, registry) {
         this.eventBus = eventBus;
@@ -159,6 +178,11 @@ class FinanceService {
             this._data = existing;
             // Ensure creditCards array exists (added in Phase 2)
             if (!this._data.creditCards) this._data.creditCards = [];
+            // Ensure loans array exists (added in Phase 3)
+            if (!this._data.loans) this._data.loans = [];
+            // Ensure recurring payments + cycle log exist (added in Phase 4)
+            if (!this._data.recurringPayments) this._data.recurringPayments = [];
+            if (!this._data.cycleLog) this._data.cycleLog = [];
             // Ensure creditScore object exists (added in Phase 2.5)
             if (!this._data.creditScore) {
                 this._data.creditScore = this._createDefaultCreditScore();
@@ -218,6 +242,9 @@ class FinanceService {
                         source: 'migrated'
                     })),
                     creditCards: [],
+                    loans: [],
+                    recurringPayments: [],
+                    cycleLog: [],
                     creditScore: this._createDefaultCreditScore(),
                     lastProcessedDate: new Date().toISOString().split('T')[0],
                     migrated: true,
@@ -244,6 +271,9 @@ class FinanceService {
     _createDefaultFinanceData() {
         return {
             creditCards: [],
+            loans: [],
+            recurringPayments: [],
+            cycleLog: [],
             creditScore: this._createDefaultCreditScore(),
             accounts: {
                 checking: {
@@ -398,6 +428,22 @@ class FinanceService {
             message: `Deposited $${amount.toFixed(2)} to ${accountType}.`,
             balance: this._data.accounts[accountType].balance
         };
+    }
+
+    /**
+     * Sync deposit — adds balance + transaction without saving or emitting events.
+     * Used by EmploymentService to batch multiple paycheck deposits efficiently.
+     * Caller is responsible for calling _save() afterward.
+     */
+    _depositDirect(accountType, amount, description) {
+        if (!this._data || !this._data.accounts[accountType]) return;
+        this._data.accounts[accountType].balance += amount;
+        this._addTransaction({
+            type: 'deposit',
+            account: accountType,
+            amount: amount,
+            description: description || 'Direct deposit'
+        });
     }
 
     /**

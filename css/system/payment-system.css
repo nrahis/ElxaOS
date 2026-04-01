@@ -1,6 +1,7 @@
 /* =================================
    ELXA MOCK PAYMENT SYSTEM STYLES
    Late 90s/Early 2000s Dialog Theme
+   Theme-aware via CSS variables
 ================================= */
 
 /* Force override aggressive parent CSS for payment dialog containers */
@@ -68,12 +69,11 @@ body.elxa-payment-modal-open {
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
     font-family: 'MS Sans Serif', sans-serif;
     font-size: 11px;
-    color: #000;
+    color: var(--menuText, #333);
     overflow: hidden;
     animation: elxa-payment-slideIn 0.3s ease-out;
 }
 
-/* Additional specificity for the main dialog */
 .elxa-payment-modal .elxa-payment-dialog {
     background: var(--windowBg, #c0c0c0) !important;
     background-color: var(--windowBg, #c0c0c0) !important;
@@ -88,7 +88,7 @@ body.elxa-payment-modal-open {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #808080;
+    border-bottom: 1px solid var(--windowBorder, #808080);
     min-height: 20px;
 }
 
@@ -111,18 +111,18 @@ body.elxa-payment-modal-open {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000;
+    color: var(--menuText, #333);
 }
 
 .elxa-payment-close:hover {
-    background: #d4d0c8 !important;
-    background-color: #d4d0c8 !important;
+    background: var(--buttonHoverBg, #d4d0c8) !important;
+    background-color: var(--buttonHoverBg, #d4d0c8) !important;
 }
 
 .elxa-payment-close:active {
-    border: 1px inset #c0c0c0;
-    background: #b0b0b0 !important;
-    background-color: #b0b0b0 !important;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, #b0b0b0) !important;
+    background-color: var(--buttonActiveBg, #b0b0b0) !important;
 }
 
 /* =================================
@@ -136,7 +136,6 @@ body.elxa-payment-modal-open {
     overflow-y: auto;
 }
 
-/* Additional specificity for content area */
 .elxa-payment-modal .elxa-payment-content {
     background: var(--windowBg, #c0c0c0) !important;
     background-color: var(--windowBg, #c0c0c0) !important;
@@ -153,21 +152,21 @@ body.elxa-payment-modal-open {
 }
 
 .elxa-payment-content::-webkit-scrollbar-thumb {
-    background: var(--windowBg, #c0c0c0);
+    background: var(--buttonBg, #c0c0c0);
     border: 1px outset var(--windowBorder, #c0c0c0);
 }
 
 .elxa-payment-content::-webkit-scrollbar-thumb:hover {
-    background: #d4d0c8;
+    background: var(--buttonHoverBg, #d4d0c8);
 }
 
 /* =================================
    ORDER SUMMARY SECTION
 ================================= */
 .elxa-payment-order-summary {
-    background: white !important;
-    background-color: white !important;
-    border: 1px inset #c0c0c0;
+    background: var(--menuBg, white) !important;
+    background-color: var(--menuBg, white) !important;
+    border: 1px inset var(--windowBorder, #c0c0c0);
     padding: 10px;
     margin-bottom: 12px;
 }
@@ -176,7 +175,7 @@ body.elxa-payment-modal-open {
     margin: 0 0 8px 0;
     font-size: 12px;
     font-weight: bold;
-    color: #000080;
+    color: var(--menuText, #333);
 }
 
 .elxa-payment-order-item {
@@ -184,12 +183,12 @@ body.elxa-payment-modal-open {
     justify-content: space-between;
     align-items: center;
     padding: 4px 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid color-mix(in srgb, var(--menuText, #333) 15%, var(--windowBg, #c0c0c0));
 }
 
 .elxa-payment-product-name {
     font-weight: bold;
-    color: #000;
+    color: var(--menuText, #333);
 }
 
 .elxa-payment-product-price {
@@ -202,14 +201,14 @@ body.elxa-payment-modal-open {
     justify-content: space-between;
     padding: 8px 0 4px 0;
     font-size: 12px;
-    color: #000;
-    border-top: 1px solid #000;
+    color: var(--menuText, #333);
+    border-top: 1px solid var(--menuText, #333);
     margin-top: 4px;
 }
 
 .elxa-payment-order-number {
     font-size: 9px;
-    color: #666;
+    color: color-mix(in srgb, var(--menuText, #333) 60%, transparent);
     text-align: right;
     margin-top: 4px;
 }
@@ -230,7 +229,6 @@ body.elxa-payment-modal-open {
     padding: 10px;
 }
 
-/* Additional specificity for sections */
 .elxa-payment-modal .elxa-payment-section {
     background: var(--windowBg, #c0c0c0) !important;
     background-color: var(--windowBg, #c0c0c0) !important;
@@ -240,9 +238,9 @@ body.elxa-payment-modal-open {
     margin: 0 0 10px 0;
     font-size: 12px;
     font-weight: bold;
-    color: #000080;
+    color: var(--menuText, #333);
     padding-bottom: 4px;
-    border-bottom: 1px solid #808080;
+    border-bottom: 1px solid var(--windowBorder, #808080);
 }
 
 /* =================================
@@ -266,7 +264,7 @@ body.elxa-payment-modal-open {
     margin-bottom: 2px;
     font-size: 11px;
     font-weight: bold;
-    color: #000;
+    color: var(--menuText, #333);
 }
 
 .elxa-payment-field input,
@@ -274,25 +272,25 @@ body.elxa-payment-modal-open {
     width: 100%;
     padding: 2px 4px;
     border: 1px inset var(--windowBorder, #c0c0c0);
-    background: white !important;
-    background-color: white !important;
+    background: var(--menuBg, white) !important;
+    background-color: var(--menuBg, white) !important;
     font-size: 11px;
     font-family: inherit;
-    color: #000;
+    color: var(--menuText, #333);
     box-sizing: border-box;
 }
 
 .elxa-payment-field input:focus,
 .elxa-payment-field select:focus {
     outline: none;
-    background: #fefefe !important;
-    background-color: #fefefe !important;
-    border-color: #0a246a;
+    background: var(--menuBg, white) !important;
+    background-color: var(--menuBg, white) !important;
+    border-color: var(--windowBorder, #c0c0c0);
 }
 
 .elxa-payment-field input:invalid {
-    background: #ffe6e6 !important;
-    background-color: #ffe6e6 !important;
+    background: color-mix(in srgb, #ff4444 15%, var(--menuBg, white)) !important;
+    background-color: color-mix(in srgb, #ff4444 15%, var(--menuBg, white)) !important;
 }
 
 /* Card number field with icons */
@@ -318,12 +316,12 @@ body.elxa-payment-modal-open {
    SECURITY NOTICE
 ================================= */
 .elxa-payment-security-notice {
-    background: #ffffcc !important;
-    background-color: #ffffcc !important;
-    border: 1px solid #cccc99;
+    background: color-mix(in srgb, #ffcc00 20%, var(--windowBg, #c0c0c0)) !important;
+    background-color: color-mix(in srgb, #ffcc00 20%, var(--windowBg, #c0c0c0)) !important;
+    border: 1px solid color-mix(in srgb, #ffcc00 40%, var(--windowBorder, #c0c0c0));
     padding: 8px;
     font-size: 10px;
-    color: #333;
+    color: var(--menuText, #333);
     margin: 8px 0;
     border-left: 3px solid #ffcc00;
 }
@@ -336,8 +334,13 @@ body.elxa-payment-modal-open {
     gap: 8px;
     justify-content: flex-end;
     padding-top: 12px;
-    border-top: 1px solid #808080;
+    border-top: 1px solid var(--windowBorder, #808080);
     margin-top: 12px;
+    position: sticky;
+    bottom: 0;
+    background: var(--windowBg, #c0c0c0);
+    padding-bottom: 4px;
+    z-index: 1;
 }
 
 .elxa-payment-btn {
@@ -348,42 +351,44 @@ body.elxa-payment-modal-open {
     cursor: pointer;
     border: 1px outset var(--windowBorder, #c0c0c0);
     background: var(--buttonBg, #c0c0c0) !important;
-    background-color: var(--windowBg, #c0c0c0) !important;
-    color: #000;
+    background-color: var(--buttonBg, #c0c0c0) !important;
+    color: var(--menuText, #333);
     min-width: 80px;
 }
 
 .elxa-payment-btn:hover {
-    background: #d4d0c8 !important;
-    background-color: #d4d0c8 !important;
+    background: var(--buttonHoverBg, #d4d0c8) !important;
+    background-color: var(--buttonHoverBg, #d4d0c8) !important;
 }
 
 .elxa-payment-btn:active {
-    border: 1px inset #c0c0c0;
-    background: #b0b0b0 !important;
-    background-color: #b0b0b0 !important;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--buttonActiveBg, #b0b0b0) !important;
+    background-color: var(--buttonActiveBg, #b0b0b0) !important;
 }
 
 .elxa-payment-btn-primary {
-    background: linear-gradient(to bottom, #4a90e2, #2e5ea8) !important;
+    background: var(--titlebarBg, linear-gradient(to bottom, #4a90e2, #2e5ea8)) !important;
     color: white;
-    border: 1px outset #4a90e2;
+    border: 1px outset var(--windowBorder, #c0c0c0);
     font-weight: bold;
 }
 
 .elxa-payment-btn-primary:hover {
-    background: linear-gradient(to bottom, #5ba0f2, #3e6eb8) !important;
+    background: var(--titlebarBg, linear-gradient(to bottom, #5ba0f2, #3e6eb8)) !important;
+    filter: brightness(1.1);
 }
 
 .elxa-payment-btn-primary:active {
-    border: 1px inset #4a90e2;
-    background: linear-gradient(to bottom, #2e5ea8, #1e4e98) !important;
+    border: 1px inset var(--windowBorder, #c0c0c0);
+    background: var(--titlebarBg, linear-gradient(to bottom, #2e5ea8, #1e4e98)) !important;
+    filter: brightness(0.9);
 }
 
 .elxa-payment-btn-cancel {
     background: var(--buttonBg, #c0c0c0) !important;
-    background-color: var(--windowBg, #c0c0c0) !important;
-    color: #000;
+    background-color: var(--buttonBg, #c0c0c0) !important;
+    color: var(--menuText, #333);
 }
 
 /* =================================
@@ -396,7 +401,6 @@ body.elxa-payment-modal-open {
     background-color: var(--windowBg, #c0c0c0) !important;
 }
 
-/* Additional specificity for processing state */
 .elxa-payment-modal .elxa-payment-processing {
     background: var(--windowBg, #c0c0c0) !important;
     background-color: var(--windowBg, #c0c0c0) !important;
@@ -404,21 +408,21 @@ body.elxa-payment-modal-open {
 
 .elxa-payment-processing-content h3 {
     margin: 0 0 8px 0;
-    color: #000080;
+    color: var(--menuText, #333);
     font-size: 14px;
 }
 
 .elxa-payment-processing-content p {
     margin: 0 0 20px 0;
-    color: #666;
+    color: color-mix(in srgb, var(--menuText, #333) 60%, transparent);
     font-size: 11px;
 }
 
 .elxa-payment-spinner {
     width: 32px;
     height: 32px;
-    border: 3px solid #e0e0e0;
-    border-top: 3px solid #0a246a;
+    border: 3px solid color-mix(in srgb, var(--menuText, #333) 20%, var(--windowBg, #c0c0c0));
+    border-top-color: var(--uiIconColor, #555);
     border-radius: 50%;
     animation: elxa-payment-spin 1s linear infinite;
     margin: 0 auto 16px auto;
@@ -427,16 +431,16 @@ body.elxa-payment-modal-open {
 .elxa-payment-progress-bar {
     width: 200px;
     height: 16px;
-    background: white !important;
-    background-color: white !important;
-    border: 1px inset #c0c0c0;
+    background: var(--menuBg, white) !important;
+    background-color: var(--menuBg, white) !important;
+    border: 1px inset var(--windowBorder, #c0c0c0);
     margin: 0 auto;
     overflow: hidden;
 }
 
 .elxa-payment-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4a90e2, #2e5ea8) !important;
+    background: var(--titlebarBg, linear-gradient(90deg, #4a90e2, #2e5ea8)) !important;
     width: 0%;
     animation: elxa-payment-progress 3s ease-in-out;
 }
@@ -451,7 +455,6 @@ body.elxa-payment-modal-open {
     background-color: var(--windowBg, #c0c0c0) !important;
 }
 
-/* Additional specificity for success state */
 .elxa-payment-modal .elxa-payment-success {
     background: var(--windowBg, #c0c0c0) !important;
     background-color: var(--windowBg, #c0c0c0) !important;
@@ -459,13 +462,13 @@ body.elxa-payment-modal-open {
 
 .elxa-payment-success-content h2 {
     margin: 0 0 8px 0;
-    color: #008000;
+    color: #00aa00;
     font-size: 16px;
 }
 
 .elxa-payment-success-content p {
     margin: 0 0 16px 0;
-    color: #000;
+    color: var(--menuText, #333);
     font-size: 12px;
 }
 
@@ -476,9 +479,9 @@ body.elxa-payment-modal-open {
 }
 
 .elxa-payment-receipt {
-    background: white !important;
-    background-color: white !important;
-    border: 1px inset #c0c0c0;
+    background: var(--menuBg, white) !important;
+    background-color: var(--menuBg, white) !important;
+    border: 1px inset var(--windowBorder, #c0c0c0);
     padding: 12px;
     margin: 16px 0;
     text-align: left;
@@ -490,9 +493,9 @@ body.elxa-payment-modal-open {
 .elxa-payment-receipt h3 {
     margin: 0 0 8px 0;
     font-size: 12px;
-    color: #000080;
+    color: var(--menuText, #333);
     text-align: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid color-mix(in srgb, var(--menuText, #333) 15%, var(--windowBg, #c0c0c0));
     padding-bottom: 4px;
 }
 
@@ -501,7 +504,8 @@ body.elxa-payment-modal-open {
     justify-content: space-between;
     padding: 2px 0;
     font-size: 10px;
-    border-bottom: 1px dotted #e0e0e0;
+    color: var(--menuText, #333);
+    border-bottom: 1px dotted color-mix(in srgb, var(--menuText, #333) 15%, var(--windowBg, #c0c0c0));
 }
 
 .elxa-payment-receipt-line:last-child {
@@ -509,13 +513,13 @@ body.elxa-payment-modal-open {
     font-weight: bold;
     margin-top: 4px;
     padding-top: 6px;
-    border-top: 1px solid #000;
+    border-top: 1px solid var(--menuText, #333);
 }
 
 .elxa-payment-success-message {
-    background: #e6ffe6 !important;
-    background-color: #e6ffe6 !important;
-    border: 1px solid #99cc99;
+    background: color-mix(in srgb, #00cc00 15%, var(--windowBg, #c0c0c0)) !important;
+    background-color: color-mix(in srgb, #00cc00 15%, var(--windowBg, #c0c0c0)) !important;
+    border: 1px solid color-mix(in srgb, #00cc00 35%, var(--windowBorder, #c0c0c0));
     padding: 10px;
     margin: 16px 0;
     border-left: 3px solid #00cc00;
@@ -524,19 +528,15 @@ body.elxa-payment-modal-open {
 .elxa-payment-success-message p {
     margin: 4px 0;
     font-size: 11px;
-    color: #006600;
+    color: var(--menuText, #333);
 }
 
 /* =================================
    ANIMATIONS
 ================================= */
 @keyframes elxa-payment-fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes elxa-payment-slideIn {
@@ -551,36 +551,20 @@ body.elxa-payment-modal-open {
 }
 
 @keyframes elxa-payment-spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes elxa-payment-progress {
-    0% {
-        width: 0%;
-    }
-    50% {
-        width: 70%;
-    }
-    100% {
-        width: 100%;
-    }
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
 }
 
 @keyframes elxa-payment-bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
 }
 
 /* =================================
@@ -591,17 +575,17 @@ body.elxa-payment-modal-open {
         width: 95%;
         max-height: 95vh;
     }
-    
+
     .elxa-payment-field-row {
         flex-direction: column;
         gap: 4px;
     }
-    
+
     .elxa-payment-buttons {
         flex-direction: column-reverse;
         align-items: stretch;
     }
-    
+
     .elxa-payment-btn {
         width: 100%;
     }
@@ -612,7 +596,7 @@ body.elxa-payment-modal-open {
 ================================= */
 .elxa-payment-field input:focus,
 .elxa-payment-field select:focus {
-    box-shadow: 0 0 3px #4a90e2;
+    box-shadow: 0 0 3px var(--uiIconColor, #4a90e2);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -623,4 +607,243 @@ body.elxa-payment-modal-open {
     .elxa-payment-success-icon {
         animation: none;
     }
+}
+
+
+/* =================================
+   BANK NOTICE (was injected via JS)
+================================= */
+.elxa-payment-bank-notice {
+    margin: 15px 0;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--menuText, #333);
+}
+
+.elxa-payment-bank-notice.sufficient {
+    background: color-mix(in srgb, #4CAF50 15%, var(--windowBg, #c0c0c0));
+    border: 2px solid #4CAF50;
+}
+
+.elxa-payment-bank-notice.insufficient {
+    background: color-mix(in srgb, #f44336 15%, var(--windowBg, #c0c0c0));
+    border: 2px solid #f44336;
+}
+
+.elxa-payment-bank-notice.login-required {
+    background: color-mix(in srgb, #daa520 15%, var(--windowBg, #c0c0c0));
+    border: 2px solid #daa520;
+}
+
+.elxa-payment-bank-title {
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: var(--menuText, #333);
+}
+
+.elxa-payment-bank-balance {
+    font-weight: bold;
+    font-size: 13px;
+    color: var(--menuText, #333);
+}
+
+.elxa-payment-sufficient {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.elxa-payment-insufficient {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.elxa-payment-trust-notice {
+    color: var(--menuText, #333);
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 10px;
+}
+
+.elxa-payment-trust-success {
+    color: var(--menuText, #333);
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.elxa-payment-bank-message a {
+    color: var(--uiIconColor, #1976d2);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* =================================
+   PAYMENT METHOD OPTIONS (was injected via JS)
+================================= */
+.elxa-payment-method-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.elxa-payment-method-option {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    border: 2px solid color-mix(in srgb, var(--menuText, #333) 20%, var(--windowBg, #c0c0c0));
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--menuText, #333);
+}
+
+.elxa-payment-method-option:hover {
+    border-color: var(--uiIconColor, #4a90e2);
+    background: color-mix(in srgb, var(--menuText, #333) 5%, var(--windowBg, #c0c0c0));
+}
+
+.elxa-payment-method-option input[type="radio"] {
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+.elxa-payment-method-option span {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+    color: var(--menuText, #333);
+}
+
+.elxa-payment-method-option small {
+    color: color-mix(in srgb, var(--menuText, #333) 60%, transparent);
+    font-size: 10px;
+    display: block;
+}
+
+.elxa-payment-method-option input[type="radio"]:disabled + span {
+    color: color-mix(in srgb, var(--menuText, #333) 50%, transparent);
+}
+
+.elxa-payment-method-option:has(input:disabled) {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =================================
+   CREDIT CARD PICKER (was injected via JS)
+================================= */
+.elxa-payment-cc-picker {
+    margin: -5px 0 10px 30px;
+    padding: 8px;
+    background: color-mix(in srgb, var(--uiIconColor, #4a90e2) 10%, var(--windowBg, #c0c0c0));
+    border: 1px solid color-mix(in srgb, var(--uiIconColor, #4a90e2) 25%, var(--windowBorder, #c0c0c0));
+    border-radius: 4px;
+}
+
+.elxa-payment-cc-select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--windowBorder, #bbb);
+    border-radius: 3px;
+    font-size: 11px;
+    background: var(--menuBg, white);
+    color: var(--menuText, #333);
+    cursor: pointer;
+}
+
+/* =================================
+   DOWNLOAD SECTION (was injected via JS)
+================================= */
+.elxa-payment-download-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: color-mix(in srgb, #4CAF50 10%, var(--windowBg, #c0c0c0));
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.elxa-payment-btn-download {
+    background: linear-gradient(to bottom, #4CAF50, #45a049);
+    border: 2px outset #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    display: block;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.elxa-payment-btn-download:hover {
+    background: linear-gradient(to bottom, #5cbf60, #4CAF50);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.elxa-payment-btn-download:active {
+    border: 2px inset #4CAF50;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.elxa-payment-download-info {
+    color: color-mix(in srgb, var(--menuText, #333) 60%, transparent);
+    font-size: 12px;
+}
+
+.elxa-payment-download-success {
+    padding: 15px;
+    background: color-mix(in srgb, #4CAF50 15%, var(--windowBg, #c0c0c0));
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.elxa-payment-download-success .elxa-payment-success-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.elxa-payment-download-success h4 {
+    color: #2e7d32;
+    margin: 0 0 10px 0;
+}
+
+.elxa-payment-download-success p {
+    margin: 5px 0;
+    font-size: 13px;
+    color: var(--menuText, #333);
+}
+
+/* =================================
+   PAYMENT ERROR (was inline in JS)
+================================= */
+.elxa-payment-error-box {
+    background: color-mix(in srgb, #ff4444 15%, var(--windowBg, #c0c0c0));
+    border: 1px solid #ff6b6b;
+    color: var(--menuText, #333);
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 3px;
+    border-left: 3px solid #ff4444;
+}
+
+.elxa-payment-error-dismiss {
+    background: var(--buttonBg, #c0c0c0);
+    color: var(--menuText, #333);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+    padding: 4px 8px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 10px;
+    margin-top: 8px;
+}
+
+.elxa-payment-error-dismiss:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
 }

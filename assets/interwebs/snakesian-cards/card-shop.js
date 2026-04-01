@@ -13,11 +13,24 @@
   var IMAGE_PATH = 'assets/interwebs/snakesian-cards/images/';
 
   // ==========================================
-  // COLLECTION STORAGE
+  // COLLECTION STORAGE (backed by inventoryService)
   // ==========================================
-  var STORAGE_KEY = 'elxaOS-card-collection';
+  var STORAGE_KEY = 'elxaOS-card-collection'; // localStorage fallback key
+
+  function isInventoryAvailable() {
+    return typeof elxaOS !== 'undefined' && elxaOS.inventoryService && elxaOS.inventoryService._ready;
+  }
 
   function loadCollection() {
+    if (isInventoryAvailable()) {
+      var cards = elxaOS.inventoryService.getItems('cards');
+      var collection = {};
+      cards.forEach(function(c) {
+        if (c.cardId) collection[c.cardId] = c.quantity || 1;
+      });
+      return collection;
+    }
+    // Fallback to localStorage
     try {
       var data = localStorage.getItem(STORAGE_KEY);
       return data ? JSON.parse(data) : {};
@@ -28,6 +41,7 @@
   }
 
   function saveCollection(collection) {
+    if (isInventoryAvailable()) return; // inventoryService handles persistence
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
     } catch (e) {
@@ -35,7 +49,8 @@
     }
   }
 
-  function addCardsToCollection(cards) {
+  // Sync fallback — used only when inventoryService is unavailable
+  function addCardsToCollectionSync(cards) {
     var collection = loadCollection();
     cards.forEach(function(card) {
       if (collection[card.id]) {
@@ -48,22 +63,102 @@
     return collection;
   }
 
+  // Async path — adds cards to inventoryService
+  async function addCardsToCollection(cards) {
+    if (!isInventoryAvailable()) {
+      return addCardsToCollectionSync(cards);
+    }
+
+    var existingCards = elxaOS.inventoryService.getItems('cards');
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      // Find existing entry by cardId
+      var existing = null;
+      for (var j = 0; j < existingCards.length; j++) {
+        if (existingCards[j].cardId === card.id) { existing = existingCards[j]; break; }
+      }
+      if (existing) {
+        await elxaOS.inventoryService.updateItem('cards', existing.id, {
+          quantity: (existing.quantity || 1) + 1
+        });
+      } else {
+        await elxaOS.inventoryService.addItem('cards', {
+          cardId: card.id,
+          name: card.name,
+          rarity: card.rarity,
+          seriesId: card.series || null,
+          quantity: 1,
+          acquiredFrom: 'pack-opening',
+          acquiredDate: new Date().toISOString().split('T')[0]
+        });
+      }
+    }
+    return loadCollection();
+  }
+
   function getOwnedCount() {
     var collection = loadCollection();
     return Object.keys(collection).length;
   }
 
-  // ==========================================
-  // BANK INTEGRATION (for balance display only)
-  // ==========================================
+  // Migrate existing localStorage cards to inventoryService (runs once)
+  async function migrateLocalStorageCards() {
+    if (!isInventoryAvailable()) return;
 
-  function isBankAvailable() {
-    return typeof window.bankSystem !== 'undefined' && window.bankSystem.isLoggedIn;
+    var existingCards = elxaOS.inventoryService.getItems('cards');
+    if (existingCards.length > 0) return; // Already has cards, skip migration
+
+    try {
+      var data = localStorage.getItem(STORAGE_KEY);
+      if (!data) return;
+
+      var collection = JSON.parse(data);
+      var cardIds = Object.keys(collection);
+      if (cardIds.length === 0) return;
+
+      console.log('Migrating ' + cardIds.length + ' card types from localStorage to inventoryService...');
+
+      for (var i = 0; i < cardIds.length; i++) {
+        var cardId = cardIds[i];
+        var count = collection[cardId];
+        // Look up card data from catalog if available
+        var catalogEntry = null;
+        if (typeof CARD_CATALOG !== 'undefined') {
+          for (var j = 0; j < CARD_CATALOG.length; j++) {
+            if (CARD_CATALOG[j].id === cardId) { catalogEntry = CARD_CATALOG[j]; break; }
+          }
+        }
+
+        await elxaOS.inventoryService.addItem('cards', {
+          cardId: cardId,
+          name: catalogEntry ? catalogEntry.name : cardId,
+          rarity: catalogEntry ? catalogEntry.rarity : 'common',
+          seriesId: catalogEntry ? (catalogEntry.series || null) : null,
+          quantity: count,
+          acquiredFrom: 'migrated-from-localStorage',
+          acquiredDate: new Date().toISOString().split('T')[0]
+        });
+      }
+
+      // Clear localStorage after successful migration
+      localStorage.removeItem(STORAGE_KEY);
+      console.log('Card collection migration complete!');
+    } catch (e) {
+      console.warn('Failed to migrate card collection:', e);
+    }
   }
 
-  function getBankBalance() {
-    if (!isBankAvailable()) return null;
-    var balances = window.bankSystem.getAccountBalances();
+  // ==========================================
+  // FINANCE INTEGRATION (for balance display)
+  // ==========================================
+
+  function isFinanceReady() {
+    return typeof elxaOS !== 'undefined' && elxaOS.financeService && elxaOS.financeService.isReady();
+  }
+
+  function getCheckingBalance() {
+    if (!isFinanceReady()) return null;
+    var balances = elxaOS.financeService.getAccountBalancesSync();
     return balances ? balances.checking : null;
   }
 
@@ -71,15 +166,15 @@
     var el = document.getElementById('sceBalanceDisplay');
     if (!el) return;
 
-    if (isBankAvailable()) {
-      var balance = getBankBalance();
+    if (isFinanceReady()) {
+      var balance = getCheckingBalance();
       if (balance !== null) {
         el.innerHTML = 'Balance: <strong>$' + balance.toFixed(2) + ' snakes</strong>';
       } else {
         el.innerHTML = 'Balance: <strong>\u2014</strong>';
       }
     } else {
-      el.innerHTML = '<span class="sce-balance-warning">Log in to your bank to purchase packs</span>';
+      el.innerHTML = '<span class="sce-balance-warning">Log in to view your balance</span>';
     }
   }
 
@@ -282,8 +377,8 @@
     }
   }
 
-  function collectCards() {
-    addCardsToCollection(currentPackCards);
+  async function collectCards() {
+    await addCardsToCollection(currentPackCards);
     currentPackCards = [];
     revealedCount = 0;
 
@@ -502,5 +597,8 @@
 
   // Start when DOM is ready
   init();
+
+  // Run localStorage → inventoryService migration
+  migrateLocalStorageCards();
 
 })();

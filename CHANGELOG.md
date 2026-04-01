@@ -4,6 +4,732 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
+## ScaleStreet — Phase 7: Polish + World Integration
+
+### Bug Fixes
+- **`js/services/stock-service.js`**: Fixed `getUserState`/`setUserState` → `getState`/`setState` (registry API mismatch causing init errors)
+- **`assets/interwebs/scalestreet/styles.css`**: Fixed SVSE buy dialog z-index (200 → 1100) so trade overlay renders above detail overlay
+
+### `data/world-context.json` (UPDATED)
+- Added `scaleStreet` section: SVSE info, brokerage, 3 journalists (Reginald Hissington III, Viperia Fangsworth, Coby the Intern), sectors, notable stocks
+- Added `scalestreet.ex` and `ssj.ex` to approved websites
+
+### `js/services/context-builder.js` (UPDATED)
+- Added ScaleStreet/SVSE to `getWorldContext()` (journalists, notable stocks, newspaper)
+- Added `_getStockInfo()` — portfolio summary with holdings, value, and gain/loss for LLM context
+- Added `_getMarketHeadlines()` — last 3 news headlines so LLM characters can reference market events
+
+### `assets/interwebs/scalestreet/market.js` (UPDATED)
+- Sparklines upgraded: polylines → smooth bezier curves (cubic bezier control points) for both table and detail chart
+- Detail chart: polygon fill → SVG linearGradient (top-to-bottom fade), added current price dot indicator
+- Cross-links: news items in stock detail show "Read in SSJ" link for feature articles
+- Added `gotoSSJ()` navigation helper + event delegation handler
+
+### `assets/interwebs/scalestreet/styles.css` (UPDATED)
+- Added `.svse-ssj-link` styles for cross-site navigation links
+
+## ScaleStreet — Phase 6: ScaleStreet Journal (ssj.ex)
+
+### `assets/interwebs/ssj/index.html` (NEW)
+- WSJ-inspired newspaper shell with masthead, ticker strip, front page, article detail page, market sidebar
+
+### `assets/interwebs/ssj/styles.css` (NEW)
+- Classic newspaper styling: serif headlines, cream background, column layout, newspaper rules/dividers
+- Market sidebar with top movers, snapshot stats, rotating fake ads
+- Article detail page with impact callout badges
+- Responsive ticker strip, impact badges with gain/loss coloring
+
+### `assets/interwebs/ssj/journal.js` (NEW)
+- IIFE pattern (`SSJournal`), reads from `stockService.getRecentNews()` + `STOCK_ARTICLES`
+- Front page: most recent feature article as main story, remaining news as headline blurbs
+- Article detail page for features with full body, byline, market impact callout
+- Market sidebar: top 6 movers by absolute %, aggregate market snapshot, random ad rotation
+- Ticker strip showing all 14 stocks with prices and change %
+- Cross-links: ticker badges link to SVSE stock detail, footer links to scalestreet.ex
+- Event delegation for all clicks (read-article, back-to-front, goto-svse, goto-stock)
+
+### `js/programs/website-registry.json` (UPDATED)
+- Added `ssj.ex` registry entry (The ScaleStreet Journal, Business category)
+
+## ScaleStreet — Phase 5: Portfolio + Dividends UI
+
+### `js/services/stock-service.js` (UPDATED)
+- Enhanced `_processDividends()` to emit per-stock dividend breakdown (ticker, company, shares, rate, payout) in `stocks.dividendPaid` event
+- Added `_checkBigMoves()` — detects held stocks with >15% monthly price change, emits `stocks.bigMove` event with full position details
+- Big move detection runs at end of each monthly simulation cycle
+
+### `js/services/finance-notifications.js` (UPDATED)
+- Added `stocks.dividendPaid` listener → `_onDividendPaid()`: notification center entry + email from "ScaleStreet Brokerage" (dividends@scalestreet.ex) with per-stock dividend summary
+- Added `stocks.bigMove` listener → `_onBigMove()`: toast notification + email from "ScaleStreet Brokerage — Alerts" (alerts@scalestreet.ex) with position details and investment guidance
+
+### `assets/interwebs/scalestreet/market.js` (UPDATED)
+- Rebuilt portfolio tab with 3-stat summary header: Total Value (with gain/loss), Invested, Monthly Dividends estimate
+- Holdings table now includes Div/Mo column showing estimated monthly dividend per holding
+- Added inline Sell button on each portfolio holding row (no need to go through detail view)
+- Ticker in portfolio rows is clickable to view stock detail
+
+### `assets/interwebs/scalestreet/styles.css` (UPDATED)
+- Portfolio summary panel (`.svse-portfolio-summary`, `.svse-portfolio-stat`) — 3-column stat layout with dark card background
+- Portfolio empty state styling (`.svse-portfolio-empty`)
+- Small sell button (`.svse-btn-sell-sm`) — red outline, hover fill
+- Dividend and action column styles (`.col-div`, `.col-action`)
+
+## ScaleStreet — Phase 4: Buy/Sell Flow
+
+### `assets/interwebs/scalestreet/index.html` (UPDATED)
+- Added trade dialog overlay (buy/sell modal with close button)
+
+### `assets/interwebs/scalestreet/styles.css` (UPDATED)
+- Trade dialog panel, title, subtitle, info rows
+- Quantity input with quick-set buttons (1, 5, 10, Max/All)
+- Total cost/proceeds display, gain/loss indicator
+- Confirm buy (green), confirm sell (red), cancel button styles
+- Error message and success state styling
+
+### `assets/interwebs/scalestreet/market.js` (UPDATED)
+- Buy/Sell buttons now enabled in stock detail view
+- `showBuyDialog(ticker)`: price per share, checking balance, max affordable shares, quantity input with live total
+- `showSellDialog(ticker)`: current price, shares owned, avg cost basis, gain/loss per share, quantity input with live proceeds + gain/loss preview. Empty-state message if no shares owned.
+- `updateTradeTotal()`: live recalculation on quantity change with validation (insufficient funds / exceeds holdings)
+- `executeBuy(ticker)`: async — withdraws from checking via financeService, acquires stock via inventoryService, shows success confirmation, refreshes all views
+- `executeSell(ticker)`: async — sells stock via inventoryService (returns gain/loss), deposits proceeds to checking, shows profit/loss result, refreshes all views
+- Quick quantity buttons (1, 5, 10, Max/All) for fast input
+- Event delegation wired for buy-stock, sell-stock, confirm-buy, confirm-sell, close-trade, set-qty actions
+- Trade overlay click-to-dismiss on background
+
+## ScaleStreet — Phase 3: SVSE Website (Trading Floor UI)
+
+### `assets/interwebs/scalestreet/index.html` (NEW)
+- NYSE-inspired HTML shell with header, scrolling ticker bar, market table, portfolio tab
+- Detail overlay for individual stock views
+- Filter bar (sector, sort order)
+
+### `assets/interwebs/scalestreet/styles.css` (NEW)
+- Dark navy/charcoal financial terminal aesthetic
+- Green (#3fb950) for gains, red (#f85149) for losses, gold (#d4a843) accents
+- Monospace font for all price data
+- Scrolling ticker animation, sparkline styling, responsive detail overlay
+
+### `assets/interwebs/scalestreet/market.js` (NEW)
+- IIFE pattern (`var ScaleStreet`), event delegation, sync bridge methods
+- Market tab: all 14 stocks in sortable table with price, change %, sector badges
+- Mini SVG sparklines from 12-month history (green/red based on overall trend)
+- Scrolling news ticker bar: stock prices + recent news headlines
+- Stock detail view: large chart with area fill, company info grid, recent news, description
+- Volatility and dividend info per stock, 12-month high/low range
+- Portfolio tab: total value, gain/loss, holdings table (reads from inventoryService)
+- Sector filter + sort (ticker, price, change)
+- Header stats: stock count, gainers, losers
+- Buy/sell buttons present but disabled (Phase 4)
+
+### `js/programs/website-registry.json` (UPDATED)
+- Added `scalestreet.ex` registry entry with keywords and description
+
+## ScaleStreet — Phase 2: News Events + Articles Pool
+
+### `js/services/stock-news.js` (NEW)
+- 61 news events across 4 categories: company (42), sector (8), market (5), wildcard (5)
+- Every company gets 3+ events (mix of positive/negative impacts)
+- SCAT gets 4 events (meme stock needs extra chaos)
+- Each event: id, headline, affects (ticker + impact multiplier), category, cooldown
+- Sector events hit multiple related tickers simultaneously
+- Market-wide events affect 5-9 stocks at once
+- Cooldowns range 5-12 months to prevent repetition
+
+### `js/services/stock-articles.js` (NEW)
+- Matching article for every event ID (61 total)
+- 49 blurbs (2-3 sentence summaries, self-contained)
+- 12 features (full articles with body paragraphs + bylines)
+- Three recurring journalists: Reginald Hissington III (serious finance), Viperia Fangsworth (tech/biotech), Coby the Intern (weird stories + SCAT)
+- Features spread across sectors: tech, auto, meme stocks, biotech, defense, fashion, food, market, wildcard
+
+### `index.html` (UPDATED)
+- Added script tags for `stock-news.js` and `stock-articles.js` between `stock-data.js` and `stock-service.js`
+- Load order: stock-data → stock-news → stock-articles → stock-service
+
+---
+
+## ScaleStreet — Phase 1: Stock Data + Simulation Service
+
+### `js/services/stock-data.js` (NEW)
+- 14 publicly traded Snakesian companies across 7 sectors (Tech, Finance, Real Estate, Auto, Consumer, Entertainment, Biotech, Telecom, Lifestyle, Defense)
+- Each stock: ticker, name, sector, starting price, volatility rating (Low/Medium/High/Extreme), monthly dividend rate
+- Dividend-paying stocks: ELXA, SNGL, FSB, MALD, PATO, FANG, BITE, COIL, HISS (8 of 14)
+- Meme stock: SCAT (Sussy Cat Entertainment, Extreme volatility, no dividend)
+
+### `js/services/stock-service.js` (NEW)
+- StockService class — stock market simulation engine
+- Prices update monthly on boot (same cadence as finance cycle), with trend drift + random volatility per stock
+- Price floor at $1.00, 12-month price history per stock (for sparklines)
+- News event system ready for Phase 2 data (30% chance/month, cooldown tracking, sector-wide impacts)
+- Dividend processing: monthly payouts to checking for held dividend stocks
+- Sync getters for interwebs sites: `getCurrentPricesSync()`, `getStockDetail(ticker)`, `getPortfolioSync()`, `getTopMovers/Gainers/Losers()`
+- Portfolio enrichment from inventoryService with gain/loss and % calculations
+- LLM context helper: `getPortfolioSummary()`, `getTodaysHeadlines()`
+- Debug tools: `elxaOS.stockService.debug.prices()`, `.advanceMonth(n)`, `.setPrice(ticker, price)`, `.portfolio()`, `.news()`, `.triggerEvent(id)`, `.reset()`
+
+### `js/elxaos.js` (UPDATED)
+- Added `stockService` construction (after inventoryService)
+- Added `stockService.init()` at boot step 2.73 (after inventory, before context builder)
+
+### `index.html` (UPDATED)
+- Added `<script>` tags for `stock-data.js` and `stock-service.js` (after inventory-service.js)
+
+**User-Facing Highlights:**
+- Stock market engine running behind the scenes! 14 Snakesian companies with live price simulation. Website coming in Phase 3.
+
+## New CSS Wallpapers + Pattern Type Support
+
+### `js/services/theme-service.js` (UPDATED)
+- Added 4 new built-in wallpapers: Cotton Candy (pink-lavender-blue gradient), Midnight (near-black blue gradient), Spotlight (dark radial spotlight), Carbon Fiber (repeating dark woven pattern)
+- Added new `type: 'pattern'` wallpaper support in `applyWallpaper()` for CSS patterns that need `background-size` tiling. Pattern wallpapers use `value` for the background shorthand and `size` for background-size.
+- Carbon Fiber is the first pattern-type wallpaper, using repeating linear gradients with 20x20px tile size.
+
+**User-Facing Highlights:**
+- 4 new desktop wallpapers to choose from in Personalize! Cotton Candy, Midnight, Spotlight, and Carbon Fiber.
+
+## New Themes + Dark Theme Fix + Browser Fixes
+
+### `css/programs/browser.css` (UPDATED)
+- Fixed History/Favorites sidebar rendering as a proper sidebar instead of stacking on top of the page. Changed `.browser-content` from `flex-direction: column` to `flex-direction: row`.
+- Added `min-height: 0` and `flex-shrink: 0` to `.browser-sidebar` to prevent overflow and squishing.
+- Added `min-height: 0` to `.browser-page` for proper flex scrolling.
+- Themed Go button: now uses `var(--titlebarBg)` instead of hardcoded green (`#00aa00`).
+- Themed Clear History button: now uses `var(--menuHoverBg)` instead of hardcoded red (`#ff6666`).
+- Both hover states now use `filter: brightness(1.15)` for theme-agnostic lightening.
+
+### `js/services/theme-service.js` (UPDATED)
+- Added 6 new themes: Slate (neutral dark), Frost (silver-gray light), Rosé (dusty mauve light), Matcha (sage green + cream light), Mocha (warm brown dark), Dusk (muted plum dark)
+- Added 5 more themes: Studio (dark charcoal + teal accents), Coastal (sandy tan + sea green light), Aurora (dark + green-to-indigo gradient), Noire (jet black + amber accent), Neon Bloom (dark charcoal + hot pink accent)
+- Added `dark: true` property to all dark themes (Synthwave, Zune, Slate, Mocha, Dusk)
+- Fixed dark-theme CSS class detection: now checks `theme.dark` property instead of hardcoding `'zune'`. Synthwave was missing the dark-theme class entirely before this fix.
+- Dark theme preview now works correctly — previewing a dark theme applies the class, previewing a light theme removes it.
+
+## Personalize Dialog — WindowManager Migration & Layout Revamp
+
+### `js/services/theme-service.js` (UPDATED)
+- Migrated Personalize dialog from raw DOM `system-dialog` to `WindowManager.createWindow()`. Now draggable, minimizable, with taskbar entry — matches ElxaBooks and other modern windows.
+- Removed custom `dialog-header`/`dialog-close` (WindowManager provides these).
+- Removed footer "Close" button (redundant with titlebar X).
+- Updated all class names: `personalize-tabs`, `personalize-tab`, `personalize-content`, `personalize-panel`, `personalize-theme-grid`, `personalize-wp-grid`, `personalize-wp-controls`, `personalize-controls`.
+- `hideThemeDialog()` now uses `WindowManager.closeWindow()` with fallback cleanup.
+- Added `_personalizeWindowId` tracking and `window.closed` event listener cleanup.
+
+### `css/system/personalize.css` (REWRITTEN)
+- Complete rewrite with new class names matching JS changes.
+- Theme grid uses `auto-fill, minmax(90px, 1fr)` — gracefully scales from 5 to 50+ themes.
+- Wallpaper grid uses `auto-fill, minmax(75px, 1fr)` — same auto-scaling.
+- All buttons (Apply, Reset, Import, Browse, Change Password) now use `var(--buttonBg/HoverBg/ActiveBg)` instead of hardcoded green/red/orange gradients.
+- All text/borders use CSS variables throughout.
+
+### `css/system/dialogs.css` (UPDATED)
+- Removed old `.theme-dialog`, `.theme-tabs`, `.theme-tab`, `.theme-content`, `.tab-panel`, `.theme-controls` blocks — no longer needed.
+- Removed old responsive rules for `.theme-dialog`.
+
+## Secure Payment Modal — Theme Color Fix
+
+### `css/system/payment-system.css` (REWRITTEN)
+- Replaced all hardcoded text colors (`#000`, `#000080`, `#666`, `#333`, `#006600`) with `var(--menuText)` and `color-mix()` opacity blends.
+- Replaced hardcoded white backgrounds with `var(--menuBg)`.
+- Replaced hardcoded button states (`#d4d0c8`, `#b0b0b0`) with `var(--buttonHoverBg/ActiveBg)`.
+- Primary button and progress bar now use `var(--titlebarBg)` with brightness filter for states.
+- Security notice uses `color-mix(#ffcc00 20%, var(--windowBg))` instead of hardcoded `#ffffcc`.
+- Success message uses `color-mix(#00cc00 15%, var(--windowBg))` instead of hardcoded `#e6ffe6`.
+- Invalid input uses `color-mix(#ff4444 15%, var(--menuBg))` instead of hardcoded `#ffe6e6`.
+- Spinner/focus ring now use `var(--uiIconColor)`.
+- Added theme-aware styles for bank notice, payment methods, CC picker, download section, and error box (moved from injected JS `<style>` block).
+
+### `js/services/payment-system.js` (UPDATED)
+- Replaced inline error `style="background: #ffe6e6..."` with CSS class `.elxa-payment-error-box`.
+- Removed 198-line injected `<style>` block from `setupEventListeners()` — all styles now in `payment-system.css`.
+
+## Battery Center — WindowManager Migration & Theme Fix
+
+### `js/services/battery-service.js` (UPDATED)
+- Migrated Battery Center from raw DOM dialog (`document.body.appendChild`) to `WindowManager.createWindow()`. Now appears as a proper draggable, minimizable, focusable window with standard titlebar — matching ElxaBooks and other modern programs.
+- Added `_batteryWindowId` tracking for proper window lifecycle management.
+- Added `window.closed` event listener cleanup in `destroy()`.
+- Removed custom header/close button HTML (WindowManager provides these).
+- Removed bottom "Close" button (redundant with titlebar X).
+
+### `css/system/battery.css` (REWRITTEN)
+- Removed `.bdialog-container` fixed positioning and custom `.bdialog-header`/`.bdialog-close` styles (WindowManager handles window chrome now).
+- Replaced all hardcoded colors with CSS variables: `#000080` → `var(--menuText)`, `white` backgrounds → `var(--menuBg)`, `#666` → `var(--menuText)` with opacity, `#e6f3ff` active mode → `color-mix()` with `var(--titlebarBg)`.
+- Cell status colors (good/empty) now use `color-mix()` to blend semantic colors with theme background.
+- Kept semantic status colors (health good/ok/warn/bad, fill levels, power mode indicators) as fixed — these need to stay recognizable regardless of theme.
+- Shutdown overlay unchanged (full-screen black is intentional for all themes).
+
+### `css/desktop.css` (UPDATED)
+- Changed `.window-content` background from hardcoded `white` to `var(--windowBg)`. All programs already set their own backgrounds on their containers, so this was the last holdout preventing system dialogs from respecting themes.
+
+## Pato & Sons Auto — Phase 8: World Integration & Polish
+
+### `data/world-context.json` (UPDATED)
+- Added `patoAuto` section with dealership name, website, description, salespeople (Pato Sr., Pato Jr., Sal) with roles/personalities/catchphrases, and 5 vehicle tiers with price ranges and lease availability.
+- Added `pato.ex` to `approvedWebsites` list.
+
+### `js/services/context-builder.js` (UPDATED)
+- Added Pato & Sons Auto block to `getWorldContext()` — includes dealership description, salespeople summary, and vehicle tier names. Mirrors the Mallard Realty pattern.
+- Added `_getVehicleInfo()` private helper — reads vehicle inventory and generates context lines like "User is leasing a Rust Bucket from Pato & Sons Auto" or "User owns a Sidewinder outright."
+- `getUserContext()` now includes vehicle ownership info alongside property and employment context.
+
+### `assets/interwebs/pato-and-sons-auto/dealership.js` (UPDATED)
+- **renderTiers()**: Overhauled — now includes "Meet the Team" staff bio section with cards for Pato Sr., Pato Jr., and Sal (name, role, bio, catchphrase). Each tier card now shows insurance rate, depreciation rate, assigned salesperson, and a flavor review quote.
+- **getOwnedVehicles()**: Cleaned up debug console.log statements left over from caching debug session. Function is now clean.
+
+### `assets/interwebs/pato-and-sons-auto/styles.css` (UPDATED)
+- Added `.pato-staff-section`, `.pato-staff-grid`, `.pato-staff-card`, `.pato-staff-name`, `.pato-staff-role`, `.pato-staff-bio`, `.pato-staff-catchphrase` — staff bio card styling on the Tiers page.
+- Added `.pato-tier-review` — italic review quotes with warm accent border on tier cards.
+
+### Bug Fixes
+- Fixed `getOwnedVehicles()` — was calling nonexistent `getItemsByCategory('vehicles')`, now uses `getVehicles()`. (Fix from previous session, now verified working after cache resolution.)
+- `itemId` vs `id` field mismatch in `renderMyVehicles()` and `getVehicleOwnership()` — confirmed already fixed on disk. Code correctly uses `item.id`.
+- Removed leftover debug logging from `getOwnedVehicles()`.
+
+## Pato & Sons Auto — Phase 7: Sell Flow
+
+### `assets/interwebs/pato-and-sons-auto/dealership.js` (UPDATED)
+- **renderMyVehicles()**: Now shows current depreciated value (from inventory), depreciation % from purchase price, "Current Value" label, and a Sell button for owned/financed vehicles. Leased vehicles still show monthly lease rate and Return button.
+- **renderDetail()**: Owned/financed vehicles now show a "Sell Vehicle" button alongside the ownership badge.
+- **handleSell(vehicleId)**: Entry point for sell flow. Reads depreciated `currentValue` from inventory, looks up active auto loan via `getLoansSync()`, calculates net proceeds (currentValue - remainingBalance), then shows sell overlay.
+- **showSellOverlay()**: Confirmation dialog with vehicle valuation (purchase price vs current value), depreciation %, auto loan payoff section (if financed), net proceeds box (green if positive, red if underwater). Underwater detection: if net < 0, checks checking balance — blocks sale if user can't cover shortfall.
+- **confirmSell()**: Deposits sale price to checking → pays off auto loan via `payOffLoan()` (if financed) → removes vehicle via `loseVehicle('sold')` → shows sale ceremony → notification.
+- **showSaleCeremony()**: Ceremony overlay with financial summary (sale price, loan payoff, net deposited), profit/loss indicator, salesperson farewell quote.
+- **getSalespersonSellQuote()**: Per-salesperson farewell quotes (Pato Sr., Pato Jr., Sal).
+- **Event delegation**: Wired `sell-vehicle` action.
+- **Public API**: Added `handleSell`.
+
+### `assets/interwebs/pato-and-sons-auto/styles.css` (UPDATED)
+- Added `.pato-btn-sell` button styles (warm mustard, matches buy button).
+- Added `.pato-confirm-btn-sell` and `.pato-confirm-btn-disabled` confirm dialog button styles.
+- Added `.pato-my-vehicle-value-label`, `.pato-my-vehicle-depreciation` styles for My Vehicles tab.
+- Added `.pato-sell-*` styles: section labels, depreciation indicator, deduction text, net proceeds box (positive/negative variants).
+- Added `.pato-sale-*` ceremony styles: summary rows, total row, profit/loss indicators.
+- Added `.pato-ceremony-*.sale` variants: icon gradient, title color, border, message accent, button.
+
+## Pato & Sons Auto — Phase 6: Insurance + Depreciation (Finance Cycle)
+
+### `js/services/inventory-service.js` (UPDATED)
+- **acquireVehicle** now stores `tier`, `insuranceRate`, `depreciationRate`, and `insuranceMissed` fields on vehicle objects.
+- **getOwnedVehicles()**: Returns non-leased vehicles (subject to insurance/depreciation).
+- **getLeasedVehicles()**: Returns leased vehicles only.
+- **recordInsurancePayment(vehicleId, amount)**: Resets missed counter, tracks total paid.
+- **recordMissedInsurancePayment(vehicleId)**: Increments missed counter. At 3 consecutive misses, emits `inventory.vehicleImpounded` event and calls `loseVehicle()` with reason 'impounded'.
+- **applyDepreciation(vehicleId, newValue)**: Updates `currentValue` with 20% purchase price floor.
+
+### `js/services/finance-cycle.js` (UPDATED)
+- **Step 6.5 — Vehicle Insurance**: `_processVehicleInsurance(cycleMonth)` — iterates owned/financed vehicles, charges insurance based on current depreciated value × insuranceRate. Missed payments tracked per-vehicle with graduated credit score penalties (-5 first, -10 second, -25 impoundment). Emits `finance.paymentMissed` with type `vehicle-insurance`.
+- **Step 6.75 — Vehicle Depreciation**: `_processVehicleDepreciation(cycleMonth)` — applies compound depreciation to ALL vehicles (including leased). Formula: `currentValue * (1 - depreciationRate)`. Floor at 20% of purchase price.
+- **getMonthlyObligationsSync()** now includes vehicle insurance costs in the breakdown.
+- Step numbering updated: secured card graduation is now step 6.5b.
+
+### `assets/interwebs/pato-and-sons-auto/dealership.js` (UPDATED)
+- Both `acquireVehicle` calls (lease + buy) now pass `tier`, `insuranceRate`, `depreciationRate` fields.
+
+### `js/services/finance-notifications.js` (UPDATED)
+- **_onVehicleInsuranceMissed(data)**: Notification (warning/critical) + in-character emails from Snakesian Auto Insurance Authority. First notice (gentle reminder) and second notice (impoundment threat).
+- **_onVehicleImpounded(data)**: Critical notification + formal impoundment notice email.
+- New event listeners: `finance.paymentMissed` type `vehicle-insurance`, `inventory.vehicleImpounded`.
+
+## Pato & Sons Auto — Phase 5: Buy Flow (Auto Loan)
+
+### `assets/interwebs/pato-and-sons-auto/dealership.js` (UPDATED)
+- **Loan math helpers**: `calcMonthlyPayment(principal, annualRate, termMonths)`, `calcTotalInterest(principal, monthlyPayment, termMonths)`, `getAutoLoanApr(score)` — mirrors finance-loans.js APR calculation. `termLabel(months)` for display.
+- **Buy flow**: `handleBuy(vehicleId)` → ownership check → credit score eligibility (580+) → tier check (loan amount vs max for score) → active auto loan count check (max 3) → down payment check (10% from checking) → APR calculation → `showBuyOverlay()`.
+- **Buy overlay**: `showBuyOverlay(vehicle, downPayment, loanAmount, apr, balance)` — vehicle preview, "Auto Loan Application" section label, price/down payment/loan amount/APR breakdown, term selector buttons (1-5 years), dynamic payment preview (monthly amount, total interest, total cost), checking balance before/after, payment warning note. "Apply for Auto Loan" confirm button.
+- **Term selector**: `wireBuyTermSelector(loanAmount, apr, downPayment)` — click handler updates active button, recalculates monthly payment/interest/total cost, updates all display elements live.
+- **Confirm buy**: `confirmBuy(vehicleId)` — withdraws 10% down payment → `applyForLoan({ type: 'auto' })` → refunds down payment on denial → clawback loan disbursement (paid to dealership) → `acquireVehicle()` as 'financed' with loanId → purchase ceremony → notification → refresh views.
+- **Purchase ceremony**: `showPurchaseCeremony(vehicle, loanTerms)` — gold sparkles, seal icon with pulse animation, "It's Official! Title Transfer Complete", vehicle preview, deed document (date, vehicle name, loan terms breakdown: down payment, loan amount, monthly payment, APR, term), salesperson buy quote, "Take Her Home" button.
+- **Salesperson buy quotes**: `getSalespersonBuyQuote(vehicle)` — in-character purchase quotes from Pato Sr., Pato Jr., Sal.
+- **Detail view updated**: Buy button now active (removed disabled/coming-soon state). Wired to `data-action="buy"`.
+- **Event delegation updated**: Handles `data-action="buy"`.
+- **Public API updated**: Exposes `handleBuy`.
+- **State variable added**: `pendingBuyTermMonths` for term selector persistence.
+
+### `assets/interwebs/pato-and-sons-auto/styles.css` (UPDATED)
+- **Buy confirm button**: `.pato-confirm-btn-buy` — gold/amber gradient, white text.
+- **Buy overlay dialog**: `.pato-confirm-dialog-buy` max-width 500px. `.pato-buy-section-label` — gold accent with bottom border (matches "Auto Loan Application" header).
+- **Term selector**: `.pato-buy-term-section`, `.pato-buy-term-label`, `.pato-buy-term-options` flex row, `.pato-term-btn` buttons with hover/active states (gold active).
+- **Payment preview**: `.pato-buy-payment-preview` — cream background, gold border, large monthly amount display, interest/total cost breakdown row.
+- **Purchase ceremony**: `.pato-ceremony-purchase` title/subtitle colors, `.pato-ceremony-icon-wrap.purchase` gold gradient with pulse animation.
+- **Deed document**: `.pato-purchase-deed` — cream card with border, `.pato-deed-vehicle-name` large gold text, `.pato-deed-terms` term breakdown rows.
+- **Ceremony button**: `.pato-ceremony-btn.purchase` — gold gradient button.
+- **Financed badge**: `.pato-badge-financed` — gold background, white text.
+
+### User-Facing Highlights
+- Buy vehicles at Pato & Sons Auto! Apply for auto loans with down payment, term selection, and monthly payment preview.
+- Purchase ceremony with title transfer document and salesperson congratulations.
+
+---
+
+## Pato & Sons Auto — Phase 4: Lease Flow
+
+### `assets/interwebs/pato-and-sons-auto/dealership.js` (UPDATED)
+- **Lease flow**: `handleLease(vehicleId)` → balance check → confirmation dialog (vehicle preview, monthly cost, balance before/after, payment warning) → `confirmLease()` → creates recurring payment + withdraws first month from checking + acquires vehicle as 'leased' via inventoryService → keys handover ceremony overlay.
+- **Return vehicle flow**: `handleReturnVehicle(vehicleId)` → confirmation dialog (vehicle info, lease since date, warning) → `confirmReturnVehicle()` → calls `loseVehicle()` (auto-cancels lease payment) → return farewell ceremony overlay.
+- **Ceremony overlays**: `showKeysHandoverCeremony(vehicle)` — animated key icon with sparkles, vehicle preview, salesperson quote. `showReturnFarewell(vehicle, acquiredDate)` — subdued car-back icon, time-spent note, farewell message.
+- **Salesperson quotes**: `getSalespersonLeaseQuote(vehicle)` — returns in-character quote from Pato Sr., Pato Jr., or Sal.
+- **Confirm overlay system**: Generic `showConfirmOverlay({ title, body, confirmText, cancelText, confirmClass, onConfirm })` / `hideConfirmOverlay()` — reusable for Phase 5 buy flow.
+- **Toast helper**: `showToast(html)` — uses ElxaOS ui.showToast if available, inline fallback otherwise.
+- **Detail view updated**: Lease button now functional (no longer disabled/coming-soon) for tiers 1-3 vehicles. Buy button still disabled. Leased vehicles show "Return Vehicle" button in detail view.
+- **My Vehicles updated**: Leased vehicles show inline "Return" button.
+- **Event delegation updated**: Handles `data-action="lease"`, `data-action="return-vehicle"`, `data-confirm-action="confirm"`, `data-confirm-action="cancel"`. Ceremony dismiss now refreshes current view after closing.
+- **Public API updated**: Exposes `handleLease`, `handleReturnVehicle`.
+
+### `assets/interwebs/pato-and-sons-auto/styles.css` (UPDATED)
+- **Confirmation dialog styles**: Full component CSS — `.pato-confirm-btn` variants (lease/danger/cancel), `.pato-confirm-vehicle` preview card, `.pato-confirm-details` + `.pato-confirm-row` summary rows, `.pato-confirm-note` info/warning notes, `.pato-confirm-row-after` green balance-after row.
+- **Ceremony overlay styles**: `.pato-ceremony-icon-wrap` with pulse animation, `.pato-ceremony-vehicle` preview card, `.pato-ceremony-message` with salesperson quote, `.pato-ceremony-btn` variants (lease/return), `.pato-sparkle` animated particles (6 positions, staggered delays), `@keyframes sparkleFloat` + `@keyframes ceremonyPulse`.
+- **Return button**: `.pato-btn-return` styling for detail view and my vehicles tab.
+- **Toast fallback**: `.pato-toast` fixed positioning with slide-in animation.
+
+### `js/services/inventory-service.js` (UPDATED)
+- **`loseVehicle()` now cancels linked lease payment**: Before removing a vehicle, checks for `leasePaymentId` and calls `financeService.cancelRecurringPayment()`. Mirrors how `loseProperty()` cancels rent payments via `_cancelLinkedPayments()`.
+
+---
+
+## Pato & Sons Auto — Phase 3: Website Build
+
+### `assets/interwebs/pato-and-sons-auto/index.html` (NEW)
+- **Full site structure**: Banner, 3-tab navigation (Browse, Tiers, My Vehicles), vehicle grid, filter bar, detail overlay, confirmation dialog overlay, ceremony overlay, footer.
+- **Mirrors Mallard Realty architecture**: Same HTML pattern — banner + nav + tabs + overlay system.
+
+### `assets/interwebs/pato-and-sons-auto/styles.css` (NEW)
+- **Warm family-dealership styling**: Mustard/amber (#f5c542) + charcoal (#3a3330) + cream (#faf5eb) color scheme. Distinct from Mallard's teal.
+- **Full component CSS**: Nav tabs, filter bar, vehicle grid cards with hover lift, tier badge colors (5 tiers), availability badges, status badges, detail overlay with specs grid + features list + salesperson quote, confirmation dialog, ceremony overlay, tiers info cards, my vehicles horizontal cards, footer.
+- **Responsive grid**: `grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))` for vehicle cards.
+
+### `assets/interwebs/pato-and-sons-auto/dealership.js` (NEW)
+- **IIFE pattern** (`var PatoAuto`): Same architecture as Mallard's `realty.js`. Uses `var` for globals (interwebs re-execution safety).
+- **Browsing**: Vehicle grid with card rendering (image, name, year/type/mileage, price, tier + availability badges).
+- **Filtering**: By tier (5 options), price range (5 brackets in snakes), vehicle type (dynamically populated from data), sort (price asc/desc, newest, name A-Z).
+- **Detail view**: Full-screen overlay with vehicle image, specs grid (year, type, mileage, color, engine, insurance rate), features list, description, quirks, salesperson quote, lease/buy cost preview. Action buttons present but disabled (functional in Phases 4-5).
+- **Auto loan banner**: Shows user's credit score, auto loan tier, and max financing amount using sync finance bridge methods.
+- **Tiers info page**: All 5 tiers with price ranges, lease/buy availability, descriptions, and score qualification status (green check vs lock icon).
+- **My Vehicles tab**: Shows owned vehicles with image, name, type, ownership badge. Empty state with car-off icon.
+- **Event delegation**: Single click handler on `.pato-root` for nav tabs, card clicks, detail close, ceremony dismiss. Filter change listeners on all 4 dropdowns.
+- **Finance integration**: Uses `getCreditScoreSync()`, `getAccountBalancesSync()`, `getAutoLoanMaxForScore()` for reads. Reads inventory via `getItemsByCategory('vehicles')`.
+- **Public API**: Exposes renderGrid, renderMyVehicles, renderDetail, closeDetail, switchTab, helpers for future phase use.
+
+### `js/programs/website-registry.json` (UPDATED)
+- **Added `pato.ex` entry**: Title "Pato & Sons Auto — Quality Rides for Every Snake", path to index.html + styles.css, keywords include car/vehicle/dealership/auto loan/lease, category "Business".
+
+## Pato & Sons Auto — Phase 1: Finance Service Updates
+
+### `js/services/finance-loans.js` (UPDATED)
+- **`LOAN_TYPES.auto` updated**: Amount range expanded from [500, 5000] to [500, 300000]. Max active loans increased from 1 to 3. Term range extended from [12, 48] to [12, 60] months. Base APR lowered from 14 to 12.
+- **`AUTO_LOAN_TIERS` constant added**: 5 score-based tiers — Starter (580+, $5k), Standard (630+, $15k), Standard Plus (670+, $40k), Premium (720+, $100k), Elite (760+, $300k). Same pattern as `MORTGAGE_TIERS`.
+- **Auto branch added to `_calculateLoanTerms()`**: Uses `AUTO_LOAN_TIERS` for score-gated max amounts instead of linear interpolation. APR still scales linearly with score. Mirrors the mortgage branch exactly.
+- **`getAutoLoanMaxForScore()` helper added**: Returns max auto loan amount, tier label, APR, and all tiers for a given credit score. Used by Pato & Sons Auto dealership website to show affordability without a full application. Mirrors `getMortgageMaxForScore()`.
+
+## Phase 7 — Centralized Context Builder + World Context Enrichment
+
+### `js/services/context-builder.js` (NEW)
+- **Centralized LLM prompt context service**: Single source of truth for world/user context that both messenger and email consume. Purely string assembly — not an LLM service.
+- **`getWorldContext()`**: Builds narrative worldbuilding block dynamically from world-context.json. Covers Snakesia overview, ExWeb/internet, key characters with relationships, Mallard Realty (agents + neighborhoods), notable attractions, bank.
+- **`getUserContext()`**: Dynamic user info block. Only includes lines the user has actually unlocked — property ownership/rental (from inventoryService), employment (from employmentService), username/about (from messenger settings).
+- **`getFullContext()`**: Convenience method combining world + user blocks.
+- **`getApprovedSites()`**: Formatted approved websites list for email only.
+- **Graceful fallback**: If context builder isn't ready, both messenger and email fall back to their legacy inline context construction.
+- **Global access**: `elxaOS.contextBuilder`
+
+### `data/world-context.json` (UPDATED)
+- **Rita Marway age corrected**: 20 (was missing). Added interests and relationships.
+- **Relationships added** to all key characters: Mr. Snake-e (wife), Mrs. Snake-e (husband), Remi (sister), Rita (brother), Pushing Cat (hideout).
+- **Interests added** to Mr. Snake-e.
+- **6 neighborhoods added** to locations: Dusty Flats, Pine Hollow, Cloverfield, Downtown Snake Valley, Maple Heights, Serpentine Estates.
+- **2 attractions added**: Snakesia Aquarium, Snake Valley National Museum.
+- **mallardRealty section added**: agents with specialties/personalities, neighborhood list.
+- **approvedWebsites expanded**: Added mallard.ex, sssteam.ex, mrs-snake-e.garden.
+
+### `js/services/email-llm-service.js` (REFACTORED)
+- **`buildPrompt()` refactored**: Uses context builder for world/user/site context instead of manual inline construction.
+- **Character enrichment**: Prompt now includes role, age, interests, relationships (email now has parity with messenger).
+- **Graceful fallback**: Falls back to legacy if context builder unavailable.
+
+### `js/programs/messenger.js` (REFACTORED)
+- **`buildEnhancedPrompt()` refactored**: Uses context builder for world/user context instead of manual inline construction.
+- **Relationships now included** in character background section.
+
+### `js/elxaos.js` (EDITED)
+- **asyncInit step 2.75**: Initialize ContextBuilderService after inventory (2.7), before notification (2.8).
+
+### `index.html` (EDITED)
+- **Script tag added**: `context-builder.js` after `conversation-history.js`.
+
+---
+
+## Phase 6 — Mallard Realty Sell Flow + Property Appreciation
+
+### `assets/interwebs/mallard/realty.js` (REWRITTEN)
+- **Property appreciation system**: Per-neighborhood monthly rates (Dusty Flats 0.5%, Pine Hollow 0.8%, Cloverfield 1.0%, Downtown 1.2%, Maple Heights 1.5%, Serpentine Estates 2.0%). Compound growth capped at 200% of purchase price.
+- **Full sell flow**: Click Sell → property valuation overlay (purchase price, current market value, appreciation %, mortgage payoff if applicable, net proceeds) → confirmation → sale processing → sale ceremony overlay
+- **Sell overlay**: Shows property preview, valuation section with appreciation indicator, mortgage payoff deduction (if mortgaged), net proceeds box (green for profit, red for underwater). Warns if property is underwater and blocks sale if user can't cover the shortfall.
+- **`confirmSell()`**: Deposits sale price to checking → pays off active mortgage via `payOffLoan()` → removes property from inventory via `loseProperty('sold')` → sale ceremony → notification
+- **Sale ceremony overlay**: Green themed, cash-check icon, property preview, financial summary table (sale price, mortgage payoff, net deposited), profit/loss indicator, farewell message
+- **Underwater sale handling**: If mortgage balance exceeds property value, shows warning + checks checking balance can cover difference. Disables confirm button if user can't afford the shortfall.
+- **`isLoanActive()` helper**: Checks if a loan ID corresponds to an active loan. Used throughout to distinguish MORTGAGED (active loan) from OWNED (paid off) badges/labels.
+- **Updated browse grid badges**: Now shows separate MORTGAGED badge (amber) vs OWNED badge (gold) based on active loan status instead of just checking for loanId existence.
+- **Updated detail view**: Sell button enabled with current market value. Owned label correctly reflects mortgage status.
+- **Updated My Properties tab**: Shows current market value with appreciation percentage (green +% or red -%), enabled Sell button (was disabled "Coming Soon"), purchase price renamed to "Purchased".
+- **Appreciation helpers**: `calcMonthsOwned()`, `calcCurrentValue()`, `calcAppreciationPercent()` — compound appreciation from acquired date.
+
+### `assets/interwebs/mallard/styles.css` (APPENDED)
+- MORTGAGED badge (amber, distinct from gold OWNED badge)
+- Sell button styles (detail view + My Properties)
+- Appreciation labels in My Properties (green positive, red negative)
+- Sell overlay: section labels, appreciation indicator, mortgage deduction, net proceeds box (green/red variants), disabled confirm state
+- Sale ceremony: green theme (border, icon gradient, property preview, summary table, profit/loss indicator, button)
+
+---
+
+## Phase 5 — Mallard Realty Buy Flow (Mortgage + Deed Ceremony)
+
+### `assets/interwebs/mallard/realty.js` (REWRITTEN)
+- **Full buy flow**: Click Buy → eligibility checks (credit score, tier max, active mortgage count, down payment balance) → mortgage application overlay → confirm → purchase
+- **Mortgage application overlay**: Property preview, 5% down payment breakdown, loan amount, APR, interactive term selector (3/5/7/10 year toggle buttons), live monthly payment preview that updates on term change, total interest + total cost display, checking balance before/after
+- **`confirmBuy()`**: Withdraws 5% down payment → `applyForLoan({ type: 'mortgage' })` → claws back disbursement (loan money pays seller, not buyer) → `acquireProperty('mortgaged', { loanId })` → deed ceremony → notification
+- **Deed ceremony overlay**: Gold/parchment themed, official seal icon, property deed document text with date + address, property image, mortgage summary (down payment, loan amount, monthly payment, term + APR), agent congratulations quote
+- **`getMortgageApr()`**: Mirrors finance-loans.js APR calculation locally for the confirmation dialog
+- **Updated property card badges**: Now shows MORTGAGED badge for mortgaged properties (was just OWNED)
+- **Updated detail view**: Owned state now shows "Mortgaged — You Own This Property" with seal icon when loanId exists
+- **Refund on denial**: If mortgage application is denied after down payment withdrawal, automatically refunds the down payment
+- **Error handling**: Toast messages for every failure path (score too low, tier exceeded, max mortgages, insufficient funds)
+
+### `assets/interwebs/mallard/styles.css` (APPENDED)
+- Buy confirmation dialog (wider 420px variant)
+- Mortgage section label styling
+- Term selector toggle button row (flex, active state = teal)
+- Payment preview card (green tint, big monthly amount, interest/cost details)
+- Buy confirm button (teal gradient)
+- Deed ceremony overlay (gold/parchment theme: border, seal icon gradient, document section, summary rows, gold button)
+- Owned button state for detail view
+
+---
+
+## ElxaBooks NaN Bug Fixes + Mallard Realty Notification Integration
+
+### `js/programs/elxabooks.js` (UPDATED)
+- Fixed NaN on Monthly Obligations card: `getMonthlyObligationsSync()` returns an object, not a number — now reads `.totalMonthlyObligations`
+- Fixed undefined/NaN on Employment card: was calling `getEmploymentSummary()` (returns string) instead of `getEmploymentData()` (returns data object with `.position`, `.annualSalary`)
+
+### `assets/interwebs/mallard/realty.js` (UPDATED)
+- Added notification center entry on successful rent ("Welcome Home!" with `mdi-home-plus`)
+- Added notification center entry on move-out ("Moved Out" with `mdi-home-minus`)
+- Both use `toast: false` since ceremony overlays already provide visual feedback
+
+---
+
+## Serpentville Conservation Initiative — New Donation Site
+
+### `assets/interwebs/environmental-protection/index.html` (NEW)
+- Full donation website for the Serpentville Conservation Initiative (sci.ex)
+- Unique sidebar layout with vertical hero image (forest/stream scene)
+- 3 monthly donation tiers: Seedling (10 snakes), Guardian (30 snakes), Conservator (60 snakes)
+- Payment processing, recurring payments, inventory subscription tracking
+- Active supporter banner, cancel flow, welcome/farewell emails from Dr. Ivy Fernscale
+- Earth-tone design (forest greens, amber accents, cream backgrounds)
+
+### `assets/interwebs/environmental-protection/styles.css` (NEW)
+- Sidebar hero layout with sticky positioning and gradient overlay
+- Tier selection cards, confirm box, supporter note, active banner
+
+### `assets/interwebs/environmental-protection/sci-data.js` (NEW)
+- Global SCI_DATA object with 8 rotating monthly email messages
+- Conservation themes: reforestation, river cleanup, wildlife census, education, habitat protection, invasive species, trail maintenance, research findings
+
+### `js/services/finance-notifications.js` (UPDATED)
+- Added `sci-donation` linkedId check in `_onRecurringPaymentProcessed()`
+- Added `_handleSCIPayment()` method — monthly update emails with rotating messages, payment count tracking, annual Conservation Gala invitations for Conservator tier
+
+### `js/programs/website-registry.json` (UPDATED)
+- Added `sci.ex` entry pointing to environmental-protection site, category "Charity"
+
+### `index.html` (UPDATED)
+- Added `<script>` tag for `sci-data.js` (loaded after swf-data.js)
+
+## Museum & Aquarium — Ticket Purchasing System
+
+### `js/services/inventory-service.js` (UPDATED)
+- Added `'tickets'` to `INVENTORY_CATEGORIES` (now 7 categories)
+- Added ticket methods: `getTickets()`, `getValidTickets()`, `getTicketsByVenue(venue)`, `getGiftableTickets()`
+- Updated `getOwnershipSummary()` to include valid tickets grouped by venue in LLM context
+- Added `debug.addTicket(venue, type, price)` helper
+
+### `assets/interwebs/museum/index.html` (UPDATED)
+- Added "Buy Tickets" section in Visit area below hours/admission/location grid
+- 3 ticket types with quantity selectors (0-10): Adult ($20/snakes, $10 USD), Child ($10/snakes, $5 USD), Senior ($14/snakes, $7 USD)
+- `buyTickets()` — one-time `processPaymentSync`, creates individual ticket items in inventory
+- Live total calculation updates as quantities change
+- Confirmation email from Dr. Helena Cobrish with itemized order
+- Toast notification on purchase
+- Supporters see "Buy Gift Tickets" header with note about free admission
+- `checkSupporterTicketNote()` refreshes on init and after donation changes
+
+### `assets/interwebs/museum/styles.css` (UPDATED)
+- Added ticket purchase box styles: navy header, supporter note banner, ticket type rows, quantity selectors, total + purchase button footer
+
+### `assets/interwebs/aquarium/index.html` (UPDATED)
+- Same ticket system as museum with aquarium pricing: Adult ($24/snakes, $12 USD), Child ($14/snakes, $7 USD), Senior ($18/snakes, $9 USD)
+- Confirmation email from Dr. Marina Coralscale
+- All aquarium-prefixed IDs and class names
+
+### `assets/interwebs/aquarium/styles.css` (UPDATED)
+- Added ticket purchase box styles matching aquarium teal + coral theme
+
+### Ticket Inventory Item Structure
+- Category: `tickets`
+- Fields: `venue`, `venueShort` ('museum'|'aquarium'), `ticketType` ('adult'|'child'|'senior'), `ticketLabel`, `price` (USD), `purchaseDate`, `status` ('valid'), `giftable` (true)
+- Each ticket is an individual item for future gifting support
+
+---
+
+## Snake Valley Aquarium — Monthly Donation Site
+
+### `assets/interwebs/aquarium/index.html` (NEW)
+- Full aquarium website: header with nav, hero banner, about section, 6 exhibit cards with images, visit info (hours/admission/location), and 4-tier donation system
+- Uses `processPaymentSync()` for first payment, `addRecurringPayment()` with linkedId `aquarium-donation` for monthly charges
+- `addItem('subscriptions')` for ElxaBooks integration
+- 3-path email injection for welcome/farewell emails from Dr. Marina Coralscale
+- One donation at a time, with tier change support (silent cancel of old + new signup)
+- Cancel flow with ElxaUI confirm dialog
+- Tiers: Friend ($50/mo) / Explorer ($200/mo) / Guardian ($500/mo) / Benefactor ($1000/mo) in snakes
+- Tier amounts in USD internally: 25/100/250/500
+
+### `assets/interwebs/aquarium/styles.css` (NEW)
+- Deep teal + coral theme (#0e4d64 primary, #e87461 coral accent)
+- Exhibit cards with image headers, same flex column layout pattern as museum
+- Tier cards in 4-column grid, modal overlay for tier selection
+
+### `assets/interwebs/aquarium/images/` (user-created)
+- `shark tank.png`, `clownfish tank.png`, `jellyfish.png`, `penguins.png`, `kids petting starfish.png`, `starfish dry display.png`
+- `banner.png` in parent folder
+
+### `js/programs/website-registry.json` (UPDATED)
+- Added `aquarium.ex` entry with path, CSS, search keywords, category "Education"
+
+### `js/services/finance-notifications.js` (UPDATED)
+- Added `aquarium-donation` linkedId check in `_onRecurringPaymentProcessed()` before SWF handler
+- Added `_handleAquariumPayment()` method — tracks payment count, sends annual event invitations every 12 payments for Guardian (level 2) and Benefactor (level 3)
+- Guardian gets "Ocean Night Experience" invite (first Friday in May, smart casual)
+- Benefactor gets "Annual Benefactor's Gala Dinner" invite (second Saturday in September, formal) plus Ocean Night
+
+---
+
+## Employment Management — Step 3: Portal Manage Employment UI
+
+### Employment Service (`employment-service.js`)
+- Added `payFormat` field to employment data (default: `'snakes'`)
+- Added `setPayFormat(format)`, `getPayFormat()`, `formatPay(usdAmount)`
+- `payFormat` carried through `hire()`, `transfer()`, `_createDefault()`, and migration
+
+### Employee Portal HTML (`employee-portal.html`)
+- Replaced "Game Room" button with "My Job" button
+- Added My Job overlay: Current Position, Contact Supervisor, Pay Format, Internal Transfer, Resign
+
+### Employee Portal JS (`employee-portal.js`)
+- Added `ELXACORP_POSITIONS` lookup table (8 positions) and `MANAGER_EMAILS` mapping
+- Added methods: `openManageEmployment`, `emailSupervisor`, `updatePayFormat`, `requestTransfer`, `resignFromElxaCorp`
+- Transfer: confirm → update employment service → update localStorage → queue HR email → refresh UI
+- Resign: double-confirm → terminate → queue farewell email → clear data → logout
+- Removed `openGameRoom()`
+
+### Portal Styles (`portal-styles.css`)
+- My Job overlay styles: sections, position list, pay format radios, transfer buttons, danger zone
+
+---
+
+## Employment Management — Step 2: Transfer Method
+
+### Employment Service (`employment-service.js`)
+- Added `transfer(transferData)` method — internal position transfer within the same employer
+- Accepts `{ position, department, annualSalary, salaryDisplay, manager }`
+- Preserves: employeeId, hireDate, ytdEarnings, payHistory, lastPayday, payFrequency
+- Updates: position, department, annualSalary, salaryDisplay, manager
+- Emits `employment.transferred` event with both old and new position/salary data
+- Updated header comment to document the new event
+- Console-testable: `await elxaOS.employmentService.transfer({position: 'Cookie Quality Assurance Tester', department: 'Quality Assurance', annualSalary: 40000, salaryDisplay: '80,000 snakes per year', manager: 'Mrs. Snake-E'})`
+
+---
+
+## Employment Management — Step 1: Inquiry Safety Valve
+
+### Apply Page Rewrite (`index.html`)
+- Rewrote `checkEmploymentStatus()` to detect three states:
+  - **State 1 (Fresh)**: No applications, not employed — shows normal apply form
+  - **State 2 (Pending)**: Application submitted but not yet employed — hides form, shows application status with **"Inquire About Application"** button
+  - **State 3 (Employed)**: Already employed (checks employment service first, then localStorage profiles) — hides form, shows position/department/ID + portal link + "Didn't receive your credentials?" resend link
+- Employment service is checked first for State 3 (modern path), with localStorage profiles as fallback (legacy)
+- Added `inquireAboutApplication()` — calls `resendHiringEmail()`, shows success message with portal link
+- Added `resendCredentials()` — same resend but for State 3 users who lost their email
+
+### Job Integration (`elxacorp-job-integration.js`)
+- Added `resendHiringEmail()` — safety valve that finds the most recent application, re-bridges to employment service (in case original bridge failed), and re-sends the hiring email with credentials
+
+## Phase 6 Steps 3-4: ElxaCorp Job Integration + Employee Portal Migration
+
+### Step 3: ElxaCorp Job Integration (`elxacorp-job-integration.js`)
+- Added `_bridgeToEmploymentService()` — on hire, calls `elxaOS.employmentService.hire()` with parsed employment data (employeeId, position, department, annual salary, hire date, manager, pay frequency)
+- Added `_parseSalaryNumeric()` — extracts raw USD annual salary from position lookup table (same numbers as `calculateSalary()` but returns a number, not a display string)
+- Bridge call fires right after user profile creation, before confirmation emails are sent
+- Graceful degradation: if ElxaOS or employment service isn't available (e.g. portal loaded standalone), hire proceeds normally without OS registration
+- Converted all template literals to string concatenation throughout file to prevent `edit_file` dollar-sign stripping
+
+### Step 4: Employee Portal Migration (`employee-data.js`)
+- Added `_hasEmploymentService()` / `_hasFinanceService()` — sync checks for OS service availability
+- Added `_syncFromEmploymentService()` — on portal load, syncs payroll data (lastPayday, ytdEarnings, payHistory) from the employment service registry into the portal's local data for UI display
+- **Constructor**: checks for employment service first; if available, syncs from it instead of running legacy `processPaydays()`
+- **`processPaydays()`**: skips entirely when employment service is handling paychecks (prevents double-deposit)
+- **`depositToBank()`**: routes through `financeService._depositDirect()` when available; falls back to direct localStorage bank manipulation for legacy/standalone use
+- **`getPayPerPeriod()`**: delegates to employment service when available
+- **`getNextPayday()`**: delegates to employment service when available
+- **`getYTDEarnings()`**: reads from employment service when available
+- **`getBankAccountInfo()`**: reads from finance service when available
+- **`linkBank()`**: simplified response when finance service handles deposits
+- Time clock + tickets remain portal-managed in localStorage (portal-specific features)
+- Converted spread operators to `Object.assign()` and arrow functions to regular functions
+
+## ElxaBooks Pro — Financial Dashboard Expansion
+
+### Full Rewrite: `js/programs/elxabooks.js` + `css/programs/elxabooks.css`
+- **Window size**: 780x540 → 900x600
+- **8 views** (was 4): Dashboard, Accounts, Credit Cards, Loans, Subscriptions, Taxes, Bookkeeping, Reports
+- **Real finance integration**: Dashboard, Accounts, Cards, Loans, Taxes, and Reports now pull live data from `financeService`, `inventoryService`, and `employmentService`
+- **Dashboard**: Total balance across all accounts, credit score, monthly obligations, employment status, debt summary, recent transactions from financeService
+- **Accounts**: Checking/savings/trust balances + full transaction history from financeService
+- **Credit Cards**: Active cards with balance, limit, utilization bar, APR. Make payment button delegates to financeService
+- **Loans**: Active loans with progress bars, remaining balance, payment schedule. Extra payment button
+- **Subscriptions**: Shell UI ready for future money sinks. Shows active subs from inventoryService with cancel button
+- **Taxes**: Property tax obligations from inventoryService — value, rate, annual/monthly tax, missed payments warning
+- **Bookkeeping**: Existing manual transactions + invoices preserved, now under sub-tabs
+- **Reports**: Net worth (assets minus debt), recurring payments summary, plus original category breakdowns
+- **Currency**: All financeService amounts (stored in USD) converted to snakes (×2) for display via `snk()` helper
+- **Sidebar**: Section labels (Overview / Finance / Business) for navigation clarity
+- **CSS**: New styles for credit cards grid, loan cards, score banner, subscription list, tax cards, bookkeeping tabs, debt banner
+
+## Notification System (Steps 1-4)
+
+### Step 1: NotificationService Infrastructure (NEW)
+- **`js/services/notification-service.js`** — Full NotificationService class. Bell icon in system tray (between WiFi and clock), slide-out panel from right side, desktop toast popups, badge with unread count. Registry-backed per-user persistence. API: `addNotification()`, `markRead()`, `markAllRead()`, `dismissNotification()`, `clearAll()`, `getUnreadCount()`. Max 50 notifications. Toasts stack bottom-right (max 3 visible), auto-dismiss 5s (8s critical).
+- **`css/system/notifications.css`** — Panel (320px slide-out), notification items (unread/urgency highlights), dismiss on hover, toast popups (slide-in from right), badge (red dot with pulse animation).
+- **`index.html`** — Added bell icon to system tray, added script tags for notification-service.js and finance-notifications.js.
+- **`css/desktop.css`** — Added `@import url('system/notifications.css')`.
+- **`js/elxaos.js`** — Constructor + asyncInit wiring for NotificationService and FinanceNotificationService.
+
+### Step 2+3: Finance Notifications — Emails + Notification Entries (NEW)
+- **`js/services/finance-notifications.js`** — FinanceNotificationService: listens to finance/inventory events and sends both immersive in-character emails AND utilitarian notification center entries. Covers: credit card missed/frozen, loan missed/defaulted/paid off, property tax missed/foreclosure, rent missed/eviction, savings interest, credit score changes, monthly cycle summary. Uses ElxaCorp email injection pattern (live → localStorage → queue). Rental property cache for eviction emails (property already removed from inventory when event fires).
+
+### Step 4: Polish
+- **`css/system/notifications.css`** — Full theme compatibility pass:
+  - All hardcoded colors → CSS variables (`--menuText`, `--menuHoverText`, `--menuHoverBg`, `--windowBg`)
+  - Unread/urgency highlights use `color-mix()` for theme-adaptive tinting
+  - Toast `bottom` transition for smooth stacking animation when toasts are removed
+  - Toast hover shadow effect
+  - Dismiss button opacity states (idle → hover → active)
+  - Panel empty state, body text, timestamps all theme-aware via opacity layering
+- **`js/services/email-system.js`** — `processQueuedExternalEmails()` now processes BOTH `elxacorp-queued-emails` and `finance-queued-emails` queues. Finance emails that were queued during monthly cycle (because ElxaMail wasn't open) are now delivered on ElxaMail login/session restore.
+
+---
+
 ## Finance Service — Phase 2: Credit Card System
 
 ### Changes

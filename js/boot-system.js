@@ -19,7 +19,7 @@ class BootSystem {
             'Mouse: ElxaMouse Pro connected',
             '',
             'Press SHIFT + B to enter BIOS Setup',
-            'Press any other key to continue...',
+            'Press any key or click to continue...',
             '',
             'Starting ElxaOS...'
         ];
@@ -65,9 +65,26 @@ class BootSystem {
         }
     }
 
-    // Set up keyboard event listeners
+    // Set up keyboard and click event listeners
     setupEventListeners() {
         this.boundKeyHandler = this.handleKeyPress.bind(this);
+        this.boundClickHandler = this.handleBootClick.bind(this);
+    }
+
+    // Handle click on boot screen (same as pressing a key)
+    handleBootClick(event) {
+        if (!this.isBooting) return;
+        event.preventDefault();
+        this.bootKeyPressed = true;
+        this.continueBoot();
+    }
+
+    // Remove click listener from boot screen
+    removeBootClickListener() {
+        var bootScreen = document.getElementById('bootScreen');
+        if (bootScreen) {
+            bootScreen.removeEventListener('click', this.boundClickHandler);
+        }
     }
 
     // Handle keyboard input during boot
@@ -149,17 +166,19 @@ class BootSystem {
             // Create boot screen
             this.createBootScreen();
             
-            // Add keyboard listener
+            // Add keyboard and click listeners
             document.addEventListener('keydown', this.boundKeyHandler);
+            
+            var bootScreen = document.getElementById('bootScreen');
+            if (bootScreen) {
+                bootScreen.addEventListener('click', this.boundClickHandler);
+            }
             
             // Start displaying boot messages
             await this.displayBootMessages();
             
-            // If no key was pressed, continue with logo
-            if (!this.bootKeyPressed) {
-                await this.showElxaOSLogo();
-                this.completeBoot();
-            }
+            // Boot screen stays up until user clicks or presses a key
+            // The click/keypress handlers will call continueBoot()
         } catch (error) {
             console.error('❌ Error in boot sequence:', error);
             // Fallback to login screen
@@ -198,6 +217,7 @@ class BootSystem {
             <div class="boot-content">
                 <div class="boot-messages" id="bootMessages"></div>
                 <div class="boot-cursor">_</div>
+                <div class="boot-skip-prompt">Click or press any key to continue</div>
             </div>
         `;
         
@@ -226,10 +246,8 @@ class BootSystem {
             await this.sleep(delay);
         }
         
-        // Wait a bit longer for user input
-        if (!this.bootKeyPressed) {
-            await this.sleep(2000);
-        }
+        // Boot screen now waits for user interaction (click or keypress)
+        // No auto-advance — this guarantees a user gesture before the startup sound
     }
 
     // Show ElxaOS logo with startup sound
@@ -265,6 +283,7 @@ class BootSystem {
     // Continue boot sequence (without BIOS)
     async continueBoot() {
         document.removeEventListener('keydown', this.boundKeyHandler);
+        this.removeBootClickListener();
         await this.showElxaOSLogo();
         this.completeBoot();
     }
@@ -274,6 +293,7 @@ class BootSystem {
         console.log('✅ Boot sequence complete, checking for setup...');
         this.isBooting = false;
         document.removeEventListener('keydown', this.boundKeyHandler);
+        this.removeBootClickListener();
         
         // Remove boot screen
         const bootScreen = document.getElementById('bootScreen');
@@ -328,6 +348,7 @@ class BootSystem {
     enterBios() {
         this.biosAccessed = true;
         document.removeEventListener('keydown', this.boundKeyHandler);
+        this.removeBootClickListener();
         
         // Remove boot screen
         const bootScreen = document.getElementById('bootScreen');

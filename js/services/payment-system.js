@@ -88,11 +88,7 @@ window.ElxaMockPayment = class ElxaMockPayment {
 
     // Create the payment dialog HTML
     createPaymentDialog() {
-        // Check if bank system is available and user is logged in
-        const bankAvailable = typeof window.bankSystem !== 'undefined';
-        const bankLoggedIn = bankAvailable && window.bankSystem.isLoggedIn;
-
-        // Check for credit cards from finance service
+        // Check if finance service is ready (means user is logged into ElxaOS)
         const financeReady = typeof elxaOS !== 'undefined' && elxaOS.financeService && elxaOS.financeService.isReady();
         const creditCards = financeReady ? elxaOS.financeService.getCreditCardsSync().filter(c => c.status === 'active') : [];
         const hasCreditCards = creditCards.length > 0;
@@ -104,11 +100,11 @@ window.ElxaMockPayment = class ElxaMockPayment {
         let methodOptions = '';
         let defaultMethod = 'card'; // fake card is always the fallback default
 
-        // Option 1: Bank account (debit)
-        if (bankLoggedIn) {
+        // Option 1: Bank account (debit) — uses finance service directly
+        if (financeReady) {
             const targetAccount = this.currentOrder.preferredAccount;
-            const balances = window.bankSystem.getAccountBalances();
-            const fundsCheck = window.bankSystem.checkFunds(this.currentOrder.priceValue, targetAccount);
+            const balances = elxaOS.financeService.getAccountBalancesSync();
+            const fundsCheck = elxaOS.financeService.checkFundsSync(this.currentOrder.priceValue, targetAccount);
             
             let accountDisplayName = 'Checking Account';
             let accountIcon = '🏛️';
@@ -142,16 +138,6 @@ window.ElxaMockPayment = class ElxaMockPayment {
                     <small>Pay from ${accountDisplayName} — $${balances[targetAccount].toFixed(2)} available</small>
                 </label>
             `;
-        } else if (bankAvailable) {
-            bankNotice = `
-                <div class="elxa-payment-bank-notice login-required">
-                    <div class="elxa-payment-bank-title">🏛️ First Snakesian Bank</div>
-                    <div class="elxa-payment-bank-message">
-                        <a href="#" onclick="elxaMockPayment.openBankLogin()">Log in to your bank account</a> 
-                        to pay ${this.currentOrder.preferredAccount === 'trust' ? 'from your Trust Account' : 'directly from your account'}!
-                    </div>
-                </div>
-            `;
         }
 
         // Option 2: Credit card (from finance service)
@@ -184,7 +170,7 @@ window.ElxaMockPayment = class ElxaMockPayment {
             <label class="elxa-payment-method-option">
                 <input type="radio" name="paymentMethod" value="card" ${fakeChecked}>
                 <span>⌨️ Enter Card Info</span>
-                <small>Type in any card details${hasCreditCards || bankLoggedIn ? '' : ' (just make something up!)'}</small>
+                <small>Type in any card details${hasCreditCards || financeReady ? '' : ' (just make something up!)'}</small>
             </label>
         `;
 
@@ -481,9 +467,15 @@ window.ElxaMockPayment = class ElxaMockPayment {
             paymentData.email = 'customer@snakesia.ex';
         }
         
-        // --- Bank (debit) payment ---
-        if (paymentMethod === 'bank' && typeof window.bankSystem !== 'undefined' && window.bankSystem.isLoggedIn) {
-            console.log(`🏛️ Processing bank payment from ${this.currentOrder.preferredAccount} account...`);
+        // --- Bank (debit) payment — routes through finance service directly ---
+        if (paymentMethod === 'bank') {
+            const financeReady = typeof elxaOS !== 'undefined' && elxaOS.financeService && elxaOS.financeService.isReady();
+            if (!financeReady) {
+                this.showPaymentError('Finance service not available.');
+                return;
+            }
+
+            console.log(`🏛️ Processing debit payment from ${this.currentOrder.preferredAccount} account...`);
             
             // Prepare description with trust authorization if needed
             let description = `${this.currentOrder.productName} - ${this.currentOrder.orderNumber}`;
@@ -491,26 +483,32 @@ window.ElxaMockPayment = class ElxaMockPayment {
                 description = '[TRUST_AUTHORIZED] ' + description;
             }
             
-            // Attempt bank payment with specified account
-            const bankResult = window.bankSystem.processPayment(
+            // Process payment through finance service
+            const debitResult = elxaOS.financeService.processPaymentSync(
                 this.currentOrder.priceValue, 
                 description,
                 this.currentOrder.preferredAccount
             );
             
-            if (!bankResult.success) {
-                // Bank payment failed
-                console.log('❌ Bank payment failed:', bankResult.message);
-                this.showPaymentError(bankResult.message);
+            if (!debitResult.success) {
+                console.log('❌ Debit payment failed:', debitResult.message);
+                this.showPaymentError(debitResult.message);
                 return;
             }
             
-            // Bank payment successful
-            console.log(`✅ Bank payment successful from ${bankResult.accountUsed} account`);
+            // Get user info from registry for receipt
+            var username = (elxaOS.registry && elxaOS.registry.getCurrentUsername()) || 'customer';
+            var displayName = username;
+            try {
+                var cached = elxaOS.registry._profileCache;
+                if (cached && cached.displayName) displayName = cached.displayName;
+            } catch (_) {}
+            
+            console.log(`✅ Debit payment successful from ${this.currentOrder.preferredAccount} account`);
             paymentData.paymentMethod = 'bank';
-            paymentData.accountUsed = bankResult.accountUsed;
-            paymentData.cardName = window.bankSystem.currentUser.firstName + ' ' + window.bankSystem.currentUser.lastName;
-            paymentData.email = `${window.bankSystem.currentUser.username}@snakesia.ex`; // Generate email
+            paymentData.accountUsed = this.currentOrder.preferredAccount;
+            paymentData.cardName = displayName;
+            paymentData.email = `${username}@snakesia.ex`;
         }
         
         // Show processing state
@@ -534,10 +532,10 @@ window.ElxaMockPayment = class ElxaMockPayment {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'elxa-payment-error';
         errorDiv.innerHTML = `
-            <div style="background: #ffe6e6; border: 1px solid #ff6b6b; color: #cc0000; padding: 12px; margin: 15px 0; border-radius: 3px;">
+            <div class="elxa-payment-error-box">
                 <strong>Payment Failed:</strong> ${message}
                 <br><br>
-                <button onclick="this.parentElement.parentElement.remove()" style="background: #ff6b6b; color: white; border: none; padding: 4px 8px; border-radius: 2px; cursor: pointer; font-size: 10px;">
+                <button class="elxa-payment-error-dismiss" onclick="this.parentElement.parentElement.remove()">
                     Dismiss
                 </button>
             </div>
@@ -606,8 +604,11 @@ window.ElxaMockPayment = class ElxaMockPayment {
         } else if (this.currentOrder.isCardPurchase) {
             // For Snakesian Card Exchange purchases - no download, triggers pack opening
             successContent = this.buildCardPurchaseSuccessContent(paymentData, paymentMethodText);
+        } else if (!this.currentOrder.installerData) {
+            // Purchase-only (e.g. Sssteam handles install separately)
+            successContent = this.buildPurchaseOnlySuccessContent(paymentData, paymentMethodText);
         } else {
-            // For game purchases - include download section
+            // For game purchases with installer data - include download section
             successContent = this.buildGameSuccessContent(paymentData, paymentMethodText);
         }
         
@@ -742,6 +743,50 @@ window.ElxaMockPayment = class ElxaMockPayment {
                 <div class="elxa-payment-success-message">
                     <p>🃏 Your <strong>${packName}</strong> is ready to open!</p>
                     <p>This window will close automatically...</p>
+                </div>
+                
+                <button class="elxa-payment-btn elxa-payment-btn-primary" onclick="elxaMockPayment.closePaymentDialog()">
+                    Close
+                </button>
+            </div>
+        `;
+    }
+
+    // Build success content for purchase-only (no download — store handles install)
+    buildPurchaseOnlySuccessContent(paymentData, paymentMethodText) {
+        return `
+            <div class="elxa-payment-success-content">
+                <div class="elxa-payment-success-icon">✅</div>
+                <h2>Payment Successful!</h2>
+                <p>Thank you for your purchase, ${paymentData.cardName}!</p>
+                
+                <div class="elxa-payment-receipt">
+                    <h3>📧 Receipt</h3>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Product:</span>
+                        <span>${this.currentOrder.productName}</span>
+                    </div>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Amount:</span>
+                        <span>${this.currentOrder.price}</span>
+                    </div>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Payment Method:</span>
+                        <span>${paymentMethodText}</span>
+                    </div>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Order #:</span>
+                        <span>${this.currentOrder.orderNumber}</span>
+                    </div>
+                    <div class="elxa-payment-receipt-line">
+                        <span>Date:</span>
+                        <span>${this.currentOrder.timestamp}</span>
+                    </div>
+                </div>
+                
+                <div class="elxa-payment-success-message">
+                    <p>🎮 Your purchase is complete!</p>
+                    <p>Head to your <strong>Library</strong> to install your new game.</p>
                 </div>
                 
                 <button class="elxa-payment-btn elxa-payment-btn-primary" onclick="elxaMockPayment.closePaymentDialog()">
@@ -946,204 +991,7 @@ window.ElxaMockPayment = class ElxaMockPayment {
             }
         });
 
-        // Add CSS for new elements
-        if (!document.querySelector('#elxa-payment-bank-styles')) {
-            const style = document.createElement('style');
-            style.id = 'elxa-payment-bank-styles';
-            style.textContent = `
-                .elxa-payment-bank-notice {
-                    margin: 15px 0;
-                    padding: 12px;
-                    border-radius: 6px;
-                    font-size: 11px;
-                }
-                
-                .elxa-payment-bank-notice.sufficient {
-                    background: #e8f5e8;
-                    border: 2px solid #4CAF50;
-                }
-                
-                .elxa-payment-bank-notice.insufficient {
-                    background: #ffe6e6;
-                    border: 2px solid #f44336;
-                }
-                
-                .elxa-payment-bank-notice.login-required {
-                    background: #fff8dc;
-                    border: 2px solid #daa520;
-                }
-                
-                .elxa-payment-bank-title {
-                    font-weight: bold;
-                    font-size: 12px;
-                    margin-bottom: 5px;
-                }
-                
-                .elxa-payment-bank-balance {
-                    font-weight: bold;
-                    font-size: 13px;
-                }
-                
-                .elxa-payment-sufficient {
-                    color: #2e7d32;
-                    font-weight: bold;
-                }
-                
-                .elxa-payment-insufficient {
-                    color: #d32f2f;
-                    font-weight: bold;
-                }
-                
-                .elxa-payment-trust-notice {
-                    color: #6a4c93;
-                    font-weight: bold;
-                    margin-top: 5px;
-                    font-size: 10px;
-                }
-                
-                .elxa-payment-trust-success {
-                    color: #6a4c93;
-                    font-weight: bold;
-                    font-size: 12px;
-                }
-                
-                .elxa-payment-bank-message a {
-                    color: #1976d2;
-                    text-decoration: underline;
-                    cursor: pointer;
-                }
-                
-                .elxa-payment-method-options {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                }
-                
-                .elxa-payment-method-option {
-                    display: flex;
-                    align-items: flex-start;
-                    padding: 10px;
-                    border: 2px solid #e0e0e0;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                }
-                
-                .elxa-payment-method-option:hover {
-                    border-color: #4a90e2;
-                    background: #f8f9fa;
-                }
-                
-                .elxa-payment-method-option input[type="radio"] {
-                    margin-right: 10px;
-                    margin-top: 2px;
-                }
-                
-                .elxa-payment-method-option span {
-                    font-weight: bold;
-                    display: block;
-                    margin-bottom: 2px;
-                }
-                
-                .elxa-payment-method-option small {
-                    color: #666;
-                    font-size: 10px;
-                    display: block;
-                }
-                
-                .elxa-payment-method-option input[type="radio"]:disabled + span {
-                    color: #999;
-                }
-                
-                .elxa-payment-method-option:has(input:disabled) {
-                    opacity: 0.6;
-                    cursor: not-allowed;
-                }
-                
-                .elxa-payment-cc-picker {
-                    margin: -5px 0 10px 30px;
-                    padding: 8px;
-                    background: #f0f4ff;
-                    border: 1px solid #c0cfe0;
-                    border-radius: 4px;
-                }
-                
-                .elxa-payment-cc-select {
-                    width: 100%;
-                    padding: 6px 8px;
-                    border: 1px solid #bbb;
-                    border-radius: 3px;
-                    font-size: 11px;
-                    background: white;
-                    cursor: pointer;
-                }
-                
-                .elxa-payment-download-section {
-                    margin: 20px 0;
-                    padding: 15px;
-                    background: #f0f8ff;
-                    border: 2px solid #4CAF50;
-                    border-radius: 8px;
-                    text-align: center;
-                }
-                
-                .elxa-payment-btn-download {
-                    background: linear-gradient(to bottom, #4CAF50, #45a049);
-                    border: 2px outset #4CAF50;
-                    color: white;
-                    padding: 12px 24px;
-                    font-size: 14px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    border-radius: 6px;
-                    margin-bottom: 8px;
-                    display: block;
-                    width: 100%;
-                    transition: all 0.2s ease;
-                }
-                
-                .elxa-payment-btn-download:hover {
-                    background: linear-gradient(to bottom, #5cbf60, #4CAF50);
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                }
-                
-                .elxa-payment-btn-download:active {
-                    border: 2px inset #4CAF50;
-                    transform: translateY(0);
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-                
-                .elxa-payment-download-info {
-                    color: #666;
-                    font-size: 12px;
-                }
-                
-                .elxa-payment-download-success {
-                    padding: 15px;
-                    background: #e8f5e8;
-                    border: 2px solid #4CAF50;
-                    border-radius: 8px;
-                    text-align: center;
-                }
-                
-                .elxa-payment-download-success .elxa-payment-success-icon {
-                    font-size: 32px;
-                    margin-bottom: 10px;
-                }
-                
-                .elxa-payment-download-success h4 {
-                    color: #2e7d32;
-                    margin: 0 0 10px 0;
-                }
-                
-                .elxa-payment-download-success p {
-                    margin: 5px 0;
-                    font-size: 13px;
-                }
-            `;
-            document.head.appendChild(style);
-        }
+        // Bank/method/download styles now live in payment-system.css (theme-aware)
     }
 }; // end class ElxaMockPayment
 } // end if (typeof ElxaMockPayment === 'undefined')

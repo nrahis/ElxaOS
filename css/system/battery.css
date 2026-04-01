@@ -1,82 +1,26 @@
 /* =================================
-   FRESH BATTERY DIALOG STYLES
-   Clean implementation with unique names
+   BATTERY DIALOG STYLES
+   Themed — uses WindowManager for window chrome
 ================================= */
 
-.bdialog-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 550px;
-    background: var(--windowBg, #c0c0c0);
-    border: 2px outset var(--windowBorder, #808080);
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    font-family: 'MS Sans Serif', sans-serif;
-    font-size: 11px;
-}
-
-.bdialog-header {
-    background: var(--titlebarBg, #008080);
-    color: var(--titlebarText, white);
-    padding: 2px 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    font-size: 11px;
-    flex-shrink: 0;
-}
-
-.bdialog-title {
-    flex: 1;
-}
-
-.bdialog-close {
-    width: 16px;
-    height: 14px;
-    background: var(--buttonBg, #c0c0c0);
-    border: 1px outset var(--buttonBorder, #808080);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 9px;
-    font-weight: bold;
-    color: black;
-}
-
-.bdialog-close:hover {
-    background: var(--buttonHoverBg, #d4d0c8);
-}
-
-.bdialog-close:active {
-    border: 1px inset var(--buttonBorder, #808080);
-}
-
 /* Prevent icon spans from stealing clicks */
-.bdialog-container .mdi,
+.bdialog-body .mdi,
 .bdialog-shutdown-overlay .mdi {
     pointer-events: none;
 }
 
 .bdialog-body {
-    flex: 1;
     display: flex;
     flex-direction: column;
     padding: 12px;
     gap: 12px;
     overflow: hidden;
-    background: var(--windowBg, #c0c0c0);
+    height: 100%;
 }
 
 /* Warning Message */
 .bdialog-warning {
-    background: #ffe6e6;
+    background: color-mix(in srgb, var(--windowBg, #c0c0c0) 70%, #ff4444 30%);
     border: 2px solid #ff4444;
     padding: 10px;
     border-radius: 4px;
@@ -106,6 +50,7 @@
 
 .bdialog-icon {
     font-size: 40px;
+    color: var(--menuText, #333);
 }
 
 .bdialog-icon .mdi {
@@ -115,13 +60,13 @@
 .bdialog-percentage {
     font-size: 18px;
     font-weight: bold;
-    color: #000080;
+    color: var(--menuText, #333);
 }
 
 .bdialog-level-bar {
     width: 80px;
     height: 12px;
-    background: white;
+    background: var(--menuBg, white);
     border: 1px inset var(--windowBorder, #808080);
     border-radius: 2px;
     overflow: hidden;
@@ -143,9 +88,10 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 8px;
-    background: white;
+    background: var(--menuBg, white);
     border: 1px inset var(--windowBorder, #808080);
     font-size: 10px;
+    color: var(--menuText, #333);
 }
 
 .bdialog-stat-label {
@@ -166,12 +112,12 @@
 .bdialog-tab {
     padding: 6px 16px;
     background: var(--buttonBg, #c0c0c0);
-    border: 1px outset var(--buttonBorder, #808080);
+    border: 1px outset var(--windowBorder, #808080);
     border-bottom: none;
     cursor: pointer;
     font-size: 10px;
     font-weight: bold;
-    color: black;
+    color: var(--menuText, #333);
     position: relative;
 }
 
@@ -181,7 +127,7 @@
 
 .bdialog-tab-active {
     background: var(--windowBg, #c0c0c0);
-    border: 1px inset var(--buttonBorder, #808080);
+    border: 1px inset var(--windowBorder, #808080);
     border-bottom: 1px solid var(--windowBg, #c0c0c0);
     margin-bottom: -1px;
     z-index: 1;
@@ -195,6 +141,7 @@
     background: var(--windowBg, #c0c0c0);
     position: relative;
     overflow: hidden;
+    min-height: 0;
 }
 
 .bdialog-panel {
@@ -214,6 +161,22 @@
     display: flex;
 }
 
+/* Themed Scrollbar */
+.bdialog-panel::-webkit-scrollbar {
+    width: 16px;
+}
+.bdialog-panel::-webkit-scrollbar-track {
+    background: var(--windowBg, #c0c0c0);
+    border: 1px inset var(--windowBorder, #c0c0c0);
+}
+.bdialog-panel::-webkit-scrollbar-thumb {
+    background: var(--buttonBg, #c0c0c0);
+    border: 1px outset var(--windowBorder, #c0c0c0);
+}
+.bdialog-panel::-webkit-scrollbar-thumb:hover {
+    background: var(--buttonHoverBg, #d4d0c8);
+}
+
 /* Details Panel */
 .bdialog-details-grid {
     display: grid;
@@ -225,9 +188,10 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 8px;
-    background: white;
+    background: var(--menuBg, white);
     border: 1px inset var(--windowBorder, #808080);
     font-size: 9px;
+    color: var(--menuText, #333);
 }
 
 .bdialog-detail-label {
@@ -235,7 +199,7 @@
 }
 
 .bdialog-detail-value {
-    color: #000080;
+    color: var(--menuText, #333);
     font-weight: bold;
 }
 
@@ -247,6 +211,7 @@
     font-weight: bold;
     font-size: 10px;
     margin-bottom: 8px;
+    color: var(--menuText, #333);
 }
 
 .bdialog-cells-grid {
@@ -260,16 +225,17 @@
     border: 1px solid var(--windowBorder, #808080);
     text-align: center;
     font-size: 8px;
-    background: white;
+    background: var(--menuBg, white);
+    color: var(--menuText, #333);
 }
 
 .bdialog-cell-good {
-    background: #e6ffe6;
+    background: color-mix(in srgb, var(--menuBg, white) 70%, #00cc00 30%);
     border-color: #00aa00;
 }
 
 .bdialog-cell-empty {
-    background: #ffe6e6;
+    background: color-mix(in srgb, var(--menuBg, white) 70%, #cc0000 30%);
     border-color: #aa0000;
 }
 
@@ -278,7 +244,7 @@
 }
 
 .bdialog-cell-voltage {
-    color: #000080;
+    color: var(--menuText, #333);
     margin-top: 2px;
 }
 
@@ -293,7 +259,7 @@
 
 .bdialog-section-title {
     margin: 0 0 8px 0;
-    color: #000080;
+    color: var(--menuText, #333);
     font-size: 11px;
     font-weight: bold;
 }
@@ -311,6 +277,7 @@
     text-align: center;
     cursor: pointer;
     background: var(--buttonBg, #c0c0c0);
+    color: var(--menuText, #333);
     transition: all 0.2s ease;
 }
 
@@ -319,9 +286,9 @@
 }
 
 .bdialog-mode-active {
-    border-color: #000080;
-    background: #e6f3ff;
-    box-shadow: inset 0 0 4px rgba(0, 0, 128, 0.3);
+    border-color: var(--titlebarBg, #0000ff);
+    background: color-mix(in srgb, var(--windowBg, #c0c0c0) 70%, var(--titlebarBg, #0000ff) 30%);
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
 }
 
 .bdialog-mode-icon {
@@ -340,7 +307,8 @@
 
 .bdialog-mode-desc {
     font-size: 8px;
-    color: #666;
+    color: var(--menuText, #666);
+    opacity: 0.7;
     margin-top: 2px;
 }
 
@@ -351,6 +319,7 @@
     padding: 4px 0;
     font-size: 9px;
     cursor: pointer;
+    color: var(--menuText, #333);
 }
 
 /* History Panel */
@@ -364,14 +333,15 @@
     flex: 1;
     text-align: center;
     padding: 12px;
-    background: white;
+    background: var(--menuBg, white);
     border: 1px inset var(--windowBorder, #808080);
+    color: var(--menuText, #333);
 }
 
 .bdialog-stat-number {
     font-size: 18px;
     font-weight: bold;
-    color: #000080;
+    color: var(--menuText, #333);
 }
 
 .bdialog-stat-card-label {
@@ -385,7 +355,7 @@
 
 .bdialog-tips-title {
     margin: 0 0 8px 0;
-    color: #000080;
+    color: var(--menuText, #333);
     font-size: 11px;
     font-weight: bold;
 }
@@ -395,6 +365,7 @@
     padding-left: 16px;
     font-size: 9px;
     line-height: 1.4;
+    color: var(--menuText, #333);
 }
 
 .bdialog-tips li {
@@ -416,7 +387,7 @@
     font-weight: bold;
     cursor: pointer;
     border-radius: 2px;
-    border: 1px outset var(--buttonBorder, #808080);
+    border: 1px outset var(--windowBorder, #808080);
 }
 
 .bdialog-btn:hover {
@@ -424,7 +395,7 @@
 }
 
 .bdialog-btn:active {
-    border: 1px inset var(--buttonBorder, #808080);
+    border: 1px inset var(--windowBorder, #808080);
     transform: translateY(0);
 }
 
@@ -438,13 +409,9 @@
     color: white;
 }
 
-.bdialog-btn-close {
-    background: var(--buttonBg, #c0c0c0);
-    color: black;
-}
-
 /* =================================
    COLOR CLASSES — health, mode, fill
+   These are semantic status colors and stay fixed
 ================================= */
 .bdialog-health-good  { color: #00aa00; }
 .bdialog-health-ok    { color: #ccaa00; }

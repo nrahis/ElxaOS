@@ -42,7 +42,13 @@ var BankSystem = class BankSystem {
         this._setupKeyHandler();
         this._registerCleanup();
 
-        // Restore session
+        // Auto-login from ElxaOS if finance service is ready
+        if (this._autoLoginFromElxaOS()) {
+            this.showDashboard();
+            return;
+        }
+
+        // Fallback: restore localStorage session (pre-merge path)
         this.loadUserSession();
         if (this.isLoggedIn) {
             this.showDashboard();
@@ -119,6 +125,7 @@ var BankSystem = class BankSystem {
                 case 'show-apply-cards':    this.showApplyForCards(); break;
                 case 'show-my-cards':       this.showMyCards(); break;
                 case 'apply-card':          this.applyForCard(actionEl.dataset.tier); break;
+                case 'apply-secured-card':  this.applyForSecuredCardUI(); break;
                 case 'show-card-payment':   this.showCardPaymentForm(actionEl.dataset.cardId); break;
                 case 'close-card':          this.closeCard(actionEl.dataset.cardId); break;
                 case 'process-card-payment': this.processCardPayment(); break;
@@ -128,6 +135,21 @@ var BankSystem = class BankSystem {
                 case 'close-apply-modal':       this.closeCardApplicationModal(); break;
                 case 'apply-modal-view-cards':  this.closeCardApplicationModal(); this.showDashboard(); break;
                 case 'apply-modal-back':        this.closeCardApplicationModal(); break;
+
+                // Loans
+                case 'show-apply-loans':        this.showApplyForLoans(); break;
+                case 'show-loan-form':          this.showLoanApplicationForm(actionEl.dataset.loanType); break;
+                case 'submit-loan-application': this.submitLoanApplication(); break;
+                case 'show-loan-payment':       this.showLoanPaymentForm(actionEl.dataset.loanId); break;
+                case 'process-loan-payment':    this.processLoanPayment(); break;
+                case 'payoff-loan':             this.payOffLoan(actionEl.dataset.loanId); break;
+                case 'cancel-loan-section':     this.hideLoanSections(); break;
+                case 'show-loan-schedule':      this.showAmortizationSchedule(actionEl.dataset.loanId); break;
+                case 'close-schedule-modal':    this.closeScheduleModal(); break;
+
+                // Loan application modal
+                case 'close-loan-modal':        this.closeLoanModal(); break;
+                case 'loan-modal-dashboard':    this.closeLoanModal(); this.showDashboard(); break;
 
                 // Transaction processing
                 case 'process-deposit':  this.processDeposit(); break;
@@ -203,7 +225,69 @@ var BankSystem = class BankSystem {
     }
 
     // =================================
-    // ACCOUNT MANAGEMENT
+    // ELXAOS AUTO-LOGIN
+    // =================================
+
+    _autoLoginFromElxaOS() {
+        // If the OS finance service is ready, the user is logged into ElxaOS.
+        // Skip the bank's own login and go straight to the dashboard.
+        if (typeof elxaOS === 'undefined' || !elxaOS.financeService || !elxaOS.financeService.isReady()) {
+            return false;
+        }
+        if (!elxaOS.registry || !elxaOS.registry.isLoggedIn()) {
+            return false;
+        }
+
+        var username = elxaOS.registry.getCurrentUsername();
+        if (!username) return false;
+
+        // Check for existing bank user data (preserves account numbers, name)
+        var existingUser = this.loadUser(username);
+
+        // Get display name from registry profile cache
+        var displayName = username;
+        try {
+            var cached = elxaOS.registry._profileCache;
+            if (cached && cached.displayName) {
+                displayName = cached.displayName;
+            }
+        } catch (_) {}
+
+        // Split display name for first/last — prefer existing bank data if available
+        var nameParts = displayName.split(' ');
+        var firstName = (existingUser && existingUser.firstName) ? existingUser.firstName : (nameParts[0] || username);
+        var lastName = (existingUser && existingUser.lastName) ? existingUser.lastName : (nameParts.length > 1 ? nameParts.slice(1).join(' ') : '');
+
+        // Get live balances from finance service
+        var balances = elxaOS.financeService.getAccountBalancesSync();
+
+        this.currentUser = {
+            username: username,
+            firstName: firstName,
+            lastName: lastName,
+            dateCreated: existingUser ? existingUser.dateCreated : new Date().toISOString(),
+            lastLogin: new Date().toISOString(),
+            accounts: {
+                checking: { balance: balances.checking, number: (existingUser && existingUser.accounts.checking) ? existingUser.accounts.checking.number : this.generateAccountNumber('CHK') },
+                savings:  { balance: balances.savings,  number: (existingUser && existingUser.accounts.savings)  ? existingUser.accounts.savings.number  : this.generateAccountNumber('SAV') },
+                trust:    { balance: balances.trust,    number: (existingUser && existingUser.accounts.trust)    ? existingUser.accounts.trust.number    : this.generateAccountNumber('TRU') }
+            },
+            transactions: (existingUser && existingUser.transactions) ? existingUser.transactions : []
+        };
+
+        this.isLoggedIn = true;
+        this.accounts = this.currentUser.accounts;
+        this.transactions = this.currentUser.transactions;
+
+        // Save so localStorage stays in sync for backward compatibility
+        this.saveUser(this.currentUser);
+        this.saveUserSession();
+
+        return true;
+    }
+
+    // =================================
+    // ACCOUNT MANAGEMENT (legacy login/register)
     // =================================
 
     register() {
@@ -348,7 +432,7 @@ var BankSystem = class BankSystem {
     }
 
     hideAllSections() {
-        var sections = ['loginSection', 'registerSection', 'dashboardSection', 'cardApplySection', 'aboutSection', 'locationsSection', 'helpSection'];
+        var sections = ['loginSection', 'registerSection', 'dashboardSection', 'cardApplySection', 'loanApplySection', 'aboutSection', 'locationsSection', 'helpSection'];
         sections.forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.classList.add('hidden');
@@ -383,6 +467,9 @@ var BankSystem = class BankSystem {
         // Credit Score & Cards (Phase 2.5)
         this.renderCreditScoreWidget();
         this.renderMyCardsSection();
+
+        // Loans (Phase 3)
+        this.renderMyLoansSection();
 
         this.updateTransactionHistory();
     }

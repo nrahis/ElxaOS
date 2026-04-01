@@ -2,18 +2,45 @@
 // INSTALLER SERVICE - Handle .abby files and program installation (FIXED VERSION)
 // =================================
 class InstallerService {
-    constructor(eventBus, fileSystem, windowManager, osInstance = null) {
+    constructor(eventBus, fileSystem, windowManager, osInstance = null, registry = null) {
         this.eventBus = eventBus;
         this.fileSystem = fileSystem;
         this.windowManager = windowManager;
         this.osInstance = osInstance; // Store reference to OS instance
+        this.registry = registry;
         this.installedPrograms = new Map();
+        this._ready = false;
         this.setupEventHandlers();
-        
-        // Delay loading until OS is ready
-        if (this.osInstance) {
-            this.loadInstalledPrograms();
+        this._setupUserListeners();
+    }
+
+    _setupUserListeners() {
+        // Load per-user installed programs on login
+        this.eventBus.on('registry.userLoaded', async () => {
+            await this._loadFromRegistry();
+        });
+
+        // Clear runtime state on logout
+        this.eventBus.on('login.logout', () => {
+            this.installedPrograms.clear();
+            this._ready = false;
+            // Unregister all installed programs from the OS
+            const os = this.osInstance || (typeof elxaOS !== 'undefined' ? elxaOS : null);
+            if (os && os.installedPrograms) {
+                os.installedPrograms = {};
+            }
+        });
+    }
+
+    /**
+     * Called during ElxaOS asyncInit. If a user is already logged in
+     * (session restore), load their installed programs.
+     */
+    async init() {
+        if (this.registry && this.registry.isLoggedIn()) {
+            await this._loadFromRegistry();
         }
+        console.log('\ud83d\udce6 InstallerService ready');
     }
 
     setupEventHandlers() {
@@ -153,7 +180,7 @@ class InstallerService {
                     await this.simulateInstallation(dialog, installData);
                     
                     // Actually install the program
-                    const success = this.installProgram(installData);
+                    const success = await this.installProgram(installData);
                     
                     if (success) {
                         console.log('Installation successful, showing completion screen');
@@ -254,7 +281,7 @@ class InstallerService {
         }
     }
 
-    installProgram(installData) {
+    async installProgram(installData) {
         try {
             // Generate a unique program ID
             const programId = `installed_${installData.id || installData.name.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}`;
@@ -273,7 +300,7 @@ class InstallerService {
 
             // Add to installed programs
             this.installedPrograms.set(programId, programInfo);
-            this.saveInstalledPrograms();
+            await this.saveInstalledPrograms();
 
             // Create a shortcut file in the Desktop folder instead of directly creating DOM
             const shortcutContent = JSON.stringify({
@@ -346,7 +373,7 @@ class InstallerService {
         }
     }
 
-    uninstallProgram(programId) {
+    async uninstallProgram(programId) {
         const programInfo = this.installedPrograms.get(programId);
         if (!programInfo) {
             this.showMessage('Program not found!', 'error');
@@ -359,7 +386,7 @@ class InstallerService {
 
         // Remove from installed programs
         this.installedPrograms.delete(programId);
-        this.saveInstalledPrograms();
+        await this.saveInstalledPrograms();
 
         // Find and delete the .lnk shortcut file from Desktop folder
         const desktopFiles = this.fileSystem.listContents(['root', 'Desktop']);
@@ -389,23 +416,48 @@ class InstallerService {
         this.eventBus.emit('desktop.changed');
     }
 
-    saveInstalledPrograms() {
+    async saveInstalledPrograms() {
         try {
             const data = {};
             this.installedPrograms.forEach((value, key) => {
                 data[key] = value;
             });
-            localStorage.setItem('elxaOS-installed-programs', JSON.stringify(data));
+            if (this.registry && this.registry.isLoggedIn()) {
+                await this.registry.setState('installedPrograms', data);
+            }
         } catch (error) {
             console.error('Failed to save installed programs:', error);
         }
     }
 
-    loadInstalledPrograms() {
+    async _loadFromRegistry() {
+        if (!this.registry || !this.registry.isLoggedIn()) return;
+
         try {
-            const saved = localStorage.getItem('elxaOS-installed-programs');
-            if (saved) {
-                const data = JSON.parse(saved);
+            let data = await this.registry.getState('installedPrograms');
+
+            // One-time migration from localStorage
+            if (!data) {
+                const legacyKey = 'elxaOS-installed-programs';
+                const legacy = localStorage.getItem(legacyKey);
+                if (legacy) {
+                    try {
+                        data = JSON.parse(legacy);
+                        // Save to registry for this user
+                        await this.registry.setState('installedPrograms', data);
+                        // Remove legacy key so it doesn't re-migrate for other users
+                        localStorage.removeItem(legacyKey);
+                        console.log('\ud83d\udce6 Migrated installed programs from localStorage to registry');
+                    } catch (e) {
+                        console.warn('\ud83d\udce6 Failed to migrate legacy installed programs:', e);
+                        data = null;
+                    }
+                }
+            }
+
+            this.installedPrograms.clear();
+
+            if (data) {
                 Object.entries(data).forEach(([key, value]) => {
                     // Restore date objects
                     if (value.installDate && typeof value.installDate === 'string') {
@@ -413,16 +465,30 @@ class InstallerService {
                     }
                     this.installedPrograms.set(key, value);
                 });
-                
-                // Recreate desktop icons for installed programs
+
+                // Register programs so they can be launched
+                // (desktop icons are handled by .lnk files via syncDesktopFiles)
                 this.installedPrograms.forEach(programInfo => {
-                    this.createDesktopIcon(programInfo);
                     this.registerProgram(programInfo);
                 });
+            }
+
+            this._ready = true;
+            const count = this.installedPrograms.size;
+            console.log('\ud83d\udce6 Installed programs loaded: ' + count + ' program' + (count === 1 ? '' : 's'));
+
+            // Single desktop refresh after all programs are registered
+            if (count > 0) {
+                this.eventBus.emit('desktop.changed');
             }
         } catch (error) {
             console.error('Failed to load installed programs:', error);
         }
+    }
+
+    // Legacy wrapper — called by elxaos.js asyncInit for backwards compat
+    async loadInstalledPrograms() {
+        await this._loadFromRegistry();
     }
 
     formatFileSize(bytes) {

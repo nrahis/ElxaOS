@@ -1,6 +1,15 @@
 // =========================================================
 // EMPLOYEE DATA SYSTEM
 // Handles time clock, payroll, bank integration
+//
+// MIGRATION NOTE (Phase 6):
+// The OS-level EmploymentService now owns paycheck processing
+// and deposits through financeService. This portal reads payroll
+// data from the employment service when available, and only falls
+// back to its own localStorage processing if the service isn't
+// running (e.g. portal loaded outside ElxaOS).
+//
+// Time clock + tickets remain portal-managed in localStorage.
 // =========================================================
 var EmployeeDataSystem = class {
     constructor(employeeId, salary, hireDate) {
@@ -13,7 +22,14 @@ var EmployeeDataSystem = class {
 
         this.data = this.load();
         this.checkDayReset();
-        this.processPaydays();
+
+        // Sync payroll from employment service if available,
+        // otherwise fall back to legacy localStorage processing
+        if (this._hasEmploymentService()) {
+            this._syncFromEmploymentService();
+        } else {
+            this.processPaydays();
+        }
 
         if (this.data.timeClock.clockedIn) {
             this.startTimerDisplay();
@@ -21,6 +37,69 @@ var EmployeeDataSystem = class {
 
         this.updateDashboardStats();
     }
+
+    // ===== EMPLOYMENT SERVICE INTEGRATION =====
+
+    /**
+     * Check if the OS-level employment service is available and ready.
+     */
+    _hasEmploymentService() {
+        return (typeof elxaOS !== 'undefined' &&
+                elxaOS.employmentService &&
+                elxaOS.employmentService._ready &&
+                elxaOS.employmentService.isEmployed());
+    }
+
+    /**
+     * Check if the OS-level finance service is available.
+     */
+    _hasFinanceService() {
+        return (typeof elxaOS !== 'undefined' &&
+                elxaOS.financeService &&
+                elxaOS.financeService._ready);
+    }
+
+    /**
+     * Sync payroll data from the employment service into the portal's
+     * local data so the UI can display accurate info without the portal
+     * doing its own paycheck processing.
+     */
+    _syncFromEmploymentService() {
+        var empService = elxaOS.employmentService;
+        var empData = empService.getEmploymentData();
+        if (!empData) return;
+
+        // Sync salary if employment service has it
+        if (empData.annualSalary) {
+            this.annualSalary = empData.annualSalary;
+        }
+
+        // Sync payroll tracking from the source of truth
+        this.data.payroll.lastPayday = empData.lastPayday;
+        this.data.payroll.ytdEarnings = empData.ytdEarnings || 0;
+
+        // Convert pay history format if needed
+        // Employment service stores: { date, grossPay, deposited, depositAccount }
+        // Portal expects:            { date, amount, deposited }
+        if (empData.payHistory && empData.payHistory.length > 0) {
+            this.data.payroll.payHistory = empData.payHistory.map(function(entry) {
+                return {
+                    date: entry.date,
+                    amount: entry.grossPay || entry.amount,
+                    deposited: entry.deposited
+                };
+            });
+        }
+
+        // Save synced data locally (for offline/fallback access)
+        this.save();
+
+        console.log('Employee portal synced payroll from employment service: YTD $' +
+            this.data.payroll.ytdEarnings.toFixed(2) + ', ' +
+            this.data.payroll.payHistory.length + ' paychecks');
+    }
+
+    // ===== CORE DATA =====
 
     getDefaults() {
         return {
@@ -55,9 +134,9 @@ var EmployeeDataSystem = class {
                 var saved = JSON.parse(raw);
                 var defaults = this.getDefaults();
                 return {
-                    timeClock: { ...defaults.timeClock, ...saved.timeClock },
-                    payroll: { ...defaults.payroll, ...saved.payroll },
-                    tickets: { ...defaults.tickets, ...saved.tickets }
+                    timeClock: Object.assign({}, defaults.timeClock, saved.timeClock),
+                    payroll: Object.assign({}, defaults.payroll, saved.payroll),
+                    tickets: Object.assign({}, defaults.tickets, saved.tickets)
                 };
             }
         } catch (e) { console.warn('Employee data load error:', e); }
@@ -130,7 +209,8 @@ var EmployeeDataSystem = class {
 
     startTimerDisplay() {
         this.stopTimerDisplay();
-        this.timerInterval = setInterval(() => this.updateTimerUI(), 1000);
+        var self = this;
+        this.timerInterval = setInterval(function() { self.updateTimerUI(); }, 1000);
         this.updateTimerUI();
     }
     stopTimerDisplay() {
@@ -169,7 +249,11 @@ var EmployeeDataSystem = class {
 
     // ===== PAYROLL ENGINE (Weekly) =====
     getPayPerPeriod() {
-        // Weekly: salary / 52 pay periods per year
+        // If employment service is available, use its calculation
+        if (this._hasEmploymentService()) {
+            return elxaOS.employmentService.getPayPerPeriod();
+        }
+        // Fallback: Weekly salary / 52 pay periods per year
         return Math.round((this.annualSalary / 52) * 100) / 100;
     }
 
@@ -191,6 +275,12 @@ var EmployeeDataSystem = class {
     }
 
     getNextPayday() {
+        // Prefer employment service if available
+        if (this._hasEmploymentService()) {
+            var next = elxaOS.employmentService.getNextPayday();
+            if (next) return new Date(next);
+        }
+        // Fallback
         var next = new Date(this.hireDate);
         next.setDate(next.getDate() + 7);
         var today = new Date();
@@ -200,7 +290,19 @@ var EmployeeDataSystem = class {
         return next;
     }
 
+    /**
+     * Process paychecks that haven't been deposited yet.
+     * LEGACY PATH: Only runs when the OS-level employment service
+     * is NOT available. When the employment service is running,
+     * it handles all paycheck processing on boot.
+     */
     processPaydays() {
+        // If employment service is handling paychecks, don't double-process
+        if (this._hasEmploymentService()) {
+            console.log('Employee portal: paycheck processing delegated to employment service');
+            return;
+        }
+
         var allPaydays = this.getPaySchedule();
         if (allPaydays.length === 0) return;
 
@@ -223,7 +325,7 @@ var EmployeeDataSystem = class {
             });
             this.data.payroll.lastPayday = payday.toISOString();
 
-            // Deposit to bank if linked
+            // Deposit to bank
             var depositOk = this.depositToBank(payPerPeriod, payday);
             if (depositOk) {
                 this.data.payroll.payHistory[this.data.payroll.payHistory.length - 1].deposited = true;
@@ -242,7 +344,18 @@ var EmployeeDataSystem = class {
 
     // ===== BANK INTEGRATION =====
     linkBank(username) {
-        // Verify the FSB account exists in localStorage
+        // If finance service is available, bank linking is already handled at OS level
+        if (this._hasFinanceService()) {
+            this.data.payroll.bankUsername = username;
+            this.save();
+            return {
+                success: true,
+                message: 'Paychecks are deposited automatically via First Snakesian Bank. No manual linking needed!',
+                retroDeposits: 0
+            };
+        }
+
+        // Legacy: Verify the FSB account exists in localStorage
         var bankData = localStorage.getItem('elxaOS-bank-user-' + username);
         if (!bankData) {
             return { success: false, message: 'No First Snakesian Bank account found for "' + username + '". Make sure you\'ve registered at fsb.ex first!' };
@@ -286,6 +399,19 @@ var EmployeeDataSystem = class {
     }
 
     getBankAccountInfo() {
+        // If finance service is available, get account info from there
+        if (this._hasFinanceService()) {
+            var balances = elxaOS.financeService.getAccountBalancesSync();
+            if (balances && balances.checking !== undefined) {
+                return {
+                    name: 'First Snakesian Bank',
+                    checkingNumber: '****' + Math.floor(Math.random() * 9000 + 1000),
+                    checkingBalance: balances.checking
+                };
+            }
+        }
+
+        // Legacy: read from localStorage
         var username = this.data.payroll.bankUsername;
         if (!username) return null;
         try {
@@ -299,7 +425,22 @@ var EmployeeDataSystem = class {
         } catch (e) { return null; }
     }
 
+    /**
+     * Deposit a paycheck to the bank.
+     * Routes through financeService when available (modern path),
+     * falls back to direct localStorage bank manipulation (legacy).
+     */
     depositToBank(amount, payday) {
+        // Modern path: use finance service
+        if (this._hasFinanceService()) {
+            var dateStr = payday instanceof Date ? payday.toISOString().slice(0, 10) : String(payday);
+            elxaOS.financeService._depositDirect('checking', amount,
+                'ElxaCorp Payroll \u2014 Direct Deposit (' + dateStr + ')');
+            console.log('Deposited $' + amount.toFixed(2) + ' to checking via financeService');
+            return true;
+        }
+
+        // Legacy path: direct localStorage bank manipulation
         var username = this.data.payroll.bankUsername;
         if (!username) return false;
 
@@ -343,7 +484,7 @@ var EmployeeDataSystem = class {
                 try { window.bankSystem.updateTransactionHistory(); } catch (e) {}
             }
 
-            console.log('Deposited $' + amount.toFixed(2) + ' to FSB checking (' + username + ')');
+            console.log('Deposited $' + amount.toFixed(2) + ' to FSB checking (' + username + ') [legacy]');
             return true;
         } catch (e) {
             console.warn('Bank deposit failed:', e);
@@ -352,10 +493,18 @@ var EmployeeDataSystem = class {
     }
 
     formatCurrency(amount) {
+        // Use employment service pay format if available
+        if (this._hasEmploymentService() && elxaOS.employmentService.formatPay) {
+            return elxaOS.employmentService.formatPay(amount);
+        }
         return '$' + amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     getYTDEarnings() {
+        // Prefer employment service data
+        if (this._hasEmploymentService()) {
+            return elxaOS.employmentService.getYTDEarnings();
+        }
         return this.data.payroll.ytdEarnings;
     }
 

@@ -1,0 +1,530 @@
+/* =================================
+   SSJ — The ScaleStreet Journal
+   WSJ-inspired newspaper styling
+   ================================= */
+
+.ssj-root {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #1a1a1a;
+    background: #faf8f5;
+    min-height: 100%;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.ssj-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* ---- Masthead ---- */
+.ssj-masthead {
+    text-align: center;
+    padding: 16px 0 0;
+}
+
+.ssj-masthead-rule {
+    height: 2px;
+    background: #1a1a1a;
+}
+
+.ssj-masthead-rule.top {
+    height: 3px;
+}
+
+.ssj-masthead-inner {
+    padding: 8px 0;
+}
+
+.ssj-edition {
+    display: block;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.ssj-title {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0;
+    line-height: 1.1;
+    color: #1a1a1a;
+}
+
+.ssj-dateline {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* ---- Ticker Strip ---- */
+.ssj-ticker-strip {
+    display: flex;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    scrollbar-width: none;
+}
+
+.ssj-ticker-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.ssj-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.ssj-ticker-item .ticker-sym {
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.ssj-ticker-item .ticker-price {
+    color: #555;
+}
+
+.ssj-ticker-item .gain { color: #1a7f37; }
+.ssj-ticker-item .loss { color: #c93c37; }
+.ssj-ticker-item .neutral { color: #888; }
+
+/* ---- Page visibility ---- */
+.ssj-page { display: none; }
+.ssj-page.active { display: block; }
+
+/* ---- Main Story ---- */
+.ssj-main-story {
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.ssj-main-story .story-kicker {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #c93c37;
+    margin-bottom: 4px;
+}
+
+.ssj-main-story .story-headline {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    color: #1a1a1a;
+}
+
+.ssj-main-story .story-summary {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.ssj-main-story .story-byline {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+}
+
+.ssj-main-story .story-read-more {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #c93c37;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.ssj-main-story .story-read-more:hover {
+    text-decoration: underline;
+}
+
+.ssj-main-story .story-impact {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.ssj-main-story .impact-badge {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #f0f0f0;
+    color: #555;
+}
+
+.ssj-main-story .impact-badge.gain {
+    background: #e6f9ed;
+    color: #1a7f37;
+}
+
+.ssj-main-story .impact-badge.loss {
+    background: #fde8e8;
+    color: #c93c37;
+}
+
+/* ---- Body: Headlines + Sidebar ---- */
+.ssj-body {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 24px;
+}
+
+/* ---- Headlines Column ---- */
+.ssj-headlines {
+    min-width: 0;
+}
+
+.ssj-headline-item {
+    border-bottom: 1px solid #e0ddd8;
+    padding: 14px 0;
+}
+
+.ssj-headline-item:first-child {
+    padding-top: 0;
+}
+
+.ssj-headline-item .hl-category {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.ssj-headline-item .hl-title {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 4px;
+    color: #1a1a1a;
+}
+
+.ssj-headline-item .hl-summary {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #444;
+    margin: 0;
+}
+
+.ssj-headline-item .hl-read-more {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #c93c37;
+    cursor: pointer;
+    margin-top: 4px;
+    display: inline-block;
+}
+
+.ssj-headline-item .hl-read-more:hover {
+    text-decoration: underline;
+}
+
+.ssj-headline-item .hl-tickers {
+    display: inline-flex;
+    gap: 4px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+
+.ssj-headline-item .ticker-badge {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: #f0f0f0;
+    color: #555;
+    cursor: pointer;
+}
+
+.ssj-headline-item .ticker-badge.gain {
+    background: #e6f9ed;
+    color: #1a7f37;
+}
+
+.ssj-headline-item .ticker-badge.loss {
+    background: #fde8e8;
+    color: #c93c37;
+}
+
+/* ---- Sidebar ---- */
+.ssj-sidebar {
+    border-left: 2px solid #1a1a1a;
+    padding-left: 16px;
+}
+
+.ssj-sidebar-section {
+    margin-bottom: 20px;
+}
+
+.ssj-sidebar-title {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #ddd;
+}
+
+.ssj-sidebar-title .mdi {
+    font-size: 14px;
+    vertical-align: -1px;
+    margin-right: 2px;
+}
+
+.ssj-mover-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.ssj-mover-row:hover {
+    background: #f5f3ef;
+}
+
+.ssj-mover-row .mover-ticker {
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.ssj-mover-row .mover-price {
+    color: #555;
+}
+
+.ssj-mover-row .mover-change {
+    font-weight: 600;
+}
+
+.ssj-mover-row .mover-change.gain { color: #1a7f37; }
+.ssj-mover-row .mover-change.loss { color: #c93c37; }
+
+/* ---- Market Snapshot ---- */
+.ssj-snapshot-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    color: #555;
+}
+
+.ssj-snapshot-row .snap-label { font-weight: 600; color: #1a1a1a; }
+.ssj-snapshot-row .snap-value.gain { color: #1a7f37; font-weight: 600; }
+.ssj-snapshot-row .snap-value.loss { color: #c93c37; font-weight: 600; }
+
+/* ---- Ad ---- */
+.ssj-sidebar-ad {
+    margin-top: 20px;
+    padding: 12px;
+    background: #f5f3ef;
+    border: 1px dashed #ccc;
+    text-align: center;
+}
+
+.ssj-ad-label {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 6px;
+}
+
+.ssj-ad-content {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.ssj-ad-content strong {
+    color: #1a1a1a;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+/* ---- Article Detail Page ---- */
+.ssj-article-nav {
+    margin-bottom: 16px;
+}
+
+.ssj-back-link {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    color: #c93c37;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ssj-back-link:hover {
+    text-decoration: underline;
+}
+
+.ssj-back-link .mdi {
+    font-size: 14px;
+    vertical-align: -1px;
+    margin-right: 2px;
+}
+
+.ssj-article {
+    max-width: 680px;
+}
+
+.ssj-article .art-kicker {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #c93c37;
+    margin-bottom: 4px;
+}
+
+.ssj-article .art-headline {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 8px;
+    color: #1a1a1a;
+}
+
+.ssj-article .art-byline {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.ssj-article .art-body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+}
+
+.ssj-article .art-body p {
+    margin: 0 0 14px;
+}
+
+.ssj-article .art-impact {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background: #f5f3ef;
+    border-left: 3px solid #1a1a1a;
+}
+
+.ssj-article .art-impact-title {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 6px;
+}
+
+.ssj-article .art-impact-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ssj-article .art-impact-badge {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+}
+
+.ssj-article .art-impact-badge.gain {
+    background: #e6f9ed;
+    color: #1a7f37;
+}
+
+.ssj-article .art-impact-badge.loss {
+    background: #fde8e8;
+    color: #c93c37;
+}
+
+/* ---- Empty State ---- */
+.ssj-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #888;
+    font-style: italic;
+}
+
+.ssj-empty .mdi {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.4;
+}
+
+/* ---- Footer ---- */
+.ssj-footer {
+    margin-top: 32px;
+    padding: 16px 0 20px;
+    text-align: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    color: #999;
+}
+
+.ssj-footer p {
+    margin: 2px 0;
+}
+
+.ssj-footer a {
+    color: #c93c37;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ssj-footer a:hover {
+    text-decoration: underline;
+}
+
+.ssj-footer-rule {
+    height: 2px;
+    background: #1a1a1a;
+    margin-bottom: 12px;
+}

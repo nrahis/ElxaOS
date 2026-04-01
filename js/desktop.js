@@ -150,8 +150,8 @@ class Desktop {
         let newTop = e.clientY - containerRect.top - this.dragData.offsetY;
         
         // Constrain to container bounds
-        const iconWidth = 64;
-        const iconHeight = 64;
+        const iconWidth = 80;
+        const iconHeight = 80;
         newLeft = Math.max(0, Math.min(newLeft, containerRect.width - iconWidth));
         newTop = Math.max(0, Math.min(newTop, containerRect.height - iconHeight));
         
@@ -248,8 +248,8 @@ class Desktop {
         if (!container) return { left: 8, top: 8 };
 
         const containerRect = container.getBoundingClientRect();
-        const cellW = 80; // icon width + gap
-        const cellH = 80; // icon height + gap
+        const cellW = 88; // icon width (80) + gap
+        const cellH = 96; // icon height (80+) + gap
         const cols = Math.floor(containerRect.width / cellW) || 1;
         const rows = Math.floor(containerRect.height / cellH) || 10;
 

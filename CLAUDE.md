@@ -216,7 +216,7 @@ All icons across ElxaOS are managed through `js/icon-config.js` — the `ElxaIco
 
 **MDI CDN quirk:** The CDN stylesheet sets `font-size: inherit` on `.mdi:before`. To size icons, set `font-size` on `.mdi` via a parent selector (e.g. `.desktop-icon-image .mdi { font-size: 28px }`), not on the container.
 
-**Migration status:** Phase 1 (system chrome) complete. See `ICON-MIGRATION.md` for remaining phases.
+**Migration status:** Phase 1 (system chrome) complete. See `plans/ICON-MIGRATION.md` in the project context folder for remaining phases.
 
 ## Key Conventions
 - **No build tools** — Everything is vanilla JS loaded via script tags. Order matters.
@@ -237,6 +237,33 @@ These files live in the project root and should be kept updated during every wor
 - **`updates.txt`** — The user-facing update notes shown in the boot popup. Only update this when actually publishing a new version for the end user (the author's son). Written in a fun, enthusiastic tone.
 
 The workflow: make changes → log them in CHANGELOG.md → if something is deferred, add it to TODO.md → when publishing, cherry-pick highlights into updates.txt.
+
+## Project Context & Build Plans (IMPORTANT — READ ON PICKUP!)
+Extended project documentation lives **outside the repo** at:
+```
+C:\Users\CMoney\Documents\HICLAUDE\project-context\ElxaOS\
+├── cheatsheet.md              ← Quick-reference summary of the whole project
+├── last-session.md            ← What happened last session (overwritten each time)
+├── plans/                     ← Build plans for upcoming/in-progress features
+│   ├── chess-game-plan.md
+│   ├── finance-inventory-plan.md    ← Master plan: Phases 1-7 of the economy system
+│   ├── ICON-MIGRATION.md           ← Icon system migration phases
+│   ├── inventory-service-plan.md    ← Phase 5 detailed spec
+│   ├── mallard-realty-plan.md       ← Real estate website/app
+│   ├── notification-system-plan.md  ← Notification center + finance emails
+│   └── paycheck-system-plan.md      ← Phase 6: employment service + payroll
+├── reference/                 ← Living reference docs for built systems
+│   ├── finance-system.md           ← Full finance service API docs
+│   ├── game-pipeline.md            ← How to build/publish games
+│   ├── installer-service.md        ← Installer service API docs
+│   └── inventory-system.md         ← Full inventory service API docs
+```
+
+**Plans vs Reference:**
+- **`plans/`** — Build plans for things we haven't built yet (or are mid-build). These describe *what to build and how*. Once a plan is fully implemented, the relevant API docs move to `reference/`.
+- **`reference/`** — Documentation for things that are *already built*. API surfaces, data shapes, integration points. What you need to know to *use* the system, not build it.
+
+**Session handoff:** When picking up work, say "pick up from ElxaOS" — this reads `last-session.md` to restore context from the previous chat.
 
 ## World-Building Notes (for content consistency)
 - **Snakesia** — Fictional country west of Tennessee

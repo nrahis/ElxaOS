@@ -86,6 +86,24 @@ const ELXAOS_DEFAULT_FILES = [
     },
     {
         path: ['root', 'Desktop'],
+        name: 'ElxaBooks Pro.lnk',
+        content: JSON.stringify({
+            type: 'program_shortcut',
+            programId: 'elxabooks',
+            programInfo: { name: 'ElxaBooks Pro', icon: ElxaIcons.render('elxabooks', 'desktop'), description: 'Financial dashboard and accounting for ElxaCorp' }
+        })
+    },
+    {
+        path: ['root', 'Desktop'],
+        name: 'ElxaBooks Pro.lnk',
+        content: JSON.stringify({
+            type: 'program_shortcut',
+            programId: 'elxabooks',
+            programInfo: { name: 'ElxaBooks Pro', icon: ElxaIcons.render('elxabooks', 'desktop'), description: 'Financial dashboard and accounting for ElxaCorp' }
+        })
+    },
+    {
+        path: ['root', 'Desktop'],
         name: 'ElxaGuard Antivirus.lnk',
         content: JSON.stringify({
             type: 'program_shortcut',

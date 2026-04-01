@@ -1112,5 +1112,12 @@ class FileManagerProgram {
 
             desktopIcons.appendChild(iconElement);
         });
+
+        // Re-apply saved icon positions after rebuilding DOM
+        if (typeof elxaOS !== 'undefined' && elxaOS.desktop) {
+            setTimeout(() => {
+                elxaOS.desktop.applyIconPositions();
+            }, 50);
+        }
     }
 }

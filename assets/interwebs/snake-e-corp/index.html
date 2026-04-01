@@ -633,7 +633,7 @@
         </footer>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         function showPage(pageId) {
             // Hide all pages
             var pages = document.querySelectorAll('.snakee-page');
@@ -663,25 +663,118 @@
         }
 
         function checkEmploymentStatus() {
-            try {
-                var profiles = JSON.parse(localStorage.getItem('elxacorp-user-profiles') || '{}');
-                var keys = Object.keys(profiles);
-                if (keys.length === 0) return;
+            var form = document.getElementById('jobApplication');
+            var status = document.getElementById('application-status');
+            var introDiv = document.querySelector('.snakee-application-intro');
 
-                var profile = profiles[keys[keys.length - 1]];
-                var form = document.getElementById('jobApplication');
-                var status = document.getElementById('application-status');
+            // --- State 3: Already employed ---
+            // Check OS employment service first
+            var isEmployed = false;
+            var empPosition = 'Team Member';
+            var empDepartment = 'General';
+            var empId = 'N/A';
 
+            if (typeof elxaOS !== 'undefined' && elxaOS.employmentService &&
+                elxaOS.employmentService.isEmployed()) {
+                isEmployed = true;
+                var empData = elxaOS.employmentService.getEmploymentData();
+                if (empData) {
+                    empPosition = empData.position || empPosition;
+                    empDepartment = empData.department || empDepartment;
+                    empId = empData.employeeId || empId;
+                }
+            }
+
+            // Fallback: check localStorage profiles
+            if (!isEmployed) {
+                try {
+                    var profiles = JSON.parse(localStorage.getItem('elxacorp-user-profiles') || '{}');
+                    var keys = Object.keys(profiles);
+                    if (keys.length > 0) {
+                        var profile = profiles[keys[keys.length - 1]];
+                        if (profile.status === 'hired') {
+                            isEmployed = true;
+                            empPosition = profile.position ? profile.position.title : empPosition;
+                            empDepartment = profile.position ? profile.position.department : empDepartment;
+                            empId = profile.employeeId || empId;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            if (isEmployed) {
                 form.style.display = 'none';
+                if (introDiv) introDiv.style.display = 'none';
                 status.style.display = 'block';
                 status.className = 'snakee-status-message snakee-status-success';
                 status.innerHTML = '<strong>\uD83C\uDFE2 You\'re already employed at ElxaCorp!</strong><br><br>' +
-                    'Position: ' + (profile.position ? profile.position.title : 'Team Member') + '<br>' +
-                    'Department: ' + (profile.position ? profile.position.department : 'General') + '<br>' +
-                    'Employee ID: ' + (profile.employeeId || 'N/A') + '<br><br>' +
+                    '\uD83D\uDCBC Position: ' + empPosition + '<br>' +
+                    '\uD83C\uDFE2 Department: ' + empDepartment + '<br>' +
+                    '\uD83C\uDD94 Employee ID: ' + empId + '<br><br>' +
                     'Access your dashboard at <a href="#" onclick="elxaOS.programs.browser.loadPage(\'snake-e.corp.ex/portal\'); return false;" style="color: var(--ec-gold, #d4a017); font-family: monospace;">snake-e.corp.ex/portal</a><br><br>' +
-                    '<em>Want to switch positions? Contact HR at hr@elxacorp.ex</em>';
-            } catch (e) { /* no profiles, show form normally */ }
+                    '<em>Want to switch positions or resign? Visit the Employee Portal.</em><br><br>' +
+                    '<a href="#" onclick="resendCredentials(); return false;" style="color: var(--ec-gold, #d4a017); font-size: 0.9em;">\uD83D\uDCE7 Didn\'t receive your login credentials? Click here to resend.</a>';
+                return;
+            }
+
+            // --- State 2: Application submitted but not yet employed ---
+            try {
+                var applications = JSON.parse(localStorage.getItem('elxacorp-applications') || '[]');
+                if (applications.length > 0) {
+                    var lastApp = applications[applications.length - 1];
+                    form.style.display = 'none';
+                    if (introDiv) introDiv.style.display = 'none';
+                    status.style.display = 'block';
+                    status.className = 'snakee-status-message snakee-status-success';
+                    status.innerHTML = '<strong>\uD83D\uDCDD Application Submitted!</strong><br><br>' +
+                        'Your application for <strong>' + (lastApp.position ? lastApp.position.toUpperCase() : 'a position') + '</strong> is being reviewed by our HR team.<br><br>' +
+                        '\uD83D\uDCE7 Check your ElxaMail for your hiring confirmation and login credentials.<br><br>' +
+                        '<button onclick="inquireAboutApplication()" class="snakee-apply-button" style="margin-top: 10px;">\uD83D\uDCE8 Inquire About Application</button><br>' +
+                        '<span style="font-size: 0.85em; color: #888;">Haven\'t received your hiring email? Click above and Rita from HR will get right on it!</span>';
+                    return;
+                }
+            } catch (e) {}
+
+            // --- State 1: No job, no application --- show form (default)
+            form.style.display = '';
+            if (introDiv) introDiv.style.display = '';
+            status.style.display = 'none';
+        }
+
+        function inquireAboutApplication() {
+            if (typeof elxaCorpJobSystem === 'undefined') {
+                alert('Job system not loaded. Please refresh the page.');
+                return;
+            }
+
+            var success = elxaCorpJobSystem.resendHiringEmail();
+
+            var status = document.getElementById('application-status');
+            if (success) {
+                status.className = 'snakee-status-message snakee-status-success';
+                status.innerHTML = '<strong>\uD83C\uDF89 Great news!</strong><br><br>' +
+                    'Rita from HR just processed your application! Check your ElxaMail inbox \u2014 your hiring confirmation and login credentials should be there now.<br><br>' +
+                    'Welcome to ElxaCorp! Access the Employee Portal at <a href="#" onclick="elxaOS.programs.browser.loadPage(\'snake-e.corp.ex/portal\'); return false;" style="color: var(--ec-gold, #d4a017); font-family: monospace;">snake-e.corp.ex/portal</a>';
+            } else {
+                status.className = 'snakee-status-message snakee-status-warning';
+                status.innerHTML = '\u26A0\uFE0F Could not find your application. Please try applying again!';
+            }
+        }
+
+        function resendCredentials() {
+            if (typeof elxaCorpJobSystem === 'undefined') {
+                alert('Job system not loaded. Please refresh the page.');
+                return;
+            }
+
+            var success = elxaCorpJobSystem.resendHiringEmail();
+
+            var status = document.getElementById('application-status');
+            if (success) {
+                status.innerHTML = '<strong>\uD83C\uDFE2 You\'re already employed at ElxaCorp!</strong><br><br>' +
+                    '\u2705 <strong>Credentials resent!</strong> Check your ElxaMail inbox for your login details.<br><br>' +
+                    'Access your dashboard at <a href="#" onclick="elxaOS.programs.browser.loadPage(\'snake-e.corp.ex/portal\'); return false;" style="color: var(--ec-gold, #d4a017); font-family: monospace;">snake-e.corp.ex/portal</a>';
+            }
         }
 
         function updatePortalDateTime() {
@@ -728,40 +821,22 @@
             }, 8000);
         }
 
-        function handleJobApplication(event) {
-            event.preventDefault();
-            var status = document.getElementById('application-status');
-            var name = document.getElementById('app-name').value;
-            var position = document.getElementById('app-position').value;
-            var location = document.getElementById('app-location').value;
-            var susSkill = document.getElementById('app-sus').value;
-            
-            status.style.display = 'block';
-            
-            if (position === 'it') {
-                status.innerHTML = "🎉 CONGRATULATIONS " + name + "! Your IT application has been AUTO-APPROVED! Mr. Snake-E says 'Welcome to the team!' Please report to ElxaCorp HQ on Monday with your favorite debugging snacks. 🖥️";
-                status.className = 'snakee-status-message snakee-status-success';
-            } else if (location === 'sus-lair') {
-                status.innerHTML = "🚨 ALERT: Application from Sus Lair detected! " + name + ", we need to talk... This is either very impressive or very concerning. Pushing Cat, is this you? 🐱";
-                status.className = 'snakee-status-message snakee-status-warning';
-            } else if (susSkill === 'sus') {
-                status.innerHTML = "🤔 " + name + ", your honesty about being sus is... suspicious. But we respect the honesty! Application under review by our Sus Detection Team. Please standby. 🕵️";
-                status.className = 'snakee-status-message snakee-status-warning';
-            } else if (position === 'cookie') {
-                status.innerHTML = "🍪 WOW! " + name + ", Mrs. Snake-E is THRILLED about your cookie tester application! She says 'Finally, someone with proper priorities!' You start immediately! 👵";
-                status.className = 'snakee-status-message snakee-status-success';
-            } else if (position === 'assistant-mrs') {
-                status.innerHTML = "🌱 " + name + ", Mrs. Snake-E reviewed your application from her garden and says 'This one seems lovely!' You're hired! She'll teach you everything about both technology AND gardening! 🌺";
-                status.className = 'snakee-status-message snakee-status-success';
-            } else {
-                status.innerHTML = "📝 Thank you " + name + "! Your application for " + position + " has been received and is being reviewed by our amazing HR team (Rita says hi!). We'll be in touch within 2-3 business days. 💼";
-                status.className = 'snakee-status-message snakee-status-success';
-            }
-            
-            document.getElementById('jobApplication').reset();
-            setTimeout(function() {
-                status.style.display = 'none';
-            }, 15000);
+        // Safety stub: prevent form from EVER doing a real submit.
+        // The full handler is loaded from elxacorp-job-integration.js and
+        // overwrites this. If that script fails to load, this still stops
+        // the form from navigating the real browser.
+        if (typeof window.handleJobApplication === 'undefined') {
+            window.handleJobApplication = function(event) {
+                event.preventDefault();
+                console.error('ElxaCorp job integration script not loaded yet!');
+                var status = document.getElementById('application-status');
+                if (status) {
+                    status.style.display = 'block';
+                    status.className = 'snakee-status-message snakee-status-warning';
+                    status.innerHTML = '\u26A0\uFE0F Application system is still loading. Please try again in a moment!';
+                }
+                return false;
+            };
         }
 
         // Animate stock prices
@@ -790,6 +865,6 @@
             setInterval(updatePortalDateTime, 1000); // Update every second
         });
     </script>
-    <script src="./assets/interwebs/snake-e-corp/elxacorp-job-integration.js"></script>
+    <script src="./elxacorp-job-integration.js"></script>
 </body>
 </html>

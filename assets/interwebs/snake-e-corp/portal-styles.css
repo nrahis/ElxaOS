@@ -511,6 +511,85 @@ a:hover { text-decoration: underline; }
 .pw-must-change { background: #fffbeb; color: var(--ec-warning); border: 1px solid var(--ec-warning); }
 .pw-optional { background: var(--ec-surface-alt); color: var(--ec-text-dim); border: 1px solid var(--ec-border); }
 
+/* ===== MY JOB OVERLAY ===== */
+.myjob-overlay-panel { max-width: 480px; }
+.myjob-section { padding: 16px 20px; border-bottom: 1px solid var(--ec-border); }
+.myjob-section:last-child { border-bottom: none; }
+.myjob-section-head {
+    font-size: 12px; text-transform: uppercase; font-weight: 700;
+    letter-spacing: 0.5px; color: var(--ec-text-dim); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+}
+
+/* Current position summary */
+.myjob-current { text-align: center; padding: 8px 0; }
+.myjob-current-title { font-size: 18px; font-weight: 700; color: var(--ec-navy); margin-bottom: 4px; }
+.myjob-current-meta { font-size: 13px; color: var(--ec-text-dim); margin-bottom: 2px; }
+
+/* Email supervisor button */
+.myjob-action-btn {
+    width: 100%; padding: 10px 16px; border: none; border-radius: var(--ec-radius-sm);
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.myjob-email-btn {
+    background: var(--ec-info); color: var(--ec-text-inv);
+}
+.myjob-email-btn:hover { background: #2563eb; }
+
+/* Pay format radios */
+.myjob-pay-options {
+    display: flex; gap: 8px; margin-bottom: 8px;
+}
+.myjob-radio {
+    flex: 1; display: flex; align-items: center; gap: 6px;
+    padding: 8px 10px; border-radius: var(--ec-radius-sm);
+    border: 1px solid var(--ec-border); cursor: pointer;
+    font-size: 12px; transition: all 0.2s;
+}
+.myjob-radio:has(input:checked) {
+    border-color: var(--ec-gold); background: var(--ec-gold-glow);
+}
+.myjob-radio input { accent-color: var(--ec-gold-dim); }
+.myjob-radio-label { font-weight: 600; color: var(--ec-text); }
+.myjob-pay-preview {
+    font-size: 13px; color: var(--ec-navy); font-weight: 600;
+    text-align: center; padding: 6px 0; background: var(--ec-surface-alt);
+    border-radius: var(--ec-radius-sm);
+}
+
+/* Position list for transfers */
+.myjob-position-list { display: flex; flex-direction: column; gap: 6px; }
+.myjob-position-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border-radius: var(--ec-radius-sm);
+    border: 1px solid var(--ec-border); transition: all 0.2s;
+}
+.myjob-position-item:hover { border-color: var(--ec-gold); }
+.myjob-position-current {
+    background: var(--ec-gold-glow); border-color: var(--ec-gold);
+}
+.myjob-position-title { font-size: 13px; font-weight: 600; color: var(--ec-navy); }
+.myjob-position-meta { font-size: 11px; color: var(--ec-text-dim); margin-top: 2px; }
+.myjob-current-badge {
+    display: inline-block; padding: 1px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 700; background: var(--ec-gold); color: var(--ec-navy);
+    margin-left: 6px; vertical-align: middle;
+}
+.myjob-transfer-btn {
+    padding: 5px 14px; border: 1px solid var(--ec-info); color: var(--ec-info);
+    background: none; border-radius: var(--ec-radius-sm); font-size: 11px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.myjob-transfer-btn:hover { background: var(--ec-info); color: white; }
+
+/* Danger zone */
+.myjob-danger-zone { background: #fef2f2; }
+.myjob-resign-btn {
+    background: none; border: 1px solid var(--ec-danger); color: var(--ec-danger);
+}
+.myjob-resign-btn:hover { background: var(--ec-danger); color: white; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 700px) {
     .dash-header { flex-direction: column; text-align: center; }

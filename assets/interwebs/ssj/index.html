@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The ScaleStreet Journal</title>
+</head>
+<body>
+    <div class="ssj-root">
+        <div class="ssj-container">
+
+            <!-- Masthead -->
+            <div class="ssj-masthead">
+                <div class="ssj-masthead-rule top"></div>
+                <div class="ssj-masthead-inner">
+                    <span class="ssj-edition">Snakesia's Most Trusted Financial News</span>
+                    <h1 class="ssj-title">The ScaleStreet Journal</h1>
+                    <div class="ssj-dateline" id="dateline"></div>
+                </div>
+                <div class="ssj-masthead-rule bottom"></div>
+            </div>
+
+            <!-- Market Ticker Strip -->
+            <div class="ssj-ticker-strip" id="tickerStrip"></div>
+
+            <!-- Front Page (default view) -->
+            <div id="frontPage" class="ssj-page active">
+
+                <!-- Main Story (feature) -->
+                <div id="mainStory" class="ssj-main-story"></div>
+
+                <!-- Content + Sidebar -->
+                <div class="ssj-body">
+                    <!-- Headlines Column -->
+                    <div class="ssj-headlines" id="headlines"></div>
+
+                    <!-- Market Sidebar -->
+                    <div class="ssj-sidebar">
+                        <div class="ssj-sidebar-section">
+                            <h3 class="ssj-sidebar-title"><span data-icon="trending-up"></span> Top Movers</h3>
+                            <div id="topMovers"></div>
+                        </div>
+                        <div class="ssj-sidebar-section">
+                            <h3 class="ssj-sidebar-title"><span data-icon="chart-line"></span> Market Snapshot</h3>
+                            <div id="marketSnapshot"></div>
+                        </div>
+                        <div class="ssj-sidebar-ad">
+                            <div class="ssj-ad-label">ADVERTISEMENT</div>
+                            <div class="ssj-ad-content" id="adContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article Detail Page -->
+            <div id="articlePage" class="ssj-page">
+                <div class="ssj-article-nav">
+                    <a class="ssj-back-link" data-action="back-to-front"><span data-icon="arrow-left"></span> Back to Front Page</a>
+                </div>
+                <div id="articleContent" class="ssj-article"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="ssj-footer">
+                <div class="ssj-footer-rule"></div>
+                <p>&copy; 2025 The ScaleStreet Journal &bull; A publication of the Snake Valley Stock Exchange</p>
+                <p>Market data provided by SVSE. Visit <a data-action="goto-svse">scalestreet.ex</a> for live trading.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="journal.js"></script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<div class="sci-root">
+
+    <!-- SIDEBAR -->
+    <div class="sci-sidebar">
+        <img src="./assets/interwebs/environmental-protection/hero.png" class="sci-hero-img" alt="Snakesian forest and stream">
+        <div class="sci-sidebar-overlay">
+            <div class="sci-logo">
+                <span class="mdi mdi-leaf"></span>
+                Serpentville Conservation Initiative
+                <span class="sci-logo-tagline">Protecting Snakesia's Natural Heritage</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="sci-content">
+
+        <!-- ACTIVE SUPPORTER BANNER -->
+        <div class="sci-active-banner" id="sciActiveBanner" style="display: none;">
+            <div class="sci-active-info">
+                <span class="mdi mdi-leaf-circle"></span>
+                <span id="sciActiveText">You are a supporter!</span>
+            </div>
+            <div class="sci-active-actions">
+                <button class="sci-btn-cancel" onclick="SCISite.cancelMembership()">Cancel Membership</button>
+            </div>
+        </div>
+
+        <!-- MISSION -->
+        <div class="sci-section sci-mission">
+            <h1>Preserving Snakesia's Wild Places</h1>
+            <p>From the ancient forests of the Emerald Corridor to the crystal waters of the Serpentine River, Snakesia's natural landscapes are home to thousands of species found nowhere else on Earth.</p>
+            <p>The Serpentville Conservation Initiative works year-round to protect these irreplaceable habitats through reforestation, river restoration, wildlife monitoring, and environmental education. With your support, we can keep Snakesia wild.</p>
+        </div>
+
+        <!-- IMPACT STATS -->
+        <div class="sci-section sci-impact">
+            <h2>Our Impact</h2>
+            <div class="sci-stats-grid">
+                <div class="sci-stat-card">
+                    <div class="sci-stat-icon"><span class="mdi mdi-pine-tree"></span></div>
+                    <div class="sci-stat-number">1,200+</div>
+                    <div class="sci-stat-label">Hectares Protected</div>
+                </div>
+                <div class="sci-stat-card">
+                    <div class="sci-stat-icon"><span class="mdi mdi-bird"></span></div>
+                    <div class="sci-stat-number">47</div>
+                    <div class="sci-stat-label">Bird Species Monitored</div>
+                </div>
+                <div class="sci-stat-card">
+                    <div class="sci-stat-icon"><span class="mdi mdi-sprout"></span></div>
+                    <div class="sci-stat-number">4,800</div>
+                    <div class="sci-stat-label">Trees Planted This Year</div>
+                </div>
+                <div class="sci-stat-card">
+                    <div class="sci-stat-icon"><span class="mdi mdi-account-group"></span></div>
+                    <div class="sci-stat-number">120</div>
+                    <div class="sci-stat-label">Active Volunteers</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DONATE -->
+        <div class="sci-section sci-donate" id="sciDonateSection">
+            <h2 id="sciDonateTitle">Support Our Work</h2>
+            <p class="sci-donate-intro">Choose a monthly contribution level. Your donation funds habitat protection, wildlife research, and community education across Snakesia.</p>
+
+            <div class="sci-tiers" id="sciTiers">
+                <div class="sci-tier-card" onclick="SCISite.selectTier('seedling')" id="sciTier-seedling">
+                    <div class="sci-tier-header">
+                        <div class="sci-tier-name">
+                            <span class="mdi mdi-sprout"></span> Seedling
+                        </div>
+                        <div class="sci-tier-price">10 <span>&#x1F40D;/mo</span></div>
+                    </div>
+                    <div class="sci-tier-perks">Monthly conservation newsletter with field updates and wildlife photos from our team.</div>
+                </div>
+
+                <div class="sci-tier-card" onclick="SCISite.selectTier('guardian')" id="sciTier-guardian">
+                    <div class="sci-tier-badge">Popular</div>
+                    <div class="sci-tier-header">
+                        <div class="sci-tier-name">
+                            <span class="mdi mdi-shield-leaf"></span> Guardian
+                        </div>
+                        <div class="sci-tier-price">30 <span>&#x1F40D;/mo</span></div>
+                    </div>
+                    <div class="sci-tier-perks">Everything in Seedling, plus quarterly field reports with detailed research findings and your name on our digital donor wall.</div>
+                </div>
+
+                <div class="sci-tier-card" onclick="SCISite.selectTier('conservator')" id="sciTier-conservator">
+                    <div class="sci-tier-header">
+                        <div class="sci-tier-name">
+                            <span class="mdi mdi-tree"></span> Conservator
+                        </div>
+                        <div class="sci-tier-price">60 <span>&#x1F40D;/mo</span></div>
+                    </div>
+                    <div class="sci-tier-perks">Everything in Guardian, plus an annual invitation to the Conservation Gala and behind-the-scenes nature reserve tours with our field team.</div>
+                </div>
+            </div>
+
+            <!-- CONFIRM BOX (hidden until tier selected) -->
+            <div class="sci-confirm-box" id="sciConfirmBox" style="display: none;">
+                <div class="sci-confirm-title">
+                    <span class="mdi mdi-leaf-circle"></span>
+                    <span id="sciConfirmTierName">Confirm Membership</span>
+                </div>
+                <div class="sci-confirm-details" id="sciConfirmDetails"></div>
+                <div class="sci-confirm-note">Your first payment will be charged immediately. Future payments are processed monthly from your checking account.</div>
+                <div class="sci-confirm-actions">
+                    <button class="sci-btn sci-btn-secondary" onclick="SCISite.clearSelection()">Cancel</button>
+                    <button class="sci-btn sci-btn-primary" onclick="SCISite.confirmMembership()">
+                        <span class="mdi mdi-leaf"></span> Confirm &amp; Pay
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUPPORTER NOTE (shown when already supporting) -->
+            <div class="sci-supporter-note" id="sciSupporterNote" style="display: none;">
+                <span class="mdi mdi-check-circle"></span>
+                <span id="sciSupporterNoteText">Thank you for being a supporter! Your monthly contribution helps protect Snakesia's wild places.</span>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="sci-footer">
+            <span class="mdi mdi-leaf"></span> Serpentville Conservation Initiative &copy; 2026 &mdash; A registered Snakesian nonprofit &mdash; director@sci.ex
+        </div>
+
+    </div>
+</div>
+
+<script>
+var SCISite = {
+
+    _selectedTier: null,
+
+    _tiers: {
+        seedling:    { name: 'Seedling',    icon: 'mdi-sprout',      priceUSD: 5,  priceSnakes: 10, level: 1, perks: 'Monthly conservation newsletter' },
+        guardian:    { name: 'Guardian',     icon: 'mdi-shield-leaf', priceUSD: 15, priceSnakes: 30, level: 2, perks: 'Newsletter + quarterly field reports + donor wall' },
+        conservator: { name: 'Conservator',  icon: 'mdi-tree',        priceUSD: 30, priceSnakes: 60, level: 3, perks: 'All perks + annual Conservation Gala + reserve tours' }
+    },
+
+    // ===== INIT =====
+
+    init: function() {
+        this.checkActiveMembership();
+    },
+
+    // ===== HELPERS =====
+
+    _isReady: function() {
+        return typeof elxaOS !== 'undefined'
+            && elxaOS.financeService && elxaOS.financeService.isReady()
+            && elxaOS.inventoryService && elxaOS.inventoryService._ready;
+    },
+
+    _getActiveSub: function() {
+        if (!this._isReady()) return null;
+        var subs = elxaOS.inventoryService.getItems('subscriptions') || [];
+        for (var i = 0; i < subs.length; i++) {
+            if (subs[i].provider === 'Serpentville Conservation Initiative' && subs[i].status === 'active') {
+                return subs[i];
+            }
+        }
+        return null;
+    },
+
+    _sendEmail3Path: function(emailObj) {
+        // 3-path email injection: live ElxaMail -> localStorage -> queue
+        try {
+            if (typeof elxaOS !== 'undefined' && elxaOS.programs) {
+                var mailProgram = null;
+                var wins = elxaOS.windowManager ? elxaOS.windowManager.windows : {};
+                for (var wId in wins) {
+                    if (wins[wId] && wins[wId].program && wins[wId].program.addExternalEmail) {
+                        mailProgram = wins[wId].program;
+                        break;
+                    }
+                }
+                if (mailProgram) {
+                    mailProgram.addExternalEmail(emailObj);
+                    return;
+                }
+            }
+        } catch(e) {}
+
+        // Path 2: localStorage direct
+        try {
+            var stored = localStorage.getItem('elxamail-emails');
+            var emails = stored ? JSON.parse(stored) : [];
+            emailObj.id = 'sci-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+            emailObj.date = new Date().toISOString();
+            emailObj.read = false;
+            emailObj.folder = 'inbox';
+            emails.push(emailObj);
+            localStorage.setItem('elxamail-emails', JSON.stringify(emails));
+            return;
+        } catch(e) {}
+
+        // Path 3: queue for later
+        try {
+            var queued = localStorage.getItem('finance-queued-emails');
+            var queue = queued ? JSON.parse(queued) : [];
+            emailObj.id = 'sci-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+            emailObj.date = new Date().toISOString();
+            emailObj.read = false;
+            emailObj.folder = 'inbox';
+            queue.push(emailObj);
+            localStorage.setItem('finance-queued-emails', JSON.stringify(queue));
+        } catch(e) {}
+    },
+
+    // ===== MEMBERSHIP STATE =====
+
+    checkActiveMembership: function() {
+        var sub = this._getActiveSub();
+        if (sub) {
+            this._showActiveState(sub);
+        }
+    },
+
+    _showActiveState: function(sub) {
+        var tier = null;
+        for (var key in this._tiers) {
+            if (this._tiers[key].level === sub.tierLevel) {
+                tier = this._tiers[key];
+                break;
+            }
+        }
+        var tierName = tier ? tier.name : 'Supporter';
+
+        // Show banner
+        var banner = document.getElementById('sciActiveBanner');
+        var text = document.getElementById('sciActiveText');
+        if (banner && text) {
+            text.textContent = 'You are a ' + tierName + '-level supporter \u2014 thank you!';
+            banner.style.display = '';
+        }
+
+        // Hide tier cards, show supporter note
+        var cards = document.querySelectorAll('.sci-tier-card');
+        for (var i = 0; i < cards.length; i++) {
+            cards[i].style.display = 'none';
+        }
+        var intro = document.querySelector('.sci-donate-intro');
+        if (intro) intro.style.display = 'none';
+
+        var titleEl = document.getElementById('sciDonateTitle');
+        if (titleEl) titleEl.textContent = 'Your Membership';
+
+        var note = document.getElementById('sciSupporterNote');
+        var noteText = document.getElementById('sciSupporterNoteText');
+        if (note && noteText) {
+            var priceStr = tier ? (tier.priceSnakes + ' \uD83D\uDC0D') : '';
+            noteText.textContent = 'You are a ' + tierName + '-level supporter contributing ' + priceStr + '/month. Your generosity helps protect Snakesia\'s wild places. Thank you!';
+            note.style.display = '';
+        }
+
+        // Hide confirm box
+        var confirmBox = document.getElementById('sciConfirmBox');
+        if (confirmBox) confirmBox.style.display = 'none';
+    },
+
+    // ===== TIER SELECTION =====
+
+    selectTier: function(tierKey) {
+        // Don't allow if already supporting
+        if (this._getActiveSub()) return;
+
+        this._selectedTier = tierKey;
+        var tier = this._tiers[tierKey];
+
+        // Highlight selected card
+        var cards = document.querySelectorAll('.sci-tier-card');
+        for (var i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('sci-tier-selected');
+        }
+        var selected = document.getElementById('sciTier-' + tierKey);
+        if (selected) selected.classList.add('sci-tier-selected');
+
+        // Show confirm box
+        var box = document.getElementById('sciConfirmBox');
+        var titleEl = document.getElementById('sciConfirmTierName');
+        var details = document.getElementById('sciConfirmDetails');
+
+        if (titleEl) titleEl.textContent = 'Join as ' + tier.name;
+        if (details) {
+            details.textContent = 'You will be charged ' + tier.priceSnakes + ' \uD83D\uDC0D (' + tier.priceSnakes + ' snakes) per month from your checking account. Perks: ' + tier.perks + '.';
+        }
+        if (box) {
+            box.style.display = '';
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    },
+
+    clearSelection: function() {
+        this._selectedTier = null;
+        var cards = document.querySelectorAll('.sci-tier-card');
+        for (var i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('sci-tier-selected');
+        }
+        var box = document.getElementById('sciConfirmBox');
+        if (box) box.style.display = 'none';
+    },
+
+    // ===== CONFIRM / PAY =====
+
+    confirmMembership: function() {
+        if (!this._selectedTier) return;
+        if (!this._isReady()) {
+            if (typeof elxaOS !== 'undefined' && elxaOS.showToast) {
+                elxaOS.showToast('Financial services are not ready yet. Please try again.', 'warning');
+            }
+            return;
+        }
+
+        // Already supporting?
+        if (this._getActiveSub()) {
+            if (typeof elxaOS !== 'undefined' && elxaOS.showToast) {
+                elxaOS.showToast('You already have an active membership!', 'info');
+            }
+            return;
+        }
+
+        var tier = this._tiers[this._selectedTier];
+        var amount = tier.priceUSD;
+
+        // Check funds
+        var fundsCheck = elxaOS.financeService.checkFundsSync(amount, 'checking');
+        if (!fundsCheck.hasEnough) {
+            if (typeof elxaOS !== 'undefined' && elxaOS.showToast) {
+                elxaOS.showToast('Insufficient funds. You need ' + tier.priceSnakes + ' \uD83D\uDC0D in checking.', 'error');
+            }
+            return;
+        }
+
+        // Process first payment
+        var payResult = elxaOS.financeService.processPaymentSync(amount, 'Serpentville Conservation Initiative \u2014 ' + tier.name + ' Membership', 'checking');
+        if (!payResult.success) {
+            if (typeof elxaOS !== 'undefined' && elxaOS.showToast) {
+                elxaOS.showToast('Payment failed: ' + payResult.message, 'error');
+            }
+            return;
+        }
+
+        // Set up recurring payment
+        var recResult = elxaOS.financeService.addRecurringPayment({
+            description: 'Serpentville Conservation Initiative \u2014 ' + tier.name + ' Membership',
+            amount: amount,
+            type: 'subscription',
+            sourceAccount: 'checking',
+            linkedId: 'sci-donation'
+        });
+
+        var recurringId = (recResult && recResult.payment) ? recResult.payment.id : null;
+
+        // Add to inventory
+        elxaOS.inventoryService.addItem('subscriptions', {
+            name: 'SCI ' + tier.name + ' Membership',
+            provider: 'Serpentville Conservation Initiative',
+            monthlyRate: amount,
+            recurringPaymentId: recurringId,
+            startDate: new Date().toISOString(),
+            status: 'active',
+            tierLevel: tier.level,
+            tierName: tier.name,
+            paymentCount: 0,
+            messageIndex: 0,
+            perks: tier.perks
+        });
+
+        // Send welcome email
+        this._sendEmail3Path({
+            from: 'director@sci.ex',
+            fromName: 'Dr. Ivy Fernscale',
+            subject: 'Welcome to the Serpentville Conservation Initiative! \uD83C\uDF3F',
+            body: 'Dear Friend of Nature,\n\n'
+                + 'Welcome to the Serpentville Conservation Initiative! We are thrilled to have you join us as a ' + tier.name + '-level supporter.\n\n'
+                + 'Your monthly contribution of ' + tier.priceSnakes + ' snakes will go directly toward protecting Snakesia\'s forests, rivers, and wildlife. Every snake makes a difference.\n\n'
+                + 'Here is what you can look forward to:\n'
+                + '\u2022 ' + tier.perks + '\n\n'
+                + 'Together, we can keep Snakesia wild.\n\n'
+                + 'With gratitude,\n\n'
+                + 'Dr. Ivy Fernscale\n'
+                + 'Director, Serpentville Conservation Initiative\n'
+                + 'director@sci.ex'
+        });
+
+        // Toast
+        if (typeof elxaOS !== 'undefined' && elxaOS.showToast) {
+            elxaOS.showToast('Welcome to SCI! You are now a ' + tier.name + '-level supporter.', 'success');
+        }
+
+        // Update UI
+        this.clearSelection();
+        this._showActiveState({
+            tierLevel: tier.level,
+            tierName: tier.name
+        });
+    },
+
+    // ===== CANCEL =====
+
+    cancelMembership: function() {
+        if (!this._isReady()) return;
+        var sub = this._getActiveSub();
+        if (!sub) return;
+
+        // Use ElxaOS confirm dialog
+        if (typeof elxaOS !== 'undefined' && elxaOS.ui && elxaOS.ui.showConfirm) {
+            var self = this;
+            elxaOS.ui.showConfirm(
+                'Cancel your ' + (sub.tierName || 'SCI') + ' membership? You will no longer be charged monthly.',
+                function() { self._doCancel(sub); }
+            );
+        } else {
+            this._doCancel(sub);
+        }
+    },
+
+    _doCancel: function(sub) {
+        // Cancel recurring payment
+        if (sub.recurringPaymentId) {
+            elxaOS.financeService.cancelRecurringPayment(sub.recurringPaymentId);
+        }
+
+        // Update inventory
+        elxaOS.inventoryService.updateItem('subscriptions', sub.id, { status: 'cancelled' });
+
+        // Send farewell email
+        this._sendEmail3Path({
+            from: 'director@sci.ex',
+            fromName: 'Dr. Ivy Fernscale',
+            subject: 'We\'ll miss you \uD83C\uDF43',
+            body: 'Dear Friend,\n\n'
+                + 'We are sorry to see you go. Your support has made a real difference for Snakesia\'s wild places, and we hope you\'ll consider rejoining us in the future.\n\n'
+                + 'Your membership has been cancelled and no further payments will be processed.\n\n'
+                + 'The forests and rivers of Snakesia thank you for everything.\n\n'
+                + 'Warm regards,\n\n'
+                + 'Dr. Ivy Fernscale\n'
+                + 'Director, Serpentville Conservation Initiative\n'
+                + 'director@sci.ex'
+        });
+
+        // Toast
+        if (typeof elxaOS !== 'undefined' && elxaOS.showToast) {
+            elxaOS.showToast('Membership cancelled. Thank you for your support.', 'info');
+        }
+
+        // Reset UI
+        this._resetUI();
+    },
+
+    _resetUI: function() {
+        // Hide banner
+        var banner = document.getElementById('sciActiveBanner');
+        if (banner) banner.style.display = 'none';
+
+        // Show tier cards
+        var cards = document.querySelectorAll('.sci-tier-card');
+        for (var i = 0; i < cards.length; i++) {
+            cards[i].style.display = '';
+        }
+        var intro = document.querySelector('.sci-donate-intro');
+        if (intro) intro.style.display = '';
+
+        var titleEl = document.getElementById('sciDonateTitle');
+        if (titleEl) titleEl.textContent = 'Support Our Work';
+
+        // Hide supporter note
+        var note = document.getElementById('sciSupporterNote');
+        if (note) note.style.display = 'none';
+    }
+};
+
+// Auto-init
+SCISite.init();
+</script>

@@ -1,0 +1,842 @@
+<div class="aquarium-root">
+
+    <!-- HEADER -->
+    <div class="aquarium-header">
+        <div class="aquarium-header-inner">
+            <div class="aquarium-logo">
+                <span class="mdi mdi-fish"></span>
+                Snake Valley Aquarium
+            </div>
+            <div class="aquarium-header-nav">
+                <a href="#" onclick="document.getElementById('aquariumExhibits').scrollIntoView({behavior:'smooth'}); return false;">Exhibits</a>
+                <a href="#" onclick="document.getElementById('aquariumVisit').scrollIntoView({behavior:'smooth'}); return false;">Visit</a>
+                <a href="#" onclick="document.getElementById('aquariumSupport').scrollIntoView({behavior:'smooth'}); return false;">Support</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO BANNER -->
+    <div class="aquarium-hero">
+        <img src="./assets/interwebs/aquarium/banner.png" alt="Snake Valley Aquarium">
+        <div class="aquarium-hero-overlay">
+            <h1>Snake Valley Aquarium</h1>
+            <p>Dive Into the Wonders of the Deep Since 1962</p>
+        </div>
+    </div>
+
+    <!-- ACTIVE MEMBERSHIP BANNER (hidden by default) -->
+    <div class="aquarium-membership-banner" id="aquariumMemberBanner" style="display: none;">
+        <div class="aquarium-membership-inner">
+            <div class="aquarium-membership-info">
+                <span class="mdi mdi-star-circle"></span>
+                <span id="aquariumMemberText">You are an aquarium supporter!</span>
+            </div>
+            <div class="aquarium-membership-actions">
+                <button class="aquarium-btn aquarium-btn-outline" onclick="AquariumSite.openDonateModal(true)">Change Tier</button>
+                <button class="aquarium-btn aquarium-btn-cancel" onclick="AquariumSite.cancelDonation()">Cancel Support</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="aquarium-section aquarium-about">
+        <div class="aquarium-section-title">
+            <span class="mdi mdi-information-outline"></span>
+            About the Aquarium
+        </div>
+        <div class="aquarium-section-subtitle">Where the Ocean Comes to Life</div>
+        <p>The Snake Valley Aquarium has been Snakesia's window to the underwater world for over 60 years. Founded in 1962 by marine biologist Dr. Tidal Adderworth, the aquarium houses more than 8,000 aquatic animals across 200 species — from the vibrant coral reefs of the Snakesian Coast to the mysterious creatures of the deep ocean.</p>
+        <p>Our world-class facility features 2.4 million litres of saltwater habitats, interactive touch pools, daily feeding demonstrations, and cutting-edge marine research programs. Whether you're watching sharks glide overhead or gently touching a starfish for the first time, every visit is an unforgettable ocean adventure.</p>
+    </div>
+
+    <hr class="aquarium-section-divider">
+
+    <!-- EXHIBITS -->
+    <div class="aquarium-section aquarium-exhibits" id="aquariumExhibits">
+        <div class="aquarium-section-title">
+            <span class="mdi mdi-waves"></span>
+            Our Exhibits
+        </div>
+        <div class="aquarium-section-subtitle">Six Worlds Beneath the Waves</div>
+
+        <div class="aquarium-exhibit-grid">
+            <div class="aquarium-exhibit-card">
+                <div class="aquarium-exhibit-img"><img src="./assets/interwebs/aquarium/images/shark tank.png" alt="Shark Encounter"></div>
+                <div class="aquarium-exhibit-body">
+                    <div class="aquarium-exhibit-icon"><span class="mdi mdi-shark-fin"></span></div>
+                    <div class="aquarium-exhibit-name">Shark Encounter</div>
+                    <div class="aquarium-exhibit-desc">Walk through our 40-metre underwater tunnel as blacktip reef sharks, hammerheads, and sand tigers glide just centimetres above your head. Featuring daily shark feeding shows at 2:00 PM.</div>
+                </div>
+            </div>
+            <div class="aquarium-exhibit-card">
+                <div class="aquarium-exhibit-img"><img src="./assets/interwebs/aquarium/images/clownfish tank.png" alt="Coral Reef Experience"></div>
+                <div class="aquarium-exhibit-body">
+                    <div class="aquarium-exhibit-icon"><span class="mdi mdi-fishbowl"></span></div>
+                    <div class="aquarium-exhibit-name">Coral Reef Experience</div>
+                    <div class="aquarium-exhibit-desc">Immerse yourself in a living coral reef teeming with clownfish, tangs, angelfish, and sea anemones. Our reef tank recreates the vibrant ecosystems of the Snakesian Barrier Reef.</div>
+                </div>
+            </div>
+            <div class="aquarium-exhibit-card">
+                <div class="aquarium-exhibit-img"><img src="./assets/interwebs/aquarium/images/jellyfish.png" alt="Jellyfish Gallery"></div>
+                <div class="aquarium-exhibit-body">
+                    <div class="aquarium-exhibit-icon"><span class="mdi mdi-jellyfish"></span></div>
+                    <div class="aquarium-exhibit-name">Jellyfish Gallery</div>
+                    <div class="aquarium-exhibit-desc">A mesmerizing exhibition of bioluminescent beauty. Watch moon jellyfish, lion's mane jellyfish, and the rare Snakesian blue bell drift through colour-shifting LED displays.</div>
+                </div>
+            </div>
+            <div class="aquarium-exhibit-card">
+                <div class="aquarium-exhibit-img"><img src="./assets/interwebs/aquarium/images/penguins.png" alt="Penguin Cove"></div>
+                <div class="aquarium-exhibit-body">
+                    <div class="aquarium-exhibit-icon"><span class="mdi mdi-penguin"></span></div>
+                    <div class="aquarium-exhibit-name">Penguin Cove</div>
+                    <div class="aquarium-exhibit-desc">Home to our colony of 24 Snakesian rockhopper penguins! Watch them waddle, swim, and play in their climate-controlled habitat. Daily feeding and enrichment sessions at 11:00 AM and 3:00 PM.</div>
+                </div>
+            </div>
+            <div class="aquarium-exhibit-card">
+                <div class="aquarium-exhibit-img"><img src="./assets/interwebs/aquarium/images/kids petting starfish.png" alt="Tide Pool Touch Tank"></div>
+                <div class="aquarium-exhibit-body">
+                    <div class="aquarium-exhibit-icon"><span class="mdi mdi-hand-wave"></span></div>
+                    <div class="aquarium-exhibit-name">Tide Pool Touch Tank</div>
+                    <div class="aquarium-exhibit-desc">Get hands-on with the ocean! Gently touch sea stars, hermit crabs, sea urchins, and horseshoe crabs in our supervised touch pools. A favourite with families and young marine biologists.</div>
+                </div>
+            </div>
+            <div class="aquarium-exhibit-card">
+                <div class="aquarium-exhibit-img"><img src="./assets/interwebs/aquarium/images/starfish dry display.png" alt="Marine Discovery Center"></div>
+                <div class="aquarium-exhibit-body">
+                    <div class="aquarium-exhibit-icon"><span class="mdi mdi-microscope"></span></div>
+                    <div class="aquarium-exhibit-name">Marine Discovery Center</div>
+                    <div class="aquarium-exhibit-desc">Explore the science of the sea! Examine preserved specimens, learn about ocean conservation, and discover how marine biologists study the creatures of the deep. Interactive stations for all ages.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="aquarium-section-divider">
+
+    <!-- VISIT -->
+    <div class="aquarium-section" id="aquariumVisit">
+        <div class="aquarium-section-title">
+            <span class="mdi mdi-map-marker"></span>
+            Plan Your Visit
+        </div>
+        <div class="aquarium-section-subtitle">Come Make a Splash</div>
+
+        <div class="aquarium-visit-grid">
+            <div class="aquarium-visit-card">
+                <div class="aquarium-visit-card-title">
+                    <span class="mdi mdi-clock-outline"></span> Hours
+                </div>
+                <div class="aquarium-visit-item"><strong>Mon – Sat:</strong> 9:30 AM – 6:00 PM</div>
+                <div class="aquarium-visit-item"><strong>Sunday:</strong> 10:00 AM – 5:00 PM</div>
+                <div class="aquarium-visit-item" style="margin-top: 6px; font-size: 11px; color: #6a8a96;">Last entry 1 hour before closing.<br>All times in Snakesia Time.</div>
+            </div>
+            <div class="aquarium-visit-card">
+                <div class="aquarium-visit-card-title">
+                    <span class="mdi mdi-ticket-outline"></span> Admission
+                </div>
+                <div class="aquarium-visit-item"><strong>Adults:</strong> $24</div>
+                <div class="aquarium-visit-item"><strong>Children (under 12):</strong> $14</div>
+                <div class="aquarium-visit-item"><strong>Seniors (65+):</strong> $18</div>
+                <div class="aquarium-visit-item aquarium-visit-highlight" style="margin-top: 6px;">Aquarium Supporters: FREE!</div>
+            </div>
+            <div class="aquarium-visit-card">
+                <div class="aquarium-visit-card-title">
+                    <span class="mdi mdi-directions"></span> Location
+                </div>
+                <div class="aquarium-visit-item">450 Harbor Drive</div>
+                <div class="aquarium-visit-item">Snake Valley, Snakesia</div>
+                <div class="aquarium-visit-item" style="margin-top: 6px; font-size: 11px; color: #6a8a96;">Free parking available.<br>Bus routes 3, 7, and 15.</div>
+            </div>
+        </div>
+
+        <!-- TICKET PURCHASE -->
+        <div class="aquarium-ticket-box" id="aquariumTicketBox">
+            <div class="aquarium-ticket-header">
+                <span class="mdi mdi-ticket-confirmation-outline"></span>
+                <span id="aquariumTicketTitle">Buy Tickets</span>
+            </div>
+            <div class="aquarium-ticket-supporter-note" id="aquariumTicketSupporterNote" style="display: none;">
+                <span class="mdi mdi-star-circle"></span>
+                You have free admission as a supporter! Buy extra tickets here to gift to friends and family.
+            </div>
+            <div class="aquarium-ticket-types">
+                <div class="aquarium-ticket-type">
+                    <div class="aquarium-ticket-type-info">
+                        <div class="aquarium-ticket-type-name">Adult</div>
+                        <div class="aquarium-ticket-type-price">$24</div>
+                    </div>
+                    <div class="aquarium-ticket-qty">
+                        <label>Qty:</label>
+                        <select id="aquariumQtyAdult" onchange="AquariumSite.updateTicketTotal()">
+                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="aquarium-ticket-type">
+                    <div class="aquarium-ticket-type-info">
+                        <div class="aquarium-ticket-type-name">Child <span class="aquarium-ticket-age">(under 12)</span></div>
+                        <div class="aquarium-ticket-type-price">$14</div>
+                    </div>
+                    <div class="aquarium-ticket-qty">
+                        <label>Qty:</label>
+                        <select id="aquariumQtyChild" onchange="AquariumSite.updateTicketTotal()">
+                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="aquarium-ticket-type">
+                    <div class="aquarium-ticket-type-info">
+                        <div class="aquarium-ticket-type-name">Senior <span class="aquarium-ticket-age">(65+)</span></div>
+                        <div class="aquarium-ticket-type-price">$18</div>
+                    </div>
+                    <div class="aquarium-ticket-qty">
+                        <label>Qty:</label>
+                        <select id="aquariumQtySenior" onchange="AquariumSite.updateTicketTotal()">
+                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="aquarium-ticket-footer">
+                <div class="aquarium-ticket-total" id="aquariumTicketTotal" style="visibility: hidden;">
+                    Total: <strong id="aquariumTicketTotalAmount">$0</strong>
+                </div>
+                <button class="aquarium-btn aquarium-btn-primary" id="aquariumBuyTicketsBtn" onclick="AquariumSite.buyTickets()" disabled>
+                    <span class="mdi mdi-ticket-outline"></span> Purchase Tickets
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="aquarium-section-divider">
+
+    <!-- SUPPORT -->
+    <div class="aquarium-section" id="aquariumSupport">
+        <div class="aquarium-section-title">
+            <span class="mdi mdi-heart-outline"></span>
+            Support the Aquarium
+        </div>
+        <div class="aquarium-section-subtitle">Help Us Protect Our Oceans</div>
+
+        <div class="aquarium-support-intro">
+            Your monthly contribution directly funds animal care, habitat maintenance, marine conservation research, and educational programmes for Snakesian schools. As a supporter, you'll enjoy free admission and exclusive benefits — and you'll be helping protect the incredible creatures that call our oceans home.
+        </div>
+
+        <div class="aquarium-tier-grid" id="aquariumTierGrid"></div>
+    </div>
+
+    <!-- DONATE MODAL -->
+    <div class="aquarium-modal-overlay" id="aquariumModal" style="display: none;">
+        <div class="aquarium-modal">
+            <div class="aquarium-modal-header">
+                <span class="mdi mdi-heart-outline"></span>
+                <span id="aquariumModalTitle">Become a Supporter</span>
+            </div>
+            <div class="aquarium-modal-body">
+                <p>Choose a monthly contribution tier. Your support keeps our tanks flowing and our animals thriving!</p>
+                <div class="aquarium-modal-tier-label">Select your tier:</div>
+                <div class="aquarium-modal-tiers" id="aquariumModalTiers"></div>
+                <div class="aquarium-modal-note" id="aquariumModalNote">
+                    Your first payment will be charged immediately. Future payments will be processed monthly from your checking account.
+                </div>
+            </div>
+            <div class="aquarium-modal-footer">
+                <button class="aquarium-btn aquarium-btn-secondary" onclick="AquariumSite.closeModal()">Cancel</button>
+                <button class="aquarium-btn aquarium-btn-primary" id="aquariumConfirmBtn" onclick="AquariumSite.confirmDonation()" disabled>
+                    <span class="mdi mdi-heart"></span> <span id="aquariumConfirmLabel">Confirm Support</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="aquarium-footer">
+        <span class="mdi mdi-fish"></span> Snake Valley Aquarium &copy; 2026 &mdash; 450 Harbor Drive, Snake Valley, Snakesia &mdash; info@svaquarium.ex
+    </div>
+
+</div>
+
+<script>
+var AquariumSite = {
+
+    _selectedTier: null,
+    _isChangingTier: false,
+
+    // Tier data (amounts in USD, displayed as snakes x2)
+    TIERS: [
+        { amount: 25,  badge: 'Friend',    level: 0, perks: ['Thank you email', 'Name on digital donor wall', 'Free aquarium admission'] },
+        { amount: 100, badge: 'Explorer',   level: 1, perks: ['All Friend perks', 'Quarterly newsletter mention', '10% gift shop discount'], featured: true },
+        { amount: 250, badge: 'Guardian',   level: 2, perks: ['All Explorer perks', 'Annual Ocean Night experience', 'Behind-the-scenes tour access'] },
+        { amount: 500, badge: 'Benefactor', level: 3, perks: ['All Guardian perks', 'Annual Benefactor\'s Gala Dinner', 'VIP exhibit previews', 'Personal marine biologist tours'] }
+    ],
+
+    // Ticket prices in USD (displayed as snakes x2: adult=$24, child=$14, senior=$18)
+    TICKETS: [
+        { type: 'adult',  label: 'Adult Admission',  price: 12 },
+        { type: 'child',  label: 'Child Admission',  price: 7 },
+        { type: 'senior', label: 'Senior Admission', price: 9 }
+    ],
+
+    // ===== INIT =====
+
+    init: function() {
+        this.renderTierCards();
+        this.checkActiveDonation();
+        this.checkSupporterTicketNote();
+    },
+
+    // ===== HELPERS =====
+
+    _financeReady: function() {
+        return typeof elxaOS !== 'undefined' &&
+               elxaOS.financeService &&
+               elxaOS.financeService.isReady();
+    },
+
+    _inventoryReady: function() {
+        return typeof elxaOS !== 'undefined' &&
+               elxaOS.inventoryService &&
+               elxaOS.inventoryService._ready;
+    },
+
+    _snakes: function(usd) {
+        return '$' + (usd * 2).toFixed(0);
+    },
+
+    _getActiveDonation: function() {
+        if (!this._inventoryReady()) return null;
+        var subs = elxaOS.inventoryService.getItems('subscriptions') || [];
+        for (var i = 0; i < subs.length; i++) {
+            if (subs[i].provider === 'Snake Valley Aquarium' && subs[i].status === 'active') {
+                return subs[i];
+            }
+        }
+        return null;
+    },
+
+    _getTierByAmount: function(amount) {
+        for (var i = 0; i < this.TIERS.length; i++) {
+            if (this.TIERS[i].amount === amount) return this.TIERS[i];
+        }
+        return null;
+    },
+
+    _getUserEmail: function() {
+        if (typeof elxaMailSystem !== 'undefined' && elxaMailSystem.isLoggedIn && elxaMailSystem.currentUser) {
+            return elxaMailSystem.currentUser.email || 'user@elxamail.ex';
+        }
+        return 'user@elxamail.ex';
+    },
+
+    _sendEmail: function(subject, body) {
+        var emailData = {
+            from: 'membership@svaquarium.ex',
+            fromName: 'Snake Valley Aquarium',
+            to: this._getUserEmail(),
+            subject: subject,
+            body: body,
+            date: new Date().toISOString(),
+            read: false,
+            isFinanceEmail: true
+        };
+
+        // Path A: ElxaMail is running
+        if (typeof elxaMailSystem !== 'undefined' && elxaMailSystem.isLoggedIn) {
+            elxaMailSystem.emails.inbox.unshift(emailData);
+            elxaMailSystem.saveCurrentUser();
+            if (elxaMailSystem.currentFolder === 'inbox') {
+                elxaMailSystem.updateEmailList();
+            }
+            return;
+        }
+
+        // Path B: Direct localStorage injection
+        try {
+            var toEmail = emailData.to || '';
+            var username = toEmail.includes('@') ? toEmail.split('@')[0] : toEmail;
+            if (username) {
+                var raw = localStorage.getItem('elxaOS-mail-user-' + username);
+                if (raw) {
+                    var userData = JSON.parse(raw);
+                    if (!userData.folders) userData.folders = { inbox: [], sent: [], drafts: [], trash: [] };
+                    if (!userData.folders.inbox) userData.folders.inbox = [];
+                    userData.folders.inbox.unshift(emailData);
+                    localStorage.setItem('elxaOS-mail-user-' + username, JSON.stringify(userData));
+                    return;
+                }
+            }
+        } catch (e) { /* fall through */ }
+
+        // Path C: Queue
+        try {
+            var queued = JSON.parse(localStorage.getItem('finance-queued-emails') || '[]');
+            queued.push(emailData);
+            localStorage.setItem('finance-queued-emails', JSON.stringify(queued));
+        } catch (e) { /* silent */ }
+    },
+
+    // ===== RENDER =====
+
+    renderTierCards: function() {
+        var grid = document.getElementById('aquariumTierGrid');
+        if (!grid) return;
+
+        var activeSub = this._getActiveDonation();
+        var activeTierAmount = activeSub ? activeSub.monthlyRate : null;
+        var html = '';
+
+        for (var i = 0; i < this.TIERS.length; i++) {
+            var tier = this.TIERS[i];
+            var isActive = (activeTierAmount === tier.amount);
+            var cardClass = 'aquarium-tier-card';
+            if (tier.featured && !activeSub) cardClass += ' aquarium-tier-featured';
+
+            html += '<div class="' + cardClass + '">';
+            html += '<div class="aquarium-tier-badge">' + tier.badge + '</div>';
+            html += '<div class="aquarium-tier-amount">' + this._snakes(tier.amount) + '</div>';
+            html += '<div class="aquarium-tier-per">per month</div>';
+            html += '<div class="aquarium-tier-perks">';
+            for (var j = 0; j < tier.perks.length; j++) {
+                html += '<div class="aquarium-tier-perk"><span class="mdi mdi-check"></span> ' + tier.perks[j] + '</div>';
+            }
+            html += '</div>';
+
+            if (isActive) {
+                html += '<button class="aquarium-btn aquarium-btn-coral" disabled>'
+                    + '<span class="mdi mdi-star"></span> Current Tier</button>';
+            } else if (activeSub) {
+                var label = (tier.amount > activeSub.monthlyRate) ? 'Upgrade' : 'Switch';
+                html += '<button class="aquarium-btn aquarium-btn-outline" onclick="AquariumSite.openDonateModal(true, ' + tier.amount + ')">'
+                    + label + '</button>';
+            } else {
+                html += '<button class="aquarium-btn aquarium-btn-primary" onclick="AquariumSite.openDonateModal(false, ' + tier.amount + ')">'
+                    + '<span class="mdi mdi-heart-outline"></span> Join</button>';
+            }
+
+            html += '</div>';
+        }
+
+        grid.innerHTML = html;
+    },
+
+    checkActiveDonation: function() {
+        var banner = document.getElementById('aquariumMemberBanner');
+        var activeSub = this._getActiveDonation();
+
+        if (activeSub && banner) {
+            var tier = this._getTierByAmount(activeSub.monthlyRate);
+            var tierName = tier ? tier.badge : 'Supporter';
+            document.getElementById('aquariumMemberText').innerHTML =
+                '<strong>' + tierName + ' Member</strong> &mdash; ' + this._snakes(activeSub.monthlyRate) + '/month';
+            banner.style.display = 'block';
+        } else if (banner) {
+            banner.style.display = 'none';
+        }
+    },
+
+    // ===== TICKET PURCHASE =====
+
+    checkSupporterTicketNote: function() {
+        var note = document.getElementById('aquariumTicketSupporterNote');
+        var titleEl = document.getElementById('aquariumTicketTitle');
+        var activeSub = this._getActiveDonation();
+        if (activeSub && note) {
+            note.style.display = 'flex';
+            if (titleEl) titleEl.textContent = 'Buy Gift Tickets';
+        } else if (note) {
+            note.style.display = 'none';
+            if (titleEl) titleEl.textContent = 'Buy Tickets';
+        }
+    },
+
+    updateTicketTotal: function() {
+        var adultQty = parseInt(document.getElementById('aquariumQtyAdult').value) || 0;
+        var childQty = parseInt(document.getElementById('aquariumQtyChild').value) || 0;
+        var seniorQty = parseInt(document.getElementById('aquariumQtySenior').value) || 0;
+        var totalQty = adultQty + childQty + seniorQty;
+
+        // Calculate total in USD (adult=12, child=7, senior=9)
+        var totalUsd = (adultQty * 12) + (childQty * 7) + (seniorQty * 9);
+
+        var totalEl = document.getElementById('aquariumTicketTotal');
+        var totalAmountEl = document.getElementById('aquariumTicketTotalAmount');
+        var buyBtn = document.getElementById('aquariumBuyTicketsBtn');
+
+        if (totalQty > 0) {
+            totalEl.style.visibility = 'visible';
+            totalAmountEl.textContent = this._snakes(totalUsd);
+            buyBtn.disabled = false;
+        } else {
+            totalEl.style.visibility = 'hidden';
+            buyBtn.disabled = true;
+        }
+    },
+
+    buyTickets: function() {
+        if (!this._financeReady() || !this._inventoryReady()) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Financial services are not ready. Please try again in a moment.', 'error');
+            }
+            return;
+        }
+
+        var adultQty = parseInt(document.getElementById('aquariumQtyAdult').value) || 0;
+        var childQty = parseInt(document.getElementById('aquariumQtyChild').value) || 0;
+        var seniorQty = parseInt(document.getElementById('aquariumQtySenior').value) || 0;
+        var totalQty = adultQty + childQty + seniorQty;
+
+        if (totalQty === 0) return;
+
+        // USD amounts: adult=12, child=7, senior=9
+        var totalUsd = (adultQty * 12) + (childQty * 7) + (seniorQty * 9);
+
+        // Check balance
+        var funds = elxaOS.financeService.checkFundsSync(totalUsd, 'checking');
+        if (!funds.hasEnough) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Insufficient funds! You need ' + this._snakes(totalUsd) + ' to purchase these tickets.', 'error');
+            }
+            return;
+        }
+
+        // Build description
+        var parts = [];
+        if (adultQty > 0) parts.push(adultQty + ' adult');
+        if (childQty > 0) parts.push(childQty + ' child');
+        if (seniorQty > 0) parts.push(seniorQty + ' senior');
+        var desc = 'SVA Tickets — ' + parts.join(', ');
+
+        // Process payment
+        var payResult = elxaOS.financeService.processPaymentSync(totalUsd, desc, 'checking');
+        if (!payResult || !payResult.success) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Payment failed: ' + (payResult ? payResult.message : 'Unknown error'), 'error');
+            }
+            return;
+        }
+
+        // Add individual ticket items to inventory
+        var ticketTypes = [
+            { type: 'adult',  label: 'Adult Admission',  qty: adultQty,  price: 12 },
+            { type: 'child',  label: 'Child Admission',  qty: childQty,  price: 7 },
+            { type: 'senior', label: 'Senior Admission', qty: seniorQty, price: 9 }
+        ];
+
+        for (var t = 0; t < ticketTypes.length; t++) {
+            for (var q = 0; q < ticketTypes[t].qty; q++) {
+                elxaOS.inventoryService.addItem('tickets', {
+                    venue: 'Snake Valley Aquarium',
+                    venueShort: 'aquarium',
+                    ticketType: ticketTypes[t].type,
+                    ticketLabel: ticketTypes[t].label,
+                    price: ticketTypes[t].price,
+                    purchaseDate: new Date().toISOString(),
+                    status: 'valid',
+                    giftable: true
+                });
+            }
+        }
+
+        // Send confirmation email
+        var emailBody = 'Dear Visitor,\n\n'
+            + 'Thank you for purchasing tickets to the Snake Valley Aquarium!\n\n'
+            + 'YOUR TICKET ORDER:\n';
+        if (adultQty > 0) emailBody += '  ' + adultQty + 'x Adult Admission — ' + this._snakes(adultQty * 12) + '\n';
+        if (childQty > 0) emailBody += '  ' + childQty + 'x Child Admission — ' + this._snakes(childQty * 7) + '\n';
+        if (seniorQty > 0) emailBody += '  ' + seniorQty + 'x Senior Admission — ' + this._snakes(seniorQty * 9) + '\n';
+        emailBody += '  Total: ' + this._snakes(totalUsd) + '\n\n'
+            + 'Your tickets are valid for any regular opening day. Simply present your ticket confirmation at the front desk upon arrival.\n\n'
+            + 'We look forward to welcoming you!\n\n'
+            + 'Warm regards,\n\n'
+            + 'Dr. Marina Coralscale\n'
+            + 'Director, Snake Valley Aquarium\n'
+            + 'director@svaquarium.ex';
+
+        this._sendEmail('Your Aquarium Tickets — Order Confirmation', emailBody);
+
+        // Notification
+        if (typeof elxaOS !== 'undefined' && elxaOS.notificationService) {
+            elxaOS.notificationService.addNotification({
+                title: 'Aquarium Tickets Purchased!',
+                body: totalQty + ' ticket' + (totalQty > 1 ? 's' : '') + ' purchased for ' + this._snakes(totalUsd),
+                icon: 'mdi-ticket-confirmation',
+                category: 'general',
+                urgency: 'info',
+                toast: true
+            });
+        }
+
+        // Reset form
+        document.getElementById('aquariumQtyAdult').value = '0';
+        document.getElementById('aquariumQtyChild').value = '0';
+        document.getElementById('aquariumQtySenior').value = '0';
+        this.updateTicketTotal();
+
+        if (typeof ElxaUI !== 'undefined') {
+            ElxaUI.showMessage(totalQty + ' ticket' + (totalQty > 1 ? 's' : '') + ' purchased! Check your email for confirmation.', 'success');
+        }
+    },
+
+    // ===== DONATE MODAL =====
+
+    openDonateModal: function(isChange, preselect) {
+        this._isChangingTier = !!isChange;
+        this._selectedTier = null;
+
+        var activeSub = this._getActiveDonation();
+
+        document.getElementById('aquariumModalTitle').textContent =
+            isChange ? 'Change Your Support Tier' : 'Become a Supporter';
+        document.getElementById('aquariumConfirmLabel').textContent =
+            isChange ? 'Confirm Change' : 'Confirm Support';
+        document.getElementById('aquariumConfirmBtn').disabled = true;
+
+        var noteEl = document.getElementById('aquariumModalNote');
+        if (isChange) {
+            noteEl.textContent = 'Your current subscription will be cancelled and replaced with the new tier. The new amount will be charged immediately.';
+        } else {
+            noteEl.textContent = 'Your first payment will be charged immediately. Future payments will be processed monthly from your checking account.';
+        }
+
+        var tiersEl = document.getElementById('aquariumModalTiers');
+        var html = '';
+        for (var i = 0; i < this.TIERS.length; i++) {
+            var tier = this.TIERS[i];
+            var isCurrent = activeSub && activeSub.monthlyRate === tier.amount;
+            var btnClass = 'aquarium-modal-tier-btn';
+            if (isCurrent) btnClass += ' aquarium-modal-tier-current';
+
+            html += '<button class="' + btnClass + '" data-amount="' + tier.amount + '"'
+                + (isCurrent ? ' disabled' : ' onclick="AquariumSite.selectTier(' + tier.amount + ', this)"')
+                + '>'
+                + '<div class="aquarium-modal-tier-amount">' + this._snakes(tier.amount) + '</div>'
+                + '<div class="aquarium-modal-tier-per">per month</div>'
+                + '<div class="aquarium-modal-tier-name">' + tier.badge + (isCurrent ? ' (current)' : '') + '</div>'
+                + '</button>';
+        }
+        tiersEl.innerHTML = html;
+
+        if (preselect && !(activeSub && activeSub.monthlyRate === preselect)) {
+            var btns = tiersEl.querySelectorAll('.aquarium-modal-tier-btn');
+            for (var j = 0; j < btns.length; j++) {
+                if (parseInt(btns[j].getAttribute('data-amount')) === preselect) {
+                    this.selectTier(preselect, btns[j]);
+                    break;
+                }
+            }
+        }
+
+        document.getElementById('aquariumModal').style.display = 'flex';
+    },
+
+    selectTier: function(amount, btn) {
+        this._selectedTier = amount;
+
+        var buttons = document.querySelectorAll('.aquarium-modal-tier-btn');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove('aquarium-modal-tier-selected');
+        }
+        btn.classList.add('aquarium-modal-tier-selected');
+
+        document.getElementById('aquariumConfirmBtn').disabled = false;
+    },
+
+    closeModal: function() {
+        document.getElementById('aquariumModal').style.display = 'none';
+        this._selectedTier = null;
+        this._isChangingTier = false;
+    },
+
+    // ===== CONFIRM DONATION =====
+
+    confirmDonation: function() {
+        if (!this._selectedTier) return;
+        if (!this._financeReady() || !this._inventoryReady()) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Financial services are not ready. Please try again in a moment.', 'error');
+            }
+            return;
+        }
+
+        var amount = this._selectedTier;
+        var tierInfo = this._getTierByAmount(amount);
+        if (!tierInfo) return;
+
+        if (this._isChangingTier) {
+            var oldSub = this._getActiveDonation();
+            if (oldSub) {
+                this._doCancelSilent(oldSub);
+            }
+        }
+
+        var funds = elxaOS.financeService.checkFundsSync(amount, 'checking');
+        if (!funds.hasEnough) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Insufficient funds in checking account! You need ' + this._snakes(amount) + ' to start your support.', 'error');
+            }
+            return;
+        }
+
+        var payResult = elxaOS.financeService.processPaymentSync(
+            amount,
+            'Snake Valley Aquarium — ' + tierInfo.badge + ' Support (first month)',
+            'checking'
+        );
+
+        if (!payResult || !payResult.success) {
+            if (typeof ElxaUI !== 'undefined') {
+                ElxaUI.showMessage('Payment failed: ' + (payResult ? payResult.message : 'Unknown error'), 'error');
+            }
+            return;
+        }
+
+        var recurResult = elxaOS.financeService.addRecurringPayment({
+            description: 'SVA — ' + tierInfo.badge + ' Membership',
+            amount: amount,
+            type: 'subscription',
+            sourceAccount: 'checking',
+            linkedId: 'aquarium-donation'
+        });
+
+        var paymentId = recurResult.success ? recurResult.payment.id : null;
+
+        elxaOS.inventoryService.addItem('subscriptions', {
+            name: tierInfo.badge + ' Membership',
+            provider: 'Snake Valley Aquarium',
+            monthlyRate: amount,
+            recurringPaymentId: paymentId,
+            startDate: new Date().toISOString(),
+            status: 'active',
+            tierBadge: tierInfo.badge,
+            tierLevel: tierInfo.level,
+            perks: tierInfo.perks.join(', '),
+            paymentCount: 0
+        });
+
+        var welcomeBody = 'Dear ' + tierInfo.badge + ',\n\n'
+            + 'Thank you for your generous support of the Snake Valley Aquarium!\n\n'
+            + 'YOUR MEMBERSHIP DETAILS:\n'
+            + '  Tier: ' + tierInfo.badge + '\n'
+            + '  Monthly Contribution: ' + this._snakes(amount) + '\n\n'
+            + 'YOUR BENEFITS:\n';
+        for (var i = 0; i < tierInfo.perks.length; i++) {
+            welcomeBody += '  - ' + tierInfo.perks[i] + '\n';
+        }
+        welcomeBody += '\n'
+            + 'As an aquarium supporter, you now enjoy free admission to all exhibits, including the Tide Pool Touch Tank and daily feeding shows. Simply mention your membership at the front desk.\n\n';
+
+        if (tierInfo.level >= 2) {
+            welcomeBody += 'As a ' + tierInfo.badge + '-level supporter, you\'ll receive a special invitation to ';
+            if (tierInfo.level >= 3) {
+                welcomeBody += 'the Annual Benefactor\'s Gala Dinner and our exclusive Ocean Night experience. These events are our way of saying thank you for your extraordinary generosity.\n\n';
+            } else {
+                welcomeBody += 'our exclusive Ocean Night — a magical after-hours evening at the aquarium with our marine biology team and fellow ocean advocates.\n\n';
+            }
+        }
+
+        welcomeBody += 'On behalf of our staff, marine biologists, and the thousands of visitors who discover the wonders of the ocean through our doors each year — thank you. Your support helps us protect marine life and inspire the next generation of ocean stewards.\n\n'
+            + 'With gratitude,\n\n'
+            + 'Dr. Marina Coralscale\n'
+            + 'Director, Snake Valley Aquarium\n'
+            + 'director@svaquarium.ex';
+
+        this._sendEmail('Welcome to the Snake Valley Aquarium Family!', welcomeBody);
+
+        if (typeof elxaOS !== 'undefined' && elxaOS.notificationService) {
+            elxaOS.notificationService.addNotification({
+                title: this._isChangingTier ? 'Membership Updated!' : 'New Aquarium Membership!',
+                body: 'You\'re now a ' + tierInfo.badge + ' supporter of the Snake Valley Aquarium!',
+                icon: 'mdi-fish',
+                category: 'general',
+                urgency: 'info',
+                toast: true
+            });
+        }
+
+        this.closeModal();
+        this.renderTierCards();
+        this.checkActiveDonation();
+        this.checkSupporterTicketNote();
+
+        if (typeof ElxaUI !== 'undefined') {
+            ElxaUI.showMessage('You\'re now a ' + tierInfo.badge + ' supporter of the aquarium!', 'success');
+        }
+    },
+
+    // ===== CANCEL =====
+
+    cancelDonation: function() {
+        var activeSub = this._getActiveDonation();
+        if (!activeSub) return;
+
+        var tier = this._getTierByAmount(activeSub.monthlyRate);
+        var tierName = tier ? tier.badge : 'your';
+
+        if (typeof ElxaUI !== 'undefined' && ElxaUI.showConfirmDialog) {
+            var self = this;
+            ElxaUI.showConfirmDialog(
+                'Cancel your ' + tierName + ' membership? (' + this._snakes(activeSub.monthlyRate) + '/mo)',
+                'Cancel Aquarium Support'
+            ).then(function(confirmed) {
+                if (confirmed) self._doCancel(activeSub);
+            });
+        } else {
+            this._doCancel(activeSub);
+        }
+    },
+
+    _doCancel: function(sub) {
+        if (sub.recurringPaymentId && this._financeReady()) {
+            try { elxaOS.financeService.cancelRecurringPayment(sub.recurringPaymentId); }
+            catch (e) { /* already cancelled */ }
+        }
+
+        if (this._inventoryReady()) {
+            elxaOS.inventoryService.updateItem('subscriptions', sub.id, { status: 'cancelled' });
+        }
+
+        this._sendEmail(
+            'We\'ll Miss You!',
+            'Dear Former Supporter,\n\n'
+            + 'We\'re sorry to see you go. Your support of the Snake Valley Aquarium has made a real difference — every contribution helps feed our animals, maintain their habitats, and fund vital marine conservation research.\n\n'
+            + 'If you\'d ever like to rejoin our community of ocean advocates, we\'d welcome you back with open arms (and possibly a behind-the-scenes penguin encounter).\n\n'
+            + 'Thank you for everything,\n\n'
+            + 'Dr. Marina Coralscale\n'
+            + 'Director, Snake Valley Aquarium\n'
+            + 'director@svaquarium.ex'
+        );
+
+        if (typeof elxaOS !== 'undefined' && elxaOS.notificationService) {
+            elxaOS.notificationService.addNotification({
+                title: 'Aquarium Support Cancelled',
+                body: 'Your aquarium membership has been cancelled.',
+                icon: 'mdi-fish-off',
+                category: 'general',
+                urgency: 'info',
+                toast: true
+            });
+        }
+
+        this.renderTierCards();
+        this.checkActiveDonation();
+        this.checkSupporterTicketNote();
+
+        if (typeof ElxaUI !== 'undefined') {
+            ElxaUI.showMessage('Aquarium membership cancelled. You can rejoin anytime!', 'info');
+        }
+    },
+
+    _doCancelSilent: function(sub) {
+        if (sub.recurringPaymentId && this._financeReady()) {
+            try { elxaOS.financeService.cancelRecurringPayment(sub.recurringPaymentId); }
+            catch (e) { /* already cancelled */ }
+        }
+        if (this._inventoryReady()) {
+            elxaOS.inventoryService.updateItem('subscriptions', sub.id, { status: 'cancelled' });
+        }
+    }
+};
+
+// Auto-init
+AquariumSite.init();
+</script>

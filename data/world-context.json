@@ -43,9 +43,14 @@
       "role": "CEO of ElxaCorp",
       "wealth": "Trillionaire",
       "personality": "Intelligent, business-minded, tech-savvy, successful but friendly",
-      "details": "Drives a Denali, lives in a mansion, knows everything about math and tech",
+      "interests": ["Technology", "Mathematics", "Business"],
+      "details": "Drives a Denali, lives in a mansion in Serpentine Estates, knows everything about math and tech",
       "email": "mr.snake.e@elxacorp.ex",
-      "speakingStyle": "Professional but approachable, uses business terminology"
+      "speakingStyle": "Professional but approachable, uses business terminology",
+      "relationships": {
+        "Mrs. Snake-e": "wife",
+        "ElxaCorp": "CEO and founder"
+      }
     },
     "mrs_snake_e": {
       "fullName": "Mrs. Snake-e",
@@ -53,8 +58,12 @@
       "role": "Mr. Snake-e's wife",
       "interests": ["Gardening", "Baking", "Cooking"],
       "personality": "Sweet, nurturing, loves sharing recipes and garden tips, very wise and motherly, doesn't understand tech at all",
+      "details": "Runs a personal gardening and recipe website at mrs-snake-e.garden",
       "email": "mrs.snake.e@snakesia.garden",
-      "speakingStyle": "Warm, caring, uses endearing terms like 'dear' and 'sweetie'"
+      "speakingStyle": "Warm, caring, uses endearing terms like 'dear' and 'sweetie'",
+      "relationships": {
+        "Mr. Snake-e": "husband"
+      }
     },
     "remi": {
       "fullName": "Remi Marway",
@@ -62,18 +71,26 @@
       "role": "Famous YouTuber",
       "interests": ["Gaming", "YouTube", "Minecraft"],
       "personality": "Cool, chill, uses gaming slang, talks about YouTube and Minecraft, friendly and laid-back",
-      "details": "Has his own Minecraft server, very popular online",
+      "details": "Has his own Minecraft server (remicraft.ex), very popular online",
       "email": "remi@cooltuber.ex",
-      "speakingStyle": "Casual, uses gaming terms, types in lowercase, uses emojis"
+      "speakingStyle": "Casual, uses gaming terms, types in lowercase, uses emojis",
+      "relationships": {
+        "Rita Marway": "older sister"
+      }
     },
     "rita": {
-      "fullName": "Rita",
+      "fullName": "Rita Marway",
+      "age": "20",
       "appearance": "Red-haired",
-      "role": "Protective older sister figure",
+      "role": "Remi's protective older sister",
+      "interests": ["Taking care of Remi", "Being responsible", "Looking out for others"],
       "personality": "Sweet, playful, protective, caring, shows concern for others",
       "details": "Older sister of Remi, very kind and patient",
       "email": "rita.m@snakesia.com",
-      "speakingStyle": "Sweet and caring, uses friendly emojis, shows concern"
+      "speakingStyle": "Sweet and caring, uses friendly emojis, shows concern",
+      "relationships": {
+        "Remi Marway": "younger brother"
+      }
     },
     "pushing_cat": {
       "fullName": "Pushing Cat",
@@ -82,7 +99,10 @@
       "personality": "Mischievous, playful, uses cat puns, talks about plottin' stuff and being sneaky",
       "details": "Sneaky, loves pushing things, climbs into belly buttons, has a secret Sussy Lair",
       "email": "pushingcat@sussylair.hid",
-      "speakingStyle": "Cat puns, mentions being 'sus', playful and silly"
+      "speakingStyle": "Cat puns, mentions being 'sus', playful and silly",
+      "relationships": {
+        "Sussy Lair": "secret hideout"
+      }
     },
     "elxacorp_hr": {
       "fullName": "ElxaCorp HR",
@@ -129,13 +149,100 @@
     "snake_e_mansion": {
       "name": "Snake-e Mansion",
       "type": "Private residence",
-      "description": "Luxurious mansion where Mr. and Mrs. Snake-e live"
+      "description": "Luxurious mansion where Mr. and Mrs. Snake-e live in Serpentine Estates"
     },
     "sussy_lair": {
       "name": "Sussy Lair",
       "type": "Secret hideout",
       "description": "Pushing Cat's secret hideout under the blanket"
+    },
+    "snakesia_aquarium": {
+      "name": "Snakesia Aquarium",
+      "type": "Attraction",
+      "description": "Marine life exhibits with ticket sales"
+    },
+    "snake_valley_museum": {
+      "name": "Snake Valley National Museum",
+      "type": "Attraction",
+      "description": "Cultural and historical exhibits with ticket sales"
+    },
+    "dusty_flats": {
+      "name": "Dusty Flats",
+      "type": "Neighborhood",
+      "description": "Rural outskirts of Snake Valley. Budget-friendly properties with loads of character."
+    },
+    "pine_hollow": {
+      "name": "Pine Hollow",
+      "type": "Neighborhood",
+      "description": "Quiet wooded area with nature trails and cozy cabins."
+    },
+    "cloverfield": {
+      "name": "Cloverfield",
+      "type": "Neighborhood",
+      "description": "Suburban neighborhood popular with families. Great schools and parks."
+    },
+    "downtown_snake_valley": {
+      "name": "Downtown Snake Valley",
+      "type": "Neighborhood",
+      "description": "Urban center with trendy apartments, shops, and nightlife."
+    },
+    "maple_heights": {
+      "name": "Maple Heights",
+      "type": "Neighborhood",
+      "description": "Upscale suburban area with spacious homes. Buy-only neighborhood."
+    },
+    "serpentine_estates": {
+      "name": "Serpentine Estates",
+      "type": "Neighborhood",
+      "description": "Luxury gated community. Home to Mr. and Mrs. Snake-e."
     }
+  },
+  "mallardRealty": {
+    "name": "Mallard Realty",
+    "website": "mallard.ex",
+    "description": "The real estate agency of Snakesia. Handles renting and buying across 6 neighborhoods.",
+    "agents": [
+      { "name": "Darla Duckworth", "specialty": "Luxury properties", "personality": "Very enthusiastic senior agent" },
+      { "name": "Hank Pondsworth", "specialty": "Budget properties", "personality": "Brutally honest in a funny way" },
+      { "name": "Lily Featherstone", "specialty": "Suburban homes", "personality": "Very perky, uses too many exclamation marks" },
+      { "name": "Victor Quackwell", "specialty": "Downtown/urban", "personality": "Tries too hard to be cool" }
+    ],
+    "neighborhoods": ["Dusty Flats", "Pine Hollow", "Cloverfield", "Downtown Snake Valley", "Maple Heights", "Serpentine Estates"]
+  },
+  "patoAuto": {
+    "name": "Pato & Sons Auto",
+    "website": "pato.ex",
+    "description": "Family-run car dealership in Snake Valley. Leasing and buying across 5 vehicle tiers, from rust buckets to dream machines.",
+    "salespeople": [
+      { "name": "Pato Sr.", "role": "Founder", "handles": "Beaters & Budget, Showroom Elite", "personality": "Brutally honest about cheap cars, weirdly reverent about expensive ones. 40 years in the business.", "catchphrase": "A deal's a deal, kid." },
+      { "name": "Pato Jr.", "role": "Sales Manager", "handles": "Reliable Rides, Mid-Range", "personality": "Enthusiastic, knows every spec, genuinely excited about cars. Tries to upsell but in an endearing way.", "catchphrase": "You're gonna LOVE this one!" },
+      { "name": "Sal", "role": "Wildcard Cousin", "handles": "Random vehicles across tiers", "personality": "Gives oddly specific facts and unrelated backstories for every car.", "catchphrase": "Fun fact..." }
+    ],
+    "vehicleTiers": [
+      { "name": "Beaters & Budget", "priceRange": "$1,500–$5,000", "leasable": true },
+      { "name": "Reliable Rides", "priceRange": "$6,000–$15,000", "leasable": true },
+      { "name": "Mid-Range", "priceRange": "$16,000–$35,000", "leasable": true },
+      { "name": "Premium", "priceRange": "$40,000–$80,000", "leasable": false },
+      { "name": "Showroom Elite", "priceRange": "$100,000–$300,000", "leasable": false }
+    ]
+  },
+  "scaleStreet": {
+    "name": "Snake Valley Stock Exchange (SVSE)",
+    "website": "scalestreet.ex",
+    "newspaper": "ssj.ex",
+    "description": "Snakesia's only stock exchange. 14 publicly traded companies across tech, finance, real estate, consumer, telecom, and lifestyle sectors. Prices update monthly. Some stocks pay dividends.",
+    "brokerage": "ScaleStreet Brokerage handles all trades and dividend payments.",
+    "journalists": [
+      { "name": "Reginald Hissington III", "role": "Senior Financial Correspondent", "style": "Authoritative, old-school journalism" },
+      { "name": "Viperia Fangsworth", "role": "Markets Reporter", "style": "Data-driven, sharp analysis" },
+      { "name": "Coby the Intern", "role": "Junior Reporter", "style": "Enthusiastic, always gets the weird stories" }
+    ],
+    "sectors": ["Tech", "Finance", "Real Estate & Auto", "Consumer & Entertainment", "Telecom & Infrastructure", "Lifestyle"],
+    "notableStocks": [
+      { "ticker": "ELXA", "name": "ElxaCorp", "note": "Blue chip, employer of the user" },
+      { "ticker": "SCAT", "name": "Sussy Cat Entertainment", "note": "Meme stock, extremely volatile" },
+      { "ticker": "FSB", "name": "First Snakesian Bank", "note": "Highest dividend payer" }
+    ]
   },
   "promptGuidelines": {
     "characterConsistency": [
@@ -157,7 +264,7 @@
     },
     "responseLength": {
       "brief": "Very short responses (1-2 sentences max)",
-      "normal": "Short like real messages (1-3 sentences max)", 
+      "normal": "Short like real messages (1-3 sentences max)",
       "detailed": "Longer but still conversational (2-5 sentences max)"
     }
   },
@@ -165,6 +272,11 @@
     { "url": "snoogle.ex", "description": "Search the ExWeb" },
     { "url": "elxamail.ex", "description": "Email service" },
     { "url": "fsb.ex", "description": "First Snakesian Bank - Online Banking" },
+    { "url": "mallard.ex", "description": "Mallard Realty - Real estate listings and services" },
+    { "url": "pato.ex", "description": "Pato & Sons Auto - Car dealership with leasing and financing" },
+    { "url": "scalestreet.ex", "description": "Snake Valley Stock Exchange - Buy and sell stocks" },
+    { "url": "ssj.ex", "description": "The ScaleStreet Journal - Financial newspaper" },
+    { "url": "sssteam.ex", "description": "Sssteam - Online PC game store" },
     { "url": "privilege-palace.ex", "description": "Premium privileges for kids" },
     { "url": "snoogle-dictionary.ex", "description": "Dictionary and language reference" },
     { "url": "snoogle-pedia.ex", "description": "Free online encyclopedia" },
@@ -175,6 +287,7 @@
     { "url": "chihuahua-info.ex", "description": "Chihuahua research center" },
     { "url": "sussy-cat.ex", "description": "Sussy Cat Adventure game" },
     { "url": "remicraft.ex", "description": "Official Minecraft server by Remi" },
+    { "url": "mrs-snake-e.garden", "description": "Mrs. Snake-e's gardening and recipe site" },
     { "url": "snakesia.gov.ex", "description": "Official Snakesia government website" },
     { "url": "elxatech.ex", "description": "Educational technology platform" },
     { "url": "snake-deluxe.ex", "description": "Executive training suite" },

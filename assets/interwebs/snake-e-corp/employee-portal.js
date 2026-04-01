@@ -1,6 +1,30 @@
 // =========================================================
 // EMPLOYEE PORTAL SYSTEM
 // =========================================================
+
+// Position lookup table (shared with job application page)
+var ELXACORP_POSITIONS = {
+    it:             { title: 'IT Specialist',                  department: 'Information Technology',   annualSalary: 75000, manager: 'Mr. Snake-E (CEO)' },
+    gaming:         { title: 'Gaming Division Specialist',     department: 'Gaming & Entertainment',   annualSalary: 70000, manager: 'Remi Marway' },
+    'assistant-mrs':{ title: 'Executive Assistant to Mrs. Snake-E', department: 'Executive Operations', annualSalary: 65000, manager: 'Mrs. Snake-E (CIO)' },
+    security:       { title: 'Sus Security Specialist',        department: 'Security & Compliance',    annualSalary: 60000, manager: 'Chief Security Officer' },
+    arcade:         { title: 'Retro Arcade Technician',        department: 'Retro Gaming Division',    annualSalary: 55000, manager: 'Remi Marway' },
+    denali:         { title: 'Denali Maintenance Technician',  department: 'Fleet & Facilities',       annualSalary: 50000, manager: 'Facilities Manager' },
+    customer:       { title: 'Customer Relations Rep',         department: 'Customer Relations',       annualSalary: 45000, manager: 'Rita Martinez' },
+    cookie:         { title: 'Cookie Quality Assurance Tester',department: 'Quality Assurance',        annualSalary: 40000, manager: 'Mrs. Snake-E' }
+};
+
+// Manager name → email mapping
+var MANAGER_EMAILS = {
+    'Mr. Snake-E (CEO)':        'snake-e@elxacorp.ex',
+    'Mrs. Snake-E (CIO)':       'mrs.snake-e@elxacorp.ex',
+    'Mrs. Snake-E':             'mrs.snake-e@elxacorp.ex',
+    'Remi Marway':              'remi.marway@elxacorp.ex',
+    'Chief Security Officer':   'security@elxacorp.ex',
+    'Facilities Manager':       'facilities@elxacorp.ex',
+    'Rita Martinez':            'rita.martinez@elxacorp.ex'
+};
+
 var EmployeePortalSystem = class {
     constructor() {
         this.currentUser = null;
@@ -423,6 +447,7 @@ var EmployeePortalSystem = class {
         // Auto-close after 2 seconds
         setTimeout(() => this.closePasswordChange(), 2000);
     }
+
     // ===== TICKET SYSTEM UI =====
     openTicketSystem() {
         if (!this.ticketSystem) return;
@@ -474,7 +499,7 @@ var EmployeePortalSystem = class {
             return;
         }
 
-        var cookieMap = { high: '3 🍪', medium: '2 🍪', low: '1 🍪' };
+        var cookieMap = { high: '3 \u{1F36A}', medium: '2 \u{1F36A}', low: '1 \u{1F36A}' };
         var html = '<div class="ticket-list">';
         for (var i = 0; i < tickets.length; i++) {
             var t = tickets[i];
@@ -495,7 +520,7 @@ var EmployeePortalSystem = class {
     renderTicketFooter() {
         var ts = this.ticketSystem;
         document.getElementById('ticketFooter').innerHTML =
-            '<span class="ticket-footer-stat">Completed: <strong>' + ts.data.totalCompleted + '</strong> &bull; Cookies earned: <strong>' + ts.data.cookiesFromTickets + ' 🍪</strong></span>' +
+            '<span class="ticket-footer-stat">Completed: <strong>' + ts.data.totalCompleted + '</strong> &bull; Cookies earned: <strong>' + ts.data.cookiesFromTickets + ' \u{1F36A}</strong></span>' +
             '<button class="ticket-refresh-btn" onclick="portalSystem.refreshTickets()" id="ticketRefreshBtn"><span class="mdi mdi-refresh"></span> New Tickets</button>';
     }
 
@@ -511,7 +536,7 @@ var EmployeePortalSystem = class {
             optionsHtml += '<option value="' + approaches[i].replace(/"/g, '&quot;') + '">' + approaches[i] + '</option>';
         }
 
-        var cookieMap = { high: '3 🍪', medium: '2 🍪', low: '1 🍪' };
+        var cookieMap = { high: '3 \u{1F36A}', medium: '2 \u{1F36A}', low: '1 \u{1F36A}' };
 
         document.getElementById('ticketContent').innerHTML =
             '<div class="ticket-detail">' +
@@ -562,9 +587,9 @@ var EmployeePortalSystem = class {
         // Show completion screen
         document.getElementById('ticketContent').innerHTML =
             '<div class="ticket-completion">' +
-                '<div class="ticket-completion-icon">✅</div>' +
+                '<div class="ticket-completion-icon">\u2705</div>' +
                 '<div class="ticket-completion-title">Ticket Resolved!</div>' +
-                '<div class="ticket-completion-reward">+' + result.cookieReward + ' 🍪 earned</div>' +
+                '<div class="ticket-completion-reward">+' + result.cookieReward + ' \u{1F36A} earned</div>' +
                 '<div class="ticket-completion-msg">' + responseMsg + '</div>' +
                 '<button class="ticket-completion-btn" onclick="portalSystem.returnToTicketList()">Continue</button>' +
             '</div>';
@@ -668,7 +693,7 @@ var EmployeePortalSystem = class {
         var toast = document.createElement('div');
         toast.className = 'promo-toast';
         toast.innerHTML =
-            '<div class="promo-toast-icon">🎉</div>' +
+            '<div class="promo-toast-icon">\u{1F389}</div>' +
             '<div class="promo-toast-title">PROMOTION!</div>' +
             '<div class="promo-toast-detail">' +
                 'You are now <strong>' + newLevel.badge + ' ' + newLevel.title + '</strong> (Level ' + newLevel.level + ')' +
@@ -686,13 +711,315 @@ var EmployeePortalSystem = class {
             setTimeout(function() { toast.remove(); }, 500);
         }, 4000);
     }
+
+    // ===== MY JOB / MANAGE EMPLOYMENT UI =====
+
+    openManageEmployment() {
+        if (!this.currentUser) return;
+
+        // Populate current position info
+        var empService = (typeof elxaOS !== 'undefined' && elxaOS.employmentService) ? elxaOS.employmentService : null;
+        var position = this.currentUser.position;
+
+        var posTitle = position.title || 'Team Member';
+        var dept = position.department || 'General';
+        var salary = position.salary || '\u2014';
+        var manager = position.manager || 'Department Manager';
+
+        // If employment service is available, use it as source of truth
+        if (empService && empService.isEmployed()) {
+            var empData = empService.getEmploymentData();
+            posTitle = empData.position || posTitle;
+            dept = empData.department || dept;
+            salary = empData.salaryDisplay || salary;
+            manager = empData.manager || manager;
+        }
+
+        document.getElementById('mjPosition').textContent = posTitle;
+        document.getElementById('mjDepartment').textContent = dept;
+        document.getElementById('mjSalary').textContent = salary;
+        document.getElementById('mjManager').textContent = manager;
+        document.getElementById('mjManagerName').textContent = manager.split(' (')[0]; // "Rita Martinez" from "Rita Martinez"
+
+        // Set pay format radio
+        var currentFormat = empService ? empService.getPayFormat() : 'snakes';
+        var radios = document.querySelectorAll('input[name="payFormat"]');
+        for (var i = 0; i < radios.length; i++) {
+            radios[i].checked = (radios[i].value === currentFormat);
+        }
+        this._updatePayPreview(currentFormat);
+
+        // Build position list
+        this._renderPositionList(posTitle);
+
+        // Clear any previous messages
+        var msgEl = document.getElementById('mjTransferMsg');
+        if (msgEl) msgEl.style.display = 'none';
+
+        document.getElementById('myJobOverlay').classList.remove('hidden');
+    }
+
+    closeManageEmployment() {
+        document.getElementById('myJobOverlay').classList.add('hidden');
+    }
+
+    emailSupervisor() {
+        var manager = document.getElementById('mjManager').textContent;
+        var email = MANAGER_EMAILS[manager] || 'hr@elxacorp.ex';
+        var employeeName = this.currentUser ? this.currentUser.personalInfo.name : 'Employee';
+        var subject = 'Message from ' + employeeName;
+
+        // Stash compose data in localStorage for ElxaMail to pick up
+        try {
+            localStorage.setItem('elxamail-pending-compose', JSON.stringify({
+                to: email,
+                subject: subject,
+                body: ''
+            }));
+        } catch (e) {
+            console.warn('Failed to stash compose data:', e);
+        }
+
+        // Navigate the in-game browser to ElxaMail
+        if (typeof elxaOS !== 'undefined' && elxaOS.programs && elxaOS.programs.browser) {
+            elxaOS.programs.browser.loadPage('elxamail.ex');
+        } else {
+            alert('Email your supervisor at: ' + email);
+        }
+    }
+
+    async updatePayFormat(format) {
+        var empService = (typeof elxaOS !== 'undefined' && elxaOS.employmentService) ? elxaOS.employmentService : null;
+        if (empService) {
+            await empService.setPayFormat(format);
+        }
+        this._updatePayPreview(format);
+        // Refresh dashboard pay displays with new format
+        this.updateStats();
+    }
+
+    _updatePayPreview(format) {
+        var empService = (typeof elxaOS !== 'undefined' && elxaOS.employmentService) ? elxaOS.employmentService : null;
+        var previewEl = document.getElementById('mjPayPreview');
+        if (!previewEl) return;
+
+        if (empService && empService.isEmployed()) {
+            var payPerPeriod = empService.getPayPerPeriod();
+            var formatted = empService.formatPay(payPerPeriod);
+            previewEl.textContent = 'Weekly pay: ' + formatted;
+        } else {
+            previewEl.textContent = 'Weekly pay: ---';
+        }
+    }
+
+    _renderPositionList(currentPosition) {
+        var container = document.getElementById('mjPositionList');
+        if (!container) return;
+
+        var html = '';
+        for (var key in ELXACORP_POSITIONS) {
+            if (!ELXACORP_POSITIONS.hasOwnProperty(key)) continue;
+            var pos = ELXACORP_POSITIONS[key];
+            var isCurrent = (pos.title === currentPosition);
+            var snakeSalary = (pos.annualSalary * 2).toLocaleString();
+
+            html += '<div class="myjob-position-item' + (isCurrent ? ' myjob-position-current' : '') + '">' +
+                '<div class="myjob-position-info">' +
+                    '<div class="myjob-position-title">' + pos.title + (isCurrent ? ' <span class="myjob-current-badge">Current</span>' : '') + '</div>' +
+                    '<div class="myjob-position-meta">' + pos.department + ' &bull; ' + snakeSalary + ' \u{1F40D}/yr</div>' +
+                '</div>';
+
+            if (!isCurrent) {
+                html += '<button class="myjob-transfer-btn" onclick="portalSystem.requestTransfer(\'' + key + '\')">Transfer</button>';
+            }
+
+            html += '</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    async requestTransfer(positionKey) {
+        var pos = ELXACORP_POSITIONS[positionKey];
+        if (!pos) return;
+
+        var empService = (typeof elxaOS !== 'undefined' && elxaOS.employmentService) ? elxaOS.employmentService : null;
+
+        // Confirm
+        var snakeSalary = (pos.annualSalary * 2).toLocaleString();
+        if (!confirm('Transfer to ' + pos.title + '?\n\nDepartment: ' + pos.department + '\nSalary: ' + snakeSalary + ' \u{1F40D}/yr\nManager: ' + pos.manager + '\n\nYour employee ID, hire date, and pay history will be preserved.')) {
+            return;
+        }
+
+        var salaryDisplay = snakeSalary + ' \u{1F40D} per year';
+
+        // Update employment service
+        if (empService && empService.isEmployed()) {
+            await empService.transfer({
+                position: pos.title,
+                department: pos.department,
+                annualSalary: pos.annualSalary,
+                salaryDisplay: salaryDisplay,
+                manager: pos.manager
+            });
+        }
+
+        // Update localStorage profile
+        try {
+            var stored = localStorage.getItem('elxacorp-user-profiles');
+            if (stored) {
+                var profiles = JSON.parse(stored);
+                for (var profileId in profiles) {
+                    if (profiles[profileId].employeeId === this.currentUser.employeeId) {
+                        profiles[profileId].position.title = pos.title;
+                        profiles[profileId].position.department = pos.department;
+                        profiles[profileId].position.salary = salaryDisplay;
+                        profiles[profileId].position.manager = pos.manager;
+                        break;
+                    }
+                }
+                localStorage.setItem('elxacorp-user-profiles', JSON.stringify(profiles));
+            }
+        } catch (e) {
+            console.warn('Failed to update profile for transfer:', e);
+        }
+
+        // Update in-memory user
+        this.currentUser.position.title = pos.title;
+        this.currentUser.position.department = pos.department;
+        this.currentUser.position.salary = salaryDisplay;
+        this.currentUser.position.manager = pos.manager;
+
+        // Send transfer confirmation email
+        this._sendTransferEmail(pos);
+
+        // Refresh the overlay with new data
+        this.closeManageEmployment();
+        this.openManageEmployment();
+
+        // Update dashboard badges
+        document.getElementById('employeePosition').textContent = pos.title;
+        document.getElementById('employeeDepartment').textContent = pos.department;
+        document.getElementById('profileSalary').textContent = salaryDisplay;
+        document.getElementById('profileManager').textContent = pos.manager;
+
+        // Show success message
+        var msgEl = document.getElementById('mjTransferMsg');
+        msgEl.className = 'overlay-msg overlay-msg-success';
+        msgEl.textContent = 'Transfer approved! You are now a ' + pos.title + '.';
+        msgEl.style.display = 'block';
+    }
+
+    _sendTransferEmail(pos) {
+        var employeeName = this.currentUser ? this.currentUser.personalInfo.name : 'Employee';
+        var snakeSalary = (pos.annualSalary * 2).toLocaleString();
+        var emailBody = 'Dear ' + employeeName + ',\n\n' +
+            'Your internal transfer has been approved! Here are your new details:\n\n' +
+            'Position: ' + pos.title + '\n' +
+            'Department: ' + pos.department + '\n' +
+            'Salary: ' + snakeSalary + ' \u{1F40D} per year\n' +
+            'Reports To: ' + pos.manager + '\n\n' +
+            'Your employee ID, benefits, and seniority remain unchanged. ' +
+            'Please report to your new department on the next business day.\n\n' +
+            'Welcome to the team!\n' +
+            'Rita Martinez\nHR Department\nElxaCorp';
+
+        var emailObj = {
+            id: 'transfer-' + Date.now(),
+            from: 'hr@elxacorp.ex',
+            fromName: 'Rita Martinez (HR)',
+            to: employeeName.toLowerCase().replace(/\s+/g, '.') + '@elxacorp.ex',
+            subject: 'Internal Transfer Approved \u2014 ' + pos.title,
+            body: emailBody,
+            timestamp: new Date().toISOString(),
+            read: false
+        };
+
+        // Queue the email for ElxaMail
+        try {
+            var queue = JSON.parse(localStorage.getItem('elxacorp-queued-emails') || '[]');
+            queue.push(emailObj);
+            localStorage.setItem('elxacorp-queued-emails', JSON.stringify(queue));
+            console.log('\u{1F4BC} Transfer confirmation email queued');
+        } catch (e) {
+            console.warn('Failed to queue transfer email:', e);
+        }
+    }
+
+    async resignFromElxaCorp() {
+        if (!confirm('Are you sure you want to resign from ElxaCorp?\n\nYou will lose access to the Employee Portal and will need to reapply if you want to return.')) {
+            return;
+        }
+
+        // Double-confirm
+        if (!confirm('This is permanent. Are you absolutely sure?')) {
+            return;
+        }
+
+        var empService = (typeof elxaOS !== 'undefined' && elxaOS.employmentService) ? elxaOS.employmentService : null;
+        var employeeName = this.currentUser ? this.currentUser.personalInfo.name : 'Employee';
+
+        // Terminate via employment service
+        if (empService) {
+            await empService.terminate('resigned');
+        }
+
+        // Send resignation acknowledgment email
+        var emailObj = {
+            id: 'resign-' + Date.now(),
+            from: 'hr@elxacorp.ex',
+            fromName: 'Rita Martinez (HR)',
+            to: employeeName.toLowerCase().replace(/\s+/g, '.') + '@elxacorp.ex',
+            subject: 'Resignation Acknowledged \u2014 ElxaCorp',
+            body: 'Dear ' + employeeName + ',\n\n' +
+                'We have received and processed your resignation from ElxaCorp.\n\n' +
+                'We\u2019re sorry to see you go! Your final paycheck will be deposited as usual. ' +
+                'Your benefits will remain active until the end of the current month.\n\n' +
+                'If you ever want to return, you\u2019re always welcome to reapply through our careers page.\n\n' +
+                'Mrs. Snake-E wanted me to let you know there will always be cookies waiting for you. \u{1F36A}\n\n' +
+                'Best wishes,\n' +
+                'Rita Martinez\nHR Department\nElxaCorp',
+            timestamp: new Date().toISOString(),
+            read: false
+        };
+
+        try {
+            var queue = JSON.parse(localStorage.getItem('elxacorp-queued-emails') || '[]');
+            queue.push(emailObj);
+            localStorage.setItem('elxacorp-queued-emails', JSON.stringify(queue));
+        } catch (e) {
+            console.warn('Failed to queue resignation email:', e);
+        }
+
+        // Clear localStorage data
+        try {
+            localStorage.removeItem('elxacorp-user-profiles');
+            localStorage.removeItem('elxacorp-applications');
+        } catch (e) {
+            console.warn('Failed to clear localStorage:', e);
+        }
+
+        // Close overlay and logout
+        this.closeManageEmployment();
+        if (this.employeeData) this.employeeData.stopTimerDisplay();
+        this.currentUser = null;
+        this.isLoggedIn = false;
+        this.employeeData = null;
+
+        // Show login screen with goodbye message
+        document.getElementById('portalDashboard').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('loginForm').reset();
+        this.hideMessages();
+        this.showSuccess('You have resigned from ElxaCorp. We hope to see you again! \u{1F36A}');
+    }
+
+    // ===== OTHER OVERLAYS =====
     openDirectory() { document.getElementById("directoryOverlay").classList.remove("hidden"); }
     closeDirectory() { document.getElementById("directoryOverlay").classList.add("hidden"); }
     openBenefits() { document.getElementById("benefitsOverlay").classList.remove("hidden"); }
     closeBenefits() { document.getElementById("benefitsOverlay").classList.add("hidden"); }
     openTraining() { document.getElementById("trainingOverlay").classList.remove("hidden"); }
     closeTraining() { document.getElementById("trainingOverlay").classList.add("hidden"); }
-    openGameRoom() { alert('\u{1F3AE} Game Room:\n\n\u2022 Arcade machines\n\u2022 Minecraft server: play.elxacorp.ex\n\u2022 Break time gaming encouraged!\n\nBasement level, next to Remi\'s office'); }
 
     showError(msg) {
         var el = document.getElementById('loginError');

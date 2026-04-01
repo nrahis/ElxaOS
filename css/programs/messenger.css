@@ -162,7 +162,7 @@
 .messenger-header {
     padding: 8px;
     background: var(--titlebarBg);
-    color: var(--titlebarText);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -277,7 +277,7 @@
 
 .messenger-contact-item.active {
     background: var(--titlebarBg);
-    color: var(--titlebarText);
+    color: white;
 }
 
 .messenger-contact-avatar {
@@ -383,9 +383,10 @@
 .messenger-chat-header {
     padding: 6px 8px;
     background: var(--titlebarBg);
-    color: var(--titlebarText);
+    color: white;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 11px;
     font-weight: bold;
 }
@@ -516,7 +517,8 @@
 
 .messenger-message-time {
     font-size: 9px;
-    color: #666;
+    color: inherit;
+    opacity: 0.55;
     margin-top: 2px;
     font-style: italic;
 }
@@ -651,8 +653,8 @@
 ================================= */
 .messenger-emoji-picker {
     position: fixed;
-    width: 280px;
-    height: 200px;
+    width: 340px;
+    height: 220px;
     background: var(--windowBg);
     border: 2px outset var(--windowBorder);
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -665,7 +667,7 @@
 
 .messenger-emoji-header {
     background: var(--titlebarBg);
-    color: var(--titlebarText);
+    color: white;
     padding: 4px 6px;
     display: flex;
     align-items: center;
@@ -710,14 +712,14 @@
     padding: 4px;
     overflow-y: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
     gap: 2px;
     align-content: start;
 }
 
 .messenger-emoji-item {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border: 1px solid transparent;
     background: transparent;
     cursor: pointer;
@@ -770,7 +772,7 @@
 .messenger-settings-header {
     padding: 8px 12px;
     background: var(--titlebarBg);
-    color: var(--titlebarText);
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -930,8 +932,8 @@
     }
 
     .messenger-emoji-picker {
-        width: 240px;
-        height: 180px;
+        width: 300px;
+        height: 200px;
     }
 }
 
