@@ -18,86 +18,117 @@
     image-rendering: pixelated;
 }
 
-/* HUD overlay — top bar */
+/* HUD overlay — pixel-style top bar */
 .qp-hud {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 40px;
-    background: rgba(0, 0, 0, 0.7);
+    background: #5C4A32;
     display: flex;
     align-items: center;
-    padding: 0 12px;
-    gap: 16px;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    justify-content: space-between;
+    padding: 0 8px;
+    font-family: 'Courier New', monospace;
     font-size: 13px;
-    color: #fff;
+    font-weight: 700;
+    color: #E8D5B0;
     z-index: 10;
     pointer-events: auto;
+    box-shadow:
+        inset 0 -3px 0 #3A2D1E,
+        inset 0 2px 0 #7A6548;
+    image-rendering: pixelated;
+}
+
+.qp-hud-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
 }
 
 .qp-hud-stat {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     white-space: nowrap;
-}
-
-.qp-hud-stat .qp-icon {
-    font-size: 16px;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
 }
 
 .qp-hud-tools {
     display: flex;
-    gap: 6px;
-    margin-left: auto;
+    gap: 4px;
 }
 
-.qp-tool-btn {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 4px;
+.qp-hud-right {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.qp-hud-btn {
+    background: #4A3A28;
+    border: none;
     padding: 3px 8px;
-    color: #fff;
+    color: #E8D5B0;
+    font-family: 'Courier New', monospace;
     font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
-    transition: background 0.15s;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+    box-shadow:
+        inset -1px -1px 0 #3A2D1E,
+        inset 1px 1px 0 #6A5540;
+    transition: background 0.05s;
 }
 
-.qp-tool-btn:hover {
-    background: rgba(255,255,255,0.3);
+.qp-hud-btn:hover {
+    background: #6B5840;
+    box-shadow:
+        inset -1px -1px 0 #3A2D1E,
+        inset 1px 1px 0 #8A7558;
 }
 
-.qp-tool-btn.active {
-    background: rgba(100, 200, 255, 0.4);
-    border-color: rgba(100, 200, 255, 0.7);
+.qp-hud-btn.active {
+    background: #3A5A28;
+    box-shadow:
+        inset 1px 1px 0 #2A4018,
+        inset -1px -1px 0 #5A7A40;
+    color: #C8E8A0;
 }
 
-.qp-tool-btn img {
+.qp-hud-btn:active {
+    transform: translate(1px, 1px);
+}
+
+.qp-hud-btn img {
     width: 16px;
     height: 16px;
     image-rendering: pixelated;
 }
 
-/* Selected duck info panel */
 .qp-duck-info {
     position: absolute;
     top: 48px;
     right: 8px;
-    background: rgba(0, 0, 0, 0.75);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 6px;
+    background: #5C4A32;
+    color: #E8D5B0;
+    font-family: 'Courier New', monospace;
+    box-shadow:
+        inset -2px -2px 0 #3A2D1E,
+        inset 2px 2px 0 #7A6548,
+        0 0 0 2px #3A2D1E;
     padding: 8px 12px;
-    color: #fff;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
     font-size: 12px;
     z-index: 10;
     min-width: 140px;
     display: none;
+    image-rendering: pixelated;
 }
 
 .qp-duck-info.visible {
@@ -105,9 +136,11 @@
 }
 
 .qp-duck-info-name {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 14px;
     margin-bottom: 4px;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
 }
 
 .qp-duck-info-actions {
@@ -159,15 +192,15 @@
 .qp-info-bar {
     width: 70px;
     height: 8px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 4px;
+    background: #3A2D1E;
     overflow: hidden;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+    box-shadow:
+        inset 1px 1px 0 #251C12,
+        inset -1px -1px 0 #4A3A28;
 }
 
 .qp-info-bar-fill {
     height: 100%;
-    border-radius: 4px;
     transition: width 0.3s;
     width: 100%;
 }
@@ -468,14 +501,12 @@
     width: 200px;
     height: 8px;
     background: rgba(255,255,255,0.2);
-    border-radius: 4px;
     overflow: hidden;
 }
 
 .qp-loading-bar-fill {
     height: 100%;
     background: #4caf50;
-    border-radius: 4px;
     transition: width 0.3s;
     width: 0%;
 }
@@ -498,7 +529,7 @@
    Phase 4: Breeding UI
    ============================ */
 
-.qp-breed-btn {
+.qp-hud-btn.qp-breed-btn {
     font-family: 'Courier New', monospace;
     font-weight: bold;
     font-size: 12px;
@@ -544,3 +575,122 @@
     white-space: normal;
     line-height: 1.3;
 }
+
+/* ============================================
+   SETTINGS MENU
+   ============================================ */
+
+.qp-settings-wrap {
+    position: relative;
+}
+
+.qp-settings-btn {
+    font-size: 16px !important;
+    padding: 3px 6px !important;
+    line-height: 1;
+}
+
+.qp-settings-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: #5C4A32;
+    box-shadow:
+        inset -2px -2px 0 #3A2D1E,
+        inset 2px 2px 0 #7A6548,
+        0 0 0 2px #3A2D1E,
+        0 4px 12px rgba(0,0,0,0.5);
+    z-index: 20;
+    min-width: 130px;
+}
+
+.qp-settings-menu.visible {
+    display: block;
+}
+
+.qp-settings-item {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    color: #E8D5B0;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 12px;
+    text-align: left;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+}
+
+.qp-settings-item:hover {
+    background: #6B5840;
+}
+
+.qp-settings-item + .qp-settings-item {
+    border-top: 1px solid #3A2D1E;
+}
+
+/* ============================================
+   STATS PANEL
+   ============================================ */
+
+.qp-stats-panel {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    padding: 6px 10px 8px;
+    font-size: 11px;
+    z-index: 10;
+    min-width: 120px;
+}
+
+.qp-stats-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.qp-stats-title {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
+
+.qp-stats-close {
+    background: none;
+    border: none;
+    color: #E8D5B0;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+    opacity: 0.7;
+}
+
+.qp-stats-close:hover {
+    opacity: 1;
+    color: #FF8A80;
+}
+
+.qp-stats-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 2px 0;
+}
+
+.qp-stats-row span:last-child {
+    font-weight: bold;
+    color: #FFD54F;
+}
+
+/* ============================================
+   SELECTED DUCK INFO — pixel style
+   ============================================ */

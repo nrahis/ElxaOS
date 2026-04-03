@@ -4,6 +4,51 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
+## Quacker Pond — Breeding Rebalance, Audio, Sssteam Listing, Icon — Session 55
+
+### `js/games/quacker-pond.js` (UPDATED)
+- **Breeding rebalanced (way easier)**: Base breed chance raised from 25% to 50%. Happy/clean/fed bonuses doubled from 5% to 10% each. Max chance without Charming: 80% (was 40%). Max with Charming: 90% (was 50%). Individual duck cooldown halved from 60s to 30s. Pair cooldown halved from 120s to 60s.
+- **Click SFX**: New `clickSfx` audio object loads `click.wav` from the quackers assets folder. `playClick()` method resets and plays the sound. All HUD buttons, dialog buttons (buy/cancel, sell/keep, breed OK, release, reset, stats close, settings gear, daily bonus), and the splash screen start button now fire `playClick()` on press.
+- **Background music**: New `bgMusic` audio object loads `What-the-Cluck.mp3`. Loops at 30% volume. Starts playing when the splash screen is dismissed (in `dismissSplash()`). Stopped on window close (in `destroy()`).
+- **Audio methods**: `loadAudio()` called from `initGame()`, creates both Audio objects with try/catch. `playClick()`, `startMusic()`, `stopMusic()` helpers with silent error handling.
+
+### `assets/interwebs/sssteam/sssteam-catalog.js` (UPDATED)
+- **Quacker Pond Sssteam listing**: Added `heroImage` pointing to `quacker-pond_cover.png`. Added one screenshot (`quacker-pond_1.png`, caption "Duck Pond Gameplay"). Changed top-level `icon` from `🦆` emoji to `<img>` tag pointing to `icon.png`. Added `iconEmoji: '🦆'` fallback. Changed `installerData.icon` from `🦆` to same `<img>` tag (this is what the desktop shortcut uses).
+
+**User-Facing Highlights:**
+- Breeding is much easier now — ducks are way more likely to hit it off, and they're ready to try again sooner!
+- Button clicks now make a satisfying "click" sound
+- Background music plays while you manage your ducks
+- Quacker Pond has a proper store page on Sssteam with cover art and screenshots
+- The desktop icon is now the custom Quacker Pond icon instead of a duck emoji
+
+---
+
+## Quacker Pond — QoL: Economy Fixes, Stats, Daily Bonus, UI Overhaul — Session 54
+
+### `js/games/quacker-pond.js` (UPDATED)
+- **Economy softlock fix — poop pays §1**: Cleaning messes with the shovel now earns §1 per poop cleaned. Earnings tracked in `stats.totalEarnings`. Provides a gentle grind path when broke.
+- **Economy softlock fix — free starter egg**: If the player has 0 ducks AND less than §50 coins AND no egg incubating, clicking the hatchery offers a free egg with "Oh no, your pond is empty!" message. `_freeEgg` flag cleared on dialog dismiss.
+- **Economy softlock fix — Reset Pond**: Full game reset accessible via ⚙ Settings menu. Confirmation dialog warns all ducks/stats/progress will be lost. Resets everything to fresh state with §500 starting money.
+- **Starting funds increased**: Starting pocket money raised from §200 to §500 (both initial start and reset).
+- **Daily bonus (§50)**: On each game start, checks if player has already claimed today (tracked by `YYYY-M-D` date string in `lastDailyBonus`). If new day, awards §50 and shows a "Welcome back!" dialog. Persisted in save state.
+- **Stats panel**: New toggleable panel in bottom-left corner showing Hatched, Sold, Released, and total Earnings (§). Opened via ⚙ → Stats. Has [×] close button so it doesn't permanently block the play area (poop could hide behind it). Starts hidden. Updates live on hatch/sell/release/poop-clean.
+- **Settings gear menu**: New ⚙ button in HUD top-right. Dropdown with two options: "📊 Stats" (toggles stats panel) and "↻ Reset Pond" (opens reset confirmation). Closes on outside click. Replaced the old standalone Reset toolbar button.
+- **HUD restructured**: Top bar split into three sections — left (🦆 count + § balance), center (tool buttons), right (⚙ settings). Old single-row flex layout replaced with `qp-hud-left` / `qp-hud-tools` / `qp-hud-right` structure.
+- **Cleanup**: Merged duplicate `var container` declarations in `setupEventHandlers()`. `_freeEgg` flag cleared in `hidePurchaseDialog()`.
+
+### `css/games/quacker-pond.css` (UPDATED)
+- **HUD pixel restyle**: Top bar changed from semi-transparent black (`rgba(0,0,0,0.7)`) + Segoe UI to solid brown (`#5C4A32`) + Courier New with inset pixel shadows. Matches the game's existing pixel-box aesthetic.
+- **Tool buttons restyled**: `.qp-tool-btn` → `.qp-hud-btn` with pixel-style inset shadows, dark brown background (`#4A3A28`), green active state (`#3A5A28`).
+- **Duck info panel restyled**: Changed from rounded glass-morphism (semi-transparent black, border-radius, Segoe UI) to pixel-box style (solid brown, inset shadows, Courier New). Name label now has letter-spacing and text-shadow.
+- **Stat bars restyled**: Removed border-radius from hunger/happiness bars and their container. Bar background changed from transparent white to dark brown (`#3A2D1E`) with inset shadows. Consistent pixel aesthetic.
+- **Settings menu CSS**: New `.qp-settings-wrap`, `.qp-settings-btn`, `.qp-settings-menu`, `.qp-settings-item` styles. Dropdown positioned below gear button, pixel-box shadow, hover highlights, separator between items.
+- **Stats panel CSS**: New `.qp-stats-panel`, `.qp-stats-header`, `.qp-stats-title`, `.qp-stats-close`, `.qp-stats-row` styles. Pixel-box background, gold value text, × close button with red hover.
+- **Loading bar**: Removed border-radius from loading bar and fill for pixel consistency.
+- **Removed**: Old `.qp-tool-btn`, `.qp-reset-btn`, `.qp-icon` styles.
+
+---
+
 ## Quacker Pond — Phase 7: Trait System — Session 53
 
 ### `js/games/quacker-pond.js` (UPDATED)

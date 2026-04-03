@@ -69,15 +69,15 @@ class QuackerPond {
         this.breedResultSuccess = false;
 
         // Cooldowns (seconds)
-        this.BREED_COOLDOWN = 60;
-        this.BREED_PAIR_COOLDOWN = 120;
+        this.BREED_COOLDOWN = 30;
+        this.BREED_PAIR_COOLDOWN = 60;
         this.breedPairHistory = [];    // { id1, id2, timestamp }
 
         // Base breed chance
-        this.BREED_BASE_CHANCE = 0.25;
-        this.BREED_HAPPY_BONUS = 0.05;
-        this.BREED_CLEAN_BONUS = 0.05;
-        this.BREED_FED_BONUS = 0.05;
+        this.BREED_BASE_CHANCE = 0.50;
+        this.BREED_HAPPY_BONUS = 0.10;
+        this.BREED_CLEAN_BONUS = 0.10;
+        this.BREED_FED_BONUS = 0.10;
 
         // Color mixing table: sorted key "colorA|colorB" -> result color
         this.COLOR_MIX_TABLE = {
@@ -167,7 +167,13 @@ class QuackerPond {
         this._pendingReleaseDuck = null;
 
         // --- In-game currency (NOT tied to bank) ---
-        this.coins = 200;  // Starting pocket money (in snakes §)
+        this.coins = 500;  // Starting pocket money (in snakes §)
+        this.DAILY_BONUS = 50;  // §50 daily bonus
+        this.lastDailyBonus = null;  // timestamp of last daily bonus claim
+
+        // --- Audio ---
+        this.clickSfx = null;
+        this.bgMusic = null;
 
         // --- Persistence ---
         this.autoSaveInterval = null;
@@ -235,21 +241,33 @@ class QuackerPond {
         return '<div class="qp-container" id="qp-' + windowId + '">' +
             '<canvas class="qp-canvas" id="qp-canvas-' + windowId + '"></canvas>' +
             '<div class="qp-hud" id="qp-hud-' + windowId + '">' +
-                '<div class="qp-hud-stat"><span class="qp-icon">\uD83E\uDD86</span> ' +
-                    '<span id="qp-duck-count-' + windowId + '">0</span>/8</div>' +
-                '<div class="qp-hud-stat"><span class="qp-icon">\u00A7</span> ' +
-                    '<span id="qp-balance-' + windowId + '">\u2014</span></div>' +
+                '<div class="qp-hud-left">' +
+                    '<div class="qp-hud-stat">\uD83E\uDD86 ' +
+                        '<span id="qp-duck-count-' + windowId + '">0</span>/8</div>' +
+                    '<div class="qp-hud-stat">\u00A7 ' +
+                        '<span id="qp-balance-' + windowId + '">\u2014</span></div>' +
+                '</div>' +
                 '<div class="qp-hud-tools">' +
-                    '<button class="qp-tool-btn" data-tool="food" id="qp-tool-food-' + windowId + '">' +
+                    '<button class="qp-hud-btn" data-tool="food" id="qp-tool-food-' + windowId + '">' +
                         '<img src="./assets/games/quackers/game/food_full.png" alt="food" /> \u00A710</button>' +
-                    '<button class="qp-tool-btn" data-tool="treat1" id="qp-tool-treat1-' + windowId + '">' +
+                    '<button class="qp-hud-btn" data-tool="treat1" id="qp-tool-treat1-' + windowId + '">' +
                         '<img src="./assets/games/quackers/game/treat_1.png" alt="treat" /> \u00A720</button>' +
-                    '<button class="qp-tool-btn" data-tool="treat2" id="qp-tool-treat2-' + windowId + '">' +
+                    '<button class="qp-hud-btn" data-tool="treat2" id="qp-tool-treat2-' + windowId + '">' +
                         '<img src="./assets/games/quackers/game/treat_2.png" alt="treat" /> \u00A725</button>' +
-                    '<button class="qp-tool-btn" data-tool="shovel" id="qp-tool-shovel-' + windowId + '">' +
+                    '<button class="qp-hud-btn" data-tool="shovel" id="qp-tool-shovel-' + windowId + '">' +
                         '<img src="./assets/games/quackers/game/shovel.png" alt="shovel" /></button>' +
-                    '<button class="qp-tool-btn qp-breed-btn" data-tool="breed" id="qp-tool-breed-' + windowId + '">' +
+                    '<button class="qp-hud-btn qp-breed-btn" data-tool="breed" id="qp-tool-breed-' + windowId + '">' +
                         '\uD83D\uDC95 Breed</button>' +
+                '</div>' +
+                '<div class="qp-hud-right">' +
+                    '<div class="qp-settings-wrap">' +
+                        '<button class="qp-hud-btn qp-settings-btn" id="qp-settings-btn-' + windowId + '">' +
+                            '\u2699</button>' +
+                        '<div class="qp-settings-menu" id="qp-settings-menu-' + windowId + '">' +
+                            '<button class="qp-settings-item" data-action="stats">\uD83D\uDCCA Stats</button>' +
+                            '<button class="qp-settings-item" data-action="reset">\u21BB Reset Pond</button>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
             '</div>' +
             '<div class="qp-duck-info" id="qp-info-' + windowId + '">' +
@@ -338,6 +356,40 @@ class QuackerPond {
                     '</div>' +
                 '</div>' +
             '</div>' +
+            '<div class="qp-dialog-overlay" id="qp-reset-overlay-' + windowId + '">' +
+                '<div class="qp-dialog qp-pixel-box">' +
+                    '<div class="qp-dialog-title">Reset Pond</div>' +
+                    '<div class="qp-dialog-body">' +
+                        '<div class="qp-dialog-text">Reset everything?\nAll ducks, stats, and progress\nwill be lost. You will start\nfresh with \u00A7500.</div>' +
+                    '</div>' +
+                    '<div class="qp-dialog-buttons">' +
+                        '<button class="qp-pixel-btn qp-btn-cancel" id="qp-reset-yes-' + windowId + '">RESET</button>' +
+                        '<button class="qp-pixel-btn qp-btn-confirm" id="qp-reset-no-' + windowId + '">KEEP</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="qp-dialog-overlay" id="qp-bonus-overlay-' + windowId + '">' +
+                '<div class="qp-dialog qp-pixel-box">' +
+                    '<div class="qp-dialog-title">Daily Bonus!</div>' +
+                    '<div class="qp-dialog-body">' +
+                        '<div class="qp-dialog-text">\uD83E\uDD86 Welcome back!\nHere are some pocket snakes\nfor taking care of your ducks!</div>' +
+                        '<div class="qp-dialog-price">+\u00A750</div>' +
+                    '</div>' +
+                    '<div class="qp-dialog-buttons">' +
+                        '<button class="qp-pixel-btn qp-btn-confirm" id="qp-bonus-ok-' + windowId + '">THANKS!</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="qp-stats-panel qp-pixel-box" id="qp-stats-' + windowId + '" style="display:none;">' +
+                '<div class="qp-stats-header">' +
+                    '<span class="qp-stats-title">\uD83D\uDCCA Stats</span>' +
+                    '<button class="qp-stats-close" id="qp-stats-close-' + windowId + '">\u00D7</button>' +
+                '</div>' +
+                '<div class="qp-stats-row"><span>Hatched</span><span id="qp-stat-hatched-' + windowId + '">0</span></div>' +
+                '<div class="qp-stats-row"><span>Sold</span><span id="qp-stat-sold-' + windowId + '">0</span></div>' +
+                '<div class="qp-stats-row"><span>Released</span><span id="qp-stat-released-' + windowId + '">0</span></div>' +
+                '<div class="qp-stats-row"><span>Earnings</span><span id="qp-stat-earnings-' + windowId + '">\u00A70</span></div>' +
+            '</div>' +
             '<div class="qp-breed-prompt" id="qp-breed-prompt-' + windowId + '"></div>' +
             '<div class="qp-splash" id="qp-splash-' + windowId + '" style="display:none;">' +
                 '<div class="qp-splash-gradient"></div>' +
@@ -391,6 +443,44 @@ class QuackerPond {
     }
 
     // =========================================
+    //  AUDIO
+    // =========================================
+    loadAudio() {
+        try {
+            this.clickSfx = new Audio('./assets/games/quackers/click.wav');
+            this.clickSfx.volume = 0.5;
+        } catch (e) { /* silent fail */ }
+        try {
+            this.bgMusic = new Audio('./assets/games/quackers/What-the-Cluck.mp3');
+            this.bgMusic.loop = true;
+            this.bgMusic.volume = 0.3;
+        } catch (e) { /* silent fail */ }
+    }
+
+    playClick() {
+        if (!this.clickSfx) return;
+        try {
+            this.clickSfx.currentTime = 0;
+            this.clickSfx.play().catch(function() {});
+        } catch (e) { /* silent fail */ }
+    }
+
+    startMusic() {
+        if (!this.bgMusic) return;
+        try {
+            this.bgMusic.play().catch(function() {});
+        } catch (e) { /* silent fail */ }
+    }
+
+    stopMusic() {
+        if (!this.bgMusic) return;
+        try {
+            this.bgMusic.pause();
+            this.bgMusic.currentTime = 0;
+        } catch (e) { /* silent fail */ }
+    }
+
+    // =========================================
     //  INIT / SPLASH / START
     // =========================================
     initGame(windowId) {
@@ -399,6 +489,7 @@ class QuackerPond {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.resizeCanvas();
+        this.loadAudio();
         if (this.assets.backdrop && this.assets.backdrop.complete) {
             this.ctx.drawImage(this.assets.backdrop, 0, 0, canvas.width, canvas.height);
         }
@@ -419,6 +510,8 @@ class QuackerPond {
     dismissSplash(windowId) {
         var splashEl = document.getElementById('qp-splash-' + windowId);
         if (splashEl) splashEl.style.display = 'none';
+        this.playClick();
+        this.startMusic();
         this.startGame();
     }
 
@@ -428,6 +521,8 @@ class QuackerPond {
         this.loadState().then(function(loaded) {
             self.updateBalance();
             self.updateDuckCount();
+            self.updateStatsPanel();
+            self.checkDailyBonus();
             self.running = true;
             self.lastTime = performance.now();
             self.animFrameId = requestAnimationFrame(function tick(now) {
@@ -1036,7 +1131,6 @@ class QuackerPond {
             else breedBtn.classList.remove('active');
         }
     }
-
     // =========================================
     //  FOOD PLACEMENT
     // =========================================
@@ -1359,6 +1453,7 @@ class QuackerPond {
 
         this.stats.totalSold++;
         this.stats.totalEarnings += price;
+        this.updateStatsPanel();
         this.hideSellDialog();
     }
 
@@ -1402,6 +1497,7 @@ class QuackerPond {
         }
 
         this.stats.totalReleased++;
+        this.updateStatsPanel();
         this.hideReleaseDialog();
     }
 
@@ -1412,6 +1508,13 @@ class QuackerPond {
         if (this.incubatingEgg) { this.showBuyError('An egg is already incubating!'); return; }
         if (this.ducks.length >= this.DUCK_CAP) { this.showBuyError('Pond is full! (8/8)'); return; }
         var overlay = document.getElementById('qp-buy-overlay-' + this.windowId);
+        // Check for softlock: 0 ducks and can't afford an egg
+        var isFreeEgg = (this.ducks.length === 0 && this.coins < 50);
+        var priceEl = overlay ? overlay.querySelector('.qp-dialog-price') : null;
+        var textEl = overlay ? overlay.querySelector('.qp-dialog-text') : null;
+        if (priceEl) priceEl.textContent = isFreeEgg ? 'FREE!' : '\u00A750';
+        if (textEl) textEl.textContent = isFreeEgg ? 'Oh no, your pond is empty!\nHere, have a free egg!' : 'Buy an egg?';
+        this._freeEgg = isFreeEgg;
         if (overlay) overlay.classList.add('visible');
         this.showBuyError('');
     }
@@ -1419,6 +1522,7 @@ class QuackerPond {
     hidePurchaseDialog() {
         var overlay = document.getElementById('qp-buy-overlay-' + this.windowId);
         if (overlay) overlay.classList.remove('visible');
+        this._freeEgg = false;
     }
 
     showBuyError(msg) {
@@ -1427,6 +1531,13 @@ class QuackerPond {
     }
 
     buyEgg() {
+        if (this._freeEgg) {
+            // Free egg for softlocked players
+            this._freeEgg = false;
+            this.hidePurchaseDialog();
+            this.startIncubation();
+            return;
+        }
         if (!this.canAfford(50)) { this.showBuyError('Not enough snakes!'); return; }
         if (this.spendCoins(50)) {
             this.hidePurchaseDialog();
@@ -1507,6 +1618,7 @@ class QuackerPond {
             this._pendingHatchTraits || []
         );
         this.stats.totalHatched++;
+        this.updateStatsPanel();
         this._pendingHatchColor = null;
         this._pendingHatchGeneration = null;
         this._pendingHatchParents = null;
@@ -1785,56 +1897,98 @@ class QuackerPond {
 
         var buyYes = document.getElementById('qp-buy-yes-' + windowId);
         var buyNo = document.getElementById('qp-buy-no-' + windowId);
-        if (buyYes) buyYes.addEventListener('click', function() { self.buyEgg(); });
-        if (buyNo) buyNo.addEventListener('click', function() { self.hidePurchaseDialog(); });
+        if (buyYes) buyYes.addEventListener('click', function() { self.playClick(); self.buyEgg(); });
+        if (buyNo) buyNo.addEventListener('click', function() { self.playClick(); self.hidePurchaseDialog(); });
 
         var nameOk = document.getElementById('qp-name-ok-' + windowId);
-        if (nameOk) nameOk.addEventListener('click', function() { self.confirmName(); });
+        if (nameOk) nameOk.addEventListener('click', function() { self.playClick(); self.confirmName(); });
         var nameInput = document.getElementById('qp-name-input-' + windowId);
         if (nameInput) nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') self.confirmName(); });
 
         var breedOk = document.getElementById('qp-breed-ok-' + windowId);
-        if (breedOk) breedOk.addEventListener('click', function() { self.hideBreedResult(); });
+        if (breedOk) breedOk.addEventListener('click', function() { self.playClick(); self.hideBreedResult(); });
 
         // Sell/release buttons in info panel
         var sellBtn = document.getElementById('qp-sell-btn-' + windowId);
         if (sellBtn) sellBtn.addEventListener('click', function() {
-            if (self.selectedDuck && !self.selectedDuck.releasing) self.showSellDialog(self.selectedDuck);
+            if (self.selectedDuck && !self.selectedDuck.releasing) { self.playClick(); self.showSellDialog(self.selectedDuck); }
         });
         var releaseBtn = document.getElementById('qp-release-btn-' + windowId);
         if (releaseBtn) releaseBtn.addEventListener('click', function() {
-            if (self.selectedDuck && !self.selectedDuck.releasing) self.showReleaseDialog(self.selectedDuck);
+            if (self.selectedDuck && !self.selectedDuck.releasing) { self.playClick(); self.showReleaseDialog(self.selectedDuck); }
         });
 
         // Sell dialog buttons
         var sellYes = document.getElementById('qp-sell-yes-' + windowId);
         var sellNo = document.getElementById('qp-sell-no-' + windowId);
-        if (sellYes) sellYes.addEventListener('click', function() { self.confirmSell(); });
-        if (sellNo) sellNo.addEventListener('click', function() { self.hideSellDialog(); });
+        if (sellYes) sellYes.addEventListener('click', function() { self.playClick(); self.confirmSell(); });
+        if (sellNo) sellNo.addEventListener('click', function() { self.playClick(); self.hideSellDialog(); });
 
         // Release dialog buttons
         var releaseYes = document.getElementById('qp-release-yes-' + windowId);
         var releaseNo = document.getElementById('qp-release-no-' + windowId);
-        if (releaseYes) releaseYes.addEventListener('click', function() { self.confirmRelease(); });
-        if (releaseNo) releaseNo.addEventListener('click', function() { self.hideReleaseDialog(); });
+        if (releaseYes) releaseYes.addEventListener('click', function() { self.playClick(); self.confirmRelease(); });
+        if (releaseNo) releaseNo.addEventListener('click', function() { self.playClick(); self.hideReleaseDialog(); });
+
+        // Reset dialog buttons
+        var resetYes = document.getElementById('qp-reset-yes-' + windowId);
+        var resetNo = document.getElementById('qp-reset-no-' + windowId);
+        if (resetYes) resetYes.addEventListener('click', function() { self.playClick(); self.confirmResetPond(); });
+        if (resetNo) resetNo.addEventListener('click', function() { self.playClick(); self.hideResetDialog(); });
+
+        // Daily bonus dialog
+        var bonusOk = document.getElementById('qp-bonus-ok-' + windowId);
+        if (bonusOk) bonusOk.addEventListener('click', function() { self.playClick(); self.hideBonusDialog(); });
 
         var hud = document.getElementById('qp-hud-' + windowId);
         if (hud) {
             hud.addEventListener('click', function(e) {
-                var btn = e.target.closest('.qp-tool-btn');
-                if (btn && btn.dataset.tool) self.setActiveTool(btn.dataset.tool);
+                var btn = e.target.closest('.qp-hud-btn');
+                if (btn && btn.dataset.tool) { self.playClick(); self.setActiveTool(btn.dataset.tool); }
             });
+        }
+
+        // Settings gear menu
+        var settingsBtn = document.getElementById('qp-settings-btn-' + windowId);
+        var settingsMenu = document.getElementById('qp-settings-menu-' + windowId);
+        if (settingsBtn && settingsMenu) {
+            settingsBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                self.playClick();
+                settingsMenu.classList.toggle('visible');
+            });
+            settingsMenu.addEventListener('click', function(e) {
+                var item = e.target.closest('.qp-settings-item');
+                if (!item) return;
+                self.playClick();
+                settingsMenu.classList.remove('visible');
+                var action = item.dataset.action;
+                if (action === 'stats') self.toggleStatsPanel();
+                if (action === 'reset') self.showResetDialog();
+            });
+        }
+
+        // Stats close button
+        var statsClose = document.getElementById('qp-stats-close-' + windowId);
+        if (statsClose) {
+            statsClose.addEventListener('click', function() { self.playClick(); self.hideStatsPanel(); });
+        }
+
+        // Close settings menu on outside click + ResizeObserver
+        var container = document.getElementById('qp-' + windowId);
+        if (container) {
+            container.addEventListener('click', function() {
+                if (settingsMenu) settingsMenu.classList.remove('visible');
+            });
+            if (typeof ResizeObserver !== 'undefined') {
+                this._resizeObserver = new ResizeObserver(function() { self.resizeCanvas(); });
+                this._resizeObserver.observe(container);
+            }
         }
 
         if (typeof elxaOS !== 'undefined' && elxaOS.eventBus) {
             this._onWindowClosed = function(data) { if (data && data.id === windowId) self.destroy(); };
             elxaOS.eventBus.on('window.closed', this._onWindowClosed);
-        }
-
-        var container = document.getElementById('qp-' + windowId);
-        if (container && typeof ResizeObserver !== 'undefined') {
-            this._resizeObserver = new ResizeObserver(function() { self.resizeCanvas(); });
-            this._resizeObserver.observe(container);
         }
     }
 
@@ -1850,7 +2004,12 @@ class QuackerPond {
             return;
         }
         if (this.activeTool === 'shovel') {
-            this.cleanMess(clickX, clickY);
+            var cleaned = this.cleanMess(clickX, clickY);
+            if (cleaned > 0) {
+                this.earnCoins(cleaned);  // §1 per poop cleaned
+                this.stats.totalEarnings += cleaned;
+                this.updateStatsPanel();
+            }
             return;
         }
         if (this.breedMode) {
@@ -1914,6 +2073,92 @@ class QuackerPond {
     }
 
     // =========================================
+    //  RESET POND
+    // =========================================
+    showResetDialog() {
+        var overlay = document.getElementById('qp-reset-overlay-' + this.windowId);
+        if (overlay) overlay.classList.add('visible');
+    }
+
+    hideResetDialog() {
+        var overlay = document.getElementById('qp-reset-overlay-' + this.windowId);
+        if (overlay) overlay.classList.remove('visible');
+    }
+
+    confirmResetPond() {
+        this.hideResetDialog();
+        // Wipe everything
+        this.ducks = [];
+        this.foodItems = [];
+        this.messes = [];
+        this.incubatingEgg = null;
+        this.selectedDuck = null;
+        this.breedMode = false;
+        this.breedDuck1 = null;
+        this.breedPairHistory = [];
+        this.coins = 500;
+        this.lastDailyBonus = null;
+        this.stats = { totalHatched: 0, totalSold: 0, totalReleased: 0, totalEarnings: 0 };
+        this._pendingSellDuck = null;
+        this._pendingReleaseDuck = null;
+        this.updateBalance();
+        this.updateDuckCount();
+        this.updateDuckInfoPanel();
+        this.updateStatsPanel();
+        this.saveState();
+    }
+
+    // =========================================
+    //  DAILY BONUS
+    // =========================================
+    checkDailyBonus() {
+        var now = new Date();
+        var todayKey = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+        if (this.lastDailyBonus === todayKey) return;  // already claimed today
+        this.lastDailyBonus = todayKey;
+        this.earnCoins(this.DAILY_BONUS);
+        this.showBonusDialog();
+        this.saveState();
+    }
+
+    showBonusDialog() {
+        var overlay = document.getElementById('qp-bonus-overlay-' + this.windowId);
+        if (overlay) overlay.classList.add('visible');
+    }
+
+    hideBonusDialog() {
+        var overlay = document.getElementById('qp-bonus-overlay-' + this.windowId);
+        if (overlay) overlay.classList.remove('visible');
+    }
+
+    // =========================================
+    //  STATS PANEL
+    // =========================================
+    toggleStatsPanel() {
+        var el = document.getElementById('qp-stats-' + this.windowId);
+        if (!el) return;
+        var showing = el.style.display === 'none' || !el.style.display;
+        el.style.display = showing ? 'block' : 'none';
+        if (showing) this.updateStatsPanel();
+    }
+
+    hideStatsPanel() {
+        var el = document.getElementById('qp-stats-' + this.windowId);
+        if (el) el.style.display = 'none';
+    }
+
+    updateStatsPanel() {
+        var hEl = document.getElementById('qp-stat-hatched-' + this.windowId);
+        var sEl = document.getElementById('qp-stat-sold-' + this.windowId);
+        var rEl = document.getElementById('qp-stat-released-' + this.windowId);
+        var eEl = document.getElementById('qp-stat-earnings-' + this.windowId);
+        if (hEl) hEl.textContent = this.stats.totalHatched;
+        if (sEl) sEl.textContent = this.stats.totalSold;
+        if (rEl) rEl.textContent = this.stats.totalReleased;
+        if (eEl) eEl.textContent = '\u00A7' + this.stats.totalEarnings;
+    }
+
+    // =========================================
     //  PERSISTENCE (save/load via registry)
     // =========================================
     async saveState() {
@@ -1950,6 +2195,7 @@ class QuackerPond {
         var state = {
             ducks: duckData,
             coins: this.coins,
+            lastDailyBonus: this.lastDailyBonus,
             stats: {
                 totalHatched: this.stats.totalHatched,
                 totalSold: this.stats.totalSold,
@@ -1977,6 +2223,9 @@ class QuackerPond {
 
             // Restore coins
             if (typeof state.coins === 'number') this.coins = state.coins;
+
+            // Restore daily bonus tracking
+            if (state.lastDailyBonus) this.lastDailyBonus = state.lastDailyBonus;
 
             // Restore stats
             if (state.stats) {
@@ -2034,6 +2283,7 @@ class QuackerPond {
         this.running = false;
         // Save state before cleanup
         this.saveState();
+        this.stopMusic();
         if (this.autoSaveInterval) { clearInterval(this.autoSaveInterval); this.autoSaveInterval = null; }
         if (this.animFrameId) { cancelAnimationFrame(this.animFrameId); this.animFrameId = null; }
         if (this._resizeObserver) { this._resizeObserver.disconnect(); this._resizeObserver = null; }

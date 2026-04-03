@@ -202,6 +202,7 @@ Goal: Make the File Manager solid, fix bugs, add missing features, and establish
 - **Messenger DOM queries** — All queries use `document.getElementById()` (not scoped to window element). Works because messenger is singleton, but inconsistent with multi-window programs.
 
 ## 🐛 Known Bugs
+- [x] **Quacker Pond economy softlock** — Fixed with 3 safety nets: (a) poop cleaning pays §1 per mess (gentle grind), (b) free starter egg when 0 ducks + <§50, (c) Reset Pond button in ⚙ settings menu (nuclear option, resets to §500). Starting funds also raised from §200 to §500. Daily bonus of §50 on each new day.
 - [x] **NoAds Pro shows "Install" after subscription** — `_restoreState()` in `ad-service.js` listened for `registry.userLoaded` event which was never emitted. Changed to `login.success`. Fixed in session 41.
 - [ ] **ElxaTech untested** — built in session 37, never tested. Receipt email event listener (`elxatech.purchase`) still needed.
 - [x] **Browser overlay scroll position** — Fixed in session 40. Overlays now constrained to browser page via `contain: paint` + scroll-to-top observer.

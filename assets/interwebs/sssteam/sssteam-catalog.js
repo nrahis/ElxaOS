@@ -287,15 +287,18 @@ window.SSSTEAM_CATALOG = [
         shortDesc: 'Hatch, breed, and collect ducks — discover rare colors!',
         price: 29.99,
         priceDisplay: '$29.99',
-        icon: '🦆',
+        icon: '<img src="./assets/games/quackers/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
+        iconEmoji: '🦆',
         author: 'ElxaCorp Games Division',
         version: '1.0',
         rating: 4.7,
         reviewCount: 312,
         tags: ['Simulation', 'Casual', 'Collecting'],
         heroColor: '#2e7d32',
-        heroImage: '',
-        screenshots: [],
+        heroImage: './assets/interwebs/sssteam/images/quacker/quacker-pond_cover.png',
+        screenshots: [
+            { src: './assets/interwebs/sssteam/images/quacker/quacker-pond_1.png', caption: 'Duck Pond Gameplay' }
+        ],
         features: [
             'Hatch ducks from eggs and name your flock',
             'Breed ducks to discover 14+ color varieties',
@@ -317,7 +320,7 @@ window.SSSTEAM_CATALOG = [
             id: 'quacker_pond',
             name: 'Quacker Pond',
             description: 'Duck management sim — hatch, breed, collect!',
-            icon: '🦆',
+            icon: '<img src="./assets/games/quackers/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
             version: '1.0',
             author: 'ElxaCorp Games Division',
             gameData: {

@@ -177,9 +177,9 @@ var AdService = (function() {
             }
         });
 
-        // Restore state from inventory AFTER registry has loaded user data
-        // (login.success fires before IndexedDB loads — inventoryService has no data yet)
-        eventBus.on('registry.userLoaded', function() {
+        // Restore state from inventory after user logs in
+        // By login.success, inventoryService is initialized and has user data
+        eventBus.on('login.success', function() {
             _restoreState();
         });
 
@@ -240,6 +240,11 @@ var AdService = (function() {
 
         // Don't inject on snoogle homepage or directory
         if (!browserPageEl) return;
+
+        // Lazy restore — if blocker wasn't detected via event, re-check inventory now
+        if (!_adBlockerActive) {
+            _restoreState();
+        }
 
         // Ad blocker check
         if (_adBlockerActive) {

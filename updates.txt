@@ -1,13 +1,21 @@
-🚀 **Welcome to ElxaOS v4.1.0!**
+🚀 **Welcome to ElxaOS v5.0!**
 
 **What's New:**
 
-• **E-mail** - You can now send and receive e-mails! Go to elxamail.ex to try it out!
-• **Messenger Upgrade** - Messenger has been improved; now with memory/history
-• **Snake Deluxe Improvements** - Better design, better gameplay - visit snake-deluxe.ex to download it!
-• **New game: Mail Room Mayhem** - Still a WIP but playable
+• **Stock Market!** - Trade stocks on the Snakesian Virtual Stock Exchange at scalestreet.ex! 14 companies, live prices, dividends, and breaking news in the ScaleStreet Journal at ssj.ex
+• **Pato & Sons Auto** - Lease or buy vehicles at pato.ex! 23 rides across 5 tiers, auto loans, insurance, and meet the Pato family
+• **Squiggly Wiggly** - Go grocery shopping at squiggly.ex! 48 products from all your favorite Snakesian brands
+• **Scales & Tails Fashion Co.** - Shop clothing at fashionco.ex! 19 styles with color and pattern variants
+• **Mallard Realty Expanded** - You can now BUY and SELL houses! Watch your property value grow over time
+• **Quacker Pond** - NEW GAME on Sssteam! Hatch ducks, feed them, breed rare colors, discover personality traits, and sell for profit
+• **Gifting & Bonds** - Send gifts to your Messenger friends! Build relationships and unlock new bond tiers
+• **Ads & NoAds Pro** - The ExWeb now has ads (some are... suspicious). Get the NoAds Pro browser extension to block them!
+• **ElxaBooks Pro** - Upgraded financial dashboard with 8 views: accounts, credit cards, loans, subscriptions, taxes, and more
+• **Museum & Aquarium** - Buy tickets and support with monthly donations at museum.ex and aquarium.ex
+• **11 New Themes + 4 Wallpapers** - Tons of new looks in Personalize! Try Synthwave, Neon Bloom, Matcha, and more
+• **Paychecks & Employment** - Your ElxaCorp job now pays you automatically every month!
 
-*Enjoy exploring your new operating system!*
+*So much to explore — have fun!*
 
 ---
 *Pro tip: Try pressing SHIFT+B during boot to access the BIOS setup!*
