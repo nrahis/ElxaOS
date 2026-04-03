@@ -576,6 +576,16 @@ class SimpleGame {
                     return null;
                 }
 
+            case 'quacker_pond':
+                if (typeof QuackerPond !== 'undefined') {
+                    const quackerPond = new QuackerPond(this.windowManager, this.gameData);
+                    return quackerPond.launch(programInfo);
+                } else {
+                    console.error('QuackerPond class not found! Make sure quacker-pond.js is loaded.');
+                    alert('Quacker Pond not available. Please check if the game files are loaded.');
+                    return null;
+                }
+
             case 'target_game':
             default:
                 // Launch Target game (existing implementation)

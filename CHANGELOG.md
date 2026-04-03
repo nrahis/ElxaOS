@@ -4,6 +4,264 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
+## Quacker Pond — Phase 7: Trait System — Session 53
+
+### `js/games/quacker-pond.js` (UPDATED)
+- **Trait system**: 14 duck personality traits across 3 rarities (5 common, 5 uncommon, 4 rare). Each trait has visible behavior changes — no trait punishes the player, all are funny/helpful/cute.
+- **Common traits**: Zoomies (random speed bursts), Sleepyhead (sleeps way more with double 💤), Quacky (speech bubbles with silly phrases), Chonky (20% bigger sprite), Tiny (25% smaller sprite).
+- **Uncommon traits**: Friendly (wanders toward other ducks), Splashy (loves water, splash VFX on entry), Dancer (periodic spins with 🎵), Hungry Boy (double food seek range, longer eat), Brave (explores full map area).
+- **Rare traits**: Sparkly (twinkle particles ✨), Charming (heart particles near ducks, +10% breed chance), Lucky (🍀 icon, +5% rarity boost on breeding), Immortal (golden glow, hunger never drops to 0).
+- **Trait rolling**: `rollEggTraits()` for purchased eggs (50% no traits, 40% one common, 10% two commons). `rollBredTraits()` for bred ducks (45% inherit each parent trait, 80% if shared, 12% random mutation weighted by rarity). Max 2 traits per duck, keeps rarest on overflow.
+- **Behavior hooks in `updateDuck()`**: Zoomies sprint state machine (2-3s bursts every 10-25s at 2x speed), Sleepyhead (40% sleep chance / 5-12s duration vs normal 15%/3-8s), Dancer spin state machine (1s spin every 20-35s), Quacky speech timer (random phrases every 8-18s for 2.5s), Friendly (70% wander bias toward nearest duck), Splashy (70% bias toward water center + splash VFX), Hungry Boy (2x FOOD_SEEK_RANGE + 1.5x eat duration), Immortal (hunger floor at 10), Sparkly/Charming particle systems.
+- **Visual rendering**: Chonky/Tiny scale multipliers in `renderDuck()`. Immortal golden glow ellipse behind sprite. Dancer rotation via canvas transform. Sparkly white twinkle particles. Charming heart particles near other ducks. Splashy expanding ring on water entry. Quacky rounded speech bubble with text. Trait emoji icons in name labels (💨 sprinting, ✨ sparkly, 🍀 lucky, 🎵 dancing, extra 💤 sleepyhead).
+- **Economy**: `calculateSellPrice()` adds flat trait bonuses (+§5 common, +§15 uncommon, +§50 rare). Sell dialog breakdown shows trait names.
+- **Breeding**: Charming trait adds +10% breed success in `attemptBreed()`. Lucky trait adds +5% to mutation chances in `getBreedColor()` (speckled/golden rolls and variant chance). Bred egg inherits traits via `rollBredTraits()`.
+- **Info panel**: New "Traits" row shows trait names (rare traits get ✨ prefix). Hidden when duck has no traits.
+- **Hatch dialog**: Shows "Traits: X, Y!" below the name input when hatching a duck with traits.
+- **Persistence**: Traits array saved/loaded for both ducks and incubating eggs in `saveState()`/`loadState()`. Trait animation state (sprint timers, dance angles, sparkle particles) is transient — resets on load like wander state.
+- **Duck object expanded**: `spawnDuck()` now accepts 7th `traits` parameter. New transient fields: `sprintTimer`, `sprinting`, `sprintDuration`, `quackTimer`, `quackMsg`, `quackShowTimer`, `danceTimer`, `dancing`, `danceAngle`, `splashTimer`, `sparkles[]`, `hearts[]`.
+
+### `css/games/quacker-pond.css` (UPDATED)
+- **Trait CSS**: `.qp-dialog-traits` style for hatch dialog trait announcement (gold text, centered). `.qp-info-traits-row` style for info panel trait display.
+
+### `HICLAUDE/project-context/ElxaOS/plans/trait-system-plan.md` (NEW)
+- Full build plan documenting trait design philosophy, all 14 traits with behaviors/effects, inheritance math, sell bonuses, display spec, implementation details, and build phases.
+
+---
+
+## Quacker Pond — Phase 6: Polish & Persistence — Session 52
+
+### `js/games/quacker-pond.js` (UPDATED)
+- **Persistence via registry**: Game state now saves/loads via `elxaOS.registry` under `'quackerPond'` key. Saves ducks (position, color, hunger, happiness, generation, parents), coins, stats, messes, and incubating egg state.
+- **Auto-save**: State saved every 30 seconds during gameplay and on window close (`destroy()`).
+- **Load on start**: `startGame()` now calls `loadState()` before starting the game loop. Ducks, coins, stats, messes, and incubating eggs are all restored from saved state.
+- **Idle sleep behavior**: Ducks now have a 15% chance to fall asleep when pausing during wander (only on land, not starving). Sleep lasts 3-8 seconds. Uses the `sleep` animation row (row 10) from the sprite sheet. Sleeping ducks show a 💤 indicator above their name. Starving ducks (hunger < 15) wake up automatically.
+- **Sleep animation in renderer**: `renderDuck()` now checks `duck.sleeping` first in the animation priority chain, using the dedicated sleep animation.
+
+---
+
+## Quacker Pond — In-Game Currency Decoupling — Session 51
+
+### `js/games/quacker-pond.js` (UPDATED)
+- **In-game currency**: Game no longer uses `financeService` (the bank) at all. Replaced with self-contained `this.coins` property. Player starts with §200.
+- **New helpers**: `spendCoins(amount)` and `earnCoins(amount)` replace all async `financeService.withdraw()`/`financeService.deposit()` calls. Fully synchronous now.
+- **Dead code removed**: Removed `EGG_COST_USD` property and `costUSD` fields from `FOOD_CONFIG` — no longer needed since everything runs in snakes (§) internally.
+- **Removed all `financeService` references**: `getBalanceSnakes()` (read checking × 2), `withdraw()` calls in `buyEgg()` and `placeFood()`, `deposit()` call in `confirmSell()` — all replaced with in-game coin operations.
+- **Economy balance**: §200 starting coins = 4 eggs max (§50 each) or 2 eggs + food budget, forcing early economic decisions. Players earn more by selling ducks.
+
+---
+
+## Quacker Pond — Phase 5 (Selling, Releasing & Economy) + HUD Fix — Session 50
+
+### `css/games/quacker-pond.css` (UPDATED)
+- **HUD moved to top**: Changed `.qp-hud` from `bottom: 0` to `top: 0`. Duck info panel pushed down to `top: 48px` to sit below HUD.
+- **Dialog text line breaks**: Added `white-space: pre-line` to `.qp-dialog-text` so `\n` in dialog messages renders as actual line breaks (fixes breed result messages too).
+- **Sell/Release button styles**: New `.qp-duck-info-actions` flex container, `.qp-btn-sell` (green pixel button), `.qp-btn-release` (slate pixel button).
+
+### `js/games/quacker-pond.js` (UPDATED)
+- **Phase 5: Sell system** — `SELL_PRICES` map (17 colors, §20 common to §1000 legendary). `calculateSellPrice(duck)` with +10% per generation beyond 1st and +20% happiness bonus (>=70). Sell button in duck info panel. Sell confirmation dialog with rarity/gen/happiness breakdown and price preview. `confirmSell()` removes duck, deposits USD to checking via `financeService.deposit()`, updates balance.
+- **Phase 5: Release system** — Release ("FREE") button in duck info panel. Release confirmation dialog with farewell message. `confirmRelease()` sets `duck.releasing = true`, duck walks toward nearest edge at 1.5x speed, removed when off-screen. Releasing ducks skip all AI (hunger/mess/food/wander), can't be selected or bred.
+- **Phase 5: Value display** — Sell value (§) shown in duck info panel, updates live as happiness changes.
+- **Phase 5: Stats tracking** — `this.stats` object tracks `totalHatched`, `totalSold`, `totalReleased`, `totalEarnings`. Hatched incremented in `confirmName()`, sold/released/earnings in their respective confirm methods.
+- **HUD position fix** — Priority fix from last session, HUD bar now renders at top of game window.
+- **Breed/select skip releasing ducks** — Both `handleBreedClick` and `handleCanvasClick` duck loops skip ducks with `releasing` flag.
+
+---
+
+## Gifting & Bond System — Phase 4 + Phase 6B (Context Builder + Notifications) — Session 44
+
+### `js/services/context-builder.js` (UPDATED)
+- **Phase 4A: Bond info in user context** — New `_getBondInfo()` helper reads `bondService.getAllBondSummaries()` and maps character IDs to display names via world context. Output format: `CHARACTER RELATIONSHIPS:` section with `- Mr. Snake-e: Bond 15/100 (Acquaintance)` per character.
+- **Phase 4B: Email integration** — No code changes needed. Email-LLM service already calls `contextBuilder.getUserContext()`, so bond summaries flow into email prompts automatically. Characters adjust tone/familiarity based on bond tier in both Messenger and Email.
+- Bond section only appears if user has interacted with at least one character (conditional, like all other context sections).
+
+### `js/services/bond-service.js` (UPDATED)
+- **Phase 6B: Tier change notifications** — New `_onTierChanged()` handler listens for `bond.tierChanged` events. Creates notification center entry + desktop toast with tier-colored heart emoji, character display name, and new tier. Click action launches Messenger. Category: `social`.
+- Character display names resolved from world context `keyCharacters` with fallback to character ID.
+
+---
+
+## Gifting & Bond System — Phases 2A-2D + 3A-3D (Messenger Integration) — Session 43
+
+### `js/programs/messenger.js` (UPDATED — major changes)
+- **Phase 2A: Gift button** — New gift button (MDI `mdi-gift`) to the left of the emoji picker in the message input area
+- **Phase 2B: Gift popup** — Overlay popup showing all giftable inventory items grouped by subcategory. Click item → confirm dialog → sends gift. Empty state with helpful message when no items owned. Handles both `items` and `tickets` categories.
+- **Gift sending flow** — Removes item from inventory, scores via `bondService.calculateGiftPoints()`, records gift, checks if active request is fulfilled, triggers LLM gift reaction. Special gift message bubble in chat (golden styling).
+- **Phase 2C: Request message styling** — AI messages containing `[bracketed text]` render as styled `.messenger-request-item` spans (highlighted background, bold, orange). Brackets stripped, just styled text. Applied to both new and loaded historical messages.
+- **Phase 2D: Bond display** — Bond tier + heart emoji displayed in chat header next to contact name. Updates dynamically after gifts. Hidden for non-bondable system contacts.
+- **Phase 3A: Bond context injection** — `buildEnhancedPrompt()` now always includes bond tier/description via `bondService.getBondContext()`
+- **Phase 3B: Gift reaction prompts** — New `getGiftReaction()` method builds dedicated LLM prompt with gift context from `bondService.getGiftReactionPrompt()`. Fallback responses for LLM-off mode.
+- **Phase 3C: Request trigger** — `buildEnhancedPrompt()` checks `bondService.shouldTriggerRequest()` and injects request prompt when triggered. Response parsed for `[brackets]` via `parseRequestFromResponse()`, which extracts keyword and maps to character preference category, then stores via `bondService.setActiveRequest()`.
+- **Phase 3D: Preference context** — Character preferences (likes, favorite color) injected into prompt via `bondService.getPreferenceContext()`
+- **Bond message tracking** — `sendMessage()` now calls `bondService.recordMessage()` for every user message
+- **Non-bondable guard** — Gift popup shows info toast for system contacts (HR, IT, News); bond display clears for non-bondable
+- **Gift popup auto-close** — Document click handler updated to close gift popup on outside click
+
+### `css/programs/messenger.css` (UPDATED — ~180 lines added)
+- Gift button styling (matches emoji picker button)
+- Gift popup (titlebar, scrollable content, category headers, item rows with hover, quantity badges, empty state)
+- Gift message bubble (golden background, gift icon, centered)
+- Request item styling (orange highlighted spans for `[bracketed]` text)
+- Bond display in chat header (compact, with tooltip)
+- Gift popup scrollbar (themed)
+
+### `js/icon-config.js` (UPDATED)
+- Added `gift` (`mdi-gift`) and `heart` (`mdi-heart`) to messenger action icons
+
+### `CHANGELOG.md` (UPDATED)
+- Session 43 entry
+
+## Gifting & Bond System — Phase 1 + Phase 5 — Session 42
+
+### `js/services/bond-service.js` (NEW — ~700 lines)
+- **BondService** — Full relationship tracking service for Messenger characters
+- **Phase 1A: Bond tracking** — Per-character bond value (0-100), 6 tiers (Stranger → Ride or Die), registry-backed storage under `bond` user state key, message counting (+0.1 bond per message)
+- **Phase 1B: Gift scoring engine** — Keyword matching (item name vs likes), category matching (subcategory vs preference category), dislike detection (0 pts), favorite color bonus (+1), price bonus (up to +3 for expensive gifts), max 8 pts per gift
+- **Phase 1C: Request system** — Scheduling (every 15-20 messages), expiry (30 messages), LLM prompt generation for requests, `[bracket]` keyword parsing helpers, active request storage + matching
+- **LLM context helpers** — `getBondContext()` for relationship prompt injection, `getGiftReactionPrompt()` for gift responses, `getPreferenceContext()` for general preference injection, `generateRequestPrompt()` for request triggers
+- **Events** — `bond.giftSent`, `bond.tierChanged`, `bond.requestMade`, `bond.requestFulfilled`
+- **Debug tools** — `elxaOS.bondService.debug.status()`, `.setBond()`, `.gift()`, `.request()`, `.history()`, `.preferences()`, `.reset()`
+- Boot step 2.77 (after context builder, before notifications)
+
+### `data/world-context.json` (UPDATED)
+- **Phase 5: Gift preferences** added to all 5 chattable characters:
+  - Mr. Snake-e: blue, likes tech/formal/health, dislikes candy/energy drinks
+  - Mrs. Snake-e: pink, likes flowers/baking/dresses, dislikes protein/electronics/gaming
+  - Remi: red, likes energy drinks/nuggets/shorts/electronics/gaming/candy, dislikes formal/vegetables/ties
+  - Rita: purple, likes dresses/skirts/phones/chocolate/unicorns, dislikes vitamins/nuggets
+  - Pushing Cat: black, likes tuna/fish/sussy/snacks/cereal, dislikes vegetables/flowers/formal/ties
+- Non-chattable characters (HR, IT, News) excluded from bond tracking
+
+### `index.html` (UPDATED)
+- Added `bond-service.js` script tag (after context-builder.js)
+
+### `js/elxaos.js` (UPDATED)
+- Added `this.bondService = new BondService(...)` in constructor
+- Added `await this.bondService.init()` at boot step 2.77
+
+## NoAds Pro Subscription Restore Bug Fix — Session 41
+
+### `js/services/ad-service.js` (UPDATED)
+- **FIXED: NoAds Pro subscription not detected after login.** The `_restoreState()` listener was hooked to `registry.userLoaded` — an event that is **never emitted anywhere** in the codebase. Changed to `login.success`, which actually fires when the user logs in. By that time, `inventoryService` is fully initialized and `getActiveSubscriptions()` returns the correct data.
+- Root cause chain: (1) `_restoreState()` in `init()` fails because `elxaOS` global not assigned yet (constructor still running), (2) the fallback event listener on `registry.userLoaded` never fires because no code emits it, (3) `_adBlockerActive` stays `false` forever → extensions panel shows "Install" even with active subscription → ads never blocked.
+
+## Browser Overlay Scroll Fix — Session 40
+
+### `css/programs/browser.css` (UPDATED)
+- Added `position: relative` and `contain: paint` to `.browser-page`. The `contain: paint` property makes `#browserPage` a containing block for `position: fixed` descendants, constraining interwebs overlays to the browser page area instead of covering the entire ElxaOS desktop.
+
+### `js/programs/browser.js` (UPDATED)
+- Added `setupOverlayScrollFix()` method — MutationObserver that watches for overlay elements (class name containing "overlay") being shown/hidden via `hidden` class toggle. On show: saves scroll position, scrolls `#browserPage` to top. On hide: restores scroll position via `requestAnimationFrame`.
+- Hooked into `loadWebsite()` after `executePageScripts()`.
+- Observer cleanup added to `clearPageScripts()` for proper teardown on page navigation.
+- **Affects all interwebs sites universally** — no per-site code changes needed.
+
+## Ad System Bug Fixes — Session 39
+
+### `js/programs/browser.js` (UPDATED)
+- Fixed `win is not defined` ReferenceError in `loadWebsite()` ad injection hook (~line 937). Changed `win.querySelector('#browserPage')` to `this.getWindowElement()?.querySelector('#browserPage')`. This bug was crashing all website loads and redirecting to "under construction" page.
+- Fixed 3 instances of `ElxaUI.showToast()` → `ElxaUI.showMessage()` in extensions install/uninstall callbacks. `showToast` doesn't exist on ElxaUI; correct method is `showMessage(text, type)`.
+
+### `index.html` (UPDATED)
+- Added `<script src="js/services/payment-system.js"></script>` before `ad-service.js`. Payment system was only loaded by individual interwebs site HTML files, so `window.purchaseProduct()` was unavailable at the OS level where the ad service runs. The existing `if (typeof ElxaMockPayment === 'undefined')` guard prevents re-declaration conflicts.
+
+## Ad System + Browser Extensions — Session 38
+
+### `js/services/ad-service.js` (NEW)
+- Ad service IIFE with image ads (4 from assets/ads/) and CSS-generated scam ads (10 varieties).
+- Scam ads: million visitor, virus warning, hot singles, download RAM, free phone, credit trick, free snakes phishing, snake oil, prince email, flash sale.
+- Ad injection: 60% chance per website load, 1-3s delay, random placement (popup-center, banner-bottom, corner-float).
+- [x] close button on all ads, fade-in/out animations.
+- Ad blocker subscription check — skips injection when NoAds Pro is active.
+- Extensions catalog system with install/uninstall flow using purchaseProduct + addRecurringPayment + addSubscription.
+- State restoration from inventory on login (detects existing NoAds Pro subscription).
+- Debug tools: `AdService.debug.forceAd()`, `AdService.debug.status()`.
+
+### `css/system/ads.css` (NEW)
+- Ad overlay styles: popup-center (modal with backdrop), banner-bottom, corner-float placements.
+- Close button styling with hover state.
+- Scam ad CSS: flashy gradients, blinking text, pulse animations, fake buttons, fake RAM progress bar.
+- Extensions panel styles: card layout, install/remove buttons, active badge.
+
+### `js/programs/browser.js` (UPDATED)
+- Replaced nonfunctional debug/magnify button with Extensions puzzle icon button.
+- Added extensions panel (dropdown from toolbar) showing available extensions with install/uninstall.
+- Ad injection hook: after website loads + scripts execute, calls `AdService.injectAd()`.
+- Ads cleared on navigation (`setPageContent`).
+- `showExtensionsPanel()`: renders extension cards with price, description, install/remove buttons.
+- `updateExtensionsButton()`: swaps between puzzle icon (no blocker) and shield-check icon (blocker active).
+- Extensions panel closes on document click alongside existing menu.
+
+### `js/icon-config.js` (UPDATED)
+- Added `puzzle` action icon (mdi-puzzle) for extensions button.
+- Added `shield-check` action icon (mdi-shield-check) for active ad blocker indicator.
+
+### `js/services/payment-system.js` (UPDATED)
+- Added `elxa-payment-cancelled` event dispatch on cancel button, backdrop click, and Escape key close.
+- Prevents dangling event listeners when extension purchase is cancelled.
+
+### `js/elxaos.js` (UPDATED)
+- Added `AdService.init(this.eventBus)` to constructor, stored as `this.adService`.
+
+### `css/desktop.css` (UPDATED)
+- Added `@import url('system/ads.css')` import.
+
+### `index.html` (UPDATED)
+- Added `<script src="js/services/ad-service.js">` tag (after context-builder, before programs).
+
+## ElxaMail Bug Fixes — Theme Text, Nav Bar, Sign-In State
+
+### `assets/interwebs/exmail/styles.css` (UPDATED)
+- Added `color: #000000 !important` to `.elxamail-website-root` so text color is explicitly set and doesn't inherit from desktop themes.
+- Added theme-isolation rule: key content containers (`.elxamail-container`, `.elxamail-main`, `.elxamail-sidebar`, `.elxamail-viewer-content`, `.elxamail-compose`, login/register forms, welcome screen) all get `color: #000000 !important` to prevent theme leakage.
+
+### `assets/interwebs/exmail/index.html` (UPDATED)
+- Wrapped Sign In and Sign Up nav links in `<span id="loggedOutNav">` so they can be toggled independently from the Sign Out link (`loggedInNav`).
+
+### `js/services/email-system.js` (UPDATED)
+- `showEmailInterface()`: Now hides `loggedOutNav` (Sign In / Sign Up) when showing the email interface.
+- `showLogin()`, `showRegister()`, `showWelcome()`: Now show `loggedOutNav` when returning to logged-out views.
+- `handleNavAction()`: Added guard — if user is logged in and somehow clicks login/register, redirects to email interface instead of creating a confusing half-state.
+
+### `js/services/context-builder.js` (UPDATED)
+- `getApprovedSites()`: Updated header text ("APPROVED EXWEB SITES"), added LINK FORMATTING instructions telling LLM to output ExWeb URLs as `<a class="exweb-link">` HTML tags. Includes example and "don't overuse" guidance.
+
+### `assets/interwebs/exmail/styles.css` (NEW)
+- Extracted ALL CSS from `exmail/index.html` into separate `styles.css` file (~490 lines). Follows same pattern as FSB, Mallard, Pato sites.
+- Added CSS for `.elxamail-viewer-body a.exweb-link` — blue (#0066cc), underlined, pointer cursor, darker hover (#004499).
+
+### `assets/interwebs/exmail/index.html` (UPDATED)
+- Removed entire `<style>` block (~618 lines). HTML-only now (~170 lines). CSS loaded via website registry.
+
+### `js/programs/website-registry.json` (UPDATED)
+- Added `"css": "./assets/interwebs/exmail/styles.css"` to `elxamail.ex` entry.
+
+### `js/services/email-system.js` (UPDATED)
+- Added click handler for `a.exweb-link` in the email viewer event delegation. Clicking a link in an email opens the Snoogle Browser and navigates to that ExWeb site via `elxaOS.programs.browser.launch(url)`.
+- Added `debug` getter with `testExWebLinks()` — injects a test email from Rita containing 3 ExWeb links (squiggly.ex, scalestreet.ex, pato.ex). Usage: `elxaMailSystem.debug.testExWebLinks()`
+
+## Squiggly Wiggly — Phase 4: World Integration + Polish
+
+### `data/world-context.json` (UPDATED)
+- Added `squigglyWiggly` section: store info, location (Main Street, Sidewinder Springs), departments, brand tie-ins with stock tickers (FANG, SCAT, BITE, VENM, HISS, COIL + Squiggly's Best store brand)
+- Added `squiggly.ex` to approved websites
+
+### `js/services/context-builder.js` (UPDATED)
+- World context: lightweight one-liner for Squiggly Wiggly (characters know it exists without detailed catalog info). Detailed store context (departments, brands, products) intentionally omitted — reserved for future gifting system trigger injection.
+
+### `assets/interwebs/squiggly/squiggly.js` (UPDATED)
+- Emits `squiggly.orderComplete` event after successful purchase with items list, total, and item count for receipt email generation
+
+### `js/services/finance-notifications.js` (UPDATED)
+- Added `squiggly.orderComplete` listener in `_setupListeners()`
+- Added `_onGroceryOrderComplete()` handler — sends order confirmation email from "Squiggly Wiggly Online" (orders@squigglywiggly.ex) with itemized receipt + creates notification center entry
+
+## Squiggly Wiggly — Phase 1: Inventory Service — Items Category
+
+### New Features
+- **`js/services/inventory-service.js`**: Added `items` to `INVENTORY_CATEGORIES`. New methods: `addItems()` (stacking by itemId+subcategory), `removeItems()` (decrement, auto-remove at 0), `getItemsBySubcategory()`, `getItemCount()`, `getItemsSync()`. Items included in `getOwnershipSummary()`. Debug tools: `debug.addItems()`, `debug.removeItems()`, `debug.items()`.
+- **`js/services/context-builder.js`**: Added `_getItemsInfo()` — groups owned items by subcategory for LLM context. Wired into `getUserContext()`.
+
 ## ScaleStreet — Phase 7: Polish + World Integration
 
 ### Bug Fixes

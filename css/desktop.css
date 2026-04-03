@@ -19,6 +19,7 @@
 @import url('programs/calculator.css');
 @import url('programs/elxacode.css');
 @import url('programs/elxabooks.css');
+@import url('programs/elxasheets.css');
 @import url('programs/virus/lebron-james-virus.css');
 @import url('programs/virus/roblox-jumpscare-virus.css');
 @import url('programs/antivirus.css');
@@ -29,8 +30,10 @@
 @import url('games/sussy-cat.css');
 @import url('games/mail-room-mayhem.css');
 @import url('games/chess-game.css');
+@import url('games/quacker-pond.css');
 @import url('system/login.css');
 @import url('system/notifications.css');
+@import url('system/ads.css');
 
 /* =================================
     CSS CUSTOM PROPERTIES (THEME VARIABLES)

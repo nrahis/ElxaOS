@@ -146,6 +146,8 @@
     padding: 0;
     border: 1px inset var(--windowBorder);
     margin: 2px;
+    position: relative;
+    contain: paint; /* Constrains position:fixed overlays to this container instead of viewport */
 }
 
 /* =================================

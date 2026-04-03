@@ -1,0 +1,15 @@
+# ElxaOS Changelog (Development)
+#
+# This file tracks ALL changes made during development.
+# When it's time to publish, pick the user-facing highlights
+# and write them up in updates.txt for the boot popup.
+
+## NoAds Pro Subscription Restore Bug Fix — Session 41
+
+### `js/services/ad-service.js` (UPDATED)
+- **FIXED: NoAds Pro subscription not detected after login.** The `_restoreState()` listener was hooked to `registry.userLoaded` — an event that is **never emitted anywhere** in the codebase. Changed to `login.success`, which actually fires when the user logs in. By that time, `inventoryService` is fully initialized and `getActiveSubscriptions()` returns the correct data.
+- Root cause chain: (1) `_restoreState()` in `init()` fails because `elxaOS` global not assigned yet (constructor still running), (2) the fallback event listener on `registry.userLoaded` never fires because no code emits it, (3) `_adBlockerActive` stays `false` forever → extensions panel shows "Install" even with active subscription → ads never blocked.
+- **FIXED: Duplicate NoAds Pro subscriptions.** Because `_restoreState()` never worked, the `_adBlockerActive` install guard always saw `false`, allowing the user to purchase NoAds Pro multiple times — each creating a new subscription + recurring payment in inventory. Two fixes applied:
+  - `_restoreState()` now collects ALL active NoAds Pro subscriptions, keeps the first, and cancels the rest as duplicates. Duplicates are auto-cleaned on next login.
+  - `installExtension()` now checks inventory directly (not just the `_adBlockerActive` flag) before opening the payment dialog. If an active NoAds Pro subscription already exists, it restores state from it and blocks the duplicate install.
+

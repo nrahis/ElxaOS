@@ -1,0 +1,78 @@
+<div class="fashionco-app">
+        <!-- Header -->
+        <header class="fc-header">
+            <div class="fc-brand">
+                <h1 class="fc-logo">Scales & Tails</h1>
+                <p class="fc-tagline">Fashion Co.</p>
+            </div>
+            <div class="fc-cart-btn" data-action="toggle-cart">
+                <span class="mdi mdi-cart-outline"></span>
+                <span class="fc-cart-badge" style="display:none;">0</span>
+            </div>
+        </header>
+
+        <!-- Department Tabs -->
+        <nav class="fc-departments">
+            <button class="fc-dept-tab active" data-dept="all">All</button>
+            <button class="fc-dept-tab" data-dept="tops">Tops</button>
+            <button class="fc-dept-tab" data-dept="dresses">Dresses</button>
+            <button class="fc-dept-tab" data-dept="bottoms">Bottoms</button>
+            <button class="fc-dept-tab" data-dept="swimwear">Swimwear</button>
+            <button class="fc-dept-tab" data-dept="formal">Formal</button>
+        </nav>
+
+        <!-- Product Grid -->
+        <div class="fc-grid" id="fc-product-grid"></div>
+
+        <!-- Product Detail Overlay -->
+        <div class="fc-detail-overlay" id="fc-detail-overlay" style="display:none;">
+            <div class="fc-detail-panel">
+                <button class="fc-detail-close" data-action="close-detail">&times;</button>
+                <div class="fc-detail-image-wrap">
+                    <img class="fc-detail-image" id="fc-detail-image" src="" alt="">
+                </div>
+                <div class="fc-detail-info">
+                    <div class="fc-variant-thumbs" id="fc-variant-thumbs"></div>
+                    <h2 class="fc-detail-name" id="fc-detail-name"></h2>
+                    <p class="fc-detail-price" id="fc-detail-price"></p>
+                    <p class="fc-detail-desc" id="fc-detail-desc"></p>
+                    <div class="fc-detail-selected-color" id="fc-detail-selected-color"></div>
+                    <div class="fc-detail-actions">
+                        <div class="fc-qty-control">
+                            <button class="fc-qty-btn" data-action="qty-minus">−</button>
+                            <span class="fc-qty-value" id="fc-qty-value">1</span>
+                            <button class="fc-qty-btn" data-action="qty-plus">+</button>
+                        </div>
+                        <button class="fc-add-to-cart-btn" data-action="add-to-cart">
+                            <span class="mdi mdi-cart-plus"></span> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Dropdown -->
+        <div class="fc-cart-dropdown" id="fc-cart-dropdown" style="display:none;">
+            <div class="fc-cart-header">
+                <h3>Your Cart</h3>
+                <button class="fc-cart-close" data-action="toggle-cart">&times;</button>
+            </div>
+            <div class="fc-cart-items" id="fc-cart-items"></div>
+            <div class="fc-cart-footer" id="fc-cart-footer" style="display:none;">
+                <div class="fc-cart-subtotal">
+                    <span>Subtotal:</span>
+                    <span id="fc-cart-subtotal">§0.00</span>
+                </div>
+                <button class="fc-checkout-btn" data-action="checkout">
+                    <span class="mdi mdi-credit-card-outline"></span> Checkout
+                </button>
+            </div>
+        </div>
+
+        <!-- Checkout / Delivery Overlay -->
+        <div class="fc-ceremony-overlay" id="fc-ceremony-overlay" style="display:none;"></div>
+    </div>
+
+    <script src="../../../js/services/payment-system.js"></script>
+    <script src="fashion-products.js"></script>
+    <script src="fashionco.js"></script>

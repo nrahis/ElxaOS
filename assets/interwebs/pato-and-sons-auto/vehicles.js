@@ -18,7 +18,7 @@ var PATO_VEHICLES = [
     {
         id: 1,
         name: "The Rust Bucket",
-        image: "./assets/vehicles/old beat up truck.png",
+        image: "./assets/vehicles/old beat up truck.jpg",
         price: 1500,
         tier: "beaters",
         tierName: "Beaters & Budget",
@@ -41,7 +41,7 @@ var PATO_VEHICLES = [
     {
         id: 2,
         name: "The Road Warrior",
-        image: "./assets/vehicles/hatchback travelworn.png",
+        image: "./assets/vehicles/hatchback travelworn.jpg",
         price: 2200,
         tier: "beaters",
         tierName: "Beaters & Budget",
@@ -64,7 +64,7 @@ var PATO_VEHICLES = [
     {
         id: 3,
         name: "The Sidewinder",
-        image: "./assets/vehicles/motorcycle.png",
+        image: "./assets/vehicles/motorcycle.jpg",
         price: 3200,
         tier: "beaters",
         tierName: "Beaters & Budget",
@@ -87,7 +87,7 @@ var PATO_VEHICLES = [
     {
         id: 4,
         name: "Ol' Reliable",
-        image: "./assets/vehicles/older pickup.png",
+        image: "./assets/vehicles/older pickup.jpg",
         price: 4800,
         tier: "beaters",
         tierName: "Beaters & Budget",
@@ -119,7 +119,7 @@ var PATO_VEHICLES = [
     {
         id: 5,
         name: "The Daily Grind",
-        image: "./assets/vehicles/decent hatchback.png",
+        image: "./assets/vehicles/decent hatchback.jpg",
         price: 6500,
         tier: "reliable",
         tierName: "Reliable Rides",
@@ -142,7 +142,7 @@ var PATO_VEHICLES = [
     {
         id: 6,
         name: "The Wanderer",
-        image: "./assets/vehicles/cheerful camper.png",
+        image: "./assets/vehicles/cheerful camper.jpg",
         price: 9000,
         tier: "reliable",
         tierName: "Reliable Rides",
@@ -165,7 +165,7 @@ var PATO_VEHICLES = [
     {
         id: 7,
         name: "The Sprout",
-        image: "./assets/vehicles/green electric car 2 passenger.png",
+        image: "./assets/vehicles/green electric car 2 passenger.jpg",
         price: 8500,
         tier: "reliable",
         tierName: "Reliable Rides",
@@ -188,7 +188,7 @@ var PATO_VEHICLES = [
     {
         id: 8,
         name: "The Blossom",
-        image: "./assets/vehicles/pink hybrid car.png",
+        image: "./assets/vehicles/pink hybrid car.jpg",
         price: 14000,
         tier: "reliable",
         tierName: "Reliable Rides",
@@ -220,7 +220,7 @@ var PATO_VEHICLES = [
     {
         id: 9,
         name: "The Commuter",
-        image: "./assets/vehicles/midrange car.png",
+        image: "./assets/vehicles/midrange car.jpg",
         price: 18000,
         tier: "midrange",
         tierName: "Mid-Range",
@@ -243,7 +243,7 @@ var PATO_VEHICLES = [
     {
         id: 10,
         name: "The Rugged Plum",
-        image: "./assets/vehicles/purple jeep.png",
+        image: "./assets/vehicles/purple jeep.jpg",
         price: 24000,
         tier: "midrange",
         tierName: "Mid-Range",
@@ -266,7 +266,7 @@ var PATO_VEHICLES = [
     {
         id: 11,
         name: "The Volt Viper",
-        image: "./assets/vehicles/yellow electric car.png",
+        image: "./assets/vehicles/yellow electric car.jpg",
         price: 28000,
         tier: "midrange",
         tierName: "Mid-Range",
@@ -289,7 +289,7 @@ var PATO_VEHICLES = [
     {
         id: 12,
         name: "Big Bertha",
-        image: "./assets/vehicles/sturdy 4-door truck.png",
+        image: "./assets/vehicles/sturdy 4-door truck.jpg",
         price: 32000,
         tier: "midrange",
         tierName: "Mid-Range",
@@ -312,7 +312,7 @@ var PATO_VEHICLES = [
     {
         id: 13,
         name: "The Shadow",
-        image: "./assets/vehicles/upper mid range black car.png",
+        image: "./assets/vehicles/upper mid range black car.jpg",
         price: 35000,
         tier: "midrange",
         tierName: "Mid-Range",
@@ -344,7 +344,7 @@ var PATO_VEHICLES = [
     {
         id: 14,
         name: "The War Machine",
-        image: "./assets/vehicles/weird military looking truck.png",
+        image: "./assets/vehicles/weird military looking truck.jpg",
         price: 42000,
         tier: "premium",
         tierName: "Premium",
@@ -367,7 +367,7 @@ var PATO_VEHICLES = [
     {
         id: 15,
         name: "The Copperhead",
-        image: "./assets/vehicles/classic muscle car.png",
+        image: "./assets/vehicles/classic muscle car.jpg",
         price: 55000,
         tier: "premium",
         tierName: "Premium",
@@ -390,7 +390,7 @@ var PATO_VEHICLES = [
     {
         id: 16,
         name: "The Duchess",
-        image: "./assets/vehicles/luxury classic convertible car.png",
+        image: "./assets/vehicles/luxury classic convertible car.jpg",
         price: 62000,
         tier: "premium",
         tierName: "Premium",
@@ -413,7 +413,7 @@ var PATO_VEHICLES = [
     {
         id: 17,
         name: "The Amethyst",
-        image: "./assets/vehicles/nice electric purple 4 door truck.png",
+        image: "./assets/vehicles/nice electric purple 4 door truck.jpg",
         price: 72000,
         tier: "premium",
         tierName: "Premium",
@@ -436,7 +436,7 @@ var PATO_VEHICLES = [
     {
         id: 18,
         name: "The Monarch",
-        image: "./assets/vehicles/luxury SUV.png",
+        image: "./assets/vehicles/luxury SUV.jpg",
         price: 78000,
         tier: "premium",
         tierName: "Premium",
@@ -468,7 +468,7 @@ var PATO_VEHICLES = [
     {
         id: 19,
         name: "The Sovereign",
-        image: "./assets/vehicles/luxury car.png",
+        image: "./assets/vehicles/luxury car.jpg",
         price: 105000,
         tier: "elite",
         tierName: "Showroom Elite",
@@ -491,7 +491,7 @@ var PATO_VEHICLES = [
     {
         id: 20,
         name: "The Grand Basilisk",
-        image: "./assets/vehicles/high end classy car.png",
+        image: "./assets/vehicles/high end classy car.jpg",
         price: 145000,
         tier: "elite",
         tierName: "Showroom Elite",
@@ -514,7 +514,7 @@ var PATO_VEHICLES = [
     {
         id: 21,
         name: "The Venom GT",
-        image: "./assets/vehicles/high end european car.png",
+        image: "./assets/vehicles/high end european car.jpg",
         price: 190000,
         tier: "elite",
         tierName: "Showroom Elite",
@@ -537,7 +537,7 @@ var PATO_VEHICLES = [
     {
         id: 22,
         name: "The Pink Mamba",
-        image: "./assets/vehicles/luxury pink car.png",
+        image: "./assets/vehicles/luxury pink car.jpg",
         price: 225000,
         tier: "elite",
         tierName: "Showroom Elite",
@@ -560,7 +560,7 @@ var PATO_VEHICLES = [
     {
         id: 23,
         name: "The Apex Predator",
-        image: "./assets/vehicles/hyper modern sports car luxury.png",
+        image: "./assets/vehicles/hyper modern sports car luxury.jpg",
         price: 300000,
         tier: "elite",
         tierName: "Showroom Elite",

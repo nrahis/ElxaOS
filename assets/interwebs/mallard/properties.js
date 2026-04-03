@@ -16,7 +16,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 1,
         name: "The Dusty Shack",
-        image: "./assets/properties/1.png",
+        image: "./assets/properties/1.jpg",
         price: 15000,
         neighborhood: "dusty-flats",
         neighborhoodName: "Dusty Flats",
@@ -43,7 +43,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 2,
         name: "Pebble Creek Cottage",
-        image: "./assets/properties/2.png",
+        image: "./assets/properties/2.jpg",
         price: 20000,
         neighborhood: "dusty-flats",
         neighborhoodName: "Dusty Flats",
@@ -70,7 +70,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 3,
         name: "Sunny Acres Mobile Estate",
-        image: "./assets/properties/3.png",
+        image: "./assets/properties/3.jpg",
         price: 25000,
         neighborhood: "dusty-flats",
         neighborhoodName: "Dusty Flats",
@@ -104,7 +104,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 4,
         name: "Timber Peak A-Frame",
-        image: "./assets/properties/4.png",
+        image: "./assets/properties/4.jpg",
         price: 30000,
         neighborhood: "pine-hollow",
         neighborhoodName: "Pine Hollow",
@@ -131,7 +131,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 5,
         name: "Mossy Brook Bungalow",
-        image: "./assets/properties/5.png",
+        image: "./assets/properties/5.jpg",
         price: 42000,
         neighborhood: "pine-hollow",
         neighborhoodName: "Pine Hollow",
@@ -158,7 +158,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 6,
         name: "Willow Glen Ranch",
-        image: "./assets/properties/6.png",
+        image: "./assets/properties/6.jpg",
         price: 55000,
         neighborhood: "pine-hollow",
         neighborhoodName: "Pine Hollow",
@@ -192,7 +192,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 7,
         name: "The Copperhead Arms",
-        image: "./assets/properties/7.png",
+        image: "./assets/properties/7.jpg",
         price: 75000,
         neighborhood: "downtown",
         neighborhoodName: "Downtown Snake Valley",
@@ -226,7 +226,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 8,
         name: "Cloverfield Heights Ranch",
-        image: "./assets/properties/8.png",
+        image: "./assets/properties/8.jpg",
         price: 78000,
         neighborhood: "cloverfield",
         neighborhoodName: "Cloverfield",
@@ -253,7 +253,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 9,
         name: "Clover Lane Split-Level",
-        image: "./assets/properties/9.png",
+        image: "./assets/properties/9.jpg",
         price: 92000,
         neighborhood: "cloverfield",
         neighborhoodName: "Cloverfield",
@@ -280,7 +280,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 10,
         name: "The Millworks Loft",
-        image: "./assets/properties/10.png",
+        image: "./assets/properties/10.jpg",
         price: 130000,
         neighborhood: "downtown",
         neighborhoodName: "Downtown Snake Valley",
@@ -307,7 +307,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 11,
         name: "Bluebell Cottage",
-        image: "./assets/properties/11.png",
+        image: "./assets/properties/11.jpg",
         price: 68000,
         neighborhood: "cloverfield",
         neighborhoodName: "Cloverfield",
@@ -334,7 +334,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 12,
         name: "Copperstone Foursquare",
-        image: "./assets/properties/12.png",
+        image: "./assets/properties/12.jpg",
         price: 105000,
         neighborhood: "downtown",
         neighborhoodName: "Downtown Snake Valley",
@@ -361,7 +361,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 13,
         name: "The Fieldstone Craftsman",
-        image: "./assets/properties/13.png",
+        image: "./assets/properties/13.jpg",
         price: 110000,
         neighborhood: "cloverfield",
         neighborhoodName: "Cloverfield",
@@ -395,7 +395,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 14,
         name: "The Maplewood Colonial",
-        image: "./assets/properties/14.png",
+        image: "./assets/properties/14.jpg",
         price: 150000,
         neighborhood: "maple-heights",
         neighborhoodName: "Maple Heights",
@@ -422,7 +422,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 15,
         name: "Blackshutter Manor",
-        image: "./assets/properties/15.png",
+        image: "./assets/properties/15.jpg",
         price: 210000,
         neighborhood: "maple-heights",
         neighborhoodName: "Maple Heights",
@@ -449,7 +449,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 16,
         name: "Stonerow Townhome",
-        image: "./assets/properties/16.png",
+        image: "./assets/properties/16.jpg",
         price: 265000,
         neighborhood: "maple-heights",
         neighborhoodName: "Maple Heights",
@@ -476,7 +476,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 17,
         name: "Briarstone Estate",
-        image: "./assets/properties/17.png",
+        image: "./assets/properties/17.jpg",
         price: 310000,
         neighborhood: "maple-heights",
         neighborhoodName: "Maple Heights",
@@ -503,7 +503,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 18,
         name: "Thornwood Victorian",
-        image: "./assets/properties/18.png",
+        image: "./assets/properties/18.jpg",
         price: 350000,
         neighborhood: "maple-heights",
         neighborhoodName: "Maple Heights",
@@ -537,7 +537,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 19,
         name: "The Emerald Victorian",
-        image: "./assets/properties/19.png",
+        image: "./assets/properties/19.jpg",
         price: 400000,
         neighborhood: "serpentine-estates",
         neighborhoodName: "Serpentine Estates",
@@ -564,7 +564,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 20,
         name: "Gingerbread Manor",
-        image: "./assets/properties/20.png",
+        image: "./assets/properties/20.jpg",
         price: 525000,
         neighborhood: "serpentine-estates",
         neighborhoodName: "Serpentine Estates",
@@ -591,7 +591,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 21,
         name: "The Glass & Grain",
-        image: "./assets/properties/21.png",
+        image: "./assets/properties/21.jpg",
         price: 650000,
         neighborhood: "serpentine-estates",
         neighborhoodName: "Serpentine Estates",
@@ -618,7 +618,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 22,
         name: "Villa Serpentina",
-        image: "./assets/properties/22.png",
+        image: "./assets/properties/22.jpg",
         price: 850000,
         neighborhood: "serpentine-estates",
         neighborhoodName: "Serpentine Estates",
@@ -645,7 +645,7 @@ var MALLARD_PROPERTIES = [
     {
         id: 23,
         name: "The Apex",
-        image: "./assets/properties/23.png",
+        image: "./assets/properties/23.jpg",
         price: 1000000,
         neighborhood: "serpentine-estates",
         neighborhoodName: "Serpentine Estates",

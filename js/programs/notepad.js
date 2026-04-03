@@ -1,910 +1,960 @@
 // =================================
-// PROFESSIONAL RICH TEXT NOTEPAD - WORDPAD STYLE (FIXED)
+// NOTEPAD — FULL REWRITE
 // =================================
-// TODO: document.execCommand() is deprecated and may break in future browsers.
-// A future rewrite should migrate to the InputEvent API or custom Selection/Range
-// manipulation for formatting (bold, italic, fontSize, fontName, foreColor, etc.).
+// Rich text editor with menu bar, formatting ribbon, find & replace,
+// zoom, alignment, lists, and proper file management.
+// Still uses document.execCommand() — deprecated but functional everywhere.
+
 class NotepadProgram {
     constructor(windowManager, fileSystem, eventBus) {
         this.windowManager = windowManager;
         this.fileSystem = fileSystem;
         this.eventBus = eventBus;
-        this.documents = new Map();
-        this.activeDocumentId = null;
         this.documentCounter = 0;
-        
-        // Add this property to track original file paths
-        this.documentPaths = new Map();
-        
-        // Store formatting state per document instead of globally
-        this.documentFormats = new Map();
-        
-        // Default format template
-        this.defaultFormat = {
-            fontFamily: 'Arial',
-            fontSize: 14,
-            bold: false,
-            italic: false,
-            underline: false,
-            color: '#000000',
-            backgroundColor: 'transparent'
-        };
-        
-        // Available fonts
+
+        // Per-window state keyed by windowId
+        this.docs = new Map();
+
+        // Fonts & sizes available in dropdowns
         this.fonts = [
-            'Arial',
-            'Times New Roman', 
-            'Courier New',
-            'Comic Sans MS',
-            'Impact',
-            'Georgia',
-            'Trebuchet MS',
-            'Verdana',
-            'Tahoma',
-            'Helvetica'
+            'Arial', 'Arial Black', 'Brush Script MT', 'Calibri', 'Cambria',
+            'Comic Sans MS', 'Consolas', 'Copperplate', 'Courier New',
+            'Cursive', 'Fantasy', 'Garamond', 'Georgia', 'Helvetica',
+            'Impact', 'Ink Free', 'Lucida Console', 'Lucida Handwriting',
+            'Lucida Sans', 'Monospace', 'Palatino Linotype', 'Papyrus',
+            'Segoe UI', 'Segoe Print', 'Segoe Script', 'Tahoma',
+            'Times New Roman', 'Trebuchet MS', 'Verdana'
         ];
-        
+        this.sizes = [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 72];
+
         this.colors = [
-            { name: 'Black', value: '#000000' },
-            { name: 'Red', value: '#FF0000' },
-            { name: 'Green', value: '#008000' },
-            { name: 'Blue', value: '#0000FF' },
-            { name: 'Purple', value: '#800080' },
-            { name: 'Orange', value: '#FFA500' },
-            { name: 'Pink', value: '#FFC0CB' },
-            { name: 'Cyan', value: '#00FFFF' },
-            { name: 'Yellow', value: '#FFFF00' },
-            { name: 'Brown', value: '#8B4513' }
+            { n: 'Black',  v: '#000000' }, { n: 'Dark Red',   v: '#8B0000' },
+            { n: 'Red',    v: '#FF0000' }, { n: 'Orange',     v: '#FFA500' },
+            { n: 'Yellow', v: '#FFD700' }, { n: 'Green',      v: '#008000' },
+            { n: 'Teal',   v: '#008080' }, { n: 'Blue',       v: '#0000FF' },
+            { n: 'Purple', v: '#800080' }, { n: 'Pink',       v: '#FF69B4' },
+            { n: 'Brown',  v: '#8B4513' }, { n: 'Gray',       v: '#808080' },
+            { n: 'Silver', v: '#C0C0C0' }, { n: 'White',      v: '#FFFFFF' },
+            { n: 'Cyan',   v: '#00FFFF' }, { n: 'Lime',       v: '#00FF00' }
         ];
     }
 
-    launch() {
-        this.createNewDocument();
-    }
+    // ===========================
+    // LAUNCH & WINDOW CREATION
+    // ===========================
 
-    createNewDocument(content = '', filename = null) {
+    launch(content = '', filename = null, path = null) {
         this.documentCounter++;
-        const documentId = `notepad-${Date.now()}-${this.documentCounter}`;
-        const title = filename || `Untitled Document ${this.documentCounter}`;
-        
-        const document = {
-            id: documentId,
+        const wid = 'notepad-' + Date.now() + '-' + this.documentCounter;
+        const title = filename || ('Untitled ' + this.documentCounter);
+
+        this.docs.set(wid, {
             filename: filename,
-            content: content,
-            saved: filename ? true : false,
-            cursorPosition: 0,
-            hasUserFormatting: false // Track if user has actually applied formatting
-        };
-        
-        this.documents.set(documentId, document);
-        this.activeDocumentId = documentId;
-        
-        // Reset formatting for new document
-        this.documentFormats.set(documentId, { ...this.defaultFormat });
-        
-        const windowContent = this.createNotepadInterface(documentId);
-        
-        const win = this.windowManager.createWindow(
-            documentId,
-            `${ElxaIcons.render('notepad', 'ui')} ${title}`,
-            windowContent,
-            { width: '900px', height: '700px', x: '50px', y: '50px' }
+            path: path || ['root', 'Documents'],
+            saved: !!filename,
+            hasFormatting: false,
+            zoom: 100,
+            findOpen: false
+        });
+
+        const html = this._buildUI(wid);
+        this.windowManager.createWindow(
+            wid,
+            ElxaIcons.render('notepad', 'ui') + ' ' + title,
+            html,
+            { width: '920px', height: '680px', x: '60px', y: '40px' }
         );
-        
-        this.setupEventHandlers(documentId);
-        this.updateDisplay(documentId);
-        
-        return documentId;
+
+        this._bind(wid);
+        if (content) this._loadContent(wid, content);
+        this._updateStatusBar(wid);
+
+        // Focus editor
+        const el = this._el(wid);
+        if (el) el.querySelector('.np-editor').focus();
+
+        return wid;
     }
 
-    getCurrentFormat(documentId) {
-        return this.documentFormats.get(documentId) || { ...this.defaultFormat };
-    }
-
-    setCurrentFormat(documentId, format) {
-        this.documentFormats.set(documentId, format);
-    }
-
-    applySpecificFormatting(documentId, command, value) {
-        const selection = window.getSelection();
-        
-        if (selection.rangeCount === 0) {
-            this.updateToolbarState(documentId);
+    // Open a file from the filesystem (called externally, e.g. from file manager)
+    openFile(filename, path) {
+        const filePath = path || ['root', 'Documents'];
+        const file = this.fileSystem.getFile(filePath, filename);
+        if (!file) {
+            ElxaUI.showMessage('File not found: ' + filename, 'error');
             return;
         }
-        
-        // Make sure focus is inside the text area before executing commands
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        const textArea = container.querySelector('.text-area');
-        if (!textArea.contains(selection.anchorNode) && selection.anchorNode !== textArea) {
-            // Restore the saved selection if we have one (e.g. after using a <select>)
-            if (this._savedRange) {
-                this.restoreSelection(this._savedRange);
-            } else {
-                textArea.focus();
-            }
-        }
-        
-        const hasSelection = selection.toString().length > 0;
-        
-        // Mark that user has applied formatting (only if there's selected text)
-        if (hasSelection) {
-            const doc = this.documents.get(documentId);
-            doc.hasUserFormatting = true;
-        }
-        
-        // Apply the formatting command — works both with selected text
-        // AND at an empty cursor (sets format for next typed characters)
-        if (command === 'bold' || command === 'italic' || command === 'underline') {
-            document.execCommand(command, false, null);
-        } else if (command === 'fontName') {
-            document.execCommand('fontName', false, value);
-        } else if (command === 'fontSize') {
-            document.execCommand('fontSize', false, value);
-        } else if (command === 'foreColor') {
-            document.execCommand('foreColor', false, value);
-        } else if (command === 'hiliteColor' || command === 'backColor') {
-            document.execCommand(command, false, value);
-        }
-        
-        // If text was selected, re-read formatting from the DOM after a tick.
-        // If no text was selected, the caller already updated internal state —
-        // don't let updateToolbarFromSelection overwrite it from the (unchanged) DOM.
-        if (hasSelection) {
-            setTimeout(() => this.updateToolbarFromSelection(documentId), 10);
-        }
+        this.launch(file.content || '', filename, [...filePath]);
     }
 
-    // --- Selection save/restore (for toolbar controls that steal focus) ---
-    saveSelection() {
-        const sel = window.getSelection();
-        if (sel.rangeCount > 0) {
-            return sel.getRangeAt(0).cloneRange();
-        }
-        return null;
+    // ===========================
+    // UI BUILDER
+    // ===========================
+
+    _buildUI(wid) {
+        const fontOpts = this.fonts.map(f =>
+            '<option value="' + f + '"' + (f === 'Arial' ? ' selected' : '') + '>' + f + '</option>'
+        ).join('');
+
+        const sizeOpts = this.sizes.map(s =>
+            '<option value="' + s + '"' + (s === 14 ? ' selected' : '') + '>' + s + '</option>'
+        ).join('');
+
+        const colorSwatches = this.colors.map(c =>
+            '<div class="np-swatch" data-color="' + c.v + '" style="background:' + c.v + (c.v === '#FFFFFF' ? ';border:1px solid #ccc' : '') + '" title="' + c.n + '"></div>'
+        ).join('');
+
+        const hlSwatches = '<div class="np-swatch" data-color="transparent" style="background:#fff;border:1px solid #999" title="None">\u00D7</div>' +
+            this.colors.filter(c => c.v !== '#000000').map(c =>
+                '<div class="np-swatch" data-color="' + c.v + '" style="background:' + c.v + '" title="' + c.n + '"></div>'
+            ).join('');
+
+        return '<div class="np-wrap" data-wid="' + wid + '">' +
+
+            // ---- Menu Bar ----
+            '<div class="np-menubar">' +
+                '<div class="np-menu" data-menu="file"><span class="np-menu-label">File</span>' +
+                    '<div class="np-dropdown">' +
+                        '<div class="np-menu-item" data-action="new">' + ElxaIcons.renderAction('new-file') + ' New</div>' +
+                        '<div class="np-menu-item" data-action="open">' + ElxaIcons.renderAction('open') + ' Open\u2026</div>' +
+                        '<div class="np-menu-sep"></div>' +
+                        '<div class="np-menu-item" data-action="save">' + ElxaIcons.renderAction('save') + ' Save<span class="np-shortcut">Ctrl+S</span></div>' +
+                        '<div class="np-menu-item" data-action="saveas">' + ElxaIcons.renderAction('save') + ' Save As\u2026</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="np-menu" data-menu="edit"><span class="np-menu-label">Edit</span>' +
+                    '<div class="np-dropdown">' +
+                        '<div class="np-menu-item" data-action="undo">' + ElxaIcons.renderAction('undo') + ' Undo<span class="np-shortcut">Ctrl+Z</span></div>' +
+                        '<div class="np-menu-item" data-action="redo">' + ElxaIcons.renderAction('redo') + ' Redo<span class="np-shortcut">Ctrl+Y</span></div>' +
+                        '<div class="np-menu-sep"></div>' +
+                        '<div class="np-menu-item" data-action="find">' + ElxaIcons.renderAction('search') + ' Find & Replace<span class="np-shortcut">Ctrl+H</span></div>' +
+                        '<div class="np-menu-sep"></div>' +
+                        '<div class="np-menu-item" data-action="selectall">Select All<span class="np-shortcut">Ctrl+A</span></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="np-menu" data-menu="format"><span class="np-menu-label">Format</span>' +
+                    '<div class="np-dropdown">' +
+                        '<div class="np-menu-item" data-action="bold">' + ElxaIcons.renderAction('bold') + ' Bold<span class="np-shortcut">Ctrl+B</span></div>' +
+                        '<div class="np-menu-item" data-action="italic">' + ElxaIcons.renderAction('italic') + ' Italic<span class="np-shortcut">Ctrl+I</span></div>' +
+                        '<div class="np-menu-item" data-action="underline">' + ElxaIcons.renderAction('underline') + ' Underline<span class="np-shortcut">Ctrl+U</span></div>' +
+                        '<div class="np-menu-item" data-action="strikethrough">Strikethrough</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="np-menu" data-menu="view"><span class="np-menu-label">View</span>' +
+                    '<div class="np-dropdown">' +
+                        '<div class="np-menu-item" data-action="zoomin">Zoom In<span class="np-shortcut">Ctrl++</span></div>' +
+                        '<div class="np-menu-item" data-action="zoomout">Zoom Out<span class="np-shortcut">Ctrl+-</span></div>' +
+                        '<div class="np-menu-item" data-action="zoomreset">Reset Zoom<span class="np-shortcut">Ctrl+0</span></div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+
+            // ---- Formatting Ribbon ----
+            '<div class="np-ribbon">' +
+                // Font group
+                '<div class="np-rgroup">' +
+                    '<select class="np-font-sel" title="Font" onmousedown="event.stopPropagation()">' + fontOpts + '</select>' +
+                    '<select class="np-size-sel" title="Size" onmousedown="event.stopPropagation()">' + sizeOpts + '</select>' +
+                '</div>' +
+
+                '<div class="np-rsep"></div>' +
+
+                // Style group
+                '<div class="np-rgroup">' +
+                    '<button class="np-rbtn np-fmt-bold" data-cmd="bold" title="Bold (Ctrl+B)" onmousedown="event.preventDefault()">' + ElxaIcons.renderAction('bold') + '</button>' +
+                    '<button class="np-rbtn np-fmt-italic" data-cmd="italic" title="Italic (Ctrl+I)" onmousedown="event.preventDefault()">' + ElxaIcons.renderAction('italic') + '</button>' +
+                    '<button class="np-rbtn np-fmt-underline" data-cmd="underline" title="Underline (Ctrl+U)" onmousedown="event.preventDefault()">' + ElxaIcons.renderAction('underline') + '</button>' +
+                    '<button class="np-rbtn np-fmt-strike" data-cmd="strikethrough" title="Strikethrough" onmousedown="event.preventDefault()"><span class="mdi mdi-format-strikethrough"></span></button>' +
+                '</div>' +
+
+                '<div class="np-rsep"></div>' +
+
+                // Color group
+                '<div class="np-rgroup">' +
+                    '<div class="np-color-wrap">' +
+                        '<button class="np-rbtn np-text-color-btn" title="Text Color" onmousedown="event.preventDefault()">' + ElxaIcons.renderAction('text-color') + '</button>' +
+                        '<div class="np-palette np-text-palette">' + colorSwatches + '</div>' +
+                    '</div>' +
+                    '<div class="np-color-wrap">' +
+                        '<button class="np-rbtn np-hl-color-btn" title="Highlight" onmousedown="event.preventDefault()">' + ElxaIcons.renderAction('highlight') + '</button>' +
+                        '<div class="np-palette np-hl-palette">' + hlSwatches + '</div>' +
+                    '</div>' +
+                '</div>' +
+
+                '<div class="np-rsep"></div>' +
+
+                // Alignment group
+                '<div class="np-rgroup">' +
+                    '<button class="np-rbtn np-align-left active" data-align="justifyLeft" title="Align Left" onmousedown="event.preventDefault()"><span class="mdi mdi-format-align-left"></span></button>' +
+                    '<button class="np-rbtn np-align-center" data-align="justifyCenter" title="Center" onmousedown="event.preventDefault()"><span class="mdi mdi-format-align-center"></span></button>' +
+                    '<button class="np-rbtn np-align-right" data-align="justifyRight" title="Align Right" onmousedown="event.preventDefault()"><span class="mdi mdi-format-align-right"></span></button>' +
+                    '<button class="np-rbtn np-align-justify" data-align="justifyFull" title="Justify" onmousedown="event.preventDefault()"><span class="mdi mdi-format-align-justify"></span></button>' +
+                '</div>' +
+
+                '<div class="np-rsep"></div>' +
+
+                // List group
+                '<div class="np-rgroup">' +
+                    '<button class="np-rbtn" data-cmd="insertUnorderedList" title="Bullet List" onmousedown="event.preventDefault()"><span class="mdi mdi-format-list-bulleted"></span></button>' +
+                    '<button class="np-rbtn" data-cmd="insertOrderedList" title="Numbered List" onmousedown="event.preventDefault()"><span class="mdi mdi-format-list-numbered"></span></button>' +
+                '</div>' +
+            '</div>' +
+
+            // ---- Find & Replace Bar (hidden by default) ----
+            '<div class="np-findbar" style="display:none">' +
+                '<div class="np-find-row">' +
+                    '<label>Find:</label>' +
+                    '<input type="text" class="np-find-input" placeholder="Search text\u2026">' +
+                    '<button class="np-find-btn" data-faction="findprev" title="Previous">\u25C0</button>' +
+                    '<button class="np-find-btn" data-faction="findnext" title="Next">\u25B6</button>' +
+                    '<span class="np-find-count"></span>' +
+                '</div>' +
+                '<div class="np-find-row">' +
+                    '<label>Replace:</label>' +
+                    '<input type="text" class="np-replace-input" placeholder="Replace with\u2026">' +
+                    '<button class="np-find-btn" data-faction="replace">Replace</button>' +
+                    '<button class="np-find-btn" data-faction="replaceall">Replace All</button>' +
+                    '<button class="np-find-close" data-faction="closefind" title="Close">\u2715</button>' +
+                '</div>' +
+            '</div>' +
+
+            // ---- Editor ----
+            '<div class="np-editor-wrap">' +
+                '<div class="np-editor" contenteditable="true" spellcheck="false" data-wid="' + wid + '"></div>' +
+            '</div>' +
+
+            // ---- Status Bar ----
+            '<div class="np-statusbar">' +
+                '<span class="np-status-left">Ready</span>' +
+                '<span class="np-status-counts">Words: 0 &nbsp;|&nbsp; Chars: 0 &nbsp;|&nbsp; Lines: 1</span>' +
+                '<span class="np-status-zoom">' +
+                    '<button class="np-zoom-btn" data-action="zoomout" title="Zoom Out">\u2212</button>' +
+                    '<span class="np-zoom-level">100%</span>' +
+                    '<button class="np-zoom-btn" data-action="zoomin" title="Zoom In">+</button>' +
+                '</span>' +
+            '</div>' +
+
+        '</div>';
     }
 
-    restoreSelection(range) {
-        if (range) {
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }
+    // ===========================
+    // HELPERS
+    // ===========================
+
+    _el(wid) {
+        return document.querySelector('.np-wrap[data-wid="' + wid + '"]');
     }
 
-    createNotepadInterface(documentId) {
-        return `
-            <div class="notepad-pro" data-document-id="${documentId}">
-                <!-- Toolbar -->
-                <div class="toolbar">
-                    <div class="toolbar-section">
-                        <button class="tool-btn" data-action="new" title="New" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('new-file')}</button>
-                        <button class="tool-btn" data-action="open" title="Open" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('open')}</button>
-                        <button class="tool-btn" data-action="save" title="Save" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('save')}</button>
-                        <button class="tool-btn" data-action="saveas" title="Save As" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('save')}</button>
-                        <div class="separator"></div>
-                        <button class="tool-btn" data-action="undo" title="Undo" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('undo')}</button>
-                        <button class="tool-btn" data-action="redo" title="Redo" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('redo')}</button>
-                    </div>
-                    
-                    <div class="toolbar-section">
-                        <select class="font-select">
-                            ${this.fonts.map(font => 
-                                `<option value="${font}" ${font === 'Arial' ? 'selected' : ''}>${font}</option>`
-                            ).join('')}
-                        </select>
-                        
-                        <select class="size-select">
-                            ${[8,9,10,11,12,14,16,18,20,24,28,32,36,48,72].map(size => 
-                                `<option value="${size}" ${size === 14 ? 'selected' : ''}>${size}</option>`
-                            ).join('')}
-                        </select>
-                    </div>
-                    
-                    <div class="toolbar-section">
-                        <button class="format-btn bold-btn" data-format="bold" title="Bold" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('bold')}</button>
-                        <button class="format-btn italic-btn" data-format="italic" title="Italic" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('italic')}</button>
-                        <button class="format-btn underline-btn" data-format="underline" title="Underline" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('underline')}</button>
-                        
-                        <div class="color-picker-wrapper">
-                            <button class="color-btn text-color-btn" title="Text Color" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('text-color')}</button>
-                            <div class="color-palette text-color-palette">
-                                ${this.colors.map(color => 
-                                    `<div class="color-swatch" data-color="${color.value}" style="background: ${color.value}" title="${color.name}" onmousedown="event.preventDefault()"></div>`
-                                ).join('')}
-                            </div>
-                        </div>
-                        
-                        <div class="color-picker-wrapper">
-                            <button class="color-btn bg-color-btn" title="Highlight" onmousedown="event.preventDefault()">${ElxaIcons.renderAction('highlight')}</button>
-                            <div class="color-palette bg-color-palette">
-                                <div class="color-swatch" data-color="transparent" style="background: white; border: 2px solid #333;" title="Remove highlight" onmousedown="event.preventDefault()">×</div>
-                                ${this.colors.filter(c => c.name !== 'Black').map(color => 
-                                    `<div class="color-swatch" data-color="${color.value}" style="background: ${color.value}" title="${color.name}" onmousedown="event.preventDefault()"></div>`
-                                ).join('')}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Editor Area -->
-                <div class="editor-container">
-                    <div class="ruler"></div>
-                    <div class="text-area" 
-                         contenteditable="true" 
-                         data-document-id="${documentId}"
-                         spellcheck="false">
-                    </div>
-                </div>
-                
-                <!-- Status Bar -->
-                <div class="status-bar">
-                    <span class="status-text">Ready</span>
-                    <span class="word-count">Words: 0 | Characters: 0</span>
-                </div>
-            </div>
-        `;
+    _editor(wid) {
+        const w = this._el(wid);
+        return w ? w.querySelector('.np-editor') : null;
     }
 
-    setupEventHandlers(documentId) {
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        const textArea = container.querySelector('.text-area');
-        
-        // Toolbar actions
-        container.querySelectorAll('[data-action]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.handleAction(btn.dataset.action, documentId);
+    _doc(wid) {
+        return this.docs.get(wid);
+    }
+
+    _widFromEl(el) {
+        const wrap = el.closest('.np-wrap');
+        return wrap ? wrap.dataset.wid : null;
+    }
+
+    // ===========================
+    // EVENT BINDING
+    // ===========================
+
+    _bind(wid) {
+        const wrap = this._el(wid);
+        if (!wrap) return;
+        const editor = wrap.querySelector('.np-editor');
+        const doc = this._doc(wid);
+
+        // ---- Menu bar ----
+        wrap.querySelectorAll('.np-menu').forEach(menu => {
+            const label = menu.querySelector('.np-menu-label');
+            const dd = menu.querySelector('.np-dropdown');
+            label.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close all other menus
+                wrap.querySelectorAll('.np-dropdown.open').forEach(d => {
+                    if (d !== dd) d.classList.remove('open');
+                });
+                dd.classList.toggle('open');
             });
         });
-        
-        // Font selection — save caret before the <select> steals focus
-        const fontSelect = container.querySelector('.font-select');
-        fontSelect.addEventListener('focus', () => {
-            this._savedRange = this.saveSelection();
-        });
-        fontSelect.addEventListener('change', (e) => {
-            const currentFormat = this.getCurrentFormat(documentId);
-            currentFormat.fontFamily = e.target.value;
-            this.setCurrentFormat(documentId, currentFormat);
-            this.restoreSelection(this._savedRange);
-            this.applySpecificFormatting(documentId, 'fontName', e.target.value);
-            this._savedRange = null;
-            this.updateToolbarState(documentId);
-        });
-        
-        // Size selection — save caret before the <select> steals focus
-        const sizeSelect = container.querySelector('.size-select');
-        sizeSelect.addEventListener('focus', () => {
-            this._savedRange = this.saveSelection();
-        });
-        sizeSelect.addEventListener('change', (e) => {
-            const currentFormat = this.getCurrentFormat(documentId);
-            currentFormat.fontSize = parseInt(e.target.value);
-            this.setCurrentFormat(documentId, currentFormat);
-            this.restoreSelection(this._savedRange);
-            this.applySpecificFormatting(documentId, 'fontSize', this.convertFontSize(parseInt(e.target.value)));
-            this._savedRange = null;
-            this.updateToolbarState(documentId);
-        });
-        
-        // Format buttons
-        container.querySelectorAll('[data-format]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.toggleFormat(btn.dataset.format, documentId);
-            });
-        });
-        
-        // Color pickers
-        this.setupColorPickers(container, documentId);
-        
-        // Text area events - SIMPLIFIED AND FIXED
-        textArea.addEventListener('input', (e) => {
-            // Don't apply automatic formatting - just update counters and save state
-            this.updateWordCount(documentId);
-            this.markUnsaved(documentId);
-        });
-        
-        textArea.addEventListener('keydown', (e) => {
-            this.handleKeyDown(e, documentId);
-        });
-        
-        textArea.addEventListener('paste', (e) => {
-            this.handlePaste(e, documentId);
-        });
-        
-        // Update toolbar when selection changes
-        textArea.addEventListener('mouseup', () => {
-            setTimeout(() => this.updateToolbarFromSelection(documentId), 10);
-        });
-        
-        textArea.addEventListener('keyup', () => {
-            setTimeout(() => this.updateToolbarFromSelection(documentId), 10);
-        });
-        
-        // Focus the text area
-        textArea.focus();
-    }
 
-    setupColorPickers(container, documentId) {
-        // Text color
-        const textColorBtn = container.querySelector('.text-color-btn');
-        const textColorPalette = container.querySelector('.text-color-palette');
-        
-        textColorBtn.addEventListener('click', () => {
-            textColorPalette.style.display = textColorPalette.style.display === 'block' ? 'none' : 'block';
-        });
-        
-        textColorPalette.addEventListener('click', (e) => {
-            if (e.target.classList.contains('color-swatch')) {
-                const currentFormat = this.getCurrentFormat(documentId);
-                currentFormat.color = e.target.dataset.color;
-                this.setCurrentFormat(documentId, currentFormat);
-                this.applySpecificFormatting(documentId, 'foreColor', e.target.dataset.color);
-                textColorPalette.style.display = 'none';
-            }
-        });
-        
-        // Background color
-        const bgColorBtn = container.querySelector('.bg-color-btn');
-        const bgColorPalette = container.querySelector('.bg-color-palette');
-        
-        bgColorBtn.addEventListener('click', () => {
-            bgColorPalette.style.display = bgColorPalette.style.display === 'block' ? 'none' : 'block';
-        });
-        
-        bgColorPalette.addEventListener('click', (e) => {
-            if (e.target.classList.contains('color-swatch')) {
-                const currentFormat = this.getCurrentFormat(documentId);
-                currentFormat.backgroundColor = e.target.dataset.color;
-                this.setCurrentFormat(documentId, currentFormat);
-                
-                if (e.target.dataset.color === 'transparent') {
-                    this.applySpecificFormatting(documentId, 'hiliteColor', 'transparent');
-                    this.applySpecificFormatting(documentId, 'backColor', 'transparent');
-                } else {
-                    this.applySpecificFormatting(documentId, 'hiliteColor', e.target.dataset.color);
-                }
-                bgColorPalette.style.display = 'none';
-            }
-        });
-        
-        // Close palettes when clicking elsewhere (scoped to avoid leaks)
-        const closePalettes = (e) => {
-            if (!e.target.closest('.color-picker-wrapper')) {
-                textColorPalette.style.display = 'none';
-                bgColorPalette.style.display = 'none';
+        // Close menus on click outside
+        const closeMenus = (e) => {
+            if (!e.target.closest('.np-menu')) {
+                wrap.querySelectorAll('.np-dropdown.open').forEach(d => d.classList.remove('open'));
             }
         };
-        document.addEventListener('click', closePalettes);
-        
-        // Clean up on window close
+        document.addEventListener('click', closeMenus);
         this.eventBus.on('window.closed', (data) => {
-            if (data.id === documentId) {
-                document.removeEventListener('click', closePalettes);
+            if (data.id === wid) document.removeEventListener('click', closeMenus);
+        });
+
+        // Menu item clicks
+        wrap.querySelectorAll('.np-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                wrap.querySelectorAll('.np-dropdown.open').forEach(d => d.classList.remove('open'));
+                this._handleAction(wid, item.dataset.action);
+            });
+        });
+
+        // ---- Ribbon: format buttons ----
+        wrap.querySelectorAll('.np-rbtn[data-cmd]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._execCmd(wid, btn.dataset.cmd);
+            });
+        });
+
+        // ---- Ribbon: alignment ----
+        wrap.querySelectorAll('.np-rbtn[data-align]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.execCommand(btn.dataset.align, false, null);
+                this._updateToolbar(wid);
+                this._markDirty(wid);
+            });
+        });
+
+        // ---- Ribbon: font select ----
+        const fontSel = wrap.querySelector('.np-font-sel');
+        fontSel.addEventListener('focus', () => { this._savedRange = this._saveSelection(); });
+        fontSel.addEventListener('change', () => {
+            this._restoreSelection(this._savedRange);
+            document.execCommand('fontName', false, fontSel.value);
+            this._savedRange = null;
+            this._markDirty(wid);
+            this._updateToolbar(wid);
+        });
+
+        // ---- Ribbon: size select ----
+        const sizeSel = wrap.querySelector('.np-size-sel');
+        sizeSel.addEventListener('focus', () => { this._savedRange = this._saveSelection(); });
+        sizeSel.addEventListener('change', () => {
+            this._restoreSelection(this._savedRange);
+            document.execCommand('fontSize', false, this._pxToHtmlSize(parseInt(sizeSel.value)));
+            this._savedRange = null;
+            this._markDirty(wid);
+            this._updateToolbar(wid);
+        });
+
+        // ---- Ribbon: color palettes ----
+        this._bindPalette(wrap, '.np-text-color-btn', '.np-text-palette', (color) => {
+            document.execCommand('foreColor', false, color);
+            this._markDirty(wid);
+        });
+        this._bindPalette(wrap, '.np-hl-color-btn', '.np-hl-palette', (color) => {
+            if (color === 'transparent') {
+                document.execCommand('hiliteColor', false, 'transparent');
+                document.execCommand('backColor', false, 'transparent');
+            } else {
+                document.execCommand('hiliteColor', false, color);
             }
+            this._markDirty(wid);
+        });
+
+        // ---- Editor events ----
+        editor.addEventListener('input', () => {
+            this._markDirty(wid);
+            this._updateStatusBar(wid);
+        });
+
+        editor.addEventListener('mouseup', () => {
+            setTimeout(() => this._updateToolbar(wid), 10);
+        });
+        editor.addEventListener('keyup', () => {
+            setTimeout(() => this._updateToolbar(wid), 10);
+        });
+
+        editor.addEventListener('keydown', (e) => this._onKeyDown(e, wid));
+
+        editor.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = e.clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
+            this._markDirty(wid);
+        });
+
+        // ---- Find bar ----
+        wrap.querySelectorAll('[data-faction]').forEach(btn => {
+            btn.addEventListener('click', () => this._handleFind(wid, btn.dataset.faction));
+        });
+        const findInput = wrap.querySelector('.np-find-input');
+        findInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this._handleFind(wid, e.shiftKey ? 'findprev' : 'findnext');
+            }
+            if (e.key === 'Escape') this._handleFind(wid, 'closefind');
+        });
+        const replaceInput = wrap.querySelector('.np-replace-input');
+        replaceInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this._handleFind(wid, 'closefind');
+        });
+
+        // ---- Status bar zoom buttons ----
+        wrap.querySelectorAll('.np-zoom-btn').forEach(btn => {
+            btn.addEventListener('click', () => this._handleAction(wid, btn.dataset.action));
+        });
+
+        // ---- Font preview: render each option in its own typeface ----
+        fontSel.querySelectorAll('option').forEach(opt => {
+            opt.style.fontFamily = opt.value;
         });
     }
 
-    handleKeyDown(e, documentId) {
-        // Handle TAB key
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            // Insert 4 spaces for tab
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const tabText = document.createTextNode('    '); // 4 spaces
-                range.deleteContents();
-                range.insertNode(tabText);
-                range.setStartAfter(tabText);
-                range.collapse(true);
-                selection.removeAllRanges();
-                selection.addRange(range);
+    _bindPalette(wrap, btnSel, paletteSel, onPick) {
+        const btn = wrap.querySelector(btnSel);
+        const palette = wrap.querySelector(paletteSel);
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Save selection before palette steals focus
+            this._savedRange = this._saveSelection();
+            const isOpen = palette.classList.contains('open');
+            // Close all palettes first
+            wrap.querySelectorAll('.np-palette.open').forEach(p => p.classList.remove('open'));
+            if (!isOpen) palette.classList.add('open');
+        });
+
+        palette.addEventListener('click', (e) => {
+            const swatch = e.target.closest('.np-swatch');
+            if (!swatch) return;
+            this._restoreSelection(this._savedRange);
+            onPick(swatch.dataset.color);
+            palette.classList.remove('open');
+            this._savedRange = null;
+        });
+
+        // Close palette on outside click
+        const closePal = (e) => {
+            if (!e.target.closest('.np-color-wrap')) {
+                palette.classList.remove('open');
             }
-            return;
-        }
-        
-        if (e.ctrlKey) {
-            switch(e.key) {
-                case 'b':
-                    e.preventDefault();
-                    this.toggleFormat('bold', documentId);
-                    break;
-                case 'i':
-                    e.preventDefault();
-                    this.toggleFormat('italic', documentId);
-                    break;
-                case 'u':
-                    e.preventDefault();
-                    this.toggleFormat('underline', documentId);
-                    break;
-                case 's':
-                    e.preventDefault();
-                    this.handleAction('save', documentId);
-                    break;
-            }
-        }
+        };
+        document.addEventListener('click', closePal);
+        // Clean up later — we rely on window.closed event in the menu close handler
     }
 
-    handlePaste(e, documentId) {
-        e.preventDefault();
-        const text = e.clipboardData.getData('text/plain');
-        
-        // Use browser's built-in command to insert text
-        document.execCommand('insertText', false, text);
-        
-        // Mark as unsaved
-        this.markUnsaved(documentId);
+    // ===========================
+    // SELECTION SAVE/RESTORE
+    // ===========================
+
+    _saveSelection() {
+        const sel = window.getSelection();
+        return sel.rangeCount > 0 ? sel.getRangeAt(0).cloneRange() : null;
     }
 
-    toggleFormat(type, documentId) {
-        const currentFormat = this.getCurrentFormat(documentId);
-        currentFormat[type] = !currentFormat[type];
-        this.setCurrentFormat(documentId, currentFormat);
-        
-        // Apply only the specific formatting that was toggled
-        this.applySpecificFormatting(documentId, type, currentFormat[type]);
-        this.updateToolbarState(documentId);
+    _restoreSelection(range) {
+        if (!range) return;
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
     }
 
-    convertFontSize(size) {
-        // Convert pixel size to HTML font size (1-7)
-        if (size <= 10) return 1;
-        if (size <= 12) return 2;
-        if (size <= 14) return 3;
-        if (size <= 18) return 4;
-        if (size <= 24) return 5;
-        if (size <= 32) return 6;
+    // ===========================
+    // EXEC COMMAND WRAPPER
+    // ===========================
+
+    _execCmd(wid, cmd, val) {
+        document.execCommand(cmd, false, val || null);
+        const doc = this._doc(wid);
+        if (doc) doc.hasFormatting = true;
+        this._markDirty(wid);
+        this._updateToolbar(wid);
+    }
+
+    _pxToHtmlSize(px) {
+        if (px <= 10) return 1;
+        if (px <= 12) return 2;
+        if (px <= 14) return 3;
+        if (px <= 18) return 4;
+        if (px <= 24) return 5;
+        if (px <= 32) return 6;
         return 7;
     }
 
-    updateToolbarFromSelection(documentId) {
-        const selection = window.getSelection();
-        if (selection.rangeCount === 0) return;
-        
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        if (!container) return;
-        const textArea = container.querySelector('.text-area');
-        
-        // Only read from DOM if the selection is actually inside the text area
-        const range = selection.getRangeAt(0);
-        if (!textArea.contains(range.startContainer)) return;
-        
-        let element = range.startContainer;
-        if (element.nodeType === Node.TEXT_NODE) {
-            element = element.parentElement;
-        }
-        
-        const currentFormat = this.getCurrentFormat(documentId);
-        
-        // Read current formatting from DOM
-        const computedStyle = window.getComputedStyle(element);
-        
-        currentFormat.bold = computedStyle.fontWeight === 'bold' || computedStyle.fontWeight >= 700;
-        currentFormat.italic = computedStyle.fontStyle === 'italic';
-        currentFormat.underline = computedStyle.textDecoration.includes('underline');
-        currentFormat.fontFamily = computedStyle.fontFamily.replace(/"/g, '').split(',')[0].trim();
-        currentFormat.color = this.rgbToHex(computedStyle.color);
-        
-        // Snap computed font size to the nearest available dropdown value
-        const computedSize = parseInt(computedStyle.fontSize);
-        const sizeOptions = [8,9,10,11,12,14,16,18,20,24,28,32,36,48,72];
-        currentFormat.fontSize = sizeOptions.reduce((prev, curr) =>
-            Math.abs(curr - computedSize) < Math.abs(prev - computedSize) ? curr : prev
-        );
-        
-        const bgColor = computedStyle.backgroundColor;
-        if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
-            currentFormat.backgroundColor = 'transparent';
-        } else {
-            currentFormat.backgroundColor = this.rgbToHex(bgColor);
-        }
-        
-        this.setCurrentFormat(documentId, currentFormat);
-        this.updateToolbarState(documentId);
-    }
+    // ===========================
+    // KEYBOARD HANDLER
+    // ===========================
 
-    rgbToHex(rgb) {
-        if (rgb.startsWith('#')) return rgb;
-        
-        const result = rgb.match(/\d+/g);
-        if (!result) return '#000000';
-        
-        const r = parseInt(result[0]);
-        const g = parseInt(result[1]);
-        const b = parseInt(result[2]);
-        
-        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-    }
-
-    updateToolbarState(documentId) {
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        if (!container) return;
-        const currentFormat = this.getCurrentFormat(documentId);
-        
-        // Update format buttons
-        container.querySelector('.bold-btn').classList.toggle('active', currentFormat.bold);
-        container.querySelector('.italic-btn').classList.toggle('active', currentFormat.italic);
-        container.querySelector('.underline-btn').classList.toggle('active', currentFormat.underline);
-        
-        // Update selects
-        container.querySelector('.font-select').value = currentFormat.fontFamily;
-        container.querySelector('.size-select').value = currentFormat.fontSize;
-        
-        // Update color indicators
-        container.querySelector('.text-color-btn').style.borderBottom = `3px solid ${currentFormat.color}`;
-        
-        if (currentFormat.backgroundColor !== 'transparent') {
-            container.querySelector('.bg-color-btn').style.background = currentFormat.backgroundColor;
-        } else {
-            container.querySelector('.bg-color-btn').style.background = '';
+    _onKeyDown(e, wid) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            document.execCommand('insertText', false, '    ');
+            return;
         }
-    }
 
-    updateDisplay(documentId) {
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        const textArea = container.querySelector('.text-area');
-        const doc = this.documents.get(documentId);
-        
-        if (doc.content) {
-            // Check if content is HTML or plain text
-            if (this.hasUserFormatting(doc.content)) {
-                textArea.innerHTML = doc.content;
-            } else {
-                // Convert plain text newlines to <br> so they display in contenteditable
-                const escaped = doc.content
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/\n/g, '<br>');
-                textArea.innerHTML = escaped;
+        if (e.ctrlKey || e.metaKey) {
+            switch (e.key.toLowerCase()) {
+                case 'b': e.preventDefault(); this._execCmd(wid, 'bold'); break;
+                case 'i': e.preventDefault(); this._execCmd(wid, 'italic'); break;
+                case 'u': e.preventDefault(); this._execCmd(wid, 'underline'); break;
+                case 's': e.preventDefault(); this._handleAction(wid, 'save'); break;
+                case 'h': e.preventDefault(); this._handleAction(wid, 'find'); break;
+                case '=': case '+': e.preventDefault(); this._handleAction(wid, 'zoomin'); break;
+                case '-': e.preventDefault(); this._handleAction(wid, 'zoomout'); break;
+                case '0': e.preventDefault(); this._handleAction(wid, 'zoomreset'); break;
             }
         }
-        
-        this.updateWordCount(documentId);
-        this.updateToolbarState(documentId);
     }
 
-    updateWordCount(documentId) {
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        const textArea = container.querySelector('.text-area');
-        const wordCountEl = container.querySelector('.word-count');
-        
-        const text = textArea.textContent || '';
+    // ===========================
+    // ACTION DISPATCHER
+    // ===========================
+
+    _handleAction(wid, action) {
+        switch (action) {
+            case 'new':           this.launch(); break;
+            case 'open':          this._showOpenDialog(wid); break;
+            case 'save':          this._save(wid); break;
+            case 'saveas':        this._showSaveAsDialog(wid); break;
+            case 'undo':          document.execCommand('undo'); break;
+            case 'redo':          document.execCommand('redo'); break;
+            case 'find':          this._toggleFind(wid); break;
+            case 'selectall':     this._selectAll(wid); break;
+            case 'bold':          this._execCmd(wid, 'bold'); break;
+            case 'italic':        this._execCmd(wid, 'italic'); break;
+            case 'underline':     this._execCmd(wid, 'underline'); break;
+            case 'strikethrough': this._execCmd(wid, 'strikeThrough'); break;
+            case 'zoomin':        this._zoom(wid, 10); break;
+            case 'zoomout':       this._zoom(wid, -10); break;
+            case 'zoomreset':     this._zoom(wid, 0); break;
+        }
+    }
+
+    // ===========================
+    // TOOLBAR STATE UPDATE
+    // ===========================
+
+    _updateToolbar(wid) {
+        const wrap = this._el(wid);
+        if (!wrap) return;
+        const editor = wrap.querySelector('.np-editor');
+        const sel = window.getSelection();
+        if (sel.rangeCount === 0) return;
+        const range = sel.getRangeAt(0);
+        if (!editor.contains(range.startContainer)) return;
+
+        let node = range.startContainer;
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+        const cs = window.getComputedStyle(node);
+
+        // Bold / Italic / Underline / Strikethrough
+        const isBold = cs.fontWeight === 'bold' || parseInt(cs.fontWeight) >= 700;
+        const isItalic = cs.fontStyle === 'italic';
+        const isUnder = cs.textDecoration.includes('underline');
+        const isStrike = cs.textDecoration.includes('line-through');
+
+        wrap.querySelector('.np-fmt-bold').classList.toggle('active', isBold);
+        wrap.querySelector('.np-fmt-italic').classList.toggle('active', isItalic);
+        wrap.querySelector('.np-fmt-underline').classList.toggle('active', isUnder);
+        wrap.querySelector('.np-fmt-strike').classList.toggle('active', isStrike);
+
+        // Font family
+        const family = cs.fontFamily.replace(/"/g, '').split(',')[0].trim();
+        wrap.querySelector('.np-font-sel').value = family;
+
+        // Font size — snap to nearest dropdown value
+        const cpx = parseInt(cs.fontSize);
+        const snapped = this.sizes.reduce((prev, curr) =>
+            Math.abs(curr - cpx) < Math.abs(prev - cpx) ? curr : prev
+        );
+        wrap.querySelector('.np-size-sel').value = snapped;
+
+        // Alignment
+        const align = cs.textAlign;
+        wrap.querySelectorAll('.np-rbtn[data-align]').forEach(b => b.classList.remove('active'));
+        if (align === 'center') wrap.querySelector('.np-align-center').classList.add('active');
+        else if (align === 'right') wrap.querySelector('.np-align-right').classList.add('active');
+        else if (align === 'justify') wrap.querySelector('.np-align-justify').classList.add('active');
+        else wrap.querySelector('.np-align-left').classList.add('active');
+
+        // Text color indicator
+        wrap.querySelector('.np-text-color-btn').style.borderBottomColor = cs.color;
+    }
+
+    // ===========================
+    // STATUS BAR
+    // ===========================
+
+    _updateStatusBar(wid) {
+        const wrap = this._el(wid);
+        if (!wrap) return;
+        const editor = wrap.querySelector('.np-editor');
+        const text = editor.innerText || '';
         const words = text.trim() ? text.trim().split(/\s+/).length : 0;
         const chars = text.length;
-        
-        wordCountEl.textContent = `Words: ${words} | Characters: ${chars}`;
+        const lines = text.split('\n').length;
+
+        wrap.querySelector('.np-status-counts').textContent =
+            'Words: ' + words + '  |  Chars: ' + chars + '  |  Lines: ' + lines;
     }
 
-    handleAction(action, documentId) {
-        switch (action) {
-            case 'new':
-                this.createNewDocument();
-                break;
-            case 'open':
-                this.showOpenDialog(documentId);
-                break;
-            case 'save':
-                this.saveDocument(documentId);
-                break;
-            case 'saveas':
-                this.showSaveAsDialog(documentId);
-                break;
-            case 'undo':
-                document.execCommand('undo');
-                break;
-            case 'redo':
-                document.execCommand('redo');
-                break;
-        }
-    }
+    // ===========================
+    // ZOOM
+    // ===========================
 
-    showOpenDialog(documentId) {
-        const files = this.fileSystem.listContents(['root', 'Documents']);
-        const textFiles = files.filter(file => 
-            file.name.endsWith('.txt') || 
-            file.name.endsWith('.html') || 
-            file.name.endsWith('.rtf')
-        );
-        
-        if (textFiles.length === 0) {
-            this.showMessage('No text files found in Documents folder', 'info');
-            return;
-        }
-        
-        const dialog = document.createElement('div');
-        dialog.className = 'file-dialog';
-        dialog.innerHTML = `
-            <div class="dialog-content">
-                <div class="dialog-header">
-                    <div class="dialog-title">${ElxaIcons.renderAction('open')} Open File</div>
-                    <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
-                </div>
-                <div class="dialog-body">
-                    <div class="file-list">
-                        ${textFiles.map(file => {
-                            let modifiedDate = 'Unknown';
-                            if (file.modified) {
-                                if (file.modified instanceof Date) {
-                                    modifiedDate = file.modified.toLocaleDateString();
-                                } else if (typeof file.modified === 'string') {
-                                    try {
-                                        modifiedDate = new Date(file.modified).toLocaleDateString();
-                                    } catch (e) {
-                                        modifiedDate = 'Unknown';
-                                    }
-                                }
-                            }
-                            
-                            return `<div class="file-item" data-filename="${file.name}">
-                                ${ElxaIcons.renderAction('open-file')} ${file.name}
-                                <div class="file-info">Modified: ${modifiedDate}</div>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                    <div class="dialog-buttons">
-                        <button class="open-btn" onclick="elxaOS.programs.notepad.openSelectedFile('${documentId}')">Open</button>
-                        <button class="dialog-button" onclick="this.closest('.file-dialog').remove()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(dialog);
-        
-        // File selection
-        dialog.querySelectorAll('.file-item').forEach(item => {
-            item.addEventListener('click', () => {
-                dialog.querySelectorAll('.file-item').forEach(i => i.classList.remove('selected'));
-                item.classList.add('selected');
-            });
-            
-            item.addEventListener('dblclick', () => {
-                this.openFile(item.dataset.filename);
-                dialog.remove();
-            });
-        });
-    }
+    _zoom(wid, delta) {
+        const doc = this._doc(wid);
+        if (!doc) return;
+        const editor = this._editor(wid);
+        const wrap = this._el(wid);
+        if (!editor || !wrap) return;
 
-    openSelectedFile(documentId) {
-        const dialog = document.querySelector('.file-dialog');
-        const selected = dialog.querySelector('.file-item.selected');
-        
-        if (selected) {
-            this.openFile(selected.dataset.filename);
-            dialog.remove();
+        if (delta === 0) {
+            doc.zoom = 100;
         } else {
-            this.showMessage('Please select a file to open', 'warning');
+            doc.zoom = Math.max(50, Math.min(250, doc.zoom + delta));
         }
+
+        editor.style.transform = 'scale(' + (doc.zoom / 100) + ')';
+        editor.style.transformOrigin = 'top left';
+        // Adjust width so text reflows properly
+        editor.style.width = (10000 / doc.zoom) + '%';
+
+        wrap.querySelector('.np-zoom-level').textContent = doc.zoom + '%';
     }
 
-    openFile(filename, path = null) {
-        const filePath = path || ['root', 'Documents'];
-        
-        console.log('Opening file:', filename, 'from path:', filePath);
-        
-        const file = this.fileSystem.getFile(filePath, filename);
-        if (!file) {
-            alert(`File not found: ${filename}`);
-            return;
-        }
-        
-        const content = file.content;
-        const newDocumentId = this.createNewDocument(content, filename);
-        this.documentPaths.set(newDocumentId, [...filePath]);
-        
-        // Check if the loaded content has user formatting
-        const doc = this.documents.get(newDocumentId);
-        doc.hasUserFormatting = this.hasUserFormatting(content);
-        
-        this.showMessage(`Opened ${filename}`, 'success');
+    // ===========================
+    // DIRTY / TITLE MANAGEMENT
+    // ===========================
+
+    _markDirty(wid) {
+        const doc = this._doc(wid);
+        if (!doc) return;
+        doc.saved = false;
+        this._updateTitle(wid);
     }
 
-    saveDocument(documentId) {
-        const doc = this.documents.get(documentId);
-        
-        if (doc.filename) {
-            const container = document.querySelector(`[data-document-id="${documentId}"]`);
-            const textArea = container.querySelector('.text-area');
-            
-            let contentToSave;
-            let fileExtension = this.getFileExtension(doc.filename);
-            
-            // Only save as HTML if user has actually applied formatting
-            if (doc.hasUserFormatting && this.hasUserFormatting(textArea.innerHTML)) {
-                contentToSave = textArea.innerHTML;
-                if (fileExtension === '.txt') {
-                    doc.filename = doc.filename.replace('.txt', '.html');
-                }
-            } else {
-                // Save as plain text — innerText preserves line breaks from <br>/block elements
-                contentToSave = textArea.innerText || '';
-                if (fileExtension === '.html' && !doc.hasUserFormatting) {
-                    // If it was HTML but has no user formatting, save as txt
-                    doc.filename = doc.filename.replace('.html', '.txt');
-                }
-            }
-            
-            const savePath = this.documentPaths.get(documentId) || ['root', 'Documents'];
-            const existingFile = this.fileSystem.getFile(savePath, doc.filename);
-            
-            if (existingFile) {
-                console.log('📝 Updating existing file:', doc.filename);
-                this.fileSystem.updateFileContent(savePath, doc.filename, contentToSave);
-            } else {
-                console.log('📄 Creating new file:', doc.filename);
-                this.fileSystem.createFile(savePath, doc.filename, contentToSave);
-            }
-            
-            doc.saved = true;
-            this.updateWindowTitle(documentId);
-            this.showMessage(`Saved ${doc.filename}`, 'success');
+    _updateTitle(wid) {
+        const doc = this._doc(wid);
+        if (!doc) return;
+        const winEl = document.getElementById('window-' + wid);
+        if (!winEl) return;
+        const titleEl = winEl.querySelector('.window-title');
+        const name = doc.filename || ('Untitled ' + wid.split('-').pop());
+        titleEl.innerHTML = ElxaIcons.render('notepad', 'ui') + ' ' + name + (doc.saved ? '' : '*');
+    }
+
+    // ===========================
+    // CONTENT LOAD
+    // ===========================
+
+    _loadContent(wid, content) {
+        const editor = this._editor(wid);
+        if (!editor) return;
+        const doc = this._doc(wid);
+
+        if (this._hasRichFormatting(content)) {
+            editor.innerHTML = content;
+            doc.hasFormatting = true;
         } else {
-            this.showSaveAsDialog(documentId);
+            // Escape and convert newlines
+            const safe = content
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\n/g, '<br>');
+            editor.innerHTML = safe;
         }
+        this._updateStatusBar(wid);
     }
 
-    showSaveAsDialog(documentId) {
-        const doc = this.documents.get(documentId);
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        const textArea = container.querySelector('.text-area');
-        
-        // FIXED: Check if user has actually applied formatting
-        const hasFormatting = doc.hasUserFormatting && this.hasUserFormatting(textArea.innerHTML);
-        const defaultExt = hasFormatting ? '.html' : '.txt';
-        
-        const currentPath = this.documentPaths.get(documentId) || ['root', 'Documents'];
-        const locationName = currentPath.length > 1 ? currentPath[currentPath.length - 1] : 'Documents';
-        
-        const dialog = document.createElement('div');
-        dialog.className = 'file-dialog save-dialog';
-        dialog.innerHTML = `
-            <div class="dialog-content">
-                <div class="dialog-header">
-                    <div class="dialog-title">${ElxaIcons.renderAction('save')} Save As</div>
-                    <div class="dialog-close" onclick="this.closest('.file-dialog').remove()">×</div>
-                </div>
-                <div class="dialog-body">
-                    <div class="save-form">
-                        <label>Filename:</label>
-                        <input type="text" class="filename-input" value="${doc.filename || ('Untitled' + defaultExt)}" placeholder="Enter filename">
-                        <div class="save-location">Save to: ${locationName} folder</div>
-                        <div class="format-info">
-                            ${hasFormatting ? '⚠️ Document contains formatting - will save as HTML' : 'ℹ️ Plain text document - will save as TXT'}
-                        </div>
-                    </div>
-                    <div class="dialog-buttons">
-                        <button class="save-btn" onclick="elxaOS.programs.notepad.saveWithFilename('${documentId}')">Save</button>
-                        <button class="dialog-button" onclick="this.closest('.file-dialog').remove()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(dialog);
-        
-        const filenameInput = dialog.querySelector('.filename-input');
-        filenameInput.focus();
-        filenameInput.select();
-        
-        filenameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.saveWithFilename(documentId);
-            }
-        });
-    }
-
-    saveWithFilename(documentId) {
-        const dialog = document.querySelector('.save-dialog');
-        const filename = dialog.querySelector('.filename-input').value.trim();
-        
-        if (!filename) {
-            this.showMessage('Please enter a filename', 'warning');
-            return;
+    _hasRichFormatting(html) {
+        if (!html) return false;
+        // Bare formatting tags — unambiguous, no further check needed
+        if (/<(b|i|u|strong|em|strike|s)\b[^>]*>/i.test(html)) return true;
+        // <font> tags with attributes (face, size, color) from execCommand
+        if (/<font[^>]+(face|size|color)\s*=/i.test(html)) return true;
+        // Ordered/unordered lists
+        if (/<(ul|ol)\b/i.test(html)) return true;
+        // Styled spans/divs/paragraphs — check for actual formatting CSS
+        if (/<(span|div|p)[^>]*style\s*=/i.test(html)) {
+            const fmtTest = /(color|background-color|font-weight:\s*bold|font-style:\s*italic|text-decoration:\s*(underline|line-through)|font-family:|font-size:|text-align:\s*(center|right|justify))/i;
+            return fmtTest.test(html);
         }
-        
-        const doc = this.documents.get(documentId);
-        const container = document.querySelector(`[data-document-id="${documentId}"]`);
-        const textArea = container.querySelector('.text-area');
-        
-        // FIXED: Check if user has actually applied formatting
-        const hasFormatting = doc.hasUserFormatting && this.hasUserFormatting(textArea.innerHTML);
-        
-        let finalFilename = filename;
-        let contentToSave;
-        
-        if (hasFormatting) {
-            if (!finalFilename.endsWith('.html') && !finalFilename.endsWith('.rtf')) {
-                finalFilename += '.html';
-            }
-            contentToSave = textArea.innerHTML;
-        } else {
-            if (!finalFilename.endsWith('.txt') && !finalFilename.includes('.')) {
-                finalFilename += '.txt';
-            }
-            // innerText preserves line breaks from <br>/block elements
-            contentToSave = textArea.innerText || '';
-        }
-        
-        const savePath = this.documentPaths.get(documentId) || ['root', 'Documents'];
-        const existingFile = this.fileSystem.getFile(savePath, finalFilename);
-        
-        if (existingFile) {
-            if (confirm(`File "${finalFilename}" already exists. Do you want to overwrite it?`)) {
-                console.log('📝 Overwriting existing file:', finalFilename);
-                this.fileSystem.updateFileContent(savePath, finalFilename, contentToSave);
-            } else {
-                return;
-            }
-        } else {
-            console.log('📄 Creating new file:', finalFilename);
-            this.fileSystem.createFile(savePath, finalFilename, contentToSave);
-        }
-        
-        doc.filename = finalFilename;
-        doc.saved = true;
-        this.updateWindowTitle(documentId);
-        
-        dialog.remove();
-        this.showMessage(`Saved as ${finalFilename}`, 'success');
-    }
-
-    hasUserFormatting(htmlContent) {
-        if (!htmlContent) return false;
-        
-        // Look for obvious formatting tags
-        const formattingTags = /<(b|i|u|strong|em|font|span[^>]*style|div[^>]*style|p[^>]*style)\b[^>]*>/i;
-        if (formattingTags.test(htmlContent)) {
-            // Check for meaningful formatting — CSS properties or font tag attributes
-            const hasColors = /(color|background-color):\s*(?!rgb\(0,\s*0,\s*0\)|#000000|black|transparent)/i;
-            const hasWeights = /font-weight:\s*bold/i;
-            const hasStyles = /font-style:\s*italic/i;
-            const hasDecoration = /text-decoration:\s*underline/i;
-            const hasFontFace = /<font[^>]+face\s*=/i;
-            const hasFontSize = /<font[^>]+size\s*=/i;
-            const hasFontFamily = /font-family:/i;
-            const hasCssFontSize = /font-size:/i;
-            
-            return hasColors.test(htmlContent) || 
-                   hasWeights.test(htmlContent) || 
-                   hasStyles.test(htmlContent) || 
-                   hasDecoration.test(htmlContent) ||
-                   hasFontFace.test(htmlContent) ||
-                   hasFontSize.test(htmlContent) ||
-                   hasFontFamily.test(htmlContent) ||
-                   hasCssFontSize.test(htmlContent);
-        }
-        
         return false;
     }
 
-    getFileExtension(filename) {
-        return filename.substring(filename.lastIndexOf('.'));
+    // ===========================
+    // SELECT ALL
+    // ===========================
+
+    _selectAll(wid) {
+        const editor = this._editor(wid);
+        if (!editor) return;
+        const range = document.createRange();
+        range.selectNodeContents(editor);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
     }
 
-    showMessage(text, type = 'info') {
-        ElxaUI.showMessage(text, type);
+    // ===========================
+    // FIND & REPLACE
+    // ===========================
+
+    _toggleFind(wid) {
+        const wrap = this._el(wid);
+        if (!wrap) return;
+        const bar = wrap.querySelector('.np-findbar');
+        const isVisible = bar.style.display !== 'none';
+        bar.style.display = isVisible ? 'none' : 'flex';
+        if (!isVisible) {
+            wrap.querySelector('.np-find-input').focus();
+        }
     }
 
-    markUnsaved(documentId) {
-        const doc = this.documents.get(documentId);
-        doc.saved = false;
-        this.updateWindowTitle(documentId);
+    _handleFind(wid, action) {
+        const wrap = this._el(wid);
+        if (!wrap) return;
+        const editor = wrap.querySelector('.np-editor');
+        const findInput = wrap.querySelector('.np-find-input');
+        const replaceInput = wrap.querySelector('.np-replace-input');
+        const countEl = wrap.querySelector('.np-find-count');
+        const needle = findInput.value;
+
+        switch (action) {
+            case 'findnext':
+            case 'findprev': {
+                if (!needle) return;
+                // Use window.find for simplicity
+                const backwards = action === 'findprev';
+                const found = window.find(needle, false, backwards, true, false, false, false);
+                if (!found) {
+                    countEl.textContent = 'Not found';
+                } else {
+                    countEl.textContent = '';
+                }
+                break;
+            }
+            case 'replace': {
+                if (!needle) return;
+                const sel = window.getSelection();
+                if (sel.toString().toLowerCase() === needle.toLowerCase()) {
+                    document.execCommand('insertText', false, replaceInput.value);
+                    this._markDirty(wid);
+                    // Find next
+                    window.find(needle, false, false, true, false, false, false);
+                } else {
+                    window.find(needle, false, false, true, false, false, false);
+                }
+                break;
+            }
+            case 'replaceall': {
+                if (!needle) return;
+                let count = 0;
+                // Move to start
+                editor.focus();
+                const sel = window.getSelection();
+                sel.collapse(editor, 0);
+                while (window.find(needle, false, false, true, false, false, false)) {
+                    // Check if result is inside our editor
+                    const selNow = window.getSelection();
+                    if (!editor.contains(selNow.anchorNode)) break;
+                    document.execCommand('insertText', false, replaceInput.value);
+                    count++;
+                    if (count > 5000) break; // Safety
+                }
+                if (count > 0) this._markDirty(wid);
+                countEl.textContent = count + ' replaced';
+                break;
+            }
+            case 'closefind':
+                wrap.querySelector('.np-findbar').style.display = 'none';
+                editor.focus();
+                break;
+        }
     }
 
-    updateWindowTitle(documentId) {
-        const doc = this.documents.get(documentId);
-        const windowElement = document.getElementById(`window-${documentId}`);
-        if (!windowElement) return;
-        const titleElement = windowElement.querySelector('.window-title');
-        
-        const title = doc.filename || `Untitled Document ${documentId.split('-').pop()}`;
-        const unsavedMarker = doc.saved ? '' : '*';
-        
-        titleElement.innerHTML = `${ElxaIcons.render('notepad', 'ui')} ${title}${unsavedMarker}`;
+    // ===========================
+    // FILE: OPEN DIALOG
+    // ===========================
+
+    _showOpenDialog(wid) {
+        const files = this.fileSystem.listContents(['root', 'Documents']);
+        const textFiles = files.filter(f =>
+            f.name.endsWith('.txt') || f.name.endsWith('.html') || f.name.endsWith('.rtf')
+        );
+
+        if (textFiles.length === 0) {
+            ElxaUI.showMessage('No text files in Documents folder', 'info');
+            return;
+        }
+
+        const items = textFiles.map(f => {
+            let modified = '';
+            if (f.modified) {
+                try { modified = new Date(f.modified).toLocaleDateString(); } catch(e) {}
+            }
+            return '<div class="np-dlg-file" data-fname="' + f.name + '">' +
+                '<span class="np-dlg-file-icon">' + ElxaIcons.getFileIcon(f.name, 'ui') + '</span>' +
+                '<span class="np-dlg-file-name">' + f.name + '</span>' +
+                '<span class="np-dlg-file-date">' + modified + '</span>' +
+            '</div>';
+        }).join('');
+
+        const dlg = document.createElement('div');
+        dlg.className = 'np-dialog-overlay';
+        dlg.innerHTML =
+            '<div class="np-dialog">' +
+                '<div class="np-dlg-titlebar">' +
+                    '<span>' + ElxaIcons.renderAction('open') + ' Open File</span>' +
+                    '<span class="np-dlg-close">\u2715</span>' +
+                '</div>' +
+                '<div class="np-dlg-body">' +
+                    '<div class="np-dlg-filelist">' + items + '</div>' +
+                    '<div class="np-dlg-buttons">' +
+                        '<button class="np-dlg-btn np-dlg-primary np-open-btn" disabled>Open</button>' +
+                        '<button class="np-dlg-btn np-dlg-cancel">Cancel</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        document.body.appendChild(dlg);
+
+        let selected = null;
+        dlg.querySelectorAll('.np-dlg-file').forEach(item => {
+            item.addEventListener('click', () => {
+                dlg.querySelectorAll('.np-dlg-file').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                selected = item.dataset.fname;
+                dlg.querySelector('.np-open-btn').disabled = false;
+            });
+            item.addEventListener('dblclick', () => {
+                this.openFile(item.dataset.fname);
+                dlg.remove();
+            });
+        });
+
+        dlg.querySelector('.np-open-btn').addEventListener('click', () => {
+            if (selected) {
+                this.openFile(selected);
+                dlg.remove();
+            }
+        });
+        dlg.querySelector('.np-dlg-cancel').addEventListener('click', () => dlg.remove());
+        dlg.querySelector('.np-dlg-close').addEventListener('click', () => dlg.remove());
+    }
+
+    // ===========================
+    // FILE: SAVE
+    // ===========================
+
+    _save(wid) {
+        const doc = this._doc(wid);
+        if (!doc) return;
+
+        if (doc.filename) {
+            this._writeFile(wid, doc.filename, doc.path);
+        } else {
+            this._showSaveAsDialog(wid);
+        }
+    }
+
+    _writeFile(wid, filename, path) {
+        const editor = this._editor(wid);
+        const doc = this._doc(wid);
+        if (!editor || !doc) return;
+
+        let content;
+        let finalName = filename;
+
+        // Check if content has rich formatting
+        if (this._hasRichFormatting(editor.innerHTML)) {
+            // Save as HTML content but keep whatever extension the user chose
+            content = editor.innerHTML;
+        } else {
+            content = editor.innerText || '';
+            if (!finalName.includes('.')) {
+                finalName += '.txt';
+            }
+        }
+
+        const existing = this.fileSystem.getFile(path, finalName);
+        if (existing) {
+            this.fileSystem.updateFileContent(path, finalName, content);
+        } else {
+            this.fileSystem.createFile(path, finalName, content);
+        }
+
+        doc.filename = finalName;
+        doc.path = path;
+        doc.saved = true;
+        this._updateTitle(wid);
+        ElxaUI.showMessage('Saved ' + finalName, 'success');
+    }
+
+    // ===========================
+    // FILE: SAVE AS DIALOG
+    // ===========================
+
+    _showSaveAsDialog(wid) {
+        const doc = this._doc(wid);
+        if (!doc) return;
+        const editor = this._editor(wid);
+        const hasFormat = this._hasRichFormatting(editor.innerHTML);
+        const defaultName = doc.filename || 'Untitled.txt';
+        const locationName = doc.path[doc.path.length - 1] || 'Documents';
+
+        const dlg = document.createElement('div');
+        dlg.className = 'np-dialog-overlay';
+        dlg.innerHTML =
+            '<div class="np-dialog">' +
+                '<div class="np-dlg-titlebar">' +
+                    '<span>' + ElxaIcons.renderAction('save') + ' Save As</span>' +
+                    '<span class="np-dlg-close">\u2715</span>' +
+                '</div>' +
+                '<div class="np-dlg-body">' +
+                    '<div class="np-dlg-form">' +
+                        '<label class="np-dlg-label">Filename:</label>' +
+                        '<input type="text" class="np-dlg-input np-save-name" value="' + defaultName + '">' +
+                        '<div class="np-dlg-hint">Save to: ' + locationName + ' folder</div>' +
+                        (hasFormat ? '<div class="np-dlg-hint">\u2139 Formatting will be preserved</div>' : '') +
+                    '</div>' +
+                    '<div class="np-dlg-buttons">' +
+                        '<button class="np-dlg-btn np-dlg-primary np-save-btn">Save</button>' +
+                        '<button class="np-dlg-btn np-dlg-cancel">Cancel</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+        document.body.appendChild(dlg);
+
+        const nameInput = dlg.querySelector('.np-save-name');
+        nameInput.focus();
+        nameInput.select();
+
+        const doSave = () => {
+            let name = nameInput.value.trim();
+            if (!name) { ElxaUI.showMessage('Please enter a filename', 'warning'); return; }
+            if (!name.includes('.')) name += '.txt';
+
+            const path = doc.path || ['root', 'Documents'];
+            const existing = this.fileSystem.getFile(path, name);
+            if (existing && !confirm('Overwrite "' + name + '"?')) return;
+
+            this._writeFile(wid, name, path);
+            dlg.remove();
+        };
+
+        dlg.querySelector('.np-save-btn').addEventListener('click', doSave);
+        nameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') doSave(); });
+        dlg.querySelector('.np-dlg-cancel').addEventListener('click', () => dlg.remove());
+        dlg.querySelector('.np-dlg-close').addEventListener('click', () => dlg.remove());
+    }
+
+    // ===========================
+    // RGB → HEX UTILITY
+    // ===========================
+
+    _rgbToHex(rgb) {
+        if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
+        const m = rgb.match(/\d+/g);
+        if (!m) return '#000000';
+        return '#' + ((1 << 24) + (parseInt(m[0]) << 16) + (parseInt(m[1]) << 8) + parseInt(m[2])).toString(16).slice(1);
     }
 }
-
-// NOTE: All Notepad styles are in css/programs/notepad.css (theme-aware via CSS variables).
-// No inline style injection needed.

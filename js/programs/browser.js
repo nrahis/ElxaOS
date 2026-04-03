@@ -256,6 +256,9 @@ class BrowserProgram {
         // Update connection status indicator
         this.updateConnectionStatus();
 
+        // Update extensions button (shows shield if NoAds Pro is active)
+        this.updateExtensionsButton();
+
         // Load requested URL or homepage
         if (startUrl) {
             this.loadPage(startUrl);
@@ -278,8 +281,8 @@ class BrowserProgram {
                     <button class="home-button" id="homeBtn" title="Home">${ElxaIcons.renderAction('home')}</button>
                     <button class="favorite-button" id="favoriteBtn" title="Add to Favorites">${ElxaIcons.renderAction('star-outline')}</button>
                     <button class="nav-button" id="wifiBtn" title="WiFi Settings">${ElxaIcons.renderAction('wifi')}</button>
+                    <button class="nav-button" id="extensionsBtn" title="Extensions">${ElxaIcons.renderAction('puzzle')}</button>
                     <button class="nav-button" id="menuBtn" title="Menu">${ElxaIcons.renderAction('menu')}</button>
-                    <button class="nav-button" id="debugBtn" title="Debug Info">${ElxaIcons.renderAction('magnify')}</button>
                 </div>
             </div>
             <div class="browser-content">
@@ -306,6 +309,7 @@ class BrowserProgram {
                 <div class="browser-menu-separator"></div>
                 <div class="browser-menu-item" data-action="wifiSettings">${ElxaIcons.renderAction('wifi')} WiFi Settings</div>
             </div>
+            <div class="extensions-panel" id="extensionsPanel" style="display: none;"></div>
         `;
     }
 
@@ -343,8 +347,17 @@ class BrowserProgram {
         // Favorite button
         win.querySelector('#favoriteBtn').addEventListener('click', () => this.toggleFavorite());
 
-        // Debug button
-        win.querySelector('#debugBtn').addEventListener('click', () => this.showDebugInfo());
+        // Extensions button
+        const extensionsBtn = win.querySelector('#extensionsBtn');
+        const extensionsPanel = win.querySelector('#extensionsPanel');
+        extensionsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (extensionsPanel.style.display === 'none') {
+                this.showExtensionsPanel();
+            } else {
+                extensionsPanel.style.display = 'none';
+            }
+        });
 
         // Menu button
         const menuBtn = win.querySelector('#menuBtn');
@@ -359,6 +372,7 @@ class BrowserProgram {
         this.cleanupDocumentListeners(); // Remove any stale handler first
         this.documentClickHandler = () => {
             menu.style.display = 'none';
+            extensionsPanel.style.display = 'none';
         };
         document.addEventListener('click', this.documentClickHandler);
 
@@ -919,6 +933,15 @@ class BrowserProgram {
                         this.setupPageLinkHandling();
                     }, 100);
 
+                    // Watch for overlay show/hide to fix scroll positioning
+                    this.setupOverlayScrollFix();
+
+                    // Inject ad overlay (if ad blocker is not active)
+                    const adTarget = this.getWindowElement()?.querySelector('#browserPage');
+                    if (adTarget && typeof AdService !== 'undefined') {
+                        AdService.injectAd(adTarget);
+                    }
+
                 } else {
                     console.error(`Failed to load ${site.path}: HTTP ${response.status}`);
                     throw new Error(`HTTP ${response.status}`);
@@ -1152,6 +1175,8 @@ class BrowserProgram {
         const page = win.querySelector('#browserPage');
         if (page) {
             this.clearPageScripts();
+            // Clear any active ad overlay
+            if (typeof AdService !== 'undefined') AdService.clearAd();
             page.innerHTML = content;
 
             setTimeout(() => {
@@ -1161,6 +1186,12 @@ class BrowserProgram {
     }
 
     clearPageScripts() {
+        // Disconnect overlay scroll observer
+        if (this._overlayObserver) {
+            this._overlayObserver.disconnect();
+            this._overlayObserver = null;
+        }
+
         if (window.browserPageCleanup) {
             window.browserPageCleanup.forEach(cleanupFn => {
                 try {
@@ -1171,6 +1202,58 @@ class BrowserProgram {
             });
             window.browserPageCleanup = [];
         }
+    }
+
+    // =================================
+    // OVERLAY SCROLL FIX
+    // Watches for overlay elements being shown/hidden inside the browser page.
+    // When an overlay appears, scrolls to top so it's visible (since overlays
+    // use position:fixed which is contained by #browserPage via CSS contain:paint).
+    // Restores scroll position when overlay is dismissed.
+    // =================================
+    setupOverlayScrollFix() {
+        if (this._overlayObserver) {
+            this._overlayObserver.disconnect();
+            this._overlayObserver = null;
+        }
+
+        const browserPage = this.getWindowElement()?.querySelector('#browserPage');
+        if (!browserPage) return;
+
+        let savedScrollTop = null;
+
+        this._overlayObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') continue;
+                const el = mutation.target;
+                if (!el.className || typeof el.className !== 'string') continue;
+                if (!el.className.includes('overlay')) continue;
+
+                const isHidden = el.classList.contains('hidden');
+                const isDisplayNone = el.style.display === 'none';
+
+                if (!isHidden && !isDisplayNone) {
+                    // Overlay was shown — save scroll position and scroll to top
+                    if (savedScrollTop === null) {
+                        savedScrollTop = browserPage.scrollTop;
+                    }
+                    browserPage.scrollTop = 0;
+                } else if (savedScrollTop !== null) {
+                    // Overlay was hidden — restore scroll position
+                    const restoreTo = savedScrollTop;
+                    savedScrollTop = null;
+                    requestAnimationFrame(() => {
+                        browserPage.scrollTop = restoreTo;
+                    });
+                }
+            }
+        });
+
+        this._overlayObserver.observe(browserPage, {
+            attributes: true,
+            attributeFilter: ['class'],
+            subtree: true
+        });
     }
 
     showDebugInfo() {
@@ -1486,6 +1569,113 @@ class BrowserProgram {
             this.favorites = [];
             this.history = [];
             this.currentHistoryIndex = -1;
+        }
+    }
+
+    // =========================================================
+    // EXTENSIONS PANEL
+    // =========================================================
+    showExtensionsPanel() {
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const panel = win.querySelector('#extensionsPanel');
+        if (!panel) return;
+
+        // Position relative to the extensions button
+        const btn = win.querySelector('#extensionsBtn');
+        if (btn) {
+            const btnRect = btn.getBoundingClientRect();
+            const winRect = win.getBoundingClientRect();
+            panel.style.position = 'absolute';
+            panel.style.top = (btnRect.bottom - winRect.top + 2) + 'px';
+            panel.style.right = '4px';
+            panel.style.left = 'auto';
+        }
+
+        const extensions = typeof AdService !== 'undefined' ? AdService.getExtensions() : [];
+        const adBlockerActive = typeof AdService !== 'undefined' && AdService.isAdBlockerActive();
+
+        let html = '<div class="extensions-header">' +
+            '<span class="mdi mdi-puzzle"></span> Extensions' +
+            (adBlockerActive ? '<span class="ad-blocker-badge"><span class="mdi mdi-shield-check"></span>Protected</span>' : '') +
+            '</div><div class="extensions-list">';
+
+        if (extensions.length === 0) {
+            html += '<div style="padding:20px;text-align:center;color:#666;font-size:12px;">No extensions available</div>';
+        } else {
+            extensions.forEach(function(ext) {
+                var priceSnakes = (ext.monthlyPrice * 2).toFixed(2);
+                html += '<div class="extension-card">' +
+                    '<div class="extension-icon ' + ext.id + '"><span class="mdi ' + ext.icon + '"></span></div>' +
+                    '<div class="extension-info">' +
+                        '<div class="extension-name">' + ext.name + '</div>' +
+                        '<div class="extension-desc">' + ext.description + '</div>' +
+                        '<div class="extension-price">§' + priceSnakes + '/month</div>' +
+                        '<div class="extension-actions">' +
+                            (ext.installed
+                                ? '<button class="ext-btn ext-btn-remove" data-ext-action="remove" data-ext-id="' + ext.id + '">Remove</button>'
+                                : '<button class="ext-btn ext-btn-install" data-ext-action="install" data-ext-id="' + ext.id + '">Install</button>'
+                            ) +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            });
+        }
+
+        html += '</div>';
+        panel.innerHTML = html;
+        panel.style.display = 'block';
+
+        // Handle button clicks via delegation
+        panel.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-ext-action]');
+            if (!btn) return;
+
+            const action = btn.dataset.extAction;
+            const extId = btn.dataset.extId;
+
+            if (action === 'install') {
+                panel.style.display = 'none';
+                AdService.installExtension(extId, (result) => {
+                    if (result.success) {
+                        ElxaUI.showMessage(result.message, 'success');
+                        // Update extensions button appearance
+                        this.updateExtensionsButton();
+                    } else {
+                        if (result.message !== 'Payment cancelled.') {
+                            ElxaUI.showMessage(result.message, 'error');
+                        }
+                    }
+                });
+            } else if (action === 'remove') {
+                AdService.uninstallExtension(extId, (result) => {
+                    if (result.success) {
+                        ElxaUI.showMessage(result.message, 'info');
+                        this.updateExtensionsButton();
+                        this.showExtensionsPanel(); // Refresh panel
+                    }
+                });
+            }
+        });
+    }
+
+    updateExtensionsButton() {
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        const btn = win.querySelector('#extensionsBtn');
+        if (!btn) return;
+
+        const active = typeof AdService !== 'undefined' && AdService.isAdBlockerActive();
+        if (active) {
+            btn.classList.add('extensions-active');
+            btn.title = 'Extensions (NoAds Pro active)';
+            btn.innerHTML = ElxaIcons.renderAction('shield-check');
+        } else {
+            btn.classList.remove('extensions-active');
+            btn.title = 'Extensions';
+            btn.innerHTML = ElxaIcons.renderAction('puzzle');
         }
     }
 

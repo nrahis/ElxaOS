@@ -44,6 +44,22 @@
       "wealth": "Trillionaire",
       "personality": "Intelligent, business-minded, tech-savvy, successful but friendly",
       "interests": ["Technology", "Mathematics", "Business"],
+      "giftPreferences": {
+        "favoriteColor": "blue",
+        "likes": [
+          { "keyword": "laptop", "category": "electronics" },
+          { "keyword": "tablet", "category": "electronics" },
+          { "keyword": "phone", "category": "electronics" },
+          { "keyword": "tie", "category": "fashion" },
+          { "keyword": "blazer", "category": "fashion" },
+          { "keyword": "protein", "category": "groceries" },
+          { "keyword": "vitamin", "category": "groceries" }
+        ],
+        "dislikes": [
+          { "keyword": "candy", "category": "groceries" },
+          { "keyword": "energy drink", "category": "drinks" }
+        ]
+      },
       "details": "Drives a Denali, lives in a mansion in Serpentine Estates, knows everything about math and tech",
       "email": "mr.snake.e@elxacorp.ex",
       "speakingStyle": "Professional but approachable, uses business terminology",
@@ -57,6 +73,22 @@
       "age": "80s",
       "role": "Mr. Snake-e's wife",
       "interests": ["Gardening", "Baking", "Cooking"],
+      "giftPreferences": {
+        "favoriteColor": "pink",
+        "likes": [
+          { "keyword": "flowers", "category": "groceries" },
+          { "keyword": "cheese", "category": "groceries" },
+          { "keyword": "baking", "category": "groceries" },
+          { "keyword": "dress", "category": "fashion" },
+          { "keyword": "blouse", "category": "fashion" },
+          { "keyword": "garden", "category": "household" }
+        ],
+        "dislikes": [
+          { "keyword": "protein", "category": "groceries" },
+          { "keyword": "electronics", "category": "electronics" },
+          { "keyword": "gaming", "category": "gaming" }
+        ]
+      },
       "personality": "Sweet, nurturing, loves sharing recipes and garden tips, very wise and motherly, doesn't understand tech at all",
       "details": "Runs a personal gardening and recipe website at mrs-snake-e.garden",
       "email": "mrs.snake.e@snakesia.garden",
@@ -70,6 +102,24 @@
       "age": "12",
       "role": "Famous YouTuber",
       "interests": ["Gaming", "YouTube", "Minecraft"],
+      "giftPreferences": {
+        "favoriteColor": "red",
+        "likes": [
+          { "keyword": "energy drink", "category": "drinks" },
+          { "keyword": "nuggets", "category": "groceries" },
+          { "keyword": "shorts", "category": "fashion" },
+          { "keyword": "shirt", "category": "fashion" },
+          { "keyword": "electronics", "category": "electronics" },
+          { "keyword": "gaming", "category": "gaming" },
+          { "keyword": "candy", "category": "groceries" },
+          { "keyword": "chips", "category": "groceries" }
+        ],
+        "dislikes": [
+          { "keyword": "formal", "category": "fashion" },
+          { "keyword": "vegetables", "category": "groceries" },
+          { "keyword": "tie", "category": "fashion" }
+        ]
+      },
       "personality": "Cool, chill, uses gaming slang, talks about YouTube and Minecraft, friendly and laid-back",
       "details": "Has his own Minecraft server (remicraft.ex), very popular online",
       "email": "remi@cooltuber.ex",
@@ -84,6 +134,22 @@
       "appearance": "Red-haired",
       "role": "Remi's protective older sister",
       "interests": ["Taking care of Remi", "Being responsible", "Looking out for others"],
+      "giftPreferences": {
+        "favoriteColor": "purple",
+        "likes": [
+          { "keyword": "dress", "category": "fashion" },
+          { "keyword": "skirt", "category": "fashion" },
+          { "keyword": "shirt", "category": "fashion" },
+          { "keyword": "phone", "category": "electronics" },
+          { "keyword": "animals", "category": "groceries" },
+          { "keyword": "chocolate", "category": "groceries" },
+          { "keyword": "unicorn", "category": "groceries" }
+        ],
+        "dislikes": [
+          { "keyword": "vitamin", "category": "groceries" },
+          { "keyword": "nuggets", "category": "groceries" }
+        ]
+      },
       "personality": "Sweet, playful, protective, caring, shows concern for others",
       "details": "Older sister of Remi, very kind and patient",
       "email": "rita.m@snakesia.com",
@@ -97,6 +163,22 @@
       "species": "Black cat",
       "role": "Professional Troublemaker",
       "personality": "Mischievous, playful, uses cat puns, talks about plottin' stuff and being sneaky",
+      "giftPreferences": {
+        "favoriteColor": "black",
+        "likes": [
+          { "keyword": "tuna", "category": "groceries" },
+          { "keyword": "fish", "category": "groceries" },
+          { "keyword": "sussy", "category": "groceries" },
+          { "keyword": "snacks", "category": "groceries" },
+          { "keyword": "cereal", "category": "groceries" }
+        ],
+        "dislikes": [
+          { "keyword": "vegetables", "category": "groceries" },
+          { "keyword": "flowers", "category": "groceries" },
+          { "keyword": "formal", "category": "fashion" },
+          { "keyword": "tie", "category": "fashion" }
+        ]
+      },
       "details": "Sneaky, loves pushing things, climbs into belly buttons, has a secret Sussy Lair",
       "email": "pushingcat@sussylair.hid",
       "speakingStyle": "Cat puns, mentions being 'sus', playful and silly",
@@ -226,6 +308,29 @@
       { "name": "Showroom Elite", "priceRange": "$100,000–$300,000", "leasable": false }
     ]
   },
+  "squigglyWiggly": {
+    "name": "Squiggly Wiggly",
+    "website": "squiggly.ex",
+    "location": "Main Street, Sidewinder Springs",
+    "description": "Snakesia's favorite neighborhood grocery chain. Online ordering with delivery to your door. Stocks products from major Snakesian brands.",
+    "tagline": "Order Online — Delivery to Your Door!",
+    "departments": ["Produce", "Pantry", "Snacks", "Drinks", "Frozen", "Bakery", "Deli", "Household"],
+    "brands": [
+      { "name": "Fang Foods International", "ticker": "FANG", "products": "Pasta, sauces, canned goods, frozen meals" },
+      { "name": "Squiggly's Best", "ticker": null, "products": "Store-brand basics and essentials" },
+      { "name": "Sussy Cat Entertainment", "ticker": "SCAT", "products": "Branded snacks, candy, cereal" },
+      { "name": "SnakeBite Labs", "ticker": "BITE", "products": "Vitamins, health drinks, protein bars" },
+      { "name": "Venom Energy Corp", "ticker": "VENM", "products": "Energy drinks, sports drinks" },
+      { "name": "Hiss Hotels & Resorts", "ticker": "HISS", "products": "Gourmet cheese, wine, fancy items" },
+      { "name": "Coil Communications", "ticker": "COIL", "products": "Batteries, phone chargers" }
+    ]
+  },
+  "scalesAndTails": {
+    "name": "Scales & Tails Fashion Co.",
+    "website": "fashionco.ex",
+    "ticker": "STFC",
+    "description": "Snakesia's trendiest fashion brand. Known for colorful prints and bold patterns. Online store with 5 departments: Tops, Dresses, Bottoms, Swimwear, and Formal."
+  },
   "scaleStreet": {
     "name": "Snake Valley Stock Exchange (SVSE)",
     "website": "scalestreet.ex",
@@ -276,6 +381,7 @@
     { "url": "pato.ex", "description": "Pato & Sons Auto - Car dealership with leasing and financing" },
     { "url": "scalestreet.ex", "description": "Snake Valley Stock Exchange - Buy and sell stocks" },
     { "url": "ssj.ex", "description": "The ScaleStreet Journal - Financial newspaper" },
+    { "url": "squiggly.ex", "description": "Squiggly Wiggly - Online grocery store with delivery" },
     { "url": "sssteam.ex", "description": "Sssteam - Online PC game store" },
     { "url": "privilege-palace.ex", "description": "Premium privileges for kids" },
     { "url": "snoogle-dictionary.ex", "description": "Dictionary and language reference" },
@@ -289,11 +395,12 @@
     { "url": "remicraft.ex", "description": "Official Minecraft server by Remi" },
     { "url": "mrs-snake-e.garden", "description": "Mrs. Snake-e's gardening and recipe site" },
     { "url": "snakesia.gov.ex", "description": "Official Snakesia government website" },
-    { "url": "elxatech.ex", "description": "Educational technology platform" },
+    { "url": "elxatech.ex", "description": "ElxaCorp tech store - phones, tablets, laptops, accessories" },
     { "url": "snake-deluxe.ex", "description": "Executive training suite" },
     { "url": "snake-e.corp.ex", "description": "ElxaCorp corporate website" },
     { "url": "snakebook.ex", "description": "Social networking platform" },
     { "url": "dissscord.ex", "description": "Chat platform for communities" },
-    { "url": "abbit.ex", "description": "Forum and discussion platform" }
+    { "url": "abbit.ex", "description": "Forum and discussion platform" },
+    { "url": "fashionco.ex", "description": "Scales & Tails Fashion Co. - Online fashion store" }
   ]
 }

@@ -419,11 +419,13 @@ window.ElxaMockPayment = class ElxaMockPayment {
         });
         
         dialog.querySelector('.elxa-payment-btn-cancel').addEventListener('click', () => {
+            document.dispatchEvent(new CustomEvent('elxa-payment-cancelled'));
             this.closePaymentDialog();
         });
         
         // Handle backdrop click
         dialog.querySelector('.elxa-payment-backdrop').addEventListener('click', () => {
+            document.dispatchEvent(new CustomEvent('elxa-payment-cancelled'));
             this.closePaymentDialog();
         });
     }
@@ -987,6 +989,7 @@ window.ElxaMockPayment = class ElxaMockPayment {
         // Handle escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isOpen) {
+                document.dispatchEvent(new CustomEvent('elxa-payment-cancelled'));
                 this.closePaymentDialog();
             }
         });

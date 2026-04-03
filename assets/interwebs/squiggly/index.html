@@ -1,0 +1,52 @@
+<div class="squiggly-root">
+
+    <!-- ===== HEADER ===== -->
+    <div class="sq-header">
+        <img src="./assets/interwebs/squiggly/banner.png" alt="Squiggly Wiggly" class="sq-banner" />
+        <div class="sq-tagline">
+            <span class="mdi mdi-truck-delivery-outline"></span>
+            Order Online — Delivery to Your Door!
+        </div>
+    </div>
+
+    <!-- ===== DEPARTMENT NAV ===== -->
+    <div class="sq-dept-nav" id="sqDeptNav"></div>
+
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="sq-body">
+
+        <!-- Product Grid -->
+        <div class="sq-products" id="sqProducts"></div>
+
+        <!-- Cart Panel -->
+        <div class="sq-cart" id="sqCart">
+            <div class="sq-cart-header">
+                <span class="mdi mdi-cart-outline"></span> Your Cart
+            </div>
+            <div class="sq-cart-items" id="sqCartItems">
+                <div class="sq-cart-empty">
+                    <span class="mdi mdi-cart-off" style="font-size: 36px; opacity: 0.3;"></span>
+                    <p>Your cart is empty!</p>
+                    <p style="font-size: 12px; opacity: 0.6;">Start shopping!</p>
+                </div>
+            </div>
+            <div class="sq-cart-footer" id="sqCartFooter" style="display: none;">
+                <div class="sq-cart-total">
+                    <span>Total:</span>
+                    <span id="sqCartTotal">§0.00</span>
+                </div>
+                <button class="sq-checkout-btn" onclick="SquigglyStore.checkout()">
+                    <span class="mdi mdi-cash-register"></span> Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DELIVERY CEREMONY OVERLAY ===== -->
+    <div class="sq-delivery-overlay" id="sqDeliveryOverlay" style="display: none;"></div>
+
+</div>
+
+<script src="../../../js/services/payment-system.js"></script>
+<script src="squiggly-products.js"></script>
+<script src="squiggly.js"></script>

@@ -21,6 +21,9 @@ class ElxaOS {
         this.financeNotificationService = new FinanceNotificationService(this.eventBus);
         this.employmentService = new EmploymentService(this.eventBus, this.registry);
         this.installerService = new InstallerService(this.eventBus, this.fileSystem, this.windowManager, this, this.registry);
+        this.adService = AdService;
+        AdService.init(this.eventBus);
+        this.bondService = new BondService(this.eventBus, this.registry);
         this.bootSystem = new BootSystem();
         this.updatePopup = new UpdatePopup();
 
@@ -39,7 +42,8 @@ class ElxaOS {
             browser: new BrowserProgram(this.windowManager, this.fileSystem, this.eventBus),
             messenger: new MessengerProgram(this.windowManager, this.fileSystem, this.eventBus),
             antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus),
-            viruslab: new VirusLabProgram(this.windowManager, this.fileSystem, this.eventBus)
+            viruslab: new VirusLabProgram(this.windowManager, this.fileSystem, this.eventBus),
+            elxasheets: new ElxaSheetsProgram(this.windowManager, this.fileSystem, this.eventBus)
         };
 
         // Initialize installed programs storage
@@ -86,6 +90,9 @@ class ElxaOS {
                 this.contextBuilder = new ContextBuilderService();
                 await this.contextBuilder.init();
             }
+
+            // 2.77. Initialize bond service (relationship tracking + gift preferences)
+            await this.bondService.init();
 
             // 2.8. Initialize notification service (loads notification data)
             await this.notificationService.init();
@@ -147,6 +154,7 @@ class ElxaOS {
             'fileManager':  (args) => this.programs.fileManager.launch(args || ['root']),
             'folder':       (args) => this.programs.fileManager.launch(args || ['root']),
             'snakesian-cards': () => this.programs.browser.launch('snakesian-cards.ex'),
+        'elxasheets':   (args) => this.programs.elxasheets.launch(args),
         };
     }
 
@@ -255,7 +263,7 @@ class ElxaOS {
 }
 
 // Initialize ElxaOS when page loads
-let elxaOS;
+var elxaOS;
 document.addEventListener('DOMContentLoaded', () => {
     elxaOS = new ElxaOS();
 });

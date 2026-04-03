@@ -323,6 +323,17 @@ class MessengerProgram {
                     </div>
                 </div>
 
+                <!-- Gift Popup -->
+                <div class="messenger-gift-popup" id="messengerGiftPopup" style="display: none;">
+                    <div class="messenger-gift-header">
+                        <span>Send a Gift</span>
+                        <button class="messenger-close-btn" onclick="elxaOS.programs.messenger.hideGiftPopup()">×</button>
+                    </div>
+                    <div class="messenger-gift-content" id="messengerGiftContent">
+                        <!-- Gift items populated here -->
+                    </div>
+                </div>
+
                 <!-- Emoji Picker -->
                 <div class="messenger-emoji-picker" id="messengerEmojiPicker" style="display: none;">
                     <div class="messenger-emoji-header">
@@ -533,6 +544,11 @@ class MessengerProgram {
             if (emojiPicker && emojiPicker.style.display === 'block' && !emojiPicker.contains(e.target) && !e.target.closest('.messenger-emoji-btn')) {
                 this.hideEmojiPicker();
             }
+
+            var giftPopup = document.getElementById('messengerGiftPopup');
+            if (giftPopup && giftPopup.style.display === 'block' && !giftPopup.contains(e.target) && !e.target.closest('.messenger-gift-btn')) {
+                this.hideGiftPopup();
+            }
         };
         document.addEventListener('click', this.documentClickHandler);
 
@@ -629,6 +645,369 @@ class MessengerProgram {
         this.hideEmojiPicker();
     }
 
+    // ===== GIFT SYSTEM =====
+
+    showGiftPopup(buttonElement) {
+        var popup = document.getElementById('messengerGiftPopup');
+        if (!popup || !buttonElement || !this.currentContact) return;
+
+        // No gifts for non-bondable contacts (system accounts)
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService && !elxaOS.bondService.isBondable(this.currentContact.id)) {
+            ElxaUI.showMessage("You can't send gifts to system contacts!", 'info');
+            return;
+        }
+
+        this.populateGiftItems();
+
+        var rect = buttonElement.getBoundingClientRect();
+        popup.style.left = rect.left + 'px';
+        popup.style.top = (rect.top - 280) + 'px';
+        popup.style.display = 'block';
+        popup.style.zIndex = '5000';
+    }
+
+    hideGiftPopup() {
+        var popup = document.getElementById('messengerGiftPopup');
+        if (popup) popup.style.display = 'none';
+    }
+
+    populateGiftItems() {
+        var content = document.getElementById('messengerGiftContent');
+        if (!content) return;
+
+        // Get giftable items from inventory
+        var items = [];
+        if (typeof elxaOS !== 'undefined' && elxaOS.inventoryService) {
+            var allItems = elxaOS.inventoryService.getItemsSync();
+            items = allItems.filter(function(i) { return i.giftable !== false && i.quantity > 0; });
+        }
+
+        // Also get giftable tickets
+        var tickets = [];
+        if (typeof elxaOS !== 'undefined' && elxaOS.inventoryService && elxaOS.inventoryService._data) {
+            tickets = (elxaOS.inventoryService._data.tickets || []).filter(function(t) {
+                return t.giftable !== false && t.status === 'valid';
+            });
+        }
+
+        if (items.length === 0 && tickets.length === 0) {
+            content.innerHTML = '<div class="messenger-gift-empty">' +
+                '<span class="mdi mdi-gift-off"></span>' +
+                '<p>No giftable items!</p>' +
+                '<small>Visit Squiggly Wiggly or other stores to buy some.</small>' +
+                '</div>';
+            return;
+        }
+
+        // Group items by subcategory
+        var groups = {};
+        for (var i = 0; i < items.length; i++) {
+            var sub = items[i].subcategory || 'other';
+            if (!groups[sub]) groups[sub] = [];
+            groups[sub].push(items[i]);
+        }
+
+        // Add tickets as their own group
+        if (tickets.length > 0) {
+            groups['tickets'] = tickets.map(function(t) {
+                return {
+                    itemId: t.id,
+                    name: t.ticketLabel || (t.venue + ' ' + t.ticketType + ' Ticket'),
+                    subcategory: 'tickets',
+                    quantity: 1,
+                    unitPrice: t.price || 0,
+                    _isTicket: true
+                };
+            });
+        }
+
+        var html = '';
+        var subcategoryLabels = {
+            'groceries': 'Groceries',
+            'drinks': 'Drinks',
+            'snacks': 'Snacks',
+            'household': 'Household',
+            'health': 'Health & Beauty',
+            'electronics': 'Electronics',
+            'fashion': 'Fashion',
+            'tickets': 'Tickets',
+            'souvenirs': 'Souvenirs',
+            'other': 'Other'
+        };
+
+        var keys = Object.keys(groups);
+        for (var k = 0; k < keys.length; k++) {
+            var key = keys[k];
+            var label = subcategoryLabels[key] || key.charAt(0).toUpperCase() + key.slice(1);
+            html += '<div class="messenger-gift-category">' + label + '</div>';
+
+            var groupItems = groups[key];
+            for (var j = 0; j < groupItems.length; j++) {
+                var item = groupItems[j];
+                var qtyBadge = item.quantity > 1 ? ' <span class="messenger-gift-qty">x' + item.quantity + '</span>' : '';
+                html += '<div class="messenger-gift-item" onclick="elxaOS.programs.messenger.confirmGift(\'' +
+                    item.itemId.replace(/'/g, "\\'") + '\', \'' +
+                    (item.subcategory || '').replace(/'/g, "\\'") + '\', \'' +
+                    item.name.replace(/'/g, "\\'") + '\')">' +
+                    '<span class="messenger-gift-item-name">' + item.name + qtyBadge + '</span>' +
+                    '</div>';
+            }
+        }
+
+        content.innerHTML = html;
+    }
+
+    async confirmGift(itemId, subcategory, itemName) {
+        if (!this.currentContact) return;
+
+        var contactName = this.currentContact.name;
+        var confirmed = await ElxaUI.showConfirmDialog({
+            title: 'Send Gift',
+            message: 'Send "' + itemName + '" to ' + contactName + '?',
+            confirmText: 'Send',
+            cancelText: 'Cancel',
+            confirmIcon: ElxaIcons.renderAction('gift')
+        });
+
+        if (confirmed) {
+            this.sendGift(itemId, subcategory, itemName);
+        }
+    }
+
+    async sendGift(itemId, subcategory, itemName) {
+        if (!this.currentContact) return;
+
+        this.hideGiftPopup();
+
+        var contactId = this.currentContact.id;
+        var isTicket = subcategory === 'tickets';
+
+        // Remove item from inventory
+        var removed = false;
+        if (typeof elxaOS !== 'undefined' && elxaOS.inventoryService) {
+            if (isTicket) {
+                // Tickets use removeItem by id
+                removed = await elxaOS.inventoryService.removeItem('tickets', itemId);
+            } else {
+                var result = await elxaOS.inventoryService.removeItems(itemId, subcategory, 1, 'gifted');
+                removed = result !== null;
+            }
+        }
+
+        if (!removed) {
+            ElxaUI.showMessage('Failed to send gift — item not found!', 'error');
+            return;
+        }
+
+        // Score the gift via BondService
+        var scoreResult = null;
+        var wasRequest = false;
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+            // Build item object for scoring
+            var itemObj = { name: itemName, subcategory: subcategory, unitPrice: 0 };
+            // Try to get price from the item before it was removed
+            var allItems = elxaOS.inventoryService.getItemsSync();
+            var match = allItems.find(function(i) { return i.itemId === itemId; });
+            if (match) itemObj.unitPrice = match.unitPrice || 0;
+
+            // Check if this fulfills an active request
+            var activeReq = elxaOS.bondService.getActiveRequest(contactId);
+            if (activeReq) {
+                var nameLC = itemName.toLowerCase();
+                if (nameLC.indexOf(activeReq.keyword.toLowerCase()) !== -1) {
+                    wasRequest = true;
+                }
+            }
+
+            scoreResult = elxaOS.bondService.calculateGiftPoints(contactId, itemObj, wasRequest);
+            elxaOS.bondService.recordGift(contactId, itemName, scoreResult.points, wasRequest);
+
+            if (wasRequest) {
+                elxaOS.bondService.clearRequest(contactId);
+            }
+        }
+
+        // Add gift message to chat (special styling)
+        this.addGiftMessage(itemName, contactId);
+
+        // Store in conversation history
+        if (this.conversationManager) {
+            this.conversationManager.addMessage(contactId, {
+                type: 'gift',
+                sender: 'user',
+                content: 'Sent a gift: ' + itemName,
+                timestamp: new Date().toISOString(),
+                platform: 'messenger'
+            });
+        }
+
+        // Get AI reaction to the gift
+        this.showTypingIndicator();
+        try {
+            var response = await this.getGiftReaction(itemName, scoreResult, wasRequest);
+            this.hideTypingIndicator();
+
+            if (response) {
+                this.addMessage('ai', response, contactId);
+                if (this.conversationManager) {
+                    this.conversationManager.addMessage(contactId, {
+                        type: 'message',
+                        sender: 'character',
+                        content: response,
+                        timestamp: new Date().toISOString(),
+                        platform: 'messenger'
+                    });
+                }
+            }
+        } catch (error) {
+            this.hideTypingIndicator();
+            console.error('Gift reaction error:', error);
+        }
+
+        // Update bond display
+        this.updateBondDisplay();
+    }
+
+    addGiftMessage(itemName, contactId) {
+        var messagesContainer = document.getElementById('messengerChatMessages');
+        if (!messagesContainer) return;
+
+        var messageElement = document.createElement('div');
+        messageElement.className = 'messenger-message user';
+
+        var time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        messageElement.innerHTML =
+            '<div class="messenger-message-bubble user messenger-gift-message">' +
+            '<div class="messenger-gift-icon"><span class="mdi mdi-gift"></span></div>' +
+            '<div class="messenger-message-text">Sent a gift: <strong>' + this.escapeHtml(itemName) + '</strong></div>' +
+            '<div class="messenger-message-time">' + time + '</div>' +
+            '</div>';
+
+        messagesContainer.appendChild(messageElement);
+        this.applyThemeToMessage(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    async getGiftReaction(itemName, scoreResult, wasRequest) {
+        if (!this.settings.llm.enabled || !window.elxaLLM || !window.elxaLLM.isAvailable()) {
+            return this.getFallbackGiftReaction(scoreResult);
+        }
+
+        var contact = this.currentContact;
+        var userName = this.settings.username || 'Friend';
+        var character = contact.character || contact;
+        if (this.worldContext && this.worldContext.keyCharacters && this.worldContext.keyCharacters[contact.id]) {
+            character = this.worldContext.keyCharacters[contact.id];
+        }
+
+        // Get gift reaction prompt from bond service
+        var giftPrompt = '';
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+            var itemObj = { name: itemName };
+            giftPrompt = elxaOS.bondService.getGiftReactionPrompt(contact.id, itemObj, scoreResult);
+        }
+
+        // Build bond context
+        var bondContext = '';
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+            bondContext = elxaOS.bondService.getBondContext(contact.id, userName);
+        }
+
+        var characterDetails = character.details || character.description || contact.description || '';
+        var characterPersonality = character.personality || contact.personality || '';
+
+        var prompt = 'You are ' + (character.fullName || character.name) + ' from Snakesia. ' +
+            characterDetails + ' ' + characterPersonality + '\n\n' +
+            (bondContext ? bondContext + '\n\n' : '') +
+            giftPrompt + '\n\n' +
+            '- This is instant messaging, be casual and conversational\n' +
+            '- Stay completely in character\n' +
+            '- IMPORTANT: Respond ONLY with the message text. Do NOT prefix with your name.\n' +
+            '- Keep response to 1-3 sentences\n';
+
+        try {
+            var maxTokens = this.settings.llm.maxTokens[this.settings.llm.responseLength] || 120;
+            var response = await window.elxaLLM.generateContent(prompt, {
+                maxTokens: maxTokens,
+                temperature: 0.85,
+                topP: 0.95,
+                topK: 40
+            });
+            return response;
+        } catch (error) {
+            console.error('Gift reaction LLM error:', error);
+            return this.getFallbackGiftReaction(scoreResult);
+        }
+    }
+
+    getFallbackGiftReaction(scoreResult) {
+        if (!scoreResult || scoreResult.points === 0) {
+            return "Oh, thanks! That's... nice of you! 😊";
+        } else if (scoreResult.points >= 5) {
+            return "OH WOW!! This is EXACTLY what I wanted!! Thank you SO much!! 🎉🎉";
+        } else if (scoreResult.points >= 3) {
+            return "Aww, I love this! You know me so well! 😍";
+        } else {
+            return "Hey thanks! That's really sweet of you! 💛";
+        }
+    }
+
+    // ===== REQUEST PARSING =====
+
+    parseRequestFromResponse(response, contactId) {
+        if (typeof elxaOS === 'undefined' || !elxaOS.bondService) return;
+
+        // Look for [bracketed text] in the response
+        var match = response.match(/\[([^\]]+)\]/);
+        if (!match) return;
+
+        var keyword = match[1].trim().toLowerCase();
+        // Skip common bracket uses that aren't requests
+        if (keyword.length < 2 || keyword.length > 40) return;
+
+        // Match keyword to character's preferences for category
+        var prefs = elxaOS.bondService._preferences ? elxaOS.bondService._preferences[contactId] : null;
+        var category = 'other';
+        if (prefs && prefs.likes) {
+            for (var i = 0; i < prefs.likes.length; i++) {
+                if (keyword.indexOf(prefs.likes[i].keyword.toLowerCase()) !== -1 ||
+                    prefs.likes[i].keyword.toLowerCase().indexOf(keyword) !== -1) {
+                    category = prefs.likes[i].category;
+                    break;
+                }
+            }
+        }
+
+        elxaOS.bondService.setActiveRequest(contactId, keyword, category, response);
+        console.log('🎁 Request detected from ' + contactId + ': [' + keyword + '] (category: ' + category + ')');
+    }
+
+    // ===== BOND DISPLAY =====
+
+    updateBondDisplay() {
+        var bondEl = document.getElementById('messengerBondDisplay');
+        if (!bondEl || !this.currentContact) return;
+
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService && elxaOS.bondService.isBondable(this.currentContact.id)) {
+            var tier = elxaOS.bondService.getBondTier(this.currentContact.id);
+            var bondVal = elxaOS.bondService.getBondRounded(this.currentContact.id);
+            var heartColors = {
+                'Stranger': '🤍',
+                'Acquaintance': '🤍',
+                'Casual Friend': '💛',
+                'Close Friend': '🧡',
+                'Best Buddy': '❤️',
+                'Ride or Die': '💜'
+            };
+            var heart = heartColors[tier.name] || '🤍';
+            bondEl.innerHTML = heart + ' ' + tier.name;
+            bondEl.title = 'Bond: ' + bondVal + '/100';
+        } else {
+            bondEl.innerHTML = '';
+        }
+    }
+
     // ===== CONTACT MANAGEMENT =====
 
     populateContacts() {
@@ -703,6 +1082,7 @@ class MessengerProgram {
                         <div class="messenger-chat-name">${contact.name}</div>
                         <div class="messenger-chat-status">Active now &bull; ${this.getSnakesiaTime()}</div>
                     </div>
+                    <div class="messenger-bond-display" id="messengerBondDisplay" title="Bond level"></div>
                 </div>
                 <div class="messenger-header-actions">
                     <button class="messenger-icon-btn" onclick="if(confirm('Clear chat history with this contact?')) elxaOS.programs.messenger.clearChat()" title="Clear Chat">${ElxaIcons.renderAction('delete')}</button>
@@ -715,6 +1095,9 @@ class MessengerProgram {
 
             <div class="messenger-chat-input-area">
                 <div class="messenger-input-container">
+                    <button class="messenger-gift-btn" onclick="elxaOS.programs.messenger.showGiftPopup(this)" title="Send a Gift">
+                        ${ElxaIcons.render('gift', 'ui')}
+                    </button>
                     <button class="messenger-emoji-btn" onclick="elxaOS.programs.messenger.showEmojiPicker(this)" title="Add Emoji">
                         😀
                     </button>
@@ -736,6 +1119,7 @@ class MessengerProgram {
         setTimeout(() => {
             const input = document.getElementById('messengerMessageInput');
             if (input) input.focus();
+            this.updateBondDisplay();
         }, 100);
     }
 
@@ -753,6 +1137,11 @@ class MessengerProgram {
         input.value = '';
 
         this.addMessage('user', message, this.currentContact.id);
+
+        // Record message in bond service
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+            elxaOS.bondService.recordMessage(this.currentContact.id);
+        }
 
         if (this.conversationManager) {
             this.conversationManager.addMessage(this.currentContact.id, {
@@ -773,6 +1162,9 @@ class MessengerProgram {
 
             if (response) {
                 this.addMessage('ai', response, this.currentContact.id);
+
+                // Parse [brackets] for gift requests from bond service
+                this.parseRequestFromResponse(response, this.currentContact.id);
 
                 if (this.conversationManager) {
                     this.conversationManager.addMessage(this.currentContact.id, {
@@ -813,7 +1205,7 @@ class MessengerProgram {
             messageElement.innerHTML = `
                 <div class="messenger-message-avatar">${this.createAvatarElement(this.currentContact)}</div>
                 <div class="messenger-message-bubble ai">
-                    <div class="messenger-message-text">${this.escapeHtml(text)}</div>
+                    <div class="messenger-message-text">${this.renderMessageText(text)}</div>
                     <div class="messenger-message-time">${time}</div>
                 </div>
             `;
@@ -853,7 +1245,7 @@ class MessengerProgram {
                     messageElement.innerHTML = `
                         <div class="messenger-message-avatar">${this.createAvatarElement(this.currentContact)}</div>
                         <div class="messenger-message-bubble ai">
-                            <div class="messenger-message-text">${this.escapeHtml(msg.content)}</div>
+                            <div class="messenger-message-text">${this.renderMessageText(msg.content)}</div>
                             <div class="messenger-message-time">${time}</div>
                         </div>
                     `;
@@ -1024,12 +1416,34 @@ class MessengerProgram {
             charRelationships = relParts.join(', ');
         }
 
+        // Bond context (Phase 3A) — always injected for bondable characters
+        var bondBlock = '';
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+            bondBlock = elxaOS.bondService.getBondContext(contact.id, userName);
+        }
+
+        // Preference context (Phase 3D) — light addition
+        var prefBlock = '';
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+            prefBlock = elxaOS.bondService.getPreferenceContext(contact.id);
+        }
+
+        // Request trigger (Phase 3C) — inject when it's time for a request
+        var requestBlock = '';
+        if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+            if (elxaOS.bondService.shouldTriggerRequest(contact.id)) {
+                requestBlock = '\n' + elxaOS.bondService.generateRequestPrompt(contact.id) + '\n';
+            }
+        }
+
         return 'You are ' + (character.fullName || character.name) + ' from Snakesia. ' + characterDetails + ' ' + characterPersonality + '\n\n' +
             'CHARACTER BACKGROUND:\n' +
             (characterRole ? '- Role/Job: ' + characterRole + '\n' : '') +
             (character.age ? '- Age: ' + character.age + '\n' : '') +
             (character.interests ? '- Interests: ' + character.interests.join(', ') + '\n' : '') +
             (charRelationships ? '- Relationships: ' + charRelationships + '\n' : '') +
+            (prefBlock ? '\n' + prefBlock + '\n' : '') +
+            (bondBlock ? '\n' + bondBlock + '\n' : '') +
             '\n' + worldBlock + '\n' +
             '\nCurrent time in Snakesia: ' + snakesiaTime + '\n' +
             '\n' + userBlock + '\n' +
@@ -1045,6 +1459,7 @@ class MessengerProgram {
             lengthGuidance + '\n' +
             storyInstructions +
             fullConversationContext + '\n' +
+            requestBlock +
             '\nCurrent message from ' + userName + ': "' + userMessage + '"\n' +
             '\nRespond as ' + (character.fullName || character.name) + ' would in an instant message, considering the FULL conversation history across email and chat:';
     }
@@ -1133,6 +1548,13 @@ class MessengerProgram {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    renderMessageText(text) {
+        var escaped = this.escapeHtml(text);
+        // Style [bracketed text] as request items (Phase 2C)
+        escaped = escaped.replace(/\[([^\]]+)\]/g, '<span class="messenger-request-item">$1</span>');
+        return escaped;
     }
 
     // ===== SETUP AND SETTINGS =====

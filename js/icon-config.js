@@ -34,6 +34,7 @@ const ElxaIcons = {
         'fileManager':  { mdi: 'mdi-folder',            color: '#FFD54F' },
         'folder':       { mdi: 'mdi-folder',            color: '#FFD54F' },
         'snakesian-cards': { mdi: 'mdi-cards-outline', color: '#d4a535' },
+        'elxasheets':   { mdi: 'mdi-table',            color: '#4CAF50' },
     },
 
     // =========================================================
@@ -55,6 +56,7 @@ const ElxaIcons = {
         '.avi':  { mdi: 'mdi-file-video',        color: '#AB47BC' },
         '.abby': { mdi: 'mdi-package-down',      color: '#8D6E63' },
         '.lnk':  { mdi: 'mdi-link',              color: '#78909C' },
+        '.csv':  { mdi: 'mdi-table',              color: '#4CAF50' },
     },
 
     // Default fallbacks
@@ -129,10 +131,14 @@ const ElxaIcons = {
         'wifi':         { mdi: 'mdi-wifi' },
         'wifi-off':     { mdi: 'mdi-wifi-off' },
         'magnify':      { mdi: 'mdi-magnify' },
+        'puzzle':       { mdi: 'mdi-puzzle' },
+        'shield-check': { mdi: 'mdi-shield-check' },
         // Messenger actions
         'settings':     { mdi: 'mdi-cog' },
         'send':         { mdi: 'mdi-send' },
         'emoticon':     { mdi: 'mdi-emoticon-outline' },
+        'gift':         { mdi: 'mdi-gift' },
+        'heart':        { mdi: 'mdi-heart' },
         // Network / WiFi actions
         'link':           { mdi: 'mdi-link-variant' },
         'lock':           { mdi: 'mdi-lock' },

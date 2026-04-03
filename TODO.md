@@ -177,6 +177,21 @@ Goal: Make the File Manager solid, fix bugs, add missing features, and establish
 - [x] **Phase 7: Sell Flow** — Current value + depreciation % display in My Vehicles. Sell button for owned/financed. Sell overlay with valuation, loan payoff, net proceeds, underwater detection (blocks if can't cover shortfall). Sale ceremony with financial summary + salesperson farewell. Vehicle returns to lot after sale.
 - [ ] **Phase 8: World Integration + Polish** — world-context.json, LLM context, tiers page, bank UI
 
+## 🔲 Gifting & Bond System — Remaining
+- [x] **Phases 1A-1C: Bond Service Core** — BondService class, bond tracking, gift scoring, request system (Session 42)
+- [x] **Phase 5: Character Preferences** — giftPreferences in world-context.json for all 5 characters (Session 42)
+- [x] **Phase 2A-2B: Gift Button + Popup** — Gift button in Messenger input, popup with inventory items (Session 43)
+- [x] **Phase 2C: Request Message Styling** — [brackets] → styled spans in AI messages (Session 43)
+- [x] **Phase 2D: Bond Display** — Heart + tier name in chat header (Session 43)
+- [x] **Phase 3A-3D: LLM Prompt Integration** — Bond context, gift reactions, request triggers, preference injection (Session 43)
+- [x] **Phase 4: Context Builder + Email** — Bond summaries in context builder getUserContext() via _getBondInfo() helper. Email gets bond info automatically (already calls getUserContext). (Session 44)
+- [x] **Phase 6: Polish** — 6A events already wired (all 4 emit), 6B tier change notifications + toasts (Session 44), 6C debug tools already built, 6D boot integration already done (step 2.77). Remaining: gift log view?, bond indicators on contact list? (future ideas)
+
+## 🐍 Scales & Tails Fashion Co. (fashionco.ex)
+- [ ] **Phase 1: Product Catalog** — `fashion-products.js` with 19 products, 79 color variants. Snakesia-themed product names. Variant data includes color, pattern, motifs, image path.
+- [ ] **Phase 2: Website Build** — `index.html`, `styles.css`, `fashionco.js`. Image-forward product grid, variant color swatches, detail view, dropdown cart with quantity, checkout via purchaseProduct(). Brand palette: cream/dusty rose/sage/teal.
+- [ ] **Phase 3: World Integration** — world-context.json entry, website registry, approved websites, context builder one-liner, receipt email on purchase.
+
 ## 🔲 Future Ideas
 - Notepad `execCommand` full rewrite (see Phase 1 #3 TODO)
 - Have InstallerService use `registerProgram()` instead of the `installed_` prefix convention
@@ -185,3 +200,8 @@ Goal: Make the File Manager solid, fix bugs, add missing features, and establish
 - **Messenger AI/API modernization** — Gemini model list is outdated, API endpoint/format may need updating, prompt structure could be improved. Consider supporting other LLM providers.
 - **Messenger emoji picker positioning** — Uses `position: fixed` + `getBoundingClientRect()` which positions relative to viewport, not the draggable window. Picker drifts away from the button when window is dragged.
 - **Messenger DOM queries** — All queries use `document.getElementById()` (not scoped to window element). Works because messenger is singleton, but inconsistent with multi-window programs.
+
+## 🐛 Known Bugs
+- [x] **NoAds Pro shows "Install" after subscription** — `_restoreState()` in `ad-service.js` listened for `registry.userLoaded` event which was never emitted. Changed to `login.success`. Fixed in session 41.
+- [ ] **ElxaTech untested** — built in session 37, never tested. Receipt email event listener (`elxatech.purchase`) still needed.
+- [x] **Browser overlay scroll position** — Fixed in session 40. Overlays now constrained to browser page via `contain: paint` + scroll-to-top observer.

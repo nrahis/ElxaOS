@@ -512,6 +512,17 @@ class ElxaMailSystem {
                 return;
             }
 
+            // ExWeb links in email body — open in browser
+            const exwebLink = target.closest('a.exweb-link');
+            if (exwebLink) {
+                e.preventDefault();
+                var url = exwebLink.getAttribute('href');
+                if (url && typeof elxaOS !== 'undefined' && elxaOS.programs && elxaOS.programs.browser) {
+                    elxaOS.programs.browser.launch(url);
+                }
+                return;
+            }
+
             // Context menu items
             const ctxItem = target.closest('[data-context]');
             if (ctxItem) {
@@ -576,8 +587,14 @@ class ElxaMailSystem {
 
     handleNavAction(action) {
         switch (action) {
-            case 'login':    this.showLogin(); break;
-            case 'register': this.showRegister(); break;
+            case 'login':
+                if (this.isLoggedIn) { this.showEmailInterface(); return; }
+                this.showLogin();
+                break;
+            case 'register':
+                if (this.isLoggedIn) { this.showEmailInterface(); return; }
+                this.showRegister();
+                break;
             case 'help':     this.showHelp(); break;
             case 'logout':   this.logout(); break;
         }
@@ -723,6 +740,7 @@ class ElxaMailSystem {
         this.hideAllSections();
         document.getElementById('loginSection').classList.remove('hidden');
         document.getElementById('loggedInNav').classList.add('hidden');
+        document.getElementById('loggedOutNav').classList.remove('hidden');
         setTimeout(() => document.getElementById('loginUsername').focus(), 100);
     }
 
@@ -730,6 +748,7 @@ class ElxaMailSystem {
         this.hideAllSections();
         document.getElementById('registerSection').classList.remove('hidden');
         document.getElementById('loggedInNav').classList.add('hidden');
+        document.getElementById('loggedOutNav').classList.remove('hidden');
         setTimeout(() => document.getElementById('regDisplayName').focus(), 100);
     }
 
@@ -737,6 +756,7 @@ class ElxaMailSystem {
         this.hideAllSections();
         document.getElementById('welcomeScreen').classList.remove('hidden');
         document.getElementById('loggedInNav').classList.add('hidden');
+        document.getElementById('loggedOutNav').classList.remove('hidden');
     }
 
     showEmailInterface() {
@@ -748,6 +768,7 @@ class ElxaMailSystem {
         this.hideAllSections();
         document.getElementById('emailInterface').classList.remove('hidden');
         document.getElementById('loggedInNav').classList.remove('hidden');
+        document.getElementById('loggedOutNav').classList.add('hidden');
 
         // Build dynamic UI components
         this.buildSidebar();
@@ -1787,6 +1808,47 @@ class ElxaMailSystem {
         } else {
             console.log('ElxaMail:', message);
         }
+    }
+
+    // ===== DEBUG TOOLS =====
+
+    /**
+     * Inject a test email with ExWeb links to verify link rendering + click handling.
+     * Usage from console: elxaMailSystem.debug.testExWebLinks()
+     */
+    get debug() {
+        var self = this;
+        return {
+            testExWebLinks: function() {
+                if (!self.isLoggedIn) {
+                    console.warn('📧 Must be logged into ElxaMail first!');
+                    return;
+                }
+
+                var testEmail = {
+                    from: 'rita@elxamail.ex',
+                    fromName: 'Rita Marway',
+                    to: self.currentUser.email,
+                    subject: 'Check out these cool sites!!',
+                    body: 'heyyyy!!\n\n'
+                        + 'ok so i found some really cool stuff on the ExWeb today and i HAD to share\n\n'
+                        + 'first, have you seen <a class="exweb-link" href="squiggly.ex">squiggly.ex</a>?? they have the BEST snacks, i literally ordered like 5 bags of dino nuggets lol\n\n'
+                        + 'also dad told me to check my stocks on <a class="exweb-link" href="scalestreet.ex">scalestreet.ex</a> and apparently SCAT is up like 40%??? idk what that means but it sounds good\n\n'
+                        + 'oh and if you need a new car or something, <a class="exweb-link" href="pato.ex">pato.ex</a> has some really funny ones. theres one called the "Dumpster Fire" LMAO\n\n'
+                        + 'anyway talk soon!!\n\n'
+                        + '- Rita',
+                    date: new Date().toISOString(),
+                    read: false
+                };
+
+                self.emails.inbox.unshift(testEmail);
+                self.saveCurrentUser();
+                if (self.currentFolder === 'inbox') {
+                    self.updateEmailList();
+                }
+                console.log('📧 Test email with ExWeb links injected! Check your inbox.');
+            }
+        };
     }
 }
 

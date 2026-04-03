@@ -152,6 +152,20 @@ class FinanceNotificationService {
             if (!data) return;
             self._onBigMove(data);
         });
+
+        // --- GROCERY ORDER EVENTS ---
+
+        this.eventBus.on('squiggly.orderComplete', function(data) {
+            if (!data) return;
+            self._onGroceryOrderComplete(data);
+        });
+
+        // --- FASHION ORDER EVENTS ---
+
+        this.eventBus.on('fashionco.orderComplete', function(data) {
+            if (!data) return;
+            self._onFashionOrderComplete(data);
+        });
     }
 
     // =================================
@@ -922,6 +936,96 @@ class FinanceNotificationService {
                 + 'Visit the Snake Valley Stock Exchange at scalestreet.ex to manage your portfolio.\n\n'
                 + 'ScaleStreet Brokerage\n'
                 + 'alerts@scalestreet.ex'
+        });
+    }
+
+    // --- GROCERY ORDER ---
+
+    _onGroceryOrderComplete(data) {
+        var itemCount = data.itemCount || 0;
+        var total = data.total || 0;
+
+        // Notification (toast)
+        this._notify({
+            title: 'Squiggly Wiggly Order Placed',
+            body: itemCount + ' item' + (itemCount !== 1 ? 's' : '') + ' ordered — $' + total.toFixed(2) + ' total.',
+            icon: 'mdi-cart-check',
+            category: 'shopping',
+            urgency: 'info',
+            toast: false  // delivery ceremony is already showing
+        });
+
+        // Build receipt lines
+        var receiptLines = '';
+        if (data.items && data.items.length > 0) {
+            for (var i = 0; i < data.items.length; i++) {
+                var item = data.items[i];
+                var lineTotal = (item.unitPrice * item.quantity).toFixed(2);
+                receiptLines += '  ' + item.quantity + 'x ' + item.name + '  $' + lineTotal + '\n';
+            }
+        }
+
+        // Order confirmation email
+        this._sendEmail({
+            from: 'orders@squigglywiggly.ex',
+            fromName: 'Squiggly Wiggly Online',
+            subject: 'Order Confirmation — ' + itemCount + ' item' + (itemCount !== 1 ? 's' : ''),
+            body: 'Thank you for shopping at Squiggly Wiggly!\n\n'
+                + 'Your order has been delivered. Here is your receipt:\n\n'
+                + 'ORDER RECEIPT\n'
+                + receiptLines
+                + '  ————————————————————\n'
+                + '  Total: $' + total.toFixed(2) + '\n\n'
+                + 'We hope you enjoy your groceries! Visit us again at squiggly.ex.\n\n'
+                + 'Squiggly Wiggly — "Slithering Savings, Every Aisle!"\n'
+                + 'Main Street, Sidewinder Springs\n'
+                + 'orders@squigglywiggly.ex'
+        });
+    }
+
+    // --- FASHION ORDER ---
+
+    _onFashionOrderComplete(data) {
+        var itemCount = data.itemCount || 0;
+        var total = data.total || 0;
+
+        // Notification (no toast — delivery ceremony already showing)
+        this._notify({
+            title: 'Scales & Tails Order Placed',
+            body: itemCount + ' item' + (itemCount !== 1 ? 's' : '') + ' ordered — $' + total.toFixed(2) + ' total.',
+            icon: 'mdi-hanger',
+            category: 'shopping',
+            urgency: 'info',
+            toast: false
+        });
+
+        // Build receipt lines
+        var receiptLines = '';
+        if (data.items && data.items.length > 0) {
+            for (var i = 0; i < data.items.length; i++) {
+                var item = data.items[i];
+                var lineTotal = (item.price * item.qty).toFixed(2);
+                var label = item.name + ' (' + item.color + ')';
+                if (item.qty > 1) label += ' x' + item.qty;
+                receiptLines += '  ' + label + '  $' + lineTotal + '\n';
+            }
+        }
+
+        // Order confirmation email
+        this._sendEmail({
+            from: 'orders@fashionco.ex',
+            fromName: 'Scales & Tails Fashion Co.',
+            subject: 'Order Confirmation — ' + itemCount + ' item' + (itemCount !== 1 ? 's' : ''),
+            body: 'Thank you for shopping at Scales & Tails Fashion Co.!\n\n'
+                + 'Your order has been delivered. Here is your receipt:\n\n'
+                + 'ORDER RECEIPT\n'
+                + receiptLines
+                + '  ————————————————————\n'
+                + '  Total: $' + total.toFixed(2) + '\n\n'
+                + 'Wear it well! Visit us again at fashionco.ex.\n\n'
+                + 'Scales & Tails Fashion Co.\n'
+                + '"Bold Prints. Bolder You."\n'
+                + 'orders@fashionco.ex'
         });
     }
 

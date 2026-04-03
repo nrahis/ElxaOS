@@ -197,6 +197,16 @@ var ContextBuilderService = class ContextBuilderService {
             }
         }
 
+        // Squiggly Wiggly grocery store (lightweight — details injected in user context when items owned)
+        if (wc.squigglyWiggly) {
+            lines.push('- ' + wc.squigglyWiggly.name + ' (' + wc.squigglyWiggly.website + '): Online grocery store in ' + (wc.squigglyWiggly.location || 'Snakesia') + '.');
+        }
+
+        // Scales & Tails Fashion Co. (lightweight — details in inventory when items owned)
+        if (wc.scalesAndTails) {
+            lines.push('- ' + wc.scalesAndTails.name + ' (' + wc.scalesAndTails.website + '): Online fashion store.');
+        }
+
         return lines.join('\n');
     }
 
@@ -237,6 +247,24 @@ var ContextBuilderService = class ContextBuilderService {
             }
         }
 
+        // Items inventory (groceries, gifts, etc.) (conditional)
+        var itemsInfo = this._getItemsInfo();
+        if (itemsInfo.length > 0) {
+            for (var ii = 0; ii < itemsInfo.length; ii++) {
+                lines.push(itemsInfo[ii]);
+            }
+        }
+
+        // Bond / relationship info (conditional)
+        var bondInfo = this._getBondInfo();
+        if (bondInfo.length > 0) {
+            lines.push('');
+            lines.push('CHARACTER RELATIONSHIPS:');
+            for (var bi = 0; bi < bondInfo.length; bi++) {
+                lines.push(bondInfo[bi]);
+            }
+        }
+
         // Today's market headlines (conditional)
         var headlines = this._getMarketHeadlines();
         if (headlines) {
@@ -268,10 +296,14 @@ var ContextBuilderService = class ContextBuilderService {
         if (!this.worldContext || !this.worldContext.approvedWebsites) return '';
 
         var sites = this.worldContext.approvedWebsites;
-        var lines = ['APPROVED WEBSITES (you may reference these if relevant):'];
+        var lines = ['APPROVED EXWEB SITES (you may reference these URLs naturally when relevant):'];
         for (var i = 0; i < sites.length; i++) {
             lines.push('- ' + sites[i].url + ': ' + sites[i].description);
         }
+        lines.push('');
+        lines.push('LINK FORMATTING: When you mention an ExWeb URL in your email, format it as an HTML link like this: <a class="exweb-link" href="URL">URL</a>');
+        lines.push('Example: Have you checked out <a class="exweb-link" href="squiggly.ex">squiggly.ex</a> yet?');
+        lines.push('Only use this format for URLs from the approved list above. Do NOT overuse links — only include them when it feels natural.');
         return lines.join('\n');
     }
 
@@ -419,6 +451,57 @@ var ContextBuilderService = class ContextBuilderService {
             }
         } catch (error) {
             console.warn('⚠️ Context Builder: failed to load stock info:', error);
+        }
+        return lines;
+    }
+
+    _getItemsInfo() {
+        var lines = [];
+        try {
+            if (typeof elxaOS !== 'undefined' && elxaOS.inventoryService) {
+                var items = elxaOS.inventoryService.getItemsSync();
+                var profile = this._getUserProfile();
+
+                if (items && items.length > 0) {
+                    // Group by subcategory
+                    var bySub = {};
+                    for (var i = 0; i < items.length; i++) {
+                        var sub = items[i].subcategory || 'other';
+                        if (!bySub[sub]) bySub[sub] = [];
+                        bySub[sub].push(items[i].quantity + 'x ' + items[i].name);
+                    }
+
+                    var subKeys = Object.keys(bySub);
+                    for (var s = 0; s < subKeys.length; s++) {
+                        var key = subKeys[s];
+                        lines.push(profile.username + ' has ' + key + ' in inventory: ' + bySub[key].join(', ') + '.');
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('\u{26a0}\u{fe0f} Context Builder: failed to load items info:', error);
+        }
+        return lines;
+    }
+
+    _getBondInfo() {
+        var lines = [];
+        try {
+            if (typeof elxaOS !== 'undefined' && elxaOS.bondService) {
+                var summaries = elxaOS.bondService.getAllBondSummaries();
+                if (summaries && summaries.length > 0) {
+                    // Map character IDs to display names from world context
+                    var characters = this.worldContext ? (this.worldContext.keyCharacters || {}) : {};
+                    for (var i = 0; i < summaries.length; i++) {
+                        var s = summaries[i];
+                        var charData = characters[s.characterId];
+                        var displayName = charData ? (charData.fullName || charData.name || s.characterId) : s.characterId;
+                        lines.push('- ' + displayName + ': Bond ' + s.bond + '/100 (' + s.tierName + ')');
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Context Builder: failed to load bond info:', error);
         }
         return lines;
     }

@@ -58,6 +58,12 @@ class StockService {
                 this._news = saved.news || [];
                 this._lastProcessedMonth = saved.lastProcessedMonth || null;
                 console.log('📈 Stock data loaded from registry (' + Object.keys(this._prices).length + ' stocks)');
+
+                // If we have prices but no news, seed some initial events
+                if (this._news.length === 0) {
+                    this._seedInitialNews();
+                    console.log('📈 Seeded initial news for existing stock data');
+                }
             } else {
                 // First run — seed from STOCK_DEFINITIONS
                 this._seedFromDefaults();
@@ -155,6 +161,41 @@ class StockService {
         }
 
         console.log('📈 Seeded ' + (Object.keys(this._prices).length) + ' stocks with 3 months history + ' + this._news.length + ' news events');
+    }
+
+    /**
+     * Seeds 2-3 news events without re-simulating prices.
+     * Used when existing stock data has no news (e.g. migrated from pre-news version).
+     */
+    _seedInitialNews() {
+        if (typeof STOCK_NEWS_EVENTS === 'undefined' || !STOCK_NEWS_EVENTS || STOCK_NEWS_EVENTS.length === 0) return;
+
+        var pool = STOCK_NEWS_EVENTS.slice();
+        for (var s = pool.length - 1; s > 0; s--) {
+            var r = Math.floor(Math.random() * (s + 1));
+            var tmp = pool[s]; pool[s] = pool[r]; pool[r] = tmp;
+        }
+        var seedCount = Math.min(3, pool.length);
+        for (var n = 0; n < seedCount; n++) {
+            var evt = pool[n];
+            if (evt.affects) {
+                for (var a = 0; a < evt.affects.length; a++) {
+                    var affect = evt.affects[a];
+                    var sd = this._prices[affect.ticker];
+                    if (sd) {
+                        sd.price = Math.max(STOCK_PRICE_FLOOR, sd.price * (1 + affect.impact));
+                        sd.price = Math.round(sd.price * 100) / 100;
+                    }
+                }
+            }
+            this._news.push({
+                eventId: evt.id,
+                headline: evt.headline,
+                affects: evt.affects || [],
+                category: evt.category || 'general'
+            });
+        }
+        this._save();
     }
 
     _getCurrentMonthKey() {
@@ -732,9 +773,11 @@ class StockService {
                 this.prices();
             },
 
-            reset() {
+            async reset() {
                 console.warn('📈 Resetting all stock data to defaults!');
                 self._seedFromDefaults();
+                await self._save();
+                console.log('📈 Reset complete — safe to refresh');
             }
         };
     }

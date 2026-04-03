@@ -12,6 +12,7 @@
         "title": "ElxaMail - Your Gateway to the ExWeb",
         "type": "file",
         "path": "./assets/interwebs/exmail/index.html",
+        "css": "./assets/interwebs/exmail/styles.css",
         "searchData": {
             "keywords": ["email", "mail", "messaging", "communication", "contact", "inbox", "send", "receive", "elxamail", "elxacorp", "snakesia"],
             "description": "Snakesia\"s premier email service. Send and receive messages, manage contacts, and stay connected across the ExWeb. Trusted by millions of Snakesians since 1997.",
@@ -217,69 +218,14 @@
         }
     },
     "elxatech.ex": {
-        "title": "ElxaTech - Educational Technology Platform",
+        "title": "ElxaTech - ElxaCorp Tech Store",
         "type": "file",
         "path": "./assets/interwebs/elxatech/index.html",
         "css": "./assets/interwebs/elxatech/styles.css",
         "searchData": {
-            "keywords": ["education", "technology", "science", "math", "chemistry", "phones", "retro", "learning", "tutorials", "snake-e", "academic"],
-            "description": "Premier educational technology platform offering resources in mathematics, chemistry, computer science, and technology history.",
-            "category": "Education"
-        }
-    },
-    "elxatech.ex/about": {
-        "title": "ElxaTech - About Us",
-        "type": "file",
-        "path": "./assets/interwebs/elxatech/about.html",
-        "css": "./assets/interwebs/elxatech/styles.css",
-        "searchData": {
-            "keywords": ["about", "elxatech", "team", "mission"],
-            "description": "Learn about ElxaTech and our educational mission.",
-            "category": "Education"
-        }
-    },
-    "elxatech.ex/chemistry": {
-        "title": "ElxaTech - Chemistry Resources",
-        "type": "file",
-        "path": "./assets/interwebs/elxatech/chemistry.html",
-        "css": "./assets/interwebs/elxatech/styles.css",
-        "searchData": {
-            "keywords": ["chemistry", "chemical", "elements", "reactions", "lab"],
-            "description": "Comprehensive chemistry resources and interactive experiments.",
-            "category": "Education"
-        }
-    },
-    "elxatech.ex/math": {
-        "title": "ElxaTech - Mathematics Center",
-        "type": "file",
-        "path": "./assets/interwebs/elxatech/math.html",
-        "css": "./assets/interwebs/elxatech/styles.css",
-        "searchData": {
-            "keywords": ["math", "mathematics", "algebra", "geometry", "calculus"],
-            "description": "Advanced mathematics tutorials and problem solving.",
-            "category": "Education"
-        }
-    },
-    "elxatech.ex/phones": {
-        "title": "ElxaTech - Phone Technology",
-        "type": "file",
-        "path": "./assets/interwebs/elxatech/phones.html",
-        "css": "./assets/interwebs/elxatech/styles.css",
-        "searchData": {
-            "keywords": ["phones", "mobile", "technology", "communication"],
-            "description": "Explore the evolution of phone technology.",
-            "category": "Technology"
-        }
-    },
-    "elxatech.ex/retro": {
-        "title": "ElxaTech - Retro Computing",
-        "type": "file",
-        "path": "./assets/interwebs/elxatech/retro.html",
-        "css": "./assets/interwebs/elxatech/styles.css",
-        "searchData": {
-            "keywords": ["retro", "vintage", "computing", "history", "old computers"],
-            "description": "Journey through the history of computing technology.",
-            "category": "Technology"
+            "keywords": ["elxatech", "tech", "store", "shop", "phone", "elxaphone", "tablet", "elxatab", "laptop", "elxabook", "watch", "elxawatch", "earpods", "elxapods", "electronics", "elxacorp", "buy", "devices"],
+            "description": "ElxaCorp's official tech store. Shop the latest ElxaPhones, ElxaTabs, ElxaBooks, and accessories.",
+            "category": "Shopping"
         }
     },
 
@@ -498,6 +444,28 @@
             "keywords": ["directory", "list", "sites", "browse"],
             "description": "Browse all available websites on the ExWeb.",
             "category": "Utilities"
+        }
+    },
+    "fashionco.ex": {
+        "title": "Scales & Tails Fashion Co.",
+        "type": "file",
+        "path": "./assets/interwebs/fashionco/index.html",
+        "css": "./assets/interwebs/fashionco/styles.css",
+        "searchData": {
+            "keywords": ["fashion", "clothing", "clothes", "dress", "shirt", "shorts", "swimwear", "blazer", "tie", "outfit", "style", "scales", "tails", "STFC", "shopping", "apparel"],
+            "description": "Snakesia's trendiest fashion brand. Browse colorful tops, dresses, bottoms, swimwear, and formal wear. Online shopping with delivery.",
+            "category": "Shopping"
+        }
+    },
+    "squiggly.ex": {
+        "title": "Squiggly Wiggly - Online Grocery",
+        "type": "file",
+        "path": "./assets/interwebs/squiggly/index.html",
+        "css": "./assets/interwebs/squiggly/styles.css",
+        "searchData": {
+            "keywords": ["grocery", "groceries", "food", "shopping", "squiggly", "wiggly", "store", "market", "supermarket", "produce", "snacks", "drinks", "frozen", "bakery", "deli", "household", "cart", "delivery"],
+            "description": "Snakesia's favorite grocery chain! Browse departments, add items to your cart, and get groceries delivered right to your door. Featuring brands like Fang Foods, Venom Energy, and Sussy Cat.",
+            "category": "Shopping"
         }
     }
 }

@@ -28,7 +28,7 @@ const PROPERTY_TAX_TIERS = [
 ];
 
 // Valid inventory categories
-const INVENTORY_CATEGORIES = ['properties', 'vehicles', 'games', 'cards', 'stocks', 'subscriptions', 'tickets'];
+const INVENTORY_CATEGORIES = ['properties', 'vehicles', 'games', 'cards', 'stocks', 'subscriptions', 'tickets', 'items'];
 
 class InventoryService {
     constructor(eventBus, registry) {
@@ -900,6 +900,155 @@ class InventoryService {
     }
 
     // =================================
+    // ITEMS METHODS (groceries, gifts, souvenirs, etc.)
+    // =================================
+
+    /**
+     * Add stackable items to inventory. If an item with the same itemId + subcategory
+     * already exists, increments quantity instead of creating a duplicate.
+     * @param {string} itemId - Product catalog ID (e.g., 'snake-pasta-3pk')
+     * @param {object} data - { name, subcategory, unitPrice, brand, giftable, image }
+     * @param {number} quantity - How many to add (default 1)
+     * @returns {object|null} The item entry (new or updated)
+     */
+    async addItems(itemId, data, quantity = 1) {
+        if (!this._ensureReady()) return null;
+        if (!itemId || !data || !data.subcategory) {
+            console.warn('\u{1f4e6} addItems requires itemId, data with subcategory');
+            return null;
+        }
+
+        // Check for existing stack
+        var existing = this._data.items.find(
+            i => i.itemId === itemId && i.subcategory === data.subcategory
+        );
+
+        if (existing) {
+            existing.quantity += quantity;
+            await this._save();
+
+            this.eventBus.emit('inventory.itemsAdded', {
+                itemId: itemId,
+                name: existing.name,
+                quantity: quantity,
+                totalQuantity: existing.quantity,
+                subcategory: existing.subcategory
+            });
+            console.log('\u{1f4e6} Stacked +' + quantity + ' ' + existing.name + ' (now ' + existing.quantity + ')');
+            return existing;
+        }
+
+        // New item entry
+        var item = {
+            id: 'item-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+            itemId: itemId,
+            name: data.name || itemId,
+            subcategory: data.subcategory,
+            quantity: quantity,
+            unitPrice: data.unitPrice || 0,
+            purchaseDate: new Date().toISOString().split('T')[0],
+            giftable: data.giftable !== undefined ? data.giftable : true,
+            brand: data.brand || null,
+            image: data.image || null
+        };
+
+        this._data.items.push(item);
+        await this._save();
+
+        this.eventBus.emit('inventory.itemsAdded', {
+            itemId: itemId,
+            name: item.name,
+            quantity: quantity,
+            totalQuantity: item.quantity,
+            subcategory: item.subcategory
+        });
+        console.log('\u{1f4e6} Added new item: ' + item.name + ' x' + quantity);
+
+        return item;
+    }
+
+    /**
+     * Remove a quantity of items from inventory. If quantity hits 0, removes the entry entirely.
+     * @param {string} itemId - Product catalog ID
+     * @param {string} subcategory - Which subcategory to look in
+     * @param {number} quantity - How many to remove (default 1)
+     * @param {string} reason - Why removed: 'gifted', 'consumed', 'expired', etc.
+     * @returns {object|null} { item, removed, remaining } or null if not found
+     */
+    async removeItems(itemId, subcategory, quantity = 1, reason = 'consumed') {
+        if (!this._ensureReady()) return null;
+
+        var index = this._data.items.findIndex(
+            i => i.itemId === itemId && i.subcategory === subcategory
+        );
+
+        if (index === -1) {
+            console.warn('\u{1f4e6} Item not found: ' + itemId + ' in ' + subcategory);
+            return null;
+        }
+
+        var item = this._data.items[index];
+        var actualRemoved = Math.min(quantity, item.quantity);
+        item.quantity -= actualRemoved;
+
+        if (item.quantity <= 0) {
+            this._data.items.splice(index, 1);
+        }
+
+        await this._save();
+
+        this.eventBus.emit('inventory.itemsRemoved', {
+            itemId: itemId,
+            name: item.name,
+            quantity: actualRemoved,
+            subcategory: subcategory,
+            reason: reason
+        });
+
+        console.log('\u{1f4e6} Removed ' + actualRemoved + 'x ' + item.name + ' (' + reason + ')' +
+            (item.quantity > 0 ? ', ' + item.quantity + ' remaining' : ', none left'));
+
+        return {
+            item: item,
+            removed: actualRemoved,
+            remaining: item.quantity > 0 ? item.quantity : 0
+        };
+    }
+
+    /**
+     * Get all items in a specific subcategory.
+     * @param {string} subcategory - e.g., 'groceries', 'tickets', 'souvenirs'
+     * @returns {Array} Items matching the subcategory
+     */
+    getItemsBySubcategory(subcategory) {
+        if (!this._ensureReady()) return [];
+        return this._data.items.filter(i => i.subcategory === subcategory);
+    }
+
+    /**
+     * Get the quantity of a specific item.
+     * @param {string} itemId - Product catalog ID
+     * @param {string} subcategory - Which subcategory
+     * @returns {number} Quantity owned (0 if none)
+     */
+    getItemCount(itemId, subcategory) {
+        if (!this._ensureReady()) return 0;
+        var item = this._data.items.find(
+            i => i.itemId === itemId && i.subcategory === subcategory
+        );
+        return item ? item.quantity : 0;
+    }
+
+    /**
+     * Sync getter for interwebs site JS (can't easily await).
+     * @returns {Array} All items in the items category
+     */
+    getItemsSync() {
+        if (!this._ready || !this._data) return [];
+        return this._data.items || [];
+    }
+
+    // =================================
     // FINANCE EVENT LISTENERS
     // =================================
 
@@ -1046,6 +1195,19 @@ class InventoryService {
             parts.push(`User has ${tickets.length} valid ticket${tickets.length === 1 ? '' : 's'}:\n${venueLines.join('\n')}`);
         }
 
+        // Items (groceries, etc.)
+        const items = this._data.items || [];
+        if (items.length > 0) {
+            const totalItems = items.reduce((sum, i) => sum + (i.quantity || 1), 0);
+            const bySub = {};
+            items.forEach(i => {
+                if (!bySub[i.subcategory]) bySub[i.subcategory] = [];
+                bySub[i.subcategory].push(`${i.name} x${i.quantity}`);
+            });
+            const subLines = Object.entries(bySub).map(([sub, list]) => `  ${sub}: ${list.join(', ')}`);
+            parts.push(`User has ${totalItems} item${totalItems === 1 ? '' : 's'} in inventory:\n${subLines.join('\n')}`);
+        }
+
         if (parts.length === 0) {
             return 'User does not currently own any tracked items.';
         }
@@ -1161,6 +1323,34 @@ class InventoryService {
                     status: 'valid',
                     giftable: true
                 });
+            },
+
+            addItems(itemId, name, subcategory, quantity, price, brand) {
+                return self.addItems(itemId || 'test-item', {
+                    name: name || 'Test Item',
+                    subcategory: subcategory || 'groceries',
+                    unitPrice: price || 1.50,
+                    brand: brand || null,
+                    giftable: true
+                }, quantity || 1);
+            },
+
+            removeItems(itemId, subcategory, quantity) {
+                return self.removeItems(itemId, subcategory || 'groceries', quantity || 1);
+            },
+
+            items() {
+                var items = self._data.items || [];
+                console.group('\u{1f4e6} Items Inventory');
+                if (items.length === 0) {
+                    console.log('No items in inventory.');
+                } else {
+                    console.table(items.map(function(i) {
+                        return { itemId: i.itemId, name: i.name, qty: i.quantity, sub: i.subcategory, brand: i.brand || '-' };
+                    }));
+                }
+                console.groupEnd();
+                return items;
             },
 
             resetInventory() {

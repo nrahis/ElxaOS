@@ -275,5 +275,55 @@ window.SSSTEAM_CATALOG = [
                 features: ['move_highlights', 'piece_info', 'undo', 'captured_display']
             }
         }
+    },
+
+    // ============================================
+    //  QUACKER POND
+    // ============================================
+    {
+        id: 'quacker_pond',
+        name: 'Quacker Pond',
+        description: 'Welcome to Quacker Pond — your very own duck sanctuary! Hatch eggs, raise adorable ducks, feed and care for them, breed rare color combinations, and build the ultimate flock. Mix duck colors to discover Uncommon, Rare, Epic, and even Legendary breeds. Every duck has a name, a mood, and a price tag — sell your prized quackers for snakes or release them into the wild. Just don\'t forget to clean up after them!\n\nCan you breed the mythical Golden Duck?',
+        shortDesc: 'Hatch, breed, and collect ducks — discover rare colors!',
+        price: 29.99,
+        priceDisplay: '$29.99',
+        icon: '🦆',
+        author: 'ElxaCorp Games Division',
+        version: '1.0',
+        rating: 4.7,
+        reviewCount: 312,
+        tags: ['Simulation', 'Casual', 'Collecting'],
+        heroColor: '#2e7d32',
+        heroImage: '',
+        screenshots: [],
+        features: [
+            'Hatch ducks from eggs and name your flock',
+            'Breed ducks to discover 14+ color varieties',
+            'Color mixing system — combine parents for rare offspring',
+            'Feed, clean, and keep your ducks happy',
+            'Sell rare breeds for big snakes',
+            'Animated duck sprites with walking and swimming',
+            'Scenic pond backdrop with land and water zones',
+            'Hunt for the Legendary Golden Duck (5% chance!)'
+        ],
+        sysReqs: { os: 'ElxaOS 1.0+', ram: '32 MB', disk: '4 MB', display: 'VGA (640x480)' },
+        reviews: [
+            { author: 'DuckLover99', rating: 5, text: 'I spent three hours trying to breed a Golden Duck. No regrets. Mr. Quackers is my best friend now.', helpful: 203 },
+            { author: 'SnakesiaFarmer', rating: 4, text: 'Great sim! The breeding system is surprisingly deep. Wish I could have more than 8 ducks though.', helpful: 87 },
+            { author: 'CasualGamer_Snek', rating: 5, text: 'So relaxing. I just watch my ducks waddle around the pond. 10/10 would quack again.', helpful: 156 },
+            { author: 'ColorMixer42', rating: 5, text: 'Finally bred a Purple duck after 20 tries! The color mixing table is genius.', helpful: 94 }
+        ],
+        installerData: {
+            id: 'quacker_pond',
+            name: 'Quacker Pond',
+            description: 'Duck management sim — hatch, breed, collect!',
+            icon: '🦆',
+            version: '1.0',
+            author: 'ElxaCorp Games Division',
+            gameData: {
+                type: 'quacker_pond',
+                features: ['hatching', 'breeding', 'feeding', 'cleaning', 'selling']
+            }
+        }
     }
 ];
