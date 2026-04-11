@@ -13,6 +13,26 @@
 const ElxaIcons = {
 
     // =========================================================
+    // Custom SVG icon registry
+    // =========================================================
+    // Programs with custom Tango-style SVG icons in assets/icons/custom-icons.svg
+    customIcons: {
+        'computer':    'icon-computer',
+        'recycle-bin': 'icon-recycle-bin',
+        'notepad':     'icon-notepad',
+        'browser':     'icon-browser',
+        'messenger':   'icon-messenger',
+        'elxabooks':   'icon-elxabooks',
+        'antivirus':   'icon-antivirus',
+        'elxaguard':   'icon-antivirus',
+        'elxasheets':  'icon-elxasheets',
+        'elxamail':    'icon-elxamail',
+        'employee-portal': 'icon-employee-portal',
+        'sssteam':     'icon-sssteam',
+        'snakesian-cards': 'icon-snakesian-cards',
+    },
+
+    // =========================================================
     // Program / system icon registry
     // =========================================================
     // Keyed by program ID (matches data-program, registry keys, etc.)
@@ -35,6 +55,10 @@ const ElxaIcons = {
         'folder':       { mdi: 'mdi-folder',            color: '#FFD54F' },
         'snakesian-cards': { mdi: 'mdi-cards-outline', color: '#d4a535' },
         'elxasheets':   { mdi: 'mdi-table',            color: '#4CAF50' },
+        'elxamail':     { mdi: 'mdi-email',             color: '#c0392b' },
+        'employee-portal': { mdi: 'mdi-office-building', color: '#607d8b' },
+        'sssteam':      { mdi: 'mdi-gamepad-variant',   color: '#636e72' },
+        'help':         { mdi: 'mdi-help-circle',       color: '#29B6F6' },
     },
 
     // =========================================================
@@ -148,6 +172,9 @@ const ElxaIcons = {
         'speedometer':    { mdi: 'mdi-speedometer' },
         'broadcast':      { mdi: 'mdi-access-point' },
         'chart-bar':      { mdi: 'mdi-chart-bar' },
+        // Weather / time
+        'weather-sunny':  { mdi: 'mdi-weather-sunny' },
+        'weather-night':  { mdi: 'mdi-weather-night' },
         'wrench':         { mdi: 'mdi-wrench' },
         'download':       { mdi: 'mdi-download' },
         'printer':        { mdi: 'mdi-printer' },
@@ -263,10 +290,16 @@ const ElxaIcons = {
         const entry = this.programs[programId];
         if (!entry) return this.renderAction('help', context); // fallback
 
+        // Check for custom SVG icon
+        const customId = this.customIcons[programId];
+        if (customId && context === 'desktop') {
+            return `<svg class="elxa-icon-custom elxa-icon-desktop" viewBox="0 0 96 96"><use href="assets/icons/custom-icons.svg#${customId}"/></svg>`;
+        }
+
         if (context === 'desktop') {
             return `<span class="mdi ${entry.mdi} elxa-icon-desktop" style="color: ${entry.color}"></span>`;
         }
-        // ui context — color comes from CSS variable
+        // ui context — color comes from CSS variable (MDI for all ui contexts)
         return `<span class="mdi ${entry.mdi} elxa-icon-ui"></span>`;
     },
 

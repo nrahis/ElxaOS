@@ -801,14 +801,233 @@
   30% { filter: brightness(1.5); }
   100% { filter: brightness(1); }
 }
-@keyframes sce-epicBurst {
-  0% { filter: brightness(1); }
-  30% { filter: brightness(1.8) drop-shadow(0 0 10px rgba(122,72,104,0.6)); }
-  100% { filter: brightness(1); }
+
+
+/* ============================================
+   THE ARENA — Battle UI Styles
+   ============================================ */
+
+/* --- Gate Screen (not enough cards) --- */
+.arena-gate {
+  text-align: center; padding: 40px 20px;
+  color: #c9b88c;
 }
-@keyframes sce-legendaryBurst {
-  0% { filter: brightness(1); }
-  20% { filter: brightness(2.5) drop-shadow(0 0 20px rgba(212,165,53,0.8)); }
-  60% { filter: brightness(1.3) drop-shadow(0 0 10px rgba(150,100,255,0.4)); }
-  100% { filter: brightness(1); }
+.arena-gate-icon { font-size: 40px; margin-bottom: 10px; }
+.arena-gate-title { font-size: 20px; font-weight: bold; color: #d4a535; margin-bottom: 10px; }
+.arena-gate-msg { font-size: 13px; line-height: 1.6; color: #a89878; margin-bottom: 14px; }
+.arena-gate-count { font-size: 12px; color: #887858; }
+
+/* --- Shared Arena Elements --- */
+.arena-back-btn {
+  background: none; border: 1px solid #5a4a3a; color: #a89878;
+  padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;
 }
+.arena-back-btn:hover { border-color: #d4a535; color: #d4a535; }
+.arena-confirm-btn {
+  display: block; width: 100%; padding: 9px; border: none;
+  border-radius: 6px; background: #5a8a65; color: #fff;
+  font-size: 13px; font-weight: bold; cursor: pointer; margin-bottom: 14px;
+}
+.arena-confirm-btn:hover { background: #6a9a75; }
+.arena-confirm-btn:disabled { background: #3a3a3a; color: #666; cursor: default; }
+
+.arena-pool-label { font-size: 12px; font-weight: bold; color: #a89878; margin-bottom: 6px; margin-top: 4px; }
+.arena-pool {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 5px; margin-bottom: 14px;
+}
+.arena-pool-card {
+  padding: 6px 8px; border-radius: 5px; background: #1a1510;
+  border: 1px solid #3a2a1a; cursor: pointer;
+  transition: all 0.15s;
+}
+.arena-pool-card:hover { border-color: #887858; }
+.arena-pool-card-selected { border-color: #d4a535; background: #332a1e; }
+.arena-pool-card-name { font-size: 11px; font-weight: bold; color: #e0d5c0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arena-pool-card-rarity { font-size: 9px; text-transform: uppercase; }
+.arena-rarity-common { color: #d4a535; }
+.arena-rarity-uncommon { color: #5a8a65; }
+.arena-rarity-rare { color: #9a3038; }
+.arena-rarity-epic { color: #7a4868; }
+.arena-rarity-legendary { color: #b0b0b8; }
+.arena-pool-card-stats { font-size: 10px; color: #a89878; }
+.arena-pool-card-ability { font-size: 9px; color: #70a0d0; font-style: italic; }
+.arena-pool-card-effect { font-size: 9px; color: #c090b0; }
+
+/* --- Opponent Select --- */
+.arena-select { padding: 16px; }
+.arena-select-title { font-size: 20px; font-weight: bold; color: #d4a535; text-align: center; margin-bottom: 2px; }
+.arena-select-sub { text-align: center; color: #a89878; font-size: 12px; margin-bottom: 14px; }
+.arena-opponents {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;
+}
+.arena-opponent-card {
+  display: flex; gap: 10px; align-items: center; padding: 10px;
+  border-radius: 6px; background: #2a2218; border: 1px solid #3a2a1a;
+  cursor: pointer; transition: all 0.2s;
+}
+.arena-opponent-card:hover { border-color: #d4a535; background: #332a1e; }
+.arena-opponent-portrait { width: 48px; height: 48px; border-radius: 5px; overflow: hidden; background: #1a1510; flex-shrink: 0; display:flex; align-items:center; justify-content:center; }
+.arena-opponent-portrait img { width: 100%; height: 100%; object-fit: cover; }
+.arena-opponent-info { min-width: 0; }
+.arena-opponent-name { font-weight: bold; color: #e0d5c0; font-size: 13px; }
+.arena-opponent-diff { font-size: 10px; font-weight: bold; text-transform: uppercase; }
+.arena-opponent-desc { font-size: 11px; color: #a89878; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arena-opponent-reward { font-size: 11px; color: #5a8a65; margin-top: 2px; }
+
+/* --- Team Builder --- */
+.arena-team { padding: 14px; }
+.arena-team-header {
+  display: flex; gap: 8px; align-items: center; margin-bottom: 12px;
+}
+.arena-team-title { font-size: 14px; font-weight: bold; color: #d4a535; }
+.arena-team-vs { font-size: 12px; color: #a89878; margin-left: auto; }
+
+.arena-team-slots {
+  display: flex; gap: 6px; margin-bottom: 12px;
+}
+.arena-slot {
+  flex: 1; min-width: 0; padding: 7px 6px; border-radius: 5px;
+  border: 1px dashed #5a4a3a; background: #1a1510; text-align: center;
+  position: relative; overflow: hidden;
+}
+.arena-slot-filled { border-style: solid; border-color: #5a8a65; background: #1e2a1a; }
+.arena-slot-support.arena-slot-filled { border-color: #7a4868; background: #2a1a28; }
+.arena-slot-empty { color: #5a4a3a; font-size: 10px; padding-top: 4px; }
+.arena-slot-name { font-size: 11px; font-weight: bold; color: #e0d5c0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arena-slot-stats { font-size: 9px; color: #a89878; }
+.arena-slot-effect { font-size: 9px; color: #c090b0; margin-top: 1px; }
+.arena-slot-remove {
+  position: absolute; top: 2px; right: 4px; cursor: pointer;
+  color: #887858; font-size: 10px;
+}
+.arena-slot-remove:hover { color: #e05060; }
+
+/* --- Ante Select --- */
+.arena-ante { padding: 14px; }
+.arena-ante-desc { font-size: 12px; color: #a89878; margin-bottom: 10px; line-height: 1.5; }
+.arena-ante-chosen {
+  padding: 6px 10px; border-radius: 5px; background: #332a1e;
+  border: 1px solid #d4a535; font-size: 12px; color: #e0d5c0;
+  margin-bottom: 10px; text-align: center;
+}
+
+/* ========= BATTLE SCREEN (two-column) ========= */
+.arena-battle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 10px;
+  padding: 10px;
+}
+.arena-battle-field {
+  display: flex; flex-direction: column; justify-content: center; gap: 3px;
+}
+.arena-battle-panel {
+  display: flex; flex-direction: column; gap: 6px;
+}
+
+/* Active fighter cards */
+.arena-active-card {
+  padding: 8px 10px; border-radius: 6px; text-align: center; position: relative;
+}
+.arena-active-ai {
+  background: linear-gradient(135deg, #2a1818 0%, #1a1510 100%);
+  border: 1px solid #4a2020;
+}
+.arena-active-player {
+  background: linear-gradient(135deg, #1a2a1a 0%, #1a1510 100%);
+  border: 1px solid #2a4a2a;
+}
+.arena-card-ko { opacity: 0.3; }
+.arena-active-name { font-size: 14px; font-weight: bold; color: #e0d5c0; margin-bottom: 2px; }
+.arena-active-stats { font-size: 10px; color: #a89878; margin-bottom: 4px; }
+.arena-hp-bar {
+  height: 8px; background: #1a1510; border-radius: 4px;
+  border: 1px solid #3a2a1a; overflow: hidden; margin-bottom: 2px;
+}
+.arena-hp-fill {
+  height: 100%; background: #9a3038; border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.arena-hp-fill-player { background: #5a8a65; }
+.arena-hp-text { font-size: 10px; color: #a89878; }
+.arena-shield-badge {
+  position: absolute; top: 4px; right: 8px; font-size: 14px;
+}
+.arena-active-side-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 1px;
+  color: #5a4a3a; margin-bottom: 2px;
+}
+
+/* VS divider */
+.arena-vs {
+  text-align: center; font-size: 14px; padding: 2px 0; color: #887858;
+}
+
+/* Bench cards */
+.arena-bench {
+  display: flex; gap: 4px; flex-wrap: wrap;
+}
+.arena-bench-card {
+  padding: 2px 6px; border-radius: 3px; background: #1a1510;
+  border: 1px solid #3a2a1a; font-size: 9px; display: flex; gap: 4px; align-items: center;
+}
+.arena-bench-ko { opacity: 0.4; text-decoration: line-through; }
+.arena-bench-name { color: #a89878; }
+.arena-bench-hp { color: #5a8a65; }
+.arena-bench-status { color: #9a3038; font-weight: bold; }
+.arena-bench-support {
+  padding: 2px 6px; border-radius: 3px; background: #2a1a28;
+  border: 1px solid #7a4868; font-size: 9px; color: #c090b0;
+}
+
+/* Dialogue */
+.arena-dialogue {
+  padding: 8px 10px; border-radius: 5px; background: #2a2218;
+  border: 1px solid #3a2a1a; font-size: 12px;
+}
+.arena-dialogue-name { color: #d4a535; font-weight: bold; }
+.arena-dialogue-text { color: #c9b88c; font-style: italic; }
+
+/* Actions */
+.arena-actions {
+  display: flex; gap: 6px;
+}
+.arena-action-btn {
+  flex: 1; padding: 8px 6px; border: none; border-radius: 5px;
+  font-size: 12px; font-weight: bold; cursor: pointer;
+  transition: background 0.2s;
+}
+.arena-btn-attack { background: #9a3038; color: #fff; }
+.arena-btn-attack:hover { background: #b04048; }
+.arena-btn-ability { background: #4a6a9a; color: #fff; }
+.arena-btn-ability:hover { background: #5a7aaa; }
+.arena-btn-disabled { background: #3a3a3a !important; color: #666 !important; cursor: default !important; }
+.arena-ability-desc {
+  font-size: 10px; color: #70a0d0; text-align: center;
+  font-style: italic;
+}
+.arena-waiting { text-align: center; color: #887858; font-size: 16px; padding: 6px; }
+
+/* Battle Log */
+.arena-log {
+  padding: 6px; border-radius: 5px;
+  background: #1a1510; border: 1px solid #2a2218;
+  overflow-y: auto; flex: 1; min-height: 60px;
+}
+.arena-log::-webkit-scrollbar { width: 5px; }
+.arena-log::-webkit-scrollbar-track { background: #1a1510; border-radius: 3px; }
+.arena-log::-webkit-scrollbar-thumb { background: #3a2a1a; border-radius: 3px; }
+.arena-log::-webkit-scrollbar-thumb:hover { background: #5a4a3a; }
+.arena-log-entry {
+  font-size: 10px; color: #887858; padding: 1px 0;
+  border-bottom: 1px solid #2a2218;
+}
+.arena-log-entry:last-child { border-bottom: none; }
+
+/* --- Result Screen --- */
+.arena-result { padding: 24px 16px; text-align: center; }
+.arena-result-title { font-size: 24px; font-weight: bold; color: #d4a535; margin-bottom: 12px; }
+.arena-ante-result { margin: 14px 0; }
+.arena-ante-won { font-size: 14px; color: #5a8a65; margin-bottom: 4px; }
+.arena-ante-lost { font-size: 14px; color: #9a3038; margin-bottom: 4px; }
+.arena-ante-reward { font-size: 13px; color: #d4a535; }

@@ -6,6 +6,7 @@ class ThemeService {
         this.eventBus = eventBus;
         this.currentTheme = 'classic';
         this.currentWallpaper = 'default';
+        this.wallpaperFit = 'fill';  // fill, fit, stretch, center, tile
         
         this.themes = {
             classic: {
@@ -973,6 +974,15 @@ class ThemeService {
                         <div class="personalize-wp-controls">
                             <button class="import-image-btn">${ElxaIcons.renderAction('folder-image')} Import Image</button>
                             <button class="browse-paint-btn">${ElxaIcons.renderAction('image')} Use Paint File</button>
+                            <label style="margin-left:auto; display:flex; align-items:center; gap:4px; font-size:11px;">Fit:
+                                <select class="wallpaper-fit-select" style="font-size:11px; padding:1px 2px;">
+                                    <option value="fill"${this.wallpaperFit === 'fill' ? ' selected' : ''}>Fill</option>
+                                    <option value="fit"${this.wallpaperFit === 'fit' ? ' selected' : ''}>Fit</option>
+                                    <option value="stretch"${this.wallpaperFit === 'stretch' ? ' selected' : ''}>Stretch</option>
+                                    <option value="center"${this.wallpaperFit === 'center' ? ' selected' : ''}>Center</option>
+                                    <option value="tile"${this.wallpaperFit === 'tile' ? ' selected' : ''}>Tile</option>
+                                </select>
+                            </label>
                         </div>
                         <div class="personalize-wp-stats">
                             ${Object.keys(this.wallpapers).length} built-in, 
@@ -1068,6 +1078,9 @@ class ThemeService {
 
             // Apply button
             if (e.target.closest('.apply-btn')) {
+                // Grab fit selection before applying
+                const fitSelect = dialog.querySelector('.wallpaper-fit-select');
+                if (fitSelect) this.wallpaperFit = fitSelect.value;
                 this.applySelectedTheme();
             }
 
@@ -1560,9 +1573,36 @@ class ThemeService {
             
             // Apply the image
             target.style.backgroundImage = `url(${wallpaper.value})`;
-            target.style.backgroundSize = 'cover';
-            target.style.backgroundPosition = 'center';
-            target.style.backgroundRepeat = 'no-repeat';
+            
+            // Apply fit mode
+            switch (this.wallpaperFit) {
+                case 'fit':
+                    target.style.backgroundSize = 'contain';
+                    target.style.backgroundPosition = 'center';
+                    target.style.backgroundRepeat = 'no-repeat';
+                    break;
+                case 'stretch':
+                    target.style.backgroundSize = '100% 100%';
+                    target.style.backgroundPosition = 'center';
+                    target.style.backgroundRepeat = 'no-repeat';
+                    break;
+                case 'center':
+                    target.style.backgroundSize = 'auto';
+                    target.style.backgroundPosition = 'center';
+                    target.style.backgroundRepeat = 'no-repeat';
+                    break;
+                case 'tile':
+                    target.style.backgroundSize = 'auto';
+                    target.style.backgroundPosition = 'top left';
+                    target.style.backgroundRepeat = 'repeat';
+                    break;
+                case 'fill':
+                default:
+                    target.style.backgroundSize = 'cover';
+                    target.style.backgroundPosition = 'center';
+                    target.style.backgroundRepeat = 'no-repeat';
+                    break;
+            }
         }
         
         // Force repaint
@@ -1579,6 +1619,7 @@ class ThemeService {
     resetToDefaults() {
         this.currentTheme = 'classic';
         this.currentWallpaper = 'default';
+        this.wallpaperFit = 'fill';
         this.customWallpapers = {}; // Clear custom wallpapers too
         this.applyTheme();
         this.saveSettings(); // 🔥 Save the reset
@@ -1607,6 +1648,7 @@ class ThemeService {
             const settingsToSave = {
                 theme: this.currentTheme,
                 wallpaper: this.currentWallpaper,
+                wallpaperFit: this.wallpaperFit,
                 customWallpapers: this.customWallpapers // Save custom wallpapers too!
                 // Note: We don't save assetWallpapers as they're loaded dynamically from the file system
             };
@@ -1626,6 +1668,7 @@ class ThemeService {
                 // Load theme and wallpaper
                 this.currentTheme = settings.theme || 'classic';
                 this.currentWallpaper = settings.wallpaper || 'default';
+                this.wallpaperFit = settings.wallpaperFit || 'fill';
                 
                 // Load custom wallpapers (imported images, Paint creations, etc.)
                 if (settings.customWallpapers) {

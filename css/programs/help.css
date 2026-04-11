@@ -1,0 +1,148 @@
+/* =================================
+   HELP PROGRAM
+   ================================= */
+
+.help-container {
+    display: flex;
+    height: 100%;
+    font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+    font-size: 12px;
+    background: var(--windowBg, #c0c0c0);
+    color: var(--menuText, #000000);
+}
+
+/* Sidebar */
+.help-sidebar {
+    width: 170px;
+    min-width: 170px;
+    border-right: 1px solid var(--windowBorderDark, #808080);
+    background: var(--windowBg, #c0c0c0);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.help-sidebar-header {
+    padding: 8px 10px 6px;
+    font-weight: bold;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--windowBorderDark, #808080);
+    color: var(--menuText, #000000);
+}
+
+.help-sidebar-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+}
+
+.help-sidebar-item:hover {
+    background: var(--menuHover, #000080);
+    color: var(--menuHoverText, #ffffff);
+}
+
+.help-sidebar-item.active {
+    background: var(--titlebarBg, #000080);
+    color: var(--titlebarText, #ffffff);
+    font-weight: bold;
+}
+
+.help-sidebar-item .mdi {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* Content area */
+.help-content {
+    flex: 1;
+    padding: 14px 18px;
+    overflow-y: auto;
+    background: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+}
+
+.help-content h2 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #000080;
+}
+
+.help-content h3 {
+    margin: 14px 0 6px 0;
+    font-size: 13px;
+    color: #333;
+}
+
+.help-content p {
+    margin: 6px 0;
+}
+
+.help-content ol,
+.help-content ul {
+    margin: 6px 0 10px 0;
+    padding-left: 22px;
+}
+
+.help-content li {
+    margin: 4px 0;
+}
+
+.help-content strong {
+    color: #000;
+}
+
+/* Prerequisite box */
+.help-prereq {
+    background: #f0f4ff;
+    border: 1px solid #b0c0e0;
+    border-radius: 3px;
+    padding: 6px 10px;
+    margin: 8px 0 12px 0;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.help-prereq .mdi-check-circle {
+    color: #00aa00;
+}
+
+.help-prereq .mdi-alert-circle-outline {
+    color: #cc8800;
+}
+
+/* Tip box */
+.help-tip {
+    background: #fffde6;
+    border: 1px solid #e0d890;
+    border-radius: 3px;
+    padding: 8px 10px;
+    margin: 12px 0 4px 0;
+    font-size: 11px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.help-tip .mdi {
+    color: #cc8800;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.help-placeholder {
+    color: #888;
+    padding: 40px;
+    text-align: center;
+    font-style: italic;
+}

@@ -832,6 +832,13 @@ class BrowserProgram {
                 categorizedSites[category].push({ url, site });
             });
 
+        // Build quick-nav links (only for categories that have sites)
+        const navLinks = Object.entries(categories)
+            .filter(([category]) => categorizedSites[category] && categorizedSites[category].length > 0)
+            .map(([category, displayName]) =>
+                `<a href="#" class="directory-nav-link" data-category="${category}">${displayName}</a>`
+            ).join(' | ');
+
         const categoryHTML = Object.entries(categories)
             .map(([category, displayName]) => {
                 if (!categorizedSites[category] || categorizedSites[category].length === 0) {
@@ -841,7 +848,7 @@ class BrowserProgram {
                 const sitesHTML = categorizedSites[category]
                     .sort((a, b) => a.site.title.localeCompare(b.site.title))
                     .map(({ url, site }) => `
-                        <tr>
+                        <tr class="directory-site-row" data-title="${site.title.toLowerCase()}" data-desc="${site.searchData.description.toLowerCase()}" data-keywords="${site.searchData.keywords.join(' ').toLowerCase()}">
                             <td style="width: 20px;">&bull;</td>
                             <td>
                                 <div class="site-link" onclick="elxaOS.programs.browser.loadPage('${url}')">${site.title}</div>
@@ -851,7 +858,7 @@ class BrowserProgram {
                     `).join('');
 
                 return `
-                    <div class="category-section">
+                    <div class="category-section" id="dir-cat-${category}">
                         <h2>${displayName}</h2>
                         <table class="site-category-table">
                             ${sitesHTML}
@@ -868,6 +875,15 @@ class BrowserProgram {
                     <div class="directory-title">ExWeb Directory</div>
                     <div class="directory-subtitle">A guide to ${totalSites} useful and interesting sites</div>
                 </div>
+                <div class="directory-toolbar">
+                    <div class="directory-search-box">
+                        <input type="text" class="directory-search-input" id="directorySearchInput" placeholder="Filter sites...">
+                    </div>
+                    <div class="directory-nav">
+                        ${navLinks}
+                    </div>
+                </div>
+                <div id="directoryNoResults" class="directory-no-results" style="display:none;">No sites match your filter.</div>
                 ${categoryHTML}
                 <div class="directory-footer">
                     ${totalSites} sites listed &bull; Last updated: ${new Date().toLocaleDateString()}<br>
@@ -877,6 +893,62 @@ class BrowserProgram {
         `;
 
         this.setPageContent(content);
+        this.setupDirectoryEvents();
+    }
+
+    setupDirectoryEvents() {
+        const win = this.getWindowElement();
+        if (!win) return;
+
+        // Category quick-nav links
+        const navLinks = win.querySelectorAll('.directory-nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = link.dataset.category;
+                const target = win.querySelector(`#dir-cat-${category}`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Search/filter
+        const searchInput = win.querySelector('#directorySearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.toLowerCase().trim();
+                const rows = win.querySelectorAll('.directory-site-row');
+                const sections = win.querySelectorAll('.category-section');
+                const noResults = win.querySelector('#directoryNoResults');
+
+                if (!query) {
+                    // Show everything
+                    rows.forEach(row => row.style.display = '');
+                    sections.forEach(sec => sec.style.display = '');
+                    if (noResults) noResults.style.display = 'none';
+                    return;
+                }
+
+                let anyVisible = false;
+                rows.forEach(row => {
+                    const title = row.dataset.title || '';
+                    const desc = row.dataset.desc || '';
+                    const keywords = row.dataset.keywords || '';
+                    const match = title.includes(query) || desc.includes(query) || keywords.includes(query);
+                    row.style.display = match ? '' : 'none';
+                    if (match) anyVisible = true;
+                });
+
+                // Hide category sections that have no visible rows
+                sections.forEach(sec => {
+                    const visibleRows = sec.querySelectorAll('.directory-site-row:not([style*="display: none"])');
+                    sec.style.display = visibleRows.length > 0 ? '' : 'none';
+                });
+
+                if (noResults) noResults.style.display = anyVisible ? 'none' : 'block';
+            });
+        }
     }
 
     async loadWebsite(url) {

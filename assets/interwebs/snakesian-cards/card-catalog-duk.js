@@ -23,7 +23,14 @@ var DUK_CARDS = [
     image: "1.png",
     stats: { atk: 1, hp: 3, spd: 2 },
     set: "DUK",
-    number: "001"
+    number: "001",
+    role: "fighter",
+    ability: {
+      name: "Patrol Report",
+      description: "Blocks the next incoming attack. He saw it coming from across the pond.",
+      type: "shield",
+      value: 1
+    }
   },
   {
     id: "duk_002",
@@ -35,7 +42,14 @@ var DUK_CARDS = [
     image: "2.png",
     stats: { atk: 2, hp: 2, spd: 2 },
     set: "DUK",
-    number: "002"
+    number: "002",
+    role: "fighter",
+    ability: {
+      name: "Bread Tax",
+      description: "Heals self 2 HP. He confiscated your snacks. For the flock.",
+      type: "heal",
+      value: 2
+    }
   },
   {
     id: "duk_003",
@@ -47,7 +61,14 @@ var DUK_CARDS = [
     image: "3.png",
     stats: { atk: 1, hp: 3, spd: 1 },
     set: "DUK",
-    number: "003"
+    number: "003",
+    role: "fighter",
+    ability: {
+      name: "Sleepy Drift",
+      description: "Stuns the opponent for 1 turn. They fell asleep watching him sleep.",
+      type: "stun",
+      value: 1
+    }
   },
 
   // ==========================================
@@ -63,7 +84,16 @@ var DUK_CARDS = [
     image: "4.png",
     stats: { atk: 2, hp: 4, spd: 2 },
     set: "DUK",
-    number: "004"
+    number: "004",
+    role: "fighter",
+    ability: {
+      name: "Dressed to Kill",
+      description: "Boosts own ATK by 2 and SPD by 1. Looking good hits different.",
+      type: "buff",
+      value: 2,
+      buffStat: "atk",
+      bonusSpd: 1
+    }
   },
   {
     id: "duk_005",
@@ -75,7 +105,14 @@ var DUK_CARDS = [
     image: "5.png",
     stats: { atk: 2, hp: 3, spd: 4 },
     set: "DUK",
-    number: "005"
+    number: "005",
+    role: "fighter",
+    ability: {
+      name: "Crash Landing",
+      description: "Deals 5 damage. The landing was not part of the plan.",
+      type: "damage",
+      value: 5
+    }
   },
   {
     id: "duk_006",
@@ -87,7 +124,14 @@ var DUK_CARDS = [
     image: "6.png",
     stats: { atk: 2, hp: 4, spd: 3 },
     set: "DUK",
-    number: "006"
+    number: "006",
+    role: "fighter",
+    ability: {
+      name: "Tactical Quack",
+      description: "Forces the opponent to swap to their next card. He saw a weakness.",
+      type: "swap",
+      value: 1
+    }
   },
   {
     id: "duk_007",
@@ -99,7 +143,14 @@ var DUK_CARDS = [
     image: "7.png",
     stats: { atk: 3, hp: 3, spd: 3 },
     set: "DUK",
-    number: "007"
+    number: "007",
+    role: "fighter",
+    ability: {
+      name: "Sunset Zen",
+      description: "Heals self 3 HP. The golden hour heals all wounds.",
+      type: "heal",
+      value: 3
+    }
   },
 
   // ==========================================
@@ -115,7 +166,14 @@ var DUK_CARDS = [
     image: "8.png",
     stats: { atk: 3, hp: 5, spd: 4 },
     set: "DUK",
-    number: "008"
+    number: "008",
+    role: "fighter",
+    ability: {
+      name: "Thunder Quack",
+      description: "Deals 6 damage. The storm follows him.",
+      type: "damage",
+      value: 6
+    }
   },
   {
     id: "duk_009",
@@ -127,7 +185,14 @@ var DUK_CARDS = [
     image: "9.png",
     stats: { atk: 4, hp: 4, spd: 3 },
     set: "DUK",
-    number: "009"
+    number: "009",
+    role: "fighter",
+    ability: {
+      name: "Party Crasher",
+      description: "Stuns the opponent for 1 turn. He just showed up and started eating.",
+      type: "stun",
+      value: 1
+    }
   },
   {
     id: "duk_010",
@@ -139,7 +204,16 @@ var DUK_CARDS = [
     image: "10.png",
     stats: { atk: 3, hp: 5, spd: 4 },
     set: "DUK",
-    number: "010"
+    number: "010",
+    role: "fighter",
+    ability: {
+      name: "Double Agent",
+      description: "50/50: deals 7 damage OR opponent heals 2 HP. His cover might be blown.",
+      type: "gamble",
+      value: 7,
+      chance: 0.5,
+      altValue: -2
+    }
   },
 
   // ==========================================
@@ -155,7 +229,14 @@ var DUK_CARDS = [
     image: "11.png",
     stats: { atk: 5, hp: 6, spd: 5 },
     set: "DUK",
-    number: "011"
+    number: "011",
+    role: "fighter",
+    ability: {
+      name: "V-Formation Strike",
+      description: "Deals 3 damage to ALL remaining opponent cards. The flock obeys.",
+      type: "aoe",
+      value: 3
+    }
   },
   {
     id: "duk_012",
@@ -167,7 +248,16 @@ var DUK_CARDS = [
     image: "12.png",
     stats: { atk: 5, hp: 7, spd: 4 },
     set: "DUK",
-    number: "012"
+    number: "012",
+    role: "fighter",
+    ability: {
+      name: "Golden Plumage",
+      description: "Boosts own ATK by 3 and HP by 3. Pure gold energy.",
+      type: "buff",
+      value: 3,
+      buffStat: "atk",
+      bonusHp: 3
+    }
   },
 
   // ==========================================
@@ -183,7 +273,14 @@ var DUK_CARDS = [
     image: "13.png",
     stats: { atk: 7, hp: 8, spd: 6 },
     set: "DUK",
-    number: "013"
+    number: "013",
+    role: "fighter",
+    ability: {
+      name: "THE QUACKENING",
+      description: "Deals 4 damage to ALL remaining opponent cards. His quack shakes the earth.",
+      type: "aoe",
+      value: 4
+    }
   }
 
 ];

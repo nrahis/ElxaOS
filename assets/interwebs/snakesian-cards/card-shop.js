@@ -188,20 +188,26 @@
   function showSection(section) {
     var shopSection = document.getElementById('sceShopSection');
     var collectionSection = document.getElementById('sceCollectionSection');
+    var arenaSection = document.getElementById('sceArenaSection');
     var navLinks = document.querySelectorAll('.sce-shop-nav-link');
 
     navLinks.forEach(function(link) { link.classList.remove('active'); });
 
+    shopSection.style.display = 'none';
+    collectionSection.style.display = 'none';
+    if (arenaSection) arenaSection.style.display = 'none';
+
     if (section === 'collection') {
-      shopSection.style.display = 'none';
       collectionSection.style.display = 'block';
       document.querySelector('[data-section="collection"]').classList.add('active');
       renderCollection();
+    } else if (section === 'arena') {
+      if (arenaSection) arenaSection.style.display = 'block';
+      document.querySelector('[data-section="arena"]').classList.add('active');
+      if (typeof window.arenaInit === 'function') window.arenaInit();
     } else {
       shopSection.style.display = 'block';
-      collectionSection.style.display = 'none';
       document.querySelector('[data-section="shop"]').classList.add('active');
-      // Reset to series view when switching back to shop
       showSeriesView();
     }
   }

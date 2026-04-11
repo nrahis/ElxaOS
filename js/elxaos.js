@@ -43,7 +43,8 @@ class ElxaOS {
             messenger: new MessengerProgram(this.windowManager, this.fileSystem, this.eventBus),
             antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus),
             viruslab: new VirusLabProgram(this.windowManager, this.fileSystem, this.eventBus),
-            elxasheets: new ElxaSheetsProgram(this.windowManager, this.fileSystem, this.eventBus)
+            elxasheets: new ElxaSheetsProgram(this.windowManager, this.fileSystem, this.eventBus),
+            help: new HelpProgram(this.windowManager, this.fileSystem, this.eventBus)
         };
 
         // Initialize installed programs storage
@@ -153,8 +154,12 @@ class ElxaOS {
             'recycle-bin':  (args) => this.programs.fileManager.launch(['root', 'RecycleBin']),
             'fileManager':  (args) => this.programs.fileManager.launch(args || ['root']),
             'folder':       (args) => this.programs.fileManager.launch(args || ['root']),
-            'snakesian-cards': () => this.programs.browser.launch('snakesian-cards.ex'),
+            'snakesian-cards': (args) => this.programs.browser.launch(args || 'snakesian-cards.ex'),
+            'elxamail':     (args) => this.programs.browser.launch(args || 'elxamail.ex'),
+            'employee-portal': (args) => this.programs.browser.launch(args || 'snake-e.corp.ex/portal'),
+            'sssteam':      (args) => this.programs.browser.launch(args || 'sssteam.ex'),
         'elxasheets':   (args) => this.programs.elxasheets.launch(args),
+        'help':         (args) => this.programs.help.launch(args),
         };
     }
 

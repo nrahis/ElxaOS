@@ -118,7 +118,7 @@ const ELXAOS_DEFAULT_FILES = [
         name: 'E-Mail.lnk',
         content: JSON.stringify({
             type: 'program_shortcut',
-            programId: 'browser',
+            programId: 'elxamail',
             launchArgs: 'elxamail.ex',
             programInfo: { name: 'E-Mail', icon: '<span class="mdi mdi-email elxa-icon-desktop" style="color: #42A5F5"></span>', description: 'Open ElxaMail in Snoogle Browser' }
         })
@@ -128,7 +128,7 @@ const ELXAOS_DEFAULT_FILES = [
         name: 'ElxaCorp Employee Portal.lnk',
         content: JSON.stringify({
             type: 'program_shortcut',
-            programId: 'browser',
+            programId: 'employee-portal',
             launchArgs: 'snake-e.corp.ex/portal',
             programInfo: { name: 'ElxaCorp Employee Portal', icon: '<span class="mdi mdi-briefcase elxa-icon-desktop" style="color: #FFA726"></span>', description: 'Access your ElxaCorp employee dashboard' }
         })
@@ -139,7 +139,7 @@ const ELXAOS_DEFAULT_FILES = [
         name: 'Sssteam.lnk',
         content: JSON.stringify({
             type: 'program_shortcut',
-            programId: 'browser',
+            programId: 'sssteam',
             launchArgs: 'sssteam.ex',
             programInfo: { name: 'Sssteam', icon: '<span class="mdi mdi-controller elxa-icon-desktop" style="color: #67c1f5"></span>', description: 'Browse and install games from the Sssteam store' }
         })
@@ -149,7 +149,7 @@ const ELXAOS_DEFAULT_FILES = [
         name: 'Card Exchange.lnk',
         content: JSON.stringify({
             type: 'program_shortcut',
-            programId: 'browser',
+            programId: 'snakesian-cards',
             launchArgs: 'snakesian-cards.ex',
             programInfo: { name: 'Card Exchange', icon: '<span class="mdi mdi-cards-outline elxa-icon-desktop" style="color: #d4a535"></span>', description: 'Collect trading cards from the Snakesian Card Exchange' }
         })

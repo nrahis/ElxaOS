@@ -4,6 +4,70 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
+## ExWeb Directory — Search & Navigation — Session 58
+
+### Enhanced Directory page
+- Added filter/search input at the top — filters sites in real-time by title, description, and keywords
+- Added category quick-nav links below search — click to smooth-scroll to any category section
+- "No sites match your filter" message when nothing matches
+- Category sections auto-hide when all their sites are filtered out
+- Retro styling kept consistent (cream toolbar box, inset input, old-web link colors)
+
+### Files modified
+- `js/programs/browser.js` — rewrote `showSiteDirectory()`, added `setupDirectoryEvents()`
+- `css/programs/browser.css` — added `.directory-toolbar`, `.directory-search-input`, `.directory-nav`, `.directory-no-results` styles
+
+---
+
+## Custom SVG Desktop Icons — Session 57
+
+### Batch 1: Core icons
+- Custom Tango-style realistic SVG icons for 7 programs: My Computer, Recycle Bin, Notepad, Snoogle Browser, Snakesia Messenger, Elxabooks Pro, Antivirus
+
+### Batch 2: Additional icons
+- Added 5 more custom icons: ElxaSheets, ElxaMail, Employee Portal, Sssteam, Snakesian Card Exchange
+- ElxaSheets: spreadsheet with green header bar, grid cells, blue selection highlight
+- ElxaMail: cream envelope with red wax seal, letter peeking out
+- Employee Portal: office building with lit windows and ID badge overlay
+- Sssteam: dark card with game controller (colored ABXY buttons, d-pad, analog sticks)
+- Card Exchange: two overlapping trading cards (purple back, cream front with art area and rarity star)
+
+### `assets/icons/custom-icons.svg` (NEW)
+- Custom Tango-style realistic SVG icons for 7 programs: My Computer, Recycle Bin, Notepad, Snoogle Browser, Snakesia Messenger, Elxabooks Pro, Antivirus
+- Uses SVG `<symbol>` sprite sheet pattern — all icons in one file, referenced via `<use href="#icon-id">`
+- Neutral/realistic colors: gray metals, cream parchment, earth-tone leather, muted blues/greens
+
+### `js/icon-config.js` (UPDATED)
+- Added `customIcons` registry mapping program IDs to SVG symbol IDs
+- Updated `render()` method: programs with custom icons get SVG in `desktop` context, MDI in `ui` context (start menu, taskbar, toolbars all unchanged)
+- Added program entries for `elxamail`, `employee-portal`, `sssteam` (MDI fallbacks for ui context)
+
+### `js/elxaos.js` (UPDATED)
+- Added program launchers for `elxamail` (→ elxamail.ex), `employee-portal` (→ snake-e.corp.ex/portal), `sssteam` (→ sssteam.ex)
+
+### `index.html` (UPDATED)
+- Added SVG sprite container div at top of `<body>`
+- Swapped hardcoded desktop icons for computer, recycle-bin, notepad from MDI to custom SVG
+
+### `css/desktop.css` (UPDATED)
+- Added `.elxa-icon-custom` class: 40×40px sizing for custom SVG icons in the desktop icon container
+
+### `assets/icons/` (NEW DIRECTORY)
+- Created directory for custom icon assets
+
+## Window Manager — Viewport Clamping — Session 56
+
+### `js/elxa-core.js` (UPDATED)
+- **Window position clamping**: `createWindow` now clamps x/y so windows stay fully within the viewport (accounting for taskbar height). Fixes windows opening too low on smaller screens (e.g. laptops) where the bottom of the window — and any popups inside it — would be unreachable.
+- **Window auto-shrink**: Windows that are taller or wider than the viewport are automatically shrunk to fit on creation.
+- **Disable resize when maximized**: Maximized windows hide the resize handle; restoring brings it back.
+
+### `css/desktop.css` (UPDATED)
+- **Resizable windows**: Added `resize: both` to `.window` so users can drag the bottom-right corner to resize any window.
+
+### `js/services/theme-service.js` (UPDATED)
+- **Wallpaper fit setting**: New dropdown in the Wallpapers panel with 5 modes — Fill (cover, default), Fit (contain, shows full image), Stretch, Center, and Tile. Persisted to localStorage. Fixes images with corner details getting cropped on smaller screens.
+
 ## Quacker Pond — Breeding Rebalance, Audio, Sssteam Listing, Icon — Session 55
 
 ### `js/games/quacker-pond.js` (UPDATED)

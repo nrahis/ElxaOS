@@ -1051,7 +1051,7 @@ class FileManagerProgram {
         if (!desktopIcons) return;
 
         const systemIcons = Array.from(desktopIcons.querySelectorAll('.desktop-icon')).filter(icon =>
-            ['computer', 'recycle-bin', 'notepad'].includes(icon.dataset.program) && !icon.dataset.file
+            !icon.dataset.file
         );
 
         desktopIcons.innerHTML = '';
@@ -1076,7 +1076,13 @@ class FileManagerProgram {
                         try {
                             const shortcutData = JSON.parse(file.content);
                             if (shortcutData.type === 'program_shortcut') {
-                                icon = shortcutData.programInfo.icon;
+                                // Use custom SVG icon if available, otherwise fall back to stored icon
+                                const customIconId = ElxaIcons.customIcons[shortcutData.programId];
+                                if (customIconId) {
+                                    icon = ElxaIcons.render(shortcutData.programId, 'desktop');
+                                } else {
+                                    icon = shortcutData.programInfo.icon;
+                                }
                                 program = shortcutData.programId;
                                 iconElement.dataset.installed = 'true';
                                 if (shortcutData.launchArgs) {

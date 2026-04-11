@@ -45,10 +45,27 @@ class WindowManager {
         const window = document.createElement('div');
         window.className = 'window';
         window.id = `window-${id}`;
-        window.style.width = options.width || '400px';
-        window.style.height = options.height || '300px';
-        window.style.left = options.x || '100px';
-        window.style.top = options.y || '100px';
+
+        // Parse dimensions and clamp position to keep window within viewport
+        const taskbarHeight = 40;
+        const vpW = document.documentElement.clientWidth;
+        const vpH = document.documentElement.clientHeight - taskbarHeight;
+        let w = parseInt(options.width) || 400;
+        let h = parseInt(options.height) || 300;
+
+        // Shrink window to fit viewport if too large
+        if (w > vpW) w = vpW;
+        if (h > vpH) h = vpH;
+
+        const maxX = Math.max(0, vpW - w);
+        const maxY = Math.max(0, vpH - h);
+        const x = Math.min(parseInt(options.x) || 100, maxX);
+        const y = Math.min(parseInt(options.y) || 100, maxY);
+
+        window.style.width = w + 'px';
+        window.style.height = h + 'px';
+        window.style.left = x + 'px';
+        window.style.top = y + 'px';
 
         window.innerHTML = `
             <div class="window-titlebar" data-window-id="${id}">
@@ -72,10 +89,10 @@ class WindowManager {
             maximized: false,
             // Store original dimensions for restore functionality
             originalDimensions: {
-                width: options.width || '400px',
-                height: options.height || '300px',
-                left: options.x || '100px',
-                top: options.y || '100px'
+                width: w + 'px',
+                height: h + 'px',
+                left: x + 'px',
+                top: y + 'px'
             }
         });
 
@@ -230,6 +247,7 @@ class WindowManager {
             window.style.top = '0px';
             window.style.width = '100vw';
             window.style.height = 'calc(100vh - 30px)';
+            window.style.resize = 'none';
             windowData.maximized = true;
             
             // Update maximize button appearance
@@ -252,6 +270,7 @@ class WindowManager {
             window.style.height = original.height;
             window.style.left = original.left;
             window.style.top = original.top;
+            window.style.resize = 'both';
             windowData.maximized = false;
             
             // Update maximize button appearance

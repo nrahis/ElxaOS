@@ -17,10 +17,13 @@ class Desktop {
             if (icon) {
                 this.selectIcon(icon);
                 
-                // Start drag after a small delay to distinguish from clicks
-                this.dragTimeout = setTimeout(() => {
-                    this.startDrag(icon, e);
-                }, 150);
+                // Store pending drag info — actual drag starts only after mouse moves 5+ px
+                this.pendingDrag = {
+                    icon: icon,
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    event: e
+                };
                 
                 e.preventDefault(); // Prevent text selection
             }
@@ -29,14 +32,14 @@ class Desktop {
         // Handle mouse up for click detection and drag end
         document.getElementById('desktopIcons').addEventListener('mouseup', (e) => {
             const icon = e.target.closest('.desktop-icon');
-            if (icon && this.dragTimeout) {
-                clearTimeout(this.dragTimeout);
-                
-                // Double-click detection
-                if (this.lastClick && Date.now() - this.lastClick < 300) {
+            if (icon && !this.dragData) {
+                // Double-click detection (only if we weren't dragging)
+                if (this.lastClick && Date.now() - this.lastClick < 400) {
                     this.openProgram(icon.dataset.program);
+                    this.lastClick = 0; // Reset to prevent triple-click firing again
+                } else {
+                    this.lastClick = Date.now();
                 }
-                this.lastClick = Date.now();
             }
             
             if (this.dragData) {
@@ -46,6 +49,15 @@ class Desktop {
 
         // Global mouse move for dragging
         document.addEventListener('mousemove', (e) => {
+            // Check if we should initiate a drag (distance threshold)
+            if (this.pendingDrag && !this.dragData) {
+                const dx = e.clientX - this.pendingDrag.startX;
+                const dy = e.clientY - this.pendingDrag.startY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                    this.startDrag(this.pendingDrag.icon, this.pendingDrag.event);
+                    this.pendingDrag = null;
+                }
+            }
             if (this.dragData) {
                 this.handleDrag(e);
             }
@@ -56,10 +68,7 @@ class Desktop {
             if (this.dragData) {
                 this.endDrag();
             }
-            if (this.dragTimeout) {
-                clearTimeout(this.dragTimeout);
-                this.dragTimeout = null;
-            }
+            this.pendingDrag = null;
         });
 
         // Right-click context menu for desktop icons
@@ -298,6 +307,18 @@ class Desktop {
         
         console.log('🔄 Icon positions reset to default');
     }
+
+    // Debug helper — reload the page to pick up HTML/JS changes without wiping data
+    debug = {
+        reload() { location.reload(); },
+        resetPositions() { elxaOS.desktop.resetIconPositions(); },
+        help() {
+            console.log(`🖥️ Desktop Debug Commands:
+  elxaOS.desktop.debug.reload()          — reload page (picks up code changes, keeps data)
+  elxaOS.desktop.debug.resetPositions()  — reset icon positions to default grid
+  elxaOS.refreshDesktop()                — re-sync filesystem icons`);
+        }
+    };
 
     openProgram(programId) {
         console.log('Opening program:', programId, 'Selected icon:', this.selectedIcon);

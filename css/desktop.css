@@ -20,6 +20,7 @@
 @import url('programs/elxacode.css');
 @import url('programs/elxabooks.css');
 @import url('programs/elxasheets.css');
+@import url('programs/help.css');
 @import url('programs/virus/lebron-james-virus.css');
 @import url('programs/virus/roblox-jumpscare-virus.css');
 @import url('programs/antivirus.css');
@@ -281,6 +282,8 @@ body {
     display: none;
     flex-direction: column;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    resize: both;
+    overflow: hidden;
 }
 
 .window.active {
@@ -389,6 +392,86 @@ body {
     margin: 2px 0;
 }
 
+/* Start menu items container (scrollable if too tall) */
+.start-menu-items {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+/* Submenu trigger — has arrow on right side */
+.start-menu-submenu-trigger {
+    position: relative;
+}
+
+.start-menu-submenu-trigger .start-menu-arrow {
+    margin-left: auto;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.start-menu-submenu-trigger:hover .start-menu-arrow,
+.start-menu-submenu-trigger.submenu-active .start-menu-arrow {
+    opacity: 1;
+}
+
+/* Keep submenu trigger highlighted while its submenu is open */
+.start-menu-submenu-trigger.submenu-active {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.start-menu-submenu-trigger.submenu-active .elxa-icon-ui {
+    color: var(--menuHoverText);
+}
+
+/* Fly-out submenu panel */
+.start-menu-submenu {
+    background: var(--menuBg);
+    border: 2px outset var(--windowBorder);
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    z-index: 2001;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+}
+
+.start-menu-submenu .start-menu-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--menuText);
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.start-menu-submenu .start-menu-item:hover {
+    background: var(--menuHoverBg);
+    color: var(--menuHoverText);
+}
+
+.start-menu-submenu .start-menu-item:hover .elxa-icon-ui {
+    color: var(--menuHoverText);
+}
+
+/* Disabled items (e.g., "No games installed") */
+.start-menu-item-disabled {
+    opacity: 0.5;
+    cursor: default !important;
+    font-weight: normal !important;
+    font-style: italic;
+}
+
+.start-menu-item-disabled:hover {
+    background: transparent !important;
+    color: var(--menuText) !important;
+}
+
+.start-menu-item-disabled:hover .elxa-icon-ui {
+    color: var(--uiIconColor) !important;
+}
+
 /* =================================
     DESKTOP ICONS STYLES - Enhanced with Drag & Drop
 ================================= */
@@ -467,6 +550,13 @@ body {
 /* Desktop context: full distinct colors, with drop shadow for wallpaper legibility */
 .elxa-icon-desktop {
     filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Custom SVG icons */
+.elxa-icon-custom {
+    width: 40px;
+    height: 40px;
+    display: block;
 }
 
 /* UI context: monochrome, theme-aware color via CSS variable */

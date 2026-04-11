@@ -395,6 +395,10 @@ class LoginService {
     showDesktop() {
         document.getElementById('desktop').style.display = 'block';
         document.querySelector('.taskbar').style.display = 'flex';
+        // Notify programs that the desktop is visible (used by Help for first-run prompt)
+        if (typeof elxaOS !== 'undefined' && elxaOS.eventBus) {
+            elxaOS.eventBus.emit('desktop.ready');
+        }
     }
 
     hideDesktop() {

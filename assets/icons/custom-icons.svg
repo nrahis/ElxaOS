@@ -1,0 +1,337 @@
+<!-- =================================
+     ElxaOS Custom SVG Icons
+     Tango-style realistic desktop icons
+     Referenced via <use href="#icon-{id}">
+     ================================= -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+
+  <!-- ====== MY COMPUTER ====== -->
+  <symbol id="icon-computer" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="50" cy="88" rx="34" ry="5" fill="#2c2c2c" opacity="0.15"/>
+    <!-- monitor body -->
+    <rect x="10" y="10" width="80" height="58" rx="5" fill="#4a4a4a"/>
+    <rect x="10" y="10" width="80" height="58" rx="5" fill="none" stroke="#333" stroke-width="1.5"/>
+    <!-- top highlight -->
+    <rect x="12" y="12" width="76" height="8" rx="4" fill="white" opacity="0.12"/>
+    <!-- screen bezel -->
+    <rect x="16" y="18" width="68" height="40" rx="2" fill="#1a1a2e"/>
+    <!-- screen -->
+    <rect x="19" y="21" width="62" height="34" rx="1" fill="#3a7bd5"/>
+    <rect x="19" y="21" width="62" height="14" rx="1" fill="white" opacity="0.15"/>
+    <!-- desktop icons on screen -->
+    <rect x="23" y="26" width="6" height="6" rx="1" fill="#e8c547"/>
+    <rect x="23" y="35" width="6" height="6" rx="1" fill="#6ab04c"/>
+    <rect x="33" y="26" width="20" height="3" rx="1" fill="white" opacity="0.4"/>
+    <rect x="33" y="32" width="14" height="3" rx="1" fill="white" opacity="0.3"/>
+    <!-- taskbar -->
+    <rect x="19" y="49" width="62" height="6" rx="1" fill="#2d3436"/>
+    <rect x="21" y="50" width="14" height="4" rx="1" fill="#636e72"/>
+    <!-- power LED -->
+    <circle cx="50" cy="62" r="2" fill="#6ab04c"/>
+    <circle cx="50" cy="62" r="1" fill="#badc58"/>
+    <!-- stand -->
+    <rect x="40" y="68" width="20" height="8" rx="1" fill="#5a5a5a"/>
+    <rect x="40" y="68" width="20" height="3" rx="1" fill="white" opacity="0.08"/>
+    <!-- base -->
+    <ellipse cx="50" cy="80" rx="30" ry="6" fill="#4a4a4a"/>
+    <ellipse cx="50" cy="79" rx="28" ry="5" fill="#5a5a5a"/>
+  </symbol>
+
+  <!-- ====== RECYCLE BIN ====== -->
+  <symbol id="icon-recycle-bin" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="82" rx="26" ry="4" fill="#1a1a1a" opacity="0.12"/>
+    <!-- can body -->
+    <path d="M22 22 L26 72 L62 72 L66 22 Z" fill="#78909c" stroke="#546e7a" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- body highlight -->
+    <path d="M22 22 L26 72 L36 72 L32 22 Z" fill="white" opacity="0.1"/>
+    <!-- body shadow right -->
+    <path d="M56 22 L62 72 L66 72 L66 22 Z" fill="#1a1a1a" opacity="0.1"/>
+    <!-- ridges -->
+    <line x1="36" y1="28" x2="35" y2="66" stroke="#546e7a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="44" y1="28" x2="44" y2="66" stroke="#546e7a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="52" y1="28" x2="53" y2="66" stroke="#546e7a" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- lid -->
+    <rect x="18" y="16" width="52" height="8" rx="3" fill="#90a4ae" stroke="#607d8b" stroke-width="1"/>
+    <rect x="20" y="17" width="48" height="3" rx="2" fill="white" opacity="0.15"/>
+    <!-- handle -->
+    <path d="M34 16 Q34 8 44 8 Q54 8 54 16" fill="none" stroke="#607d8b" stroke-width="2.5" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- ====== NOTEPAD ====== -->
+  <symbol id="icon-notepad" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <rect x="18" y="14" width="56" height="68" rx="3" fill="#1a1a1a" opacity="0.1"/>
+    <!-- page back -->
+    <rect x="18" y="8" width="52" height="68" rx="2" fill="#f5f0e0" stroke="#c9b97a" stroke-width="1"/>
+    <!-- page front -->
+    <rect x="14" y="10" width="52" height="68" rx="2" fill="#fdf8e8" stroke="#d4c98a" stroke-width="1"/>
+    <!-- top highlight -->
+    <rect x="16" y="12" width="48" height="6" rx="2" fill="white" opacity="0.3"/>
+    <!-- ruled lines -->
+    <line x1="22" y1="26" x2="58" y2="26" stroke="#c5d5e0" stroke-width="0.75"/>
+    <line x1="22" y1="34" x2="58" y2="34" stroke="#c5d5e0" stroke-width="0.75"/>
+    <line x1="22" y1="42" x2="58" y2="42" stroke="#c5d5e0" stroke-width="0.75"/>
+    <line x1="22" y1="50" x2="58" y2="50" stroke="#c5d5e0" stroke-width="0.75"/>
+    <line x1="22" y1="58" x2="58" y2="58" stroke="#c5d5e0" stroke-width="0.75"/>
+    <line x1="22" y1="66" x2="58" y2="66" stroke="#c5d5e0" stroke-width="0.75"/>
+    <!-- red margin -->
+    <line x1="26" y1="18" x2="26" y2="76" stroke="#e88a8a" stroke-width="0.75" opacity="0.6"/>
+    <!-- text scribbles -->
+    <path d="M30 26 Q34 24 38 26 Q42 28 46 26" fill="none" stroke="#555" stroke-width="1" stroke-linecap="round"/>
+    <path d="M30 34 Q36 32 42 34 Q46 36 52 34" fill="none" stroke="#555" stroke-width="1" stroke-linecap="round"/>
+    <path d="M30 42 Q33 40 38 42" fill="none" stroke="#555" stroke-width="1" stroke-linecap="round"/>
+    <!-- pencil -->
+    <g transform="translate(50, 48) rotate(25)">
+      <rect x="0" y="0" width="5" height="30" fill="#e8c444" stroke="#c9a830" stroke-width="0.5"/>
+      <rect x="0" y="0" width="5" height="5" rx="1" fill="#e88a8a"/>
+      <polygon points="0,30 5,30 2.5,36" fill="#d4a44a"/>
+      <polygon points="1.5,33 3.5,33 2.5,36" fill="#333"/>
+      <rect x="0" y="26" width="5" height="2" fill="#c9a830"/>
+    </g>
+  </symbol>
+
+  <!-- ====== SNOOGLE BROWSER ====== -->
+  <symbol id="icon-browser" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="82" rx="28" ry="4" fill="#1a1a1a" opacity="0.12"/>
+    <!-- globe -->
+    <circle cx="44" cy="40" r="30" fill="#4a80c4" stroke="#2c5a8c" stroke-width="1.5"/>
+    <!-- highlight -->
+    <path d="M44 10 Q20 10 16 30 Q30 15 44 14 Q58 15 72 30 Q68 10 44 10 Z" fill="white" opacity="0.18"/>
+    <!-- latitude lines -->
+    <ellipse cx="44" cy="28" rx="26" ry="6" fill="none" stroke="#2c5a8c" stroke-width="0.75" opacity="0.7"/>
+    <ellipse cx="44" cy="40" rx="30" ry="8" fill="none" stroke="#2c5a8c" stroke-width="0.75" opacity="0.7"/>
+    <ellipse cx="44" cy="52" rx="26" ry="6" fill="none" stroke="#2c5a8c" stroke-width="0.75" opacity="0.7"/>
+    <!-- meridians -->
+    <ellipse cx="44" cy="40" rx="10" ry="30" fill="none" stroke="#2c5a8c" stroke-width="0.75" opacity="0.7"/>
+    <ellipse cx="44" cy="40" rx="22" ry="30" fill="none" stroke="#2c5a8c" stroke-width="0.75" opacity="0.5"/>
+    <!-- land masses -->
+    <ellipse cx="34" cy="32" rx="8" ry="6" fill="#5a9e4b" opacity="0.7"/>
+    <ellipse cx="54" cy="44" rx="10" ry="5" fill="#5a9e4b" opacity="0.6"/>
+    <ellipse cx="38" cy="54" rx="6" ry="4" fill="#5a9e4b" opacity="0.5"/>
+    <!-- magnifying glass -->
+    <circle cx="62" cy="58" r="11" fill="#e8e8e8" stroke="#666" stroke-width="2"/>
+    <circle cx="62" cy="58" r="8" fill="white" opacity="0.5"/>
+    <circle cx="59" cy="55" r="3" fill="white" opacity="0.4"/>
+    <!-- handle -->
+    <line x1="70" y1="66" x2="80" y2="76" stroke="#666" stroke-width="4" stroke-linecap="round"/>
+    <line x1="70" y1="66" x2="78" y2="74" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- ====== SNAKESIA MESSENGER ====== -->
+  <symbol id="icon-messenger" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="82" rx="28" ry="4" fill="#1a1a1a" opacity="0.1"/>
+    <!-- bubble tail (drawn first, body overlaps the seam) -->
+    <path d="M20 56 L12 72 L36 56" fill="#5b9e47" stroke="#3d7a2e" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- bubble body -->
+    <rect x="6" y="10" width="70" height="48" rx="12" fill="#5b9e47" stroke="#3d7a2e" stroke-width="1.5"/>
+    <!-- top highlight -->
+    <rect x="10" y="12" width="62" height="10" rx="8" fill="white" opacity="0.18"/>
+    <!-- chat dots -->
+    <circle cx="26" cy="34" r="5" fill="#a0d88e" stroke="#3d7a2e" stroke-width="0.75"/>
+    <circle cx="42" cy="34" r="5" fill="#a0d88e" stroke="#3d7a2e" stroke-width="0.75"/>
+    <circle cx="58" cy="34" r="5" fill="#a0d88e" stroke="#3d7a2e" stroke-width="0.75"/>
+  </symbol>
+
+  <!-- ====== ELXABOOKS PRO ====== -->
+  <symbol id="icon-elxabooks" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <rect x="18" y="14" width="56" height="70" rx="3" fill="#1a1a1a" opacity="0.1"/>
+    <!-- back cover -->
+    <rect x="16" y="8" width="54" height="70" rx="3" fill="#6d4c2e" stroke="#4a3320" stroke-width="1"/>
+    <!-- pages edge -->
+    <rect x="18" y="12" width="48" height="62" rx="1" fill="#f5f0e0" stroke="#c9b97a" stroke-width="0.5"/>
+    <!-- front cover -->
+    <rect x="12" y="6" width="54" height="70" rx="3" fill="#8d6e3f" stroke="#6d4c2e" stroke-width="1.5"/>
+    <!-- cover highlight -->
+    <rect x="14" y="8" width="50" height="10" rx="3" fill="white" opacity="0.12"/>
+    <!-- spine -->
+    <rect x="12" y="6" width="10" height="70" rx="3" fill="#7a5c30" stroke="#6d4c2e" stroke-width="1"/>
+    <rect x="13" y="8" width="4" height="66" fill="white" opacity="0.06"/>
+    <!-- gold emboss rectangle -->
+    <rect x="26" y="20" width="34" height="26" rx="2" fill="none" stroke="#d4a44a" stroke-width="1.5"/>
+    <!-- dollar sign -->
+    <text x="43" y="42" text-anchor="middle" fill="#d4a44a" font-size="20" font-weight="500" font-family="serif">$</text>
+    <!-- ledger lines -->
+    <line x1="28" y1="52" x2="58" y2="52" stroke="#d4a44a" stroke-width="0.75" opacity="0.5"/>
+    <line x1="28" y1="58" x2="58" y2="58" stroke="#d4a44a" stroke-width="0.75" opacity="0.5"/>
+    <line x1="28" y1="64" x2="58" y2="64" stroke="#d4a44a" stroke-width="0.75" opacity="0.5"/>
+  </symbol>
+
+  <!-- ====== ANTIVIRUS (ElxaGuard) ====== -->
+  <symbol id="icon-antivirus" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="84" rx="26" ry="4" fill="#1a1a1a" opacity="0.12"/>
+    <!-- shield body -->
+    <path d="M44 6 L76 20 L76 48 Q76 70 44 80 Q12 70 12 48 L12 20 Z" fill="#4a8c3d" stroke="#2e6b22" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- shield highlight -->
+    <path d="M44 6 L12 20 L12 48 Q12 60 28 68 L44 30 Z" fill="white" opacity="0.12"/>
+    <!-- inner shield plate -->
+    <path d="M44 16 L66 26 L66 46 Q66 62 44 70 Q22 62 22 46 L22 26 Z" fill="#5b9e47" stroke="#3d7a2e" stroke-width="1"/>
+    <!-- checkmark -->
+    <polyline points="30,44 40,54 60,30" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- ====== ELXASHEETS ====== -->
+  <symbol id="icon-elxasheets" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <rect x="14" y="14" width="68" height="70" rx="3" fill="#1a1a1a" opacity="0.1"/>
+    <!-- paper -->
+    <rect x="10" y="8" width="68" height="70" rx="3" fill="#f0f4f0" stroke="#a0b0a0" stroke-width="1.5"/>
+    <!-- top highlight -->
+    <rect x="12" y="10" width="64" height="8" rx="2" fill="white" opacity="0.3"/>
+    <!-- green header bar -->
+    <rect x="14" y="14" width="60" height="10" rx="1" fill="#388e3c"/>
+    <rect x="14" y="14" width="60" height="4" rx="1" fill="white" opacity="0.15"/>
+    <!-- header cell dividers -->
+    <line x1="32" y1="14" x2="32" y2="24" stroke="#2e7d32" stroke-width="0.75"/>
+    <line x1="50" y1="14" x2="50" y2="24" stroke="#2e7d32" stroke-width="0.75"/>
+    <!-- header text -->
+    <rect x="17" y="17" width="10" height="4" rx="1" fill="white" opacity="0.6"/>
+    <rect x="35" y="17" width="10" height="4" rx="1" fill="white" opacity="0.6"/>
+    <rect x="53" y="17" width="10" height="4" rx="1" fill="white" opacity="0.6"/>
+    <!-- grid lines -->
+    <line x1="14" y1="30" x2="74" y2="30" stroke="#c5d5c5" stroke-width="0.75"/>
+    <line x1="14" y1="38" x2="74" y2="38" stroke="#c5d5c5" stroke-width="0.75"/>
+    <line x1="14" y1="46" x2="74" y2="46" stroke="#c5d5c5" stroke-width="0.75"/>
+    <line x1="14" y1="54" x2="74" y2="54" stroke="#c5d5c5" stroke-width="0.75"/>
+    <line x1="14" y1="62" x2="74" y2="62" stroke="#c5d5c5" stroke-width="0.75"/>
+    <line x1="32" y1="24" x2="32" y2="70" stroke="#c5d5c5" stroke-width="0.75"/>
+    <line x1="50" y1="24" x2="50" y2="70" stroke="#c5d5c5" stroke-width="0.75"/>
+    <!-- row numbers -->
+    <text x="20" y="35" fill="#666" font-size="6" font-family="monospace">1</text>
+    <text x="20" y="43" fill="#666" font-size="6" font-family="monospace">2</text>
+    <text x="20" y="51" fill="#666" font-size="6" font-family="monospace">3</text>
+    <text x="20" y="59" fill="#666" font-size="6" font-family="monospace">4</text>
+    <!-- cell data -->
+    <rect x="35" y="27" width="12" height="4" rx="0.5" fill="#4caf50" opacity="0.3"/>
+    <rect x="53" y="27" width="8" height="4" rx="0.5" fill="#4caf50" opacity="0.3"/>
+    <rect x="35" y="35" width="10" height="4" rx="0.5" fill="#4caf50" opacity="0.2"/>
+    <rect x="53" y="35" width="14" height="4" rx="0.5" fill="#4caf50" opacity="0.2"/>
+    <rect x="35" y="43" width="8" height="4" rx="0.5" fill="#4caf50" opacity="0.3"/>
+    <!-- selected cell highlight -->
+    <rect x="50" y="46" width="24" height="8" fill="#bbdefb" stroke="#1e88e5" stroke-width="1"/>
+  </symbol>
+
+  <!-- ====== ELXAMAIL ====== -->
+  <symbol id="icon-elxamail" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="82" rx="30" ry="4" fill="#1a1a1a" opacity="0.12"/>
+    <!-- envelope body -->
+    <rect x="6" y="18" width="76" height="52" rx="4" fill="#e8e0d0" stroke="#b8a888" stroke-width="1.5"/>
+    <!-- bottom half darker -->
+    <rect x="6" y="44" width="76" height="26" rx="4" fill="#d8d0c0" stroke="none"/>
+    <rect x="6" y="44" width="76" height="4" fill="#e8e0d0"/>
+    <!-- envelope flap -->
+    <path d="M6 18 L44 48 L82 18" fill="#f0e8d8" stroke="#b8a888" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- flap highlight -->
+    <path d="M10 20 L44 46 L78 20" fill="none" stroke="white" stroke-width="0.75" opacity="0.3"/>
+    <!-- seal -->
+    <circle cx="44" cy="38" r="6" fill="#c0392b" opacity="0.8"/>
+    <circle cx="44" cy="38" r="4" fill="#e74c3c" opacity="0.6"/>
+    <!-- letter peeking out top -->
+    <rect x="16" y="10" width="56" height="14" rx="2" fill="white" stroke="#ccc" stroke-width="0.75"/>
+    <line x1="22" y1="15" x2="50" y2="15" stroke="#bbb" stroke-width="0.75"/>
+    <line x1="22" y1="19" x2="42" y2="19" stroke="#bbb" stroke-width="0.75"/>
+  </symbol>
+
+  <!-- ====== EMPLOYEE PORTAL ====== -->
+  <symbol id="icon-employee-portal" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="84" rx="30" ry="4" fill="#1a1a1a" opacity="0.12"/>
+    <!-- building body -->
+    <rect x="14" y="16" width="60" height="58" rx="2" fill="#607d8b" stroke="#455a64" stroke-width="1.5"/>
+    <!-- top highlight -->
+    <rect x="16" y="18" width="56" height="8" rx="1" fill="white" opacity="0.1"/>
+    <!-- windows row 1 -->
+    <rect x="20" y="24" width="10" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="34" y="24" width="10" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="48" y="24" width="10" height="8" rx="1" fill="#ffecb3" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="62" y="24" width="8" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <!-- windows row 2 -->
+    <rect x="20" y="36" width="10" height="8" rx="1" fill="#ffecb3" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="34" y="36" width="10" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="48" y="36" width="10" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="62" y="36" width="8" height="8" rx="1" fill="#ffecb3" stroke="#455a64" stroke-width="0.5"/>
+    <!-- windows row 3 -->
+    <rect x="20" y="48" width="10" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="34" y="48" width="10" height="8" rx="1" fill="#ffecb3" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="48" y="48" width="10" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <rect x="62" y="48" width="8" height="8" rx="1" fill="#bbdefb" stroke="#455a64" stroke-width="0.5"/>
+    <!-- door -->
+    <rect x="34" y="60" width="20" height="14" rx="2" fill="#37474f" stroke="#263238" stroke-width="1"/>
+    <circle cx="50" cy="68" r="1.5" fill="#ffd54f"/>
+    <!-- roof trim -->
+    <rect x="12" y="14" width="64" height="4" rx="1" fill="#546e7a"/>
+    <rect x="14" y="14" width="60" height="2" rx="1" fill="white" opacity="0.1"/>
+    <!-- ID badge overlay -->
+    <rect x="58" y="58" width="22" height="18" rx="3" fill="white" stroke="#1e88e5" stroke-width="1.5"/>
+    <rect x="60" y="60" width="18" height="4" rx="1" fill="#1e88e5"/>
+    <circle cx="69" cy="68" r="3" fill="#e0e0e0"/>
+    <rect x="64" y="72" width="10" height="2" rx="0.5" fill="#bbb"/>
+  </symbol>
+
+  <!-- ====== SSSTEAM ====== -->
+  <symbol id="icon-sssteam" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="84" rx="28" ry="4" fill="#1a1a1a" opacity="0.12"/>
+    <!-- dark rounded square background -->
+    <rect x="6" y="6" width="76" height="72" rx="10" fill="#2d3436" stroke="#1a1a1a" stroke-width="1.5"/>
+    <!-- top highlight -->
+    <rect x="8" y="8" width="72" height="12" rx="8" fill="white" opacity="0.08"/>
+    <!-- controller body -->
+    <path d="M18 32 Q18 28 22 28 L34 28 Q38 28 40 32 L48 32 Q50 28 54 28 L66 28 Q70 28 70 32 L72 50 Q72 60 64 60 L58 60 Q54 60 52 56 L50 52 L38 52 L36 56 Q34 60 30 60 L24 60 Q16 60 16 50 Z" fill="#636e72" stroke="#4a5568" stroke-width="1.5"/>
+    <!-- controller highlight -->
+    <path d="M22 30 L34 30 Q36 30 38 32 L50 32 Q52 30 54 30 L66 30 Q68 30 68 32 L68 36 L20 36 L20 32 Q20 30 22 30 Z" fill="white" opacity="0.1"/>
+    <!-- d-pad -->
+    <rect x="24" y="38" width="4" height="12" rx="1" fill="#4a5568"/>
+    <rect x="20" y="42" width="12" height="4" rx="1" fill="#4a5568"/>
+    <!-- buttons -->
+    <circle cx="60" cy="38" r="3" fill="#e74c3c"/>
+    <circle cx="66" cy="44" r="3" fill="#3498db"/>
+    <circle cx="54" cy="44" r="3" fill="#2ecc71"/>
+    <circle cx="60" cy="50" r="3" fill="#f1c40f"/>
+    <!-- analog sticks -->
+    <circle cx="34" cy="48" r="4" fill="#4a5568" stroke="#2d3436" stroke-width="1"/>
+    <circle cx="50" cy="48" r="4" fill="#4a5568" stroke="#2d3436" stroke-width="1"/>
+    <!-- SSSTEAM text -->
+    <text x="44" y="22" text-anchor="middle" fill="#b0bec5" font-size="9" font-weight="500" font-family="sans-serif" letter-spacing="1">SSSTEAM</text>
+  </symbol>
+
+  <!-- ====== SNAKESIAN CARD EXCHANGE ====== -->
+  <symbol id="icon-snakesian-cards" viewBox="0 0 96 96">
+    <!-- shadow -->
+    <ellipse cx="44" cy="84" rx="28" ry="4" fill="#1a1a1a" opacity="0.12"/>
+    <!-- back card (tilted) -->
+    <g transform="translate(44, 42) rotate(-8) translate(-44, -42)">
+      <rect x="18" y="10" width="42" height="58" rx="4" fill="#7b1fa2" stroke="#4a148c" stroke-width="1.5"/>
+      <rect x="22" y="14" width="34" height="50" rx="2" fill="none" stroke="#9c27b0" stroke-width="0.75" opacity="0.5"/>
+      <circle cx="39" cy="39" r="10" fill="none" stroke="#9c27b0" stroke-width="0.75" opacity="0.4"/>
+      <circle cx="39" cy="39" r="16" fill="none" stroke="#9c27b0" stroke-width="0.75" opacity="0.3"/>
+    </g>
+    <!-- front card -->
+    <g transform="translate(44, 42) rotate(6) translate(-44, -42)">
+      <rect x="26" y="10" width="42" height="58" rx="4" fill="#f5f0e0" stroke="#c9b97a" stroke-width="1.5"/>
+      <!-- card top highlight -->
+      <rect x="28" y="12" width="38" height="8" rx="2" fill="white" opacity="0.3"/>
+      <!-- card art area -->
+      <rect x="30" y="16" width="34" height="24" rx="2" fill="#e3f2fd" stroke="#90caf9" stroke-width="0.75"/>
+      <!-- creature silhouette -->
+      <circle cx="47" cy="26" r="5" fill="#42a5f5" opacity="0.5"/>
+      <path d="M40 36 L47 28 L54 36 Z" fill="#42a5f5" opacity="0.4"/>
+      <!-- name bar -->
+      <rect x="30" y="42" width="34" height="6" rx="1" fill="#ffd54f" stroke="#f9a825" stroke-width="0.5"/>
+      <rect x="33" y="44" width="20" height="2" rx="0.5" fill="#f57f17" opacity="0.4"/>
+      <!-- stats lines -->
+      <rect x="32" y="52" width="16" height="2" rx="0.5" fill="#999"/>
+      <rect x="32" y="56" width="12" height="2" rx="0.5" fill="#999"/>
+      <rect x="32" y="60" width="18" height="2" rx="0.5" fill="#999"/>
+      <!-- rarity star -->
+      <polygon points="58,50 59.5,54 64,54 60.5,57 62,61 58,58.5 54,61 55.5,57 52,54 56.5,54" fill="#ffd54f" stroke="#f9a825" stroke-width="0.5"/>
+    </g>
+  </symbol>
+
+</svg>

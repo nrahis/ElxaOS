@@ -12,6 +12,11 @@
      rare:      3-5
      epic:      4-7
      legendary: 5-8
+
+   Arena fields:
+     role: "fighter" | "support"
+     ability: { name, description, type, value, ... }       (fighters only)
+     supportEffect: { name, description, stat, value }      (support only)
    ============================================ */
 
 var CARD_CATALOG = [
@@ -29,7 +34,14 @@ var CARD_CATALOG = [
     image: "rita_001.png",
     stats: { atk: 1, hp: 3, spd: 2 },
     set: "SCE",
-    number: "001"
+    number: "001",
+    role: "fighter",
+    ability: {
+      name: "Cookie Shield",
+      description: "Heals self 2 HP. She made extras, just in case.",
+      type: "heal",
+      value: 2
+    }
   },
   {
     id: "rita_002",
@@ -41,7 +53,15 @@ var CARD_CATALOG = [
     image: "rita_002.png",
     stats: { atk: 2, hp: 3, spd: 3 },
     set: "SCE",
-    number: "002"
+    number: "002",
+    role: "fighter",
+    ability: {
+      name: "Efficiency Mode",
+      description: "Boosts own SPD by 3 for the rest of the match. Lunch can wait.",
+      type: "buff",
+      value: 3,
+      buffStat: "spd"
+    }
   },
   {
     id: "rita_003",
@@ -53,7 +73,14 @@ var CARD_CATALOG = [
     image: "rita_003.png",
     stats: { atk: 1, hp: 4, spd: 2 },
     set: "SCE",
-    number: "003"
+    number: "003",
+    role: "fighter",
+    ability: {
+      name: "Prepared for Anything",
+      description: "Blocks the next incoming attack completely. She packed a backup plan.",
+      type: "shield",
+      value: 1
+    }
   },
   {
     id: "rita_004",
@@ -65,7 +92,15 @@ var CARD_CATALOG = [
     image: "rita_004.png",
     stats: { atk: 2, hp: 5, spd: 3 },
     set: "SCE",
-    number: "004"
+    number: "004",
+    role: "fighter",
+    ability: {
+      name: "Weekend Energy",
+      description: "Boosts own ATK by 3. She's been up for hours. She's ready.",
+      type: "buff",
+      value: 3,
+      buffStat: "atk"
+    }
   },
 
   // ==========================================
@@ -81,7 +116,15 @@ var CARD_CATALOG = [
     image: "remi_001.png",
     stats: { atk: 2, hp: 3, spd: 3 },
     set: "SCE",
-    number: "005"
+    number: "005",
+    role: "fighter",
+    ability: {
+      name: "Shoutout!",
+      description: "Boosts own ATK by 2. 'This one's for the fans!'",
+      type: "buff",
+      value: 2,
+      buffStat: "atk"
+    }
   },
   {
     id: "remi_002",
@@ -93,7 +136,14 @@ var CARD_CATALOG = [
     image: "remi_002.png",
     stats: { atk: 3, hp: 3, spd: 5 },
     set: "SCE",
-    number: "006"
+    number: "006",
+    role: "fighter",
+    ability: {
+      name: "Clickbait Strike",
+      description: "Deals 5 damage. YOU WON'T BELIEVE WHAT HAPPENS NEXT.",
+      type: "damage",
+      value: 5
+    }
   },
   {
     id: "remi_003",
@@ -105,7 +155,15 @@ var CARD_CATALOG = [
     image: "remi_003.png",
     stats: { atk: 5, hp: 5, spd: 6 },
     set: "SCE",
-    number: "007"
+    number: "007",
+    role: "fighter",
+    ability: {
+      name: "240fps Mode",
+      description: "Boosts own ATK and SPD by 2 each. Everything's running butter smooth.",
+      type: "buff",
+      value: 2,
+      buffStat: "all"
+    }
   },
   {
     id: "remi_004",
@@ -117,7 +175,16 @@ var CARD_CATALOG = [
     image: "remi_004.png",
     stats: { atk: 3, hp: 4, spd: 4 },
     set: "SCE",
-    number: "008"
+    number: "008",
+    role: "fighter",
+    ability: {
+      name: "Chat Decides",
+      description: "50/50: either deals 6 damage or heals the opponent 3 HP. Chat chose wrong again.",
+      type: "gamble",
+      value: 6,
+      chance: 0.5,
+      altValue: -3
+    }
   },
 
   // ==========================================
@@ -133,7 +200,14 @@ var CARD_CATALOG = [
     image: "mrs_snake_e_001.png",
     stats: { atk: 1, hp: 4, spd: 1 },
     set: "SCE",
-    number: "009"
+    number: "009",
+    role: "fighter",
+    ability: {
+      name: "Have a Cookie, Dear",
+      description: "Heals self 3 HP. You look like you need one.",
+      type: "heal",
+      value: 3
+    }
   },
   {
     id: "mrs_snake_e_002",
@@ -145,7 +219,15 @@ var CARD_CATALOG = [
     image: "mrs_snake_e_002.png",
     stats: { atk: 2, hp: 4, spd: 2 },
     set: "SCE",
-    number: "010"
+    number: "010",
+    role: "fighter",
+    ability: {
+      name: "Grandma's Secret",
+      description: "Boosts own HP by 4. Nobody knows what's in it, but it works every time.",
+      type: "buff",
+      value: 4,
+      buffStat: "hp"
+    }
   },
   {
     id: "mrs_snake_e_003",
@@ -157,7 +239,14 @@ var CARD_CATALOG = [
     image: "mrs_snake_e_003.png",
     stats: { atk: 1, hp: 5, spd: 2 },
     set: "SCE",
-    number: "011"
+    number: "011",
+    role: "fighter",
+    ability: {
+      name: "Garden Blessing",
+      description: "Heals self 4 HP. The flowers are cheering for her.",
+      type: "heal",
+      value: 4
+    }
   },
   {
     id: "mrs_snake_e_004",
@@ -169,7 +258,15 @@ var CARD_CATALOG = [
     image: "mrs_snake_e_004.png",
     stats: { atk: 1, hp: 7, spd: 1 },
     set: "SCE",
-    number: "012"
+    number: "012",
+    role: "fighter",
+    ability: {
+      name: "Power Nap",
+      description: "Blocks the next incoming attack and heals 2 HP. Do NOT wake her up.",
+      type: "shield",
+      value: 1,
+      bonusHeal: 2
+    }
   },
 
   // ==========================================
@@ -185,7 +282,15 @@ var CARD_CATALOG = [
     image: "mr_snake_e_001.png",
     stats: { atk: 3, hp: 4, spd: 2 },
     set: "SCE",
-    number: "013"
+    number: "013",
+    role: "fighter",
+    ability: {
+      name: "Overtime",
+      description: "Boosts own ATK by 3. He doesn't stop until the job is done.",
+      type: "buff",
+      value: 3,
+      buffStat: "atk"
+    }
   },
   {
     id: "mr_snake_e_002",
@@ -197,7 +302,14 @@ var CARD_CATALOG = [
     image: "mr_snake_e_002.png",
     stats: { atk: 4, hp: 5, spd: 3 },
     set: "SCE",
-    number: "014"
+    number: "014",
+    role: "fighter",
+    ability: {
+      name: "Record Profits",
+      description: "Deals 6 damage. The numbers don't lie.",
+      type: "damage",
+      value: 6
+    }
   },
   {
     id: "mr_snake_e_003",
@@ -209,7 +321,14 @@ var CARD_CATALOG = [
     image: "mr_snake_e_003.png",
     stats: { atk: 5, hp: 6, spd: 4 },
     set: "SCE",
-    number: "015"
+    number: "015",
+    role: "fighter",
+    ability: {
+      name: "Standing Ovation",
+      description: "Stuns the opponent for 1 turn. They're too impressed to move.",
+      type: "stun",
+      value: 1
+    }
   },
   {
     id: "mr_snake_e_004",
@@ -221,7 +340,14 @@ var CARD_CATALOG = [
     image: "mr_snake_e_004.png",
     stats: { atk: 6, hp: 8, spd: 4 },
     set: "SCE",
-    number: "016"
+    number: "016",
+    role: "fighter",
+    ability: {
+      name: "Hostile Takeover",
+      description: "Deals 8 damage. It's not personal. It's business.",
+      type: "damage",
+      value: 8
+    }
   },
 
   // ==========================================
@@ -237,7 +363,16 @@ var CARD_CATALOG = [
     image: "pushing_cat_001.png",
     stats: { atk: 1, hp: 3, spd: 1 },
     set: "SCE",
-    number: "017"
+    number: "017",
+    role: "fighter",
+    ability: {
+      name: "Fully Charged",
+      description: "Boosts own ATK by 3 and SPD by 2. The loading screen is done.",
+      type: "buff",
+      value: 3,
+      buffStat: "atk",
+      bonusSpd: 2
+    }
   },
   {
     id: "pushing_cat_002",
@@ -249,7 +384,14 @@ var CARD_CATALOG = [
     image: "pushing_cat_002.png",
     stats: { atk: 2, hp: 2, spd: 3 },
     set: "SCE",
-    number: "018"
+    number: "018",
+    role: "fighter",
+    ability: {
+      name: "Yoink!",
+      description: "Forces the opponent to swap to their next card. No refunds.",
+      type: "swap",
+      value: 1
+    }
   },
   {
     id: "pushing_cat_003",
@@ -261,7 +403,14 @@ var CARD_CATALOG = [
     image: "pushing_cat_003.png",
     stats: { atk: 2, hp: 4, spd: 2 },
     set: "SCE",
-    number: "019"
+    number: "019",
+    role: "fighter",
+    ability: {
+      name: "Box Fort",
+      description: "Blocks the next incoming attack. The box is impenetrable. He checked.",
+      type: "shield",
+      value: 1
+    }
   },
   {
     id: "pushing_cat_004",
@@ -273,7 +422,16 @@ var CARD_CATALOG = [
     image: "pushing_cat_004.png",
     stats: { atk: 3, hp: 3, spd: 3 },
     set: "SCE",
-    number: "020"
+    number: "020",
+    role: "fighter",
+    ability: {
+      name: "Wasn't Me",
+      description: "50/50: deals 5 damage OR takes 2 damage himself. Gravity is unpredictable.",
+      type: "gamble",
+      value: 5,
+      chance: 0.5,
+      altValue: -2
+    }
   },
   {
     id: "pushing_cat_005",
@@ -285,7 +443,14 @@ var CARD_CATALOG = [
     image: "pushing_cat_005.png",
     stats: { atk: 4, hp: 3, spd: 5 },
     set: "SCE",
-    number: "021"
+    number: "021",
+    role: "fighter",
+    ability: {
+      name: "POUNCE!",
+      description: "Deals 6 damage. The feather never stood a chance.",
+      type: "damage",
+      value: 6
+    }
   },
   {
     id: "pushing_cat_006",
@@ -297,7 +462,14 @@ var CARD_CATALOG = [
     image: "pushing_cat_006.png",
     stats: { atk: 5, hp: 3, spd: 4 },
     set: "SCE",
-    number: "022"
+    number: "022",
+    role: "fighter",
+    ability: {
+      name: "Pillow Bomb",
+      description: "Deals 4 damage to ALL remaining opponent cards. Feathers everywhere.",
+      type: "aoe",
+      value: 4
+    }
   },
   {
     id: "pushing_cat_007",
@@ -309,7 +481,14 @@ var CARD_CATALOG = [
     image: "pushing_cat_007.png",
     stats: { atk: 5, hp: 5, spd: 5 },
     set: "SCE",
-    number: "023"
+    number: "023",
+    role: "fighter",
+    ability: {
+      name: "Push It Off the Table",
+      description: "Deals 3 damage to ALL remaining opponent cards. For science.",
+      type: "aoe",
+      value: 3
+    }
   },
   {
     id: "pushing_cat_008",
@@ -321,7 +500,16 @@ var CARD_CATALOG = [
     image: "pushing_cat_008.png",
     stats: { atk: 4, hp: 6, spd: 4 },
     set: "SCE",
-    number: "024"
+    number: "024",
+    role: "fighter",
+    ability: {
+      name: "Mystery Dish",
+      description: "50/50: heals self 5 HP OR deals 3 damage to self. He improvised.",
+      type: "gamble",
+      value: 5,
+      chance: 0.5,
+      altValue: -3
+    }
   },
   {
     id: "pushing_cat_009",
@@ -333,7 +521,14 @@ var CARD_CATALOG = [
     image: "pushing_cat_009.png",
     stats: { atk: 7, hp: 7, spd: 6 },
     set: "SCE",
-    number: "025"
+    number: "025",
+    role: "fighter",
+    ability: {
+      name: "Total Unrolling",
+      description: "Deals 5 damage to ALL remaining opponent cards. The whole house is covered in toilet paper.",
+      type: "aoe",
+      value: 5
+    }
   },
 
   // ==========================================
@@ -349,7 +544,15 @@ var CARD_CATALOG = [
     image: "landmark_snakesia.png",
     stats: { atk: 1, hp: 7, spd: 1 },
     set: "SCE",
-    number: "026"
+    number: "026",
+    role: "support",
+    supportEffect: {
+      name: "Highland Air",
+      description: "+1 HP and +1 SPD to your whole team. The altitude does wonders.",
+      stat: "multi",
+      value: 1,
+      bonusStats: { hp: 1, spd: 1 }
+    }
   },
   {
     id: "landmark_lake_denali",
@@ -361,7 +564,14 @@ var CARD_CATALOG = [
     image: "landmark_lake_denali.png",
     stats: { atk: 1, hp: 6, spd: 2 },
     set: "SCE",
-    number: "027"
+    number: "027",
+    role: "support",
+    supportEffect: {
+      name: "Lakeside Recovery",
+      description: "Your active card heals 2 HP when swapped in. The view is restorative.",
+      stat: "swapHeal",
+      value: 2
+    }
   },
   {
     id: "landmark_garden",
@@ -373,7 +583,14 @@ var CARD_CATALOG = [
     image: "landmark_garden.png",
     stats: { atk: 2, hp: 8, spd: 1 },
     set: "SCE",
-    number: "028"
+    number: "028",
+    role: "support",
+    supportEffect: {
+      name: "Green Thumb",
+      description: "Heals your active card 1 HP at the start of each turn. Everything grows here.",
+      stat: "heal",
+      value: 1
+    }
   },
   {
     id: "landmark_remi_gaming_room",
@@ -385,7 +602,14 @@ var CARD_CATALOG = [
     image: "landmark_remi_gaming_room.png",
     stats: { atk: 6, hp: 5, spd: 5 },
     set: "SCE",
-    number: "029"
+    number: "029",
+    role: "support",
+    supportEffect: {
+      name: "RGB Power",
+      description: "+2 ATK to your whole team. The LEDs make everything stronger. Fact.",
+      stat: "atk",
+      value: 2
+    }
   },
   {
     id: "landmark_elxacorp_office",
@@ -397,7 +621,14 @@ var CARD_CATALOG = [
     image: "landmark_elxacorp_office.png",
     stats: { atk: 2, hp: 5, spd: 2 },
     set: "SCE",
-    number: "030"
+    number: "030",
+    role: "support",
+    supportEffect: {
+      name: "Corner Office Vibes",
+      description: "+2 HP to your whole team. Great benefits package.",
+      stat: "hp",
+      value: 2
+    }
   },
   {
     id: "landmark_elxacorp_hq",
@@ -409,7 +640,14 @@ var CARD_CATALOG = [
     image: "landmark_elxacorp_hq.png",
     stats: { atk: 3, hp: 8, spd: 1 },
     set: "SCE",
-    number: "031"
+    number: "031",
+    role: "support",
+    supportEffect: {
+      name: "Corporate Synergy",
+      description: "+1 ATK to your whole team. The quarterly synergy report is paying off.",
+      stat: "atk",
+      value: 1
+    }
   },
   {
     id: "landmark_snake_e_mansion",
@@ -421,7 +659,14 @@ var CARD_CATALOG = [
     image: "landmark_snake_e_mansion.png",
     stats: { atk: 4, hp: 9, spd: 1 },
     set: "SCE",
-    number: "032"
+    number: "032",
+    role: "support",
+    supportEffect: {
+      name: "Home Advantage",
+      description: "+1 to ALL stats for your whole team. Twenty-seven rooms of pure power.",
+      stat: "all",
+      value: 1
+    }
   },
   {
     id: "landmark_sussy_lair",
@@ -433,7 +678,14 @@ var CARD_CATALOG = [
     image: "landmark_sussy_lair.png",
     stats: { atk: 5, hp: 8, spd: 3 },
     set: "SCE",
-    number: "033"
+    number: "033",
+    role: "support",
+    supportEffect: {
+      name: "Secret Hideout",
+      description: "+1 SPD to your whole team. Nobody can find you in here.",
+      stat: "spd",
+      value: 1
+    }
   },
   {
     id: "mr_snake_e_denali",
@@ -445,7 +697,14 @@ var CARD_CATALOG = [
     image: "mr_snake_e_denali.png",
     stats: { atk: 4, hp: 6, spd: 7 },
     set: "SCE",
-    number: "034"
+    number: "034",
+    role: "support",
+    supportEffect: {
+      name: "Getaway Car",
+      description: "When your card is KO'd, the next card gets a free first strike. The Denali is always running.",
+      stat: "firstStrike",
+      value: 1
+    }
   }
 
 ];
