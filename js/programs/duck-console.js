@@ -6,16 +6,36 @@ class DuckConsoleProgram {
         this.windowManager = windowManager;
         this.fileSystem = fileSystem;
         this.eventBus = eventBus;
-        this.currentPath = ['root'];
+        // homeDir is the root of what this user can access.
+        // Right now it's ['root'] for everyone (shared FS).
+        // When per-user FS subtrees exist, change this to:
+        //   ['root', 'Users', loggedInUsername]
+        this.homeDir = ['root'];
+        this.currentPath = [...this.homeDir];
         this.commandHistory = [];
         this.historyIndex = -1;
-        this.user = 'hacker_kit';
+        // 'user' is the hacker flavor name shown in the prompt — pure cosmetic.
+        // Defaults to the logged-in ElxaOS account username, falls back to 'hacker_kid'.
+        this.user = this._getDefaultHackerName();
         this.isOnline = false;
         this.abbyMood = 'happy'; // Abby's current mood
         this.snakeeCEOMode = false; // Mr. Snake-e CEO mode
         this.securityLevel = 1; // Hacker security clearance
         this.activeWindows = new Set(); // Track open console windows
-        
+        this.pendingUpgrade = null; // Active upgrade puzzle: { targetLevel, check, hint, attempts }
+
+        // Commands locked behind clearance levels. Level 1 = default, unlocked for everyone.
+        this.levelRequirements = {
+            // Level 2 — Math Wizard
+            'math': 2, 'googolplex': 2, 'tree': 2, 'enigma': 2, 'binary': 2, 'convert': 2,
+            // Level 3 — Network Operative
+            'network': 3, 'netstat': 3, 'ping': 3, 'scan': 3, 'firewall': 3, 'trace': 3, 'whoislive': 3,
+            // Level 4 — Elite Hacker
+            'rainbow': 4, 'glitch': 4, 'explode': 4, 'decode': 4,
+            // Level 5 — Supreme Overlord
+            'override': 5
+        };
+
         // Check initial WiFi status
         this.checkInitialWiFiStatus();
         
@@ -38,6 +58,28 @@ class DuckConsoleProgram {
         this.eventBus.on('wifi.disconnected', this._onWifiDisconnected);
     }
 
+    // Returns the logged-in ElxaOS username as hacker name, or 'hacker_kid' as fallback.
+    _getDefaultHackerName() {
+        try {
+            const username = elxaOS?.loginService?.currentUser?.username;
+            return username && !elxaOS.loginService.currentUser.isGuest ? username : 'hacker_kid';
+        } catch (e) {
+            return 'hacker_kid';
+        }
+    }
+
+    // Persists hacker name and clearance level to the user's registry entry.
+    _saveState() {
+        try {
+            elxaOS.registry.setState('duckConsole', {
+                hackerName:    this.user,
+                securityLevel: this.securityLevel
+            });
+        } catch (e) {
+            console.warn('DUCK Console: could not save state', e);
+        }
+    }
+
     checkInitialWiFiStatus() {
         // Check if WiFi service exists and is connected
         if (typeof elxaOS !== 'undefined' && elxaOS.wifiService) {
@@ -48,8 +90,23 @@ class DuckConsoleProgram {
         }
     }
 
-    launch() {
+    async launch() {
         const windowId = `duck-console-${Date.now()}`;
+
+        // Re-check WiFi status on every launch — constructor runs before
+        // elxaOS is assigned to the global, so the initial check always misses.
+        this.checkInitialWiFiStatus();
+
+        // Load persisted hacker name + clearance level from registry
+        try {
+            const saved = await elxaOS.registry.getState('duckConsole');
+            if (saved) {
+                if (saved.hackerName)    this.user          = saved.hackerName;
+                if (saved.securityLevel) this.securityLevel = saved.securityLevel;
+            }
+        } catch (e) {
+            // No saved state yet — first launch, defaults are fine
+        }
         
         const windowContent = this.createConsoleInterface(windowId);
         
@@ -180,14 +237,32 @@ class DuckConsoleProgram {
     }
 
     executeCommand(command, windowId) {
+        // If we're mid-puzzle, route the input as an answer (no echo, no normal routing)
+        if (this.pendingUpgrade) {
+            this.outputToConsole(`[ANSWER]> ${command}`, 'command', windowId);
+            this.checkUpgradeAnswer(command, windowId);
+            return;
+        }
+
         // Echo the command
         this.outputToConsole(`${this.getPrompt()}${command}`, 'command', windowId);
 
         this.eventBus.emit('console.command', { command: command.trim() });
         
-        const args = command.toLowerCase().trim().split(/\s+/);
-        const cmd = args[0];
-        const params = args.slice(1);
+        // Only lowercase the command token — keep params in original case
+        // so filenames like 'Documents' and 'MyFolder' resolve correctly in the FS.
+        const rawArgs = command.trim().split(/\s+/);
+        const cmd = rawArgs[0].toLowerCase();
+        const params = rawArgs.slice(1);
+
+        // Level gate: block commands above current clearance before routing
+        const requiredLevel = this.levelRequirements[cmd];
+        if (requiredLevel && this.securityLevel < requiredLevel) {
+            this.outputToConsole(`🔒 CLASSIFIED — Level ${requiredLevel} clearance required`, 'error', windowId);
+            this.outputToConsole(`📊 Your clearance: Level ${this.securityLevel} (${this._getLevelName(this.securityLevel)})`, 'info', windowId);
+            this.outputToConsole(`⬆️  Type 'upgrade' to attempt your next clearance challenge`, 'info', windowId);
+            return;
+        }
 
         // Command routing
         switch (cmd) {
@@ -217,6 +292,9 @@ class DuckConsoleProgram {
                 break;
             case 'whoami':
                 this.whoAmI(windowId);
+                break;
+            case 'setuser':
+                this.setUserCommand(params, windowId);
                 break;
             case 'hack':
                 this.hackCommand(params, windowId);
@@ -258,6 +336,33 @@ class DuckConsoleProgram {
             case 'firewall':
                 this.firewallCommand(params, windowId);
                 break;
+            case 'trace':
+                this.traceCommand(params, windowId);
+                break;
+            case 'whoislive':
+                this.whoisLiveCommand(windowId);
+                break;
+            case 'binary':
+                this.binaryCommand(params, windowId);
+                break;
+            case 'convert':
+                this.convertCommand(params, windowId);
+                break;
+            case 'rainbow':
+                this.rainbowCommand(params, windowId);
+                break;
+            case 'glitch':
+                this.glitchCommand(params, windowId);
+                break;
+            case 'explode':
+                this.explodeCommand(params, windowId);
+                break;
+            case 'decode':
+                this.decodeCommand(params, windowId);
+                break;
+            case 'override':
+                this.overrideCommand(windowId);
+                break;
             case 'upgrade':
                 this.upgradeCommand(windowId);
                 break;
@@ -287,50 +392,93 @@ class DuckConsoleProgram {
     }
 
     showHelp(windowId) {
-        const helpText = [
-            '🦆 DUCK Console Command Reference',
-            '═══════════════════════════════════',
+        const lvl = this.securityLevel;
+        const locked = (n) => `  [LOCKED — Level ${n} required]`;
+
+        const lines = [
+            `🦆 DUCK Console — ${this._getLevelName(lvl)} (Level ${lvl}/5)`,
+            '═══════════════════════════════════════',
             '',
-            '📁 FILE SYSTEM COMMANDS:',
+            '📁 FILE SYSTEM:',
             '  ls, dir          - List directory contents',
-            '  cd [path]        - Change directory',
+            '  cd [path]        - Change directory (cd ~ = home)',
             '  pwd              - Show current directory',
-            '  mkdir [name]     - Create directory',
+            '  mkdir [name]     - Create a directory',
             '  cat [file]       - Display file contents',
             '',
             '🔐 HACKER COMMANDS:',
-            '  hack [target]    - Initiate hacking sequence',
-            '  decrypt [data]   - Decrypt encoded messages',
-            '  matrix           - Enter the matrix',
-            '  scan             - Scan for vulnerabilities',
-            '  firewall [cmd]   - Manage firewall settings',
-            '  upgrade          - Upgrade security clearance',
-            '',
-            '🔢 MATH & SCIENCE:',
-            '  math [operation] - Advanced calculations',
-            '  googolplex       - Explore massive numbers',
-            '  tree [n]         - Calculate Tree numbers',
-            '  enigma [text]    - Enigma machine encryption',
+            '  hack [target]    - Initiate a hacking sequence',
+            '  decrypt [data]   - Decrypt encoded data',
+            '  matrix           - Enter the Matrix',
             '',
             '🐱 VIRTUAL ASSISTANTS:',
-            '  abby [command]   - Talk to Abby (your cat assistant)',
-            '  snakee [command] - Enter Mr. Snake-e CEO mode',
+            '  abby [cmd]       - Talk to Abby (your cat assistant)',
+            '  snakee [cmd]     - Enter Mr. Snake-e CEO mode',
             '',
-            '🌐 NETWORK COMMANDS: (requires WiFi connection)',
-            '  network          - Show network status',
-            '  ping [target]    - Test network connectivity',
-            '  netstat          - Display network statistics',
-            '',
-            '🔧 SYSTEM COMMANDS:',
-            '  whoami           - Display user information',
-            '  status           - Show system status',
+            '🔧 SYSTEM:',
+            '  whoami           - Show user info',
+            '  setuser [name]   - Change your hacker name',
+            '  status           - System status report',
             '  fortune          - Get a random fortune',
-            '  clear, cls       - Clear console',
-            '  help             - Show this help menu'
+            '  upgrade          - Attempt clearance upgrade challenge',
+            '  clear / cls      - Clear the console',
+            '  help             - Show this menu',
+            '',
         ];
 
-        helpText.forEach(line => {
-            this.outputToConsole(line, line.includes('═') ? 'accent' : 'info', windowId);
+        // Level 2
+        if (lvl >= 2) {
+            lines.push('🔢 MATH & SCIENCE: (Level 2)');
+            lines.push('  math [operation] - Advanced calculations');
+            lines.push('  binary [n]       - Convert decimal ↔ binary');
+            lines.push('  convert [val]    - Unit converter (try: convert 100 miles)');
+            lines.push('  googolplex       - Explore huge numbers');
+            lines.push('  tree [n]         - TREE function explainer');
+            lines.push('  enigma [text]    - Enigma machine cipher');
+        } else {
+            lines.push(locked(2) + ' 🔢 Math & Science commands');
+        }
+        lines.push('');
+
+        // Level 3
+        if (lvl >= 3) {
+            lines.push('🌐 NETWORK: (Level 3, requires WiFi)');
+            lines.push('  network / netstat - Network status');
+            lines.push('  ping [target]     - Test connectivity');
+            lines.push('  scan              - Vulnerability scan');
+            lines.push('  firewall [cmd]    - Firewall control');
+            lines.push('  trace [target]    - Traceroute through Snakesia');
+            lines.push('  whoislive         - See who\'s online in Snakesia');
+        } else {
+            lines.push(locked(3) + ' 🌐 Network Operative commands');
+        }
+        lines.push('');
+
+        // Level 4
+        if (lvl >= 4) {
+            lines.push('⚡ ELITE COMMANDS: (Level 4)');
+            lines.push('  rainbow [text]   - Make text rainbow-colored');
+            lines.push('  glitch [text]    - Corrupt text with glitch effects');
+            lines.push('  explode [text]   - Dramatic letter-by-letter reveal');
+            lines.push('  decode [text]    - Multi-layer cipher breakdown');
+        } else {
+            lines.push(locked(4) + ' ⚡ Elite Hacker commands');
+        }
+        lines.push('');
+
+        // Level 5
+        if (lvl >= 5) {
+            lines.push('👑 SUPREME OVERLORD: (Level 5)');
+            lines.push('  override         - Full system override sequence');
+            lines.push('  snakee classified - Access Snake-e Corp classified files');
+        } else {
+            lines.push(locked(5) + ' 👑 Supreme Overlord commands');
+        }
+
+        lines.forEach(line => {
+            const isHeader = line.includes('═') || (line.endsWith(':') && !line.startsWith(' '));
+            const isLocked = line.includes('[LOCKED');
+            this.outputToConsole(line, isHeader ? 'accent' : isLocked ? 'warning' : 'info', windowId);
         });
     }
 
@@ -353,20 +501,22 @@ class DuckConsoleProgram {
     }
 
     changeDirectory(path, windowId) {
-        if (!path) {
-            this.currentPath = ['root'];
+        // No arg or '~' — go home
+        if (!path || path === '~') {
+            this.currentPath = [...this.homeDir];
             this.updatePrompt(windowId);
-            this.outputToConsole('📂 Moved to root directory', 'success', windowId);
+            this.outputToConsole('📂 Moved to home directory', 'success', windowId);
             return;
         }
 
         if (path === '..') {
-            if (this.currentPath.length > 1) {
+            // Don't allow navigating above homeDir
+            if (this.currentPath.length > this.homeDir.length) {
                 this.currentPath.pop();
                 this.updatePrompt(windowId);
                 this.outputToConsole(`📂 Moved up to ${this.getPathString()}`, 'success', windowId);
             } else {
-                this.outputToConsole('❌ Already at root directory', 'error', windowId);
+                this.outputToConsole('❌ Already at home directory', 'error', windowId);
             }
             return;
         }
@@ -374,7 +524,7 @@ class DuckConsoleProgram {
         const newPath = [...this.currentPath, path];
         const folder = this.fileSystem.getFolder(newPath);
         
-        if (folder) {
+        if (folder && folder.type === 'folder') {
             this.currentPath = newPath;
             this.updatePrompt(windowId);
             this.outputToConsole(`📂 Moved to ${this.getPathString()}`, 'success', windowId);
@@ -393,10 +543,24 @@ class DuckConsoleProgram {
             return;
         }
 
+        // Validate name — no slashes or dots that could be path traversal
+        if (name.includes('/') || name.includes('\\') || name === '..' || name === '.') {
+            this.outputToConsole('❌ Invalid directory name', 'error', windowId);
+            return;
+        }
+
+        // Guard: only create folders at or below homeDir
+        const isAtOrBelowHome = this.currentPath.length >= this.homeDir.length &&
+            this.homeDir.every((seg, i) => this.currentPath[i] === seg);
+        if (!isAtOrBelowHome) {
+            this.outputToConsole('❌ Cannot create folders outside your home directory', 'error', windowId);
+            return;
+        }
+
         if (this.fileSystem.createFolder(this.currentPath, name)) {
             this.outputToConsole(`📁 Created directory: ${name}`, 'success', windowId);
         } else {
-            this.outputToConsole(`❌ Failed to create directory: ${name}`, 'error', windowId);
+            this.outputToConsole(`❌ Failed to create directory: ${name} (already exists?)`, 'error', windowId);
         }
     }
 
@@ -420,12 +584,13 @@ class DuckConsoleProgram {
     // Hacker Commands
     whoAmI(windowId) {
         const responses = [
-            `👤 User: ${this.user}`,
+            `👤 Hacker Name: ${this.user}`,
             `🔐 Security Clearance: Level ${this.securityLevel}`,
             `🎯 Specialization: Advanced Mathematics & Cat Whispering`,
             `🏆 Achievement: Master of the Googolplex`,
             `🐱 Virtual Assistant: Abby (Status: ${this.abbyMood})`,
-            `🐍 CEO Contact: Mr. Snake-e of Snakesia Industries`
+            `🐍 CEO Contact: Mr. Snake-e of Snakesia Industries`,
+            `💡 Tip: use 'setuser [name]' to change your hacker name`
         ];
 
         responses.forEach(response => {
@@ -433,31 +598,86 @@ class DuckConsoleProgram {
         });
     }
 
+    setUserCommand(params, windowId) {
+        const newName = params.join(' ').trim();
+
+        if (!newName) {
+            this.outputToConsole('❌ Usage: setuser [new name]', 'error', windowId);
+            this.outputToConsole(`👤 Current hacker name: ${this.user}`, 'info', windowId);
+            return;
+        }
+
+        // Basic validation — alphanumeric, underscores, hyphens only
+        if (!/^[a-zA-Z0-9_\-]{1,20}$/.test(newName)) {
+            this.outputToConsole('❌ Name must be 1-20 characters: letters, numbers, _ or - only', 'error', windowId);
+            return;
+        }
+
+        const oldName = this.user;
+        this.user = newName;
+        this._saveState(); // persist the new hacker name
+
+        this.outputToConsole(`✅ Hacker name changed: ${oldName} → ${newName}`, 'success', windowId);
+        this.outputToConsole(`👷 Welcome to the console, ${newName}! 👋`, 'accent', windowId);
+
+        // Update the header USER display and the prompt in all active windows
+        this.activeWindows.forEach(wid => {
+            this.updatePrompt(wid);
+            const userEl = document.querySelector(`[data-console-id="${wid}"] .user-status`);
+            if (userEl) userEl.textContent = `USER: ${this.user}`;
+        });
+    }
+
     hackCommand(params, windowId) {
         const target = params.join(' ') || 'default_system';
-        
+        const elite = this.securityLevel >= 4;
+
         this.outputToConsole(`🔓 Initiating hack sequence on: ${target}`, 'warning', windowId);
         this.outputToConsole('⚡ Scanning for vulnerabilities...', 'info', windowId);
+
+        if (elite) {
+            this.outputToConsole('👁️  Elite protocols active — deploying advanced intrusion suite...', 'accent', windowId);
+        }
         
         setTimeout(() => {
             this.outputToConsole('🔍 Buffer overflow detected!', 'success', windowId);
-            this.outputToConsole('🔑 Bypassing encryption...', 'info', windowId);
+            this.outputToConsole('🔑 Bypassing encryption layers...', 'info', windowId);
+
+            if (elite) {
+                setTimeout(() => {
+                    this.outputToConsole('🌍 Routing through Snakesian proxy servers...', 'info', windowId);
+                    this.outputToConsole('🐍 Snake-E Corp relay: CONNECTED', 'success', windowId);
+                    this.outputToConsole('🔐 Root certificate spoofed successfully', 'accent', windowId);
+                }, 600);
+            }
             
             setTimeout(() => {
                 const successRate = Math.random();
                 if (successRate > 0.3) {
                     this.outputToConsole('✅ ACCESS GRANTED!', 'success', windowId);
                     this.outputToConsole(`🏆 You are now the admin of ${target}`, 'success', windowId);
-                    if (this.securityLevel < 5) {
-                        this.securityLevel++;
-                        this.outputToConsole(`⬆️ Security clearance upgraded to Level ${this.securityLevel}!`, 'success', windowId);
-                        this.updateSecurityDisplay(windowId);
+                    if (elite) {
+                        const classified = [
+                            '📶 Accessing classified files...',
+                            '📜 DOCUMENT: "Snakesia Nuclear Snake Count: [REDACTED]"',
+                            '📜 DOCUMENT: "Mr. Snake-e\'s Denali maintenance schedule: TOP SECRET"',
+                            '📜 DOCUMENT: "Location of Pushing Cat\'s secret nap spots: CLASSIFIED"',
+                            '🔒 Further files require Supreme Overlord clearance.'
+                        ];
+                        classified.forEach((line, i) => {
+                            setTimeout(() => this.outputToConsole(line, 'accent', windowId), i * 250);
+                        });
                     }
                 } else {
-                    this.outputToConsole('❌ HACK FAILED - ICE detected!', 'error', windowId);
-                    this.outputToConsole('🚨 Recommend trying different approach', 'warning', windowId);
+                    this.outputToConsole('❌ HACK FAILED — ICE countermeasures detected!', 'error', windowId);
+                    if (elite) {
+                        this.outputToConsole('🚨 Snakesian Cyber Police alerted! Covering tracks...', 'warning', windowId);
+                        this.outputToConsole('🐍 Escape route via Snake-E Corp relay: SUCCESS', 'accent', windowId);
+                    } else {
+                        this.outputToConsole('🚨 Recommend trying a different approach', 'warning', windowId);
+                    }
                 }
-            }, 1500);
+            }, elite ? 2200 : 1500);
         }, 1000);
     }
 
@@ -811,10 +1031,319 @@ class DuckConsoleProgram {
                 this.outputToConsole('🥳 "Agenda item 1: More fun at work!"', 'success', windowId);
                 this.outputToConsole('💰 "Agenda item 2: Another bonus for everyone!"', 'success', windowId);
                 break;
+
+            case 'classified':
+                if (this.securityLevel < 5) {
+                    this.outputToConsole('🐍 "Sssorry! Those files are Level 5 Supreme Overlord only!"', 'accent', windowId);
+                    this.outputToConsole('🔒 Access denied. Type \'upgrade\' to advance your clearance.', 'error', windowId);
+                } else {
+                    const classifiedDocs = [
+                        '🐍 "Oh! A Supreme Overlord! Come in, come in..."',
+                        '',
+                        '📜 TOP SECRET — SNAKE-E CORP CLASSIFIED FILES',
+                        '══════════════════════════════════════════',
+                        '📝 FILE 001: The Denali is actually a converted submarine.',
+                        '📝 FILE 002: Mr. Snake-e\'s real name is Gerald.',
+                        '📝 FILE 003: ElxaCorp\'s HQ is built on 40,000 old snake skins.',
+                        '📝 FILE 004: The currency "snakes" originally referred to actual snakes.',
+                        '📝 FILE 005: Pushing Cat is on ElxaCorp\'s payroll. Cat-egory: Chaos Agent.',
+                        '',
+                        '🐍 "You didn\'t read any of that. Sssee yourself out!"'
+                    ];
+                    classifiedDocs.forEach((line, i) => {
+                        setTimeout(() => {
+                            this.outputToConsole(line, line.includes('═') ? 'accent' : 'success', windowId);
+                        }, i * 200);
+                    });
+                }
+                break;
                 
             default:
                 this.outputToConsole(`🐍 "Hmm, '${command}' isn't in my CEO handbook. Try another command!"`, 'accent', windowId);
         }
+    }
+
+    // =================================
+    // LEVEL 2 — MATH & SCIENCE COMMANDS
+    // =================================
+
+    binaryCommand(params, windowId) {
+        const input = params.join('');
+        if (!input) {
+            this.outputToConsole('🔢 binary [number]  — convert decimal to binary or binary to decimal', 'info', windowId);
+            this.outputToConsole('  Examples:  binary 42   → 101010', 'info', windowId);
+            this.outputToConsole('             binary 1010 → 10 (if it looks like binary)', 'info', windowId);
+            return;
+        }
+
+        const isBinary = /^[01]+$/.test(input);
+        if (isBinary && input.length > 3) {
+            // Looks like binary — convert to decimal
+            const decimal = parseInt(input, 2);
+            this.outputToConsole(`🔢 Binary → Decimal:`, 'info', windowId);
+            this.outputToConsole(`   ${input}₂ = ${decimal}₁₀`, 'success', windowId);
+        } else {
+            // Convert decimal to binary
+            const num = parseInt(input);
+            if (isNaN(num) || num < 0) {
+                this.outputToConsole('❌ Please enter a positive whole number', 'error', windowId);
+                return;
+            }
+            if (num > 100000) {
+                this.outputToConsole('⚠️  Number too large for the display! Try something under 100,000.', 'warning', windowId);
+                return;
+            }
+            const binary = num.toString(2);
+            this.outputToConsole(`🔢 Decimal → Binary:`, 'info', windowId);
+            this.outputToConsole(`   ${num}₁₀ = ${binary}₂`, 'success', windowId);
+            // Show the bit breakdown for small numbers
+            if (num <= 255) {
+                const padded = binary.padStart(8, '0');
+                this.outputToConsole(`   8-bit: ${padded.slice(0,4)} ${padded.slice(4)}`, 'accent', windowId);
+            }
+        }
+    }
+
+    convertCommand(params, windowId) {
+        const input = params.join(' ').toLowerCase();
+        if (!input) {
+            this.outputToConsole('🔄 Unit Converter — examples:', 'info', windowId);
+            this.outputToConsole('  convert 100 miles       → km', 'info', windowId);
+            this.outputToConsole('  convert 72 fahrenheit   → celsius', 'info', windowId);
+            this.outputToConsole('  convert 10 kg           → pounds', 'info', windowId);
+            this.outputToConsole('  convert 5 feet          → meters', 'info', windowId);
+            return;
+        }
+
+        const num = parseFloat(input.match(/[\d.]+/)?.[0]);
+        if (isNaN(num)) {
+            this.outputToConsole('❌ Please include a number. Example: convert 100 miles', 'error', windowId);
+            return;
+        }
+
+        this.outputToConsole(`🔄 Converting ${num}...`, 'info', windowId);
+
+        if (input.includes('mile')) {
+            this.outputToConsole(`📐 ${num} miles = ${(num * 1.60934).toFixed(2)} km`, 'success', windowId);
+        } else if (input.includes('km') || input.includes('kilometer')) {
+            this.outputToConsole(`📐 ${num} km = ${(num / 1.60934).toFixed(2)} miles`, 'success', windowId);
+        } else if (input.includes('fahrenheit') || input.includes('f°') || input.includes('°f')) {
+            this.outputToConsole(`🌡️  ${num}°F = ${((num - 32) * 5/9).toFixed(1)}°C`, 'success', windowId);
+        } else if (input.includes('celsius') || input.includes('c°') || input.includes('°c')) {
+            this.outputToConsole(`🌡️  ${num}°C = ${(num * 9/5 + 32).toFixed(1)}°F`, 'success', windowId);
+        } else if (input.includes('kg') || input.includes('kilogram')) {
+            this.outputToConsole(`⚖️  ${num} kg = ${(num * 2.20462).toFixed(2)} pounds`, 'success', windowId);
+        } else if (input.includes('pound') || input.includes('lb')) {
+            this.outputToConsole(`⚖️  ${num} pounds = ${(num / 2.20462).toFixed(2)} kg`, 'success', windowId);
+        } else if (input.includes('feet') || input.includes('foot') || input.includes('ft')) {
+            this.outputToConsole(`📐 ${num} feet = ${(num * 0.3048).toFixed(2)} meters`, 'success', windowId);
+        } else if (input.includes('meter') || input.includes('metre')) {
+            this.outputToConsole(`📐 ${num} meters = ${(num / 0.3048).toFixed(2)} feet`, 'success', windowId);
+        } else if (input.includes('inch') || input.includes('in')) {
+            this.outputToConsole(`📐 ${num} inches = ${(num * 2.54).toFixed(2)} cm`, 'success', windowId);
+        } else if (input.includes('cm') || input.includes('centimeter')) {
+            this.outputToConsole(`📐 ${num} cm = ${(num / 2.54).toFixed(2)} inches`, 'success', windowId);
+        } else {
+            this.outputToConsole('❓ Unit not recognized. Try: miles, km, fahrenheit, celsius, kg, pounds, feet, meters', 'warning', windowId);
+        }
+    }
+
+    // =================================
+    // LEVEL 3 — NETWORK COMMANDS
+    // =================================
+
+    traceCommand(params, windowId) {
+        if (!this.isOnline) {
+            this.outputToConsole('❌ Traceroute requires a network connection', 'error', windowId);
+            return;
+        }
+        const target = params.join(' ') || 'snoogle.ex';
+        this.outputToConsole(`📍 Tracing route to ${target}...`, 'info', windowId);
+        this.outputToConsole('🔍 Mapping hops through Snakesian infrastructure:', 'info', windowId);
+        this.outputToConsole('', 'info', windowId);
+
+        const hops = [
+            { ms: '2ms',   name: 'Local Gateway — DUCK Console Router' },
+            { ms: '8ms',   name: 'Snakesia City Central Hub' },
+            { ms: '14ms',  name: 'ElxaCorp Data Center (Floor 42)' },
+            { ms: '19ms',  name: 'Snake-E Tower Relay Node' },
+            { ms: '27ms',  name: 'Snakesia National Internet Exchange (SNIE)' },
+            { ms: '33ms',  name: `${target} — DESTINATION REACHED` }
+        ];
+
+        hops.forEach((hop, i) => {
+            setTimeout(() => {
+                const type = i === hops.length - 1 ? 'success' : 'info';
+                this.outputToConsole(`  ${(i+1).toString().padStart(2)}  ${hop.ms.padEnd(6)} ${hop.name}`, type, windowId);
+            }, i * 400);
+        });
+
+        setTimeout(() => {
+            this.outputToConsole('', 'info', windowId);
+            this.outputToConsole(`✅ Traceroute complete! ${hops.length} hops, 0% packet loss.`, 'success', windowId);
+        }, hops.length * 400 + 200);
+    }
+
+    whoisLiveCommand(windowId) {
+        if (!this.isOnline) {
+            this.outputToConsole('❌ whoislive requires a network connection', 'error', windowId);
+            return;
+        }
+        this.outputToConsole('🌐 Scanning Snakesian network for active users...', 'info', windowId);
+
+        const allUsers = [
+            { name: 'mr_snake_e',    ping: '4ms',   status: 'In a board meeting (again)' },
+            { name: 'pushing_cat',   ping: '??ms',  status: 'Status: suspicious' },
+            { name: 'remi',          ping: '12ms',  status: 'Streaming live on Snakebook' },
+            { name: 'mrs_snake_e',   ping: '88ms',  status: 'Napping (do not disturb)' },
+            { name: 'rita',          ping: '7ms',   status: 'Working late at ElxaCorp' },
+            { name: 'abby_cat',      ping: '1ms',   status: 'Right here with you 💕' },
+            { name: 'sys_duck',      ping: '0ms',   status: 'DUCK Console daemon (that\'s you!)' }
+        ];
+
+        // Pick 3-5 random users to show as "online"
+        const count = 3 + Math.floor(Math.random() * 3);
+        const online = [...allUsers].sort(() => Math.random() - 0.5).slice(0, count);
+
+        setTimeout(() => {
+            this.outputToConsole('🟢 ONLINE USERS IN SNAKESIA:', 'success', windowId);
+            this.outputToConsole('══════════════════════════════════════', 'accent', windowId);
+            online.forEach(u => {
+                this.outputToConsole(`  ● ${u.name.padEnd(16)} [${u.ping}]  ${u.status}`, 'info', windowId);
+            });
+            this.outputToConsole(`
+${online.length} user(s) online of ${allUsers.length} registered.`, 'success', windowId);
+        }, 800);
+    }
+
+    // =================================
+    // LEVEL 4 — ELITE COMMANDS
+    // =================================
+
+    rainbowCommand(params, windowId) {
+        const text = params.join(' ');
+        if (!text) {
+            this.outputToConsole('❌ Usage: rainbow [text]', 'error', windowId);
+            return;
+        }
+        const colors = ['#ff4444', '#ff9900', '#ffee00', '#44dd44', '#4488ff', '#aa44ff'];
+        let html = '';
+        let colorIdx = 0;
+        for (const char of text) {
+            if (char === ' ') {
+                html += ' ';
+            } else {
+                html += `<span style="color:${colors[colorIdx % colors.length]};font-weight:bold">${char}</span>`;
+                colorIdx++;
+            }
+        }
+        this.outputToConsole('🌈 Rainbow text activated!', 'accent', windowId);
+        this.outputRichToConsole(html, windowId);
+    }
+
+    glitchCommand(params, windowId) {
+        const text = params.join(' ');
+        if (!text) {
+            this.outputToConsole('❌ Usage: glitch [text]', 'error', windowId);
+            return;
+        }
+        const glitchChars = '!@#░▒▓█▄▀■□×¶§‰®©™±';
+        const corrupt = (str) => str.split('').map(c =>
+            c === ' ' ? ' ' : (Math.random() > 0.45 ? c : glitchChars[Math.floor(Math.random() * glitchChars.length)])
+        ).join('');
+
+        this.outputToConsole('⚠️  GLITCH SEQUENCE INITIATED...', 'warning', windowId);
+        setTimeout(() => this.outputToConsole(corrupt(text), 'error', windowId), 300);
+        setTimeout(() => this.outputToConsole(corrupt(text), 'warning', windowId), 600);
+        setTimeout(() => this.outputToConsole(corrupt(text), 'error', windowId), 900);
+        setTimeout(() => this.outputToConsole(text, 'success', windowId), 1300);
+        setTimeout(() => this.outputToConsole('✅ Signal stabilized.', 'success', windowId), 1600);
+    }
+
+    explodeCommand(params, windowId) {
+        const text = params.join(' ');
+        if (!text) {
+            this.outputToConsole('❌ Usage: explode [text]', 'error', windowId);
+            return;
+        }
+        this.outputToConsole('💥 DEPLOYING DRAMATIC TEXT SEQUENCE...', 'accent', windowId);
+
+        const output = document.getElementById(`console-output-${windowId}`);
+        if (!output) return;
+
+        // Create the line div up front and append it
+        const line = document.createElement('div');
+        line.className = 'console-line success';
+        output.appendChild(line);
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < text.length) {
+                line.textContent += text[i];
+                output.scrollTop = output.scrollHeight;
+                i++;
+            } else {
+                clearInterval(interval);
+                setTimeout(() => {
+                    this.outputToConsole('🎤 ...mic drop.', 'accent', windowId);
+                }, 300);
+            }
+        }, 80);
+    }
+
+    decodeCommand(params, windowId) {
+        const text = params.join(' ');
+        if (!text) {
+            this.outputToConsole('❌ Usage: decode [text]', 'error', windowId);
+            return;
+        }
+
+        this.outputToConsole('🔓 Initializing multi-layer cipher analysis...', 'info', windowId);
+
+        // Build a series of "cipher layers" by progressively un-shifting characters
+        const shift = (str, n) => str.split('').map(c => {
+            if (c.match(/[a-zA-Z]/)) {
+                const base = c === c.toUpperCase() ? 65 : 97;
+                return String.fromCharCode(((c.charCodeAt(0) - base + 26 - n) % 26) + base);
+            }
+            return c;
+        }).join('');
+
+        const layer1 = shift(text, 7);
+        const layer2 = shift(text, 4);
+        const layer3 = shift(text, 1);
+
+        setTimeout(() => { this.outputToConsole(`🔐 Layer 1 (ROT-7 shift):     ${layer1}`, 'warning', windowId); }, 400);
+        setTimeout(() => { this.outputToConsole(`🔐 Layer 2 (ROT-4 shift):     ${layer2}`, 'warning', windowId); }, 900);
+        setTimeout(() => { this.outputToConsole(`🔐 Layer 3 (ROT-1 shift):     ${layer3}`, 'info', windowId); }, 1400);
+        setTimeout(() => { this.outputToConsole(`✅ DECODED — Original signal: ${text}`, 'success', windowId); }, 1900);
+        setTimeout(() => { this.outputToConsole('🏆 Decryption sequence complete!', 'accent', windowId); }, 2100);
+    }
+
+    // =================================
+    // LEVEL 5 — SUPREME OVERLORD COMMANDS
+    // =================================
+
+    overrideCommand(windowId) {
+        this.outputToConsole('🚨 WARNING: SYSTEM OVERRIDE INITIATED', 'warning', windowId);
+        this.outputToConsole('👑 Supreme Overlord credentials confirmed.', 'accent', windowId);
+
+        const sequence = [
+            [500,  '████████████████████████████████████████', 'accent'],
+            [700,  '🔓 Root access: GRANTED', 'success'],
+            [900,  '🔓 Kernel override: GRANTED', 'success'],
+            [1100, '🔓 ElxaOS mainframe: OWNED', 'success'],
+            [1300, '🔓 Snakesian satellite network: OWNED', 'success'],
+            [1500, '🔓 Mr. Snake-e\'s Denali GPS: OWNED', 'success'],
+            [1700, '████████████████████████████████████████', 'accent'],
+            [2000, '🌍 ALL SYSTEMS UNDER SUPREME OVERLORD CONTROL', 'success'],
+            [2300, '👑 The DUCK Console bows before you.', 'accent'],
+            [2600, '🦆 Quack.', 'accent']
+        ];
+
+        sequence.forEach(([delay, msg, type]) => {
+            setTimeout(() => this.outputToConsole(msg, type, windowId), delay);
+        });
     }
 
     // Network Commands (require WiFi)
@@ -931,21 +1460,194 @@ class DuckConsoleProgram {
     // System Commands
     upgradeCommand(windowId) {
         if (this.securityLevel >= 5) {
-            this.outputToConsole('🏆 You already have maximum security clearance!', 'success', windowId);
-            this.outputToConsole('👑 You are the ultimate hacker master!', 'accent', windowId);
+            this.outputToConsole('🏆 Maximum clearance already achieved!', 'success', windowId);
+            this.outputToConsole('👑 You are the Supreme Overlord. All systems are yours.', 'accent', windowId);
             return;
         }
 
-        this.outputToConsole('⬆️ Initiating security clearance upgrade...', 'info', windowId);
-        this.outputToConsole('🔐 Verifying credentials...', 'info', windowId);
-        
-        setTimeout(() => {
-            this.securityLevel++;
-            this.outputToConsole(`✅ UPGRADE SUCCESSFUL!`, 'success', windowId);
-            this.outputToConsole(`🎖️ New Security Level: ${this.securityLevel}`, 'success', windowId);
-            this.outputToConsole('🔓 New commands and privileges unlocked!', 'accent', windowId);
-            this.updateSecurityDisplay(windowId);
-        }, 2000);
+        if (this.pendingUpgrade) {
+            this.outputToConsole('⚠️  A challenge is already active! Type your answer, or type SKIP to cancel.', 'warning', windowId);
+            return;
+        }
+
+        const targetLevel = this.securityLevel + 1;
+        const puzzle = this._getUpgradePuzzle(targetLevel);
+
+        this.pendingUpgrade = {
+            targetLevel,
+            check: puzzle.check,
+            hint: puzzle.hint,
+            attempts: 0
+        };
+
+        puzzle.lines.forEach(line => {
+            this.outputToConsole(line, line.includes('═') ? 'accent' : 'info', windowId);
+        });
+
+        // Update prompt to show answer mode
+        this.activeWindows.forEach(wid => this.updatePrompt(wid));
+    }
+
+    checkUpgradeAnswer(input, windowId) {
+        const state = this.pendingUpgrade;
+        if (!state) return;
+
+        // Allow cancellation
+        if (input.trim().toLowerCase() === 'skip') {
+            this.pendingUpgrade = null;
+            this.outputToConsole('🚫 Challenge cancelled. Come back when you\'re ready!', 'warning', windowId);
+            this.activeWindows.forEach(wid => this.updatePrompt(wid));
+            return;
+        }
+
+        state.attempts++;
+
+        if (state.check(input)) {
+            // Correct!
+            this.pendingUpgrade = null;
+            this.securityLevel = state.targetLevel;
+            this._saveState(); // persist the new clearance level
+
+            const unlockLines = this._getLevelUnlockMessage(state.targetLevel);
+            setTimeout(() => {
+                unlockLines.forEach((line, i) => {
+                    setTimeout(() => {
+                        this.outputToConsole(line, line.includes('═') ? 'accent' : 'success', windowId);
+                    }, i * 150);
+                });
+                setTimeout(() => {
+                    this.updateSecurityDisplay(windowId);
+                    this.activeWindows.forEach(wid => this.updatePrompt(wid));
+                }, unlockLines.length * 150 + 100);
+            }, 300);
+        } else {
+            // Wrong answer
+            if (state.attempts >= 3) {
+                // Reset after 3 strikes
+                this.pendingUpgrade = null;
+                this.outputToConsole('❌ 3 failed attempts. Security lockout initiated!', 'error', windowId);
+                this.outputToConsole('🔁 Puzzle reset. Type \'upgrade\' to try again.', 'warning', windowId);
+                this.activeWindows.forEach(wid => this.updatePrompt(wid));
+            } else {
+                this.outputToConsole(`❌ Incorrect! (${state.attempts}/3 attempts used)`, 'error', windowId);
+                if (state.attempts === 1) {
+                    this.outputToConsole(state.hint, 'warning', windowId);
+                }
+                this.outputToConsole('💭 Type your answer, or type SKIP to cancel the challenge.', 'info', windowId);
+            }
+        }
+    }
+
+    _getLevelName(level) {
+        return ['', 'Cadet', 'Math Wizard', 'Network Operative', 'Elite Hacker', 'Supreme Overlord'][level] || 'Unknown';
+    }
+
+    _getUpgradePuzzle(targetLevel) {
+        const puzzles = {
+            2: {
+                lines: [
+                    '🧮 CLEARANCE CHALLENGE: LEVEL 2 — MATH WIZARD',
+                    '═════════════════════════════════════════════',
+                    '',
+                    '🔐 Prove your math skills to unlock Math Wizard access!',
+                    '',
+                    '❓ What is 2 to the power of 10?',
+                    '',
+                    '💬 Type your answer and press Enter (or SKIP to cancel)...'
+                ],
+                check: (input) => input.trim() === '1024',
+                hint: '💡 Hint: Start with 2, keep doubling... 2, 4, 8, 16...'
+            },
+            3: {
+                lines: [
+                    '💻 CLEARANCE CHALLENGE: LEVEL 3 — NETWORK OPERATIVE',
+                    '══════════════════════════════════════════════════',
+                    '',
+                    '🔐 Decode this binary to unlock Network Operative access!',
+                    '',
+                    '❓ What decimal number does 01001010 equal in binary?',
+                    '',
+                    '💬 Type your answer and press Enter (or SKIP to cancel)...'
+                ],
+                check: (input) => input.trim() === '74',
+                hint: '💡 Hint: Break it into two groups of 4 — 0100 and 1010'
+            },
+            4: {
+                lines: [
+                    '⚡ CLEARANCE CHALLENGE: LEVEL 4 — ELITE HACKER',
+                    '═════════════════════════════════════════════',
+                    '',
+                    '🔐 Solve this riddle to unlock Elite Hacker access!',
+                    '',
+                    '❓ I speak without a mouth and hear without ears.',
+                    '   I have no body, but I come alive with the wind.',
+                    '   What am I?',
+                    '',
+                    '💬 Type your answer and press Enter (or SKIP to cancel)...'
+                ],
+                check: (input) => ['echo', 'an echo'].includes(input.trim().toLowerCase()),
+                hint: '💡 Hint: You\'ve heard me in mountains, canyons, and empty halls...'
+            },
+            5: {
+                lines: [
+                    '👑 CLEARANCE CHALLENGE: LEVEL 5 — SUPREME OVERLORD',
+                    '══════════════════════════════════════════════════',
+                    '',
+                    '🔐 Final challenge: Prove you know Snakesia!',
+                    '',
+                    '❓ What is the official currency of Snakesia?',
+                    '',
+                    '💬 Type your answer and press Enter (or SKIP to cancel)...'
+                ],
+                check: (input) => ['snakes', 'snake'].includes(input.trim().toLowerCase()),
+                hint: '💡 Hint: It\'s also a reptile... and you\'re looking at one right now 🐍'
+            }
+        };
+        return puzzles[targetLevel];
+    }
+
+    _getLevelUnlockMessage(level) {
+        const messages = {
+            2: [
+                '',
+                '✅ CORRECT! CLEARANCE GRANTED!',
+                '═══════════════════════════════════',
+                '🧮 Welcome to Level 2: MATH WIZARD!',
+                '🔓 New commands unlocked:',
+                '   math, binary, convert, googolplex, tree, enigma',
+                ''
+            ],
+            3: [
+                '',
+                '✅ CORRECT! CLEARANCE GRANTED!',
+                '═══════════════════════════════════',
+                '🌐 Welcome to Level 3: NETWORK OPERATIVE!',
+                '🔓 New commands unlocked:',
+                '   network, netstat, ping, scan, firewall, trace, whoislive',
+                ''
+            ],
+            4: [
+                '',
+                '✅ CORRECT! CLEARANCE GRANTED!',
+                '═══════════════════════════════════',
+                '⚡ Welcome to Level 4: ELITE HACKER!',
+                '🔓 New commands unlocked:',
+                '   rainbow, glitch, explode, decode',
+                '🎨 Also: hack gets a serious upgrade at this level!',
+                ''
+            ],
+            5: [
+                '',
+                '✅ CORRECT! CLEARANCE GRANTED!',
+                '═══════════════════════════════════',
+                '👑 Welcome to Level 5: SUPREME OVERLORD!',
+                '🔓 All systems unlocked!',
+                '   override, snakee classified',
+                '🏆 You have reached the pinnacle of DUCK Console power.',
+                ''
+            ]
+        };
+        return messages[level] || ['✅ Level up!'];
     }
 
     statusCommand(windowId) {
@@ -953,7 +1655,7 @@ class DuckConsoleProgram {
             '📊 SYSTEM STATUS REPORT',
             '═══════════════════════',
             `👤 User: ${this.user}`,
-            `🔐 Security Level: ${this.securityLevel}/5`,
+            `🔐 Security Level: ${this.securityLevel}/5 — ${this._getLevelName(this.securityLevel)}`,
             `📂 Current Directory: ${this.getPathString()}`,
             `🌐 Network: ${this.isOnline ? 'CONNECTED' : 'OFFLINE'}`,
             `🐱 Abby Status: ${this.abbyMood}`,
@@ -1020,6 +1722,19 @@ class DuckConsoleProgram {
         output.scrollTop = output.scrollHeight;
     }
 
+    // For commands that intentionally output HTML (e.g. rainbow colored text)
+    outputRichToConsole(html, windowId) {
+        const output = document.getElementById(`console-output-${windowId}`);
+        if (!output) return;
+
+        const line = document.createElement('div');
+        line.className = 'console-line accent';
+        line.innerHTML = html;
+
+        output.appendChild(line);
+        output.scrollTop = output.scrollHeight;
+    }
+
     outputToActiveConsole(text, type = 'info') {
         // Output to all active duck-console windows
         this.activeWindows.forEach(windowId => {
@@ -1028,12 +1743,19 @@ class DuckConsoleProgram {
     }
 
     getPrompt() {
-        const pathStr = this.currentPath.length === 1 ? '~' : this.currentPath.slice(1).join('/');
+        if (this.pendingUpgrade) {
+            return `[CHALLENGE L${this.pendingUpgrade.targetLevel}]> `;
+        }
+        const atHome = this.currentPath.length === this.homeDir.length &&
+            this.homeDir.every((seg, i) => this.currentPath[i] === seg);
+        const pathStr = atHome ? '~' : '~/' + this.currentPath.slice(this.homeDir.length).join('/');
         return `${this.user}@DUCK:${pathStr}$ `;
     }
 
     getPathString() {
-        return this.currentPath.length === 1 ? 'root' : this.currentPath.slice(1).join('/');
+        const atHome = this.currentPath.length === this.homeDir.length &&
+            this.homeDir.every((seg, i) => this.currentPath[i] === seg);
+        return atHome ? '~' : '~/' + this.currentPath.slice(this.homeDir.length).join('/');
     }
 
     updatePrompt(windowId) {

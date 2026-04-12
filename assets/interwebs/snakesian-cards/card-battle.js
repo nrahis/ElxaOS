@@ -610,12 +610,34 @@
       }
 
       renderBattle();
-      setTimeout(function() { startTurn(); }, 1500);
+      if (battle.aiActedFirst) {
+        battle.aiActedFirst = false;
+        if (battle.stunPlayer > 0) {
+          battle.stunPlayer--;
+          addLog('Your ' + getActive('player').card.name + ' is stunned!');
+          setTimeout(function() { startTurn(); }, 1200);
+        } else {
+          setTimeout(function() { battle.phase = 'playerTurn'; renderBattle(); }, 1000);
+        }
+      } else {
+        setTimeout(function() { startTurn(); }, 1500);
+      }
       return;
     }
 
     renderBattle();
-    setTimeout(function() { startTurn(); }, 1200);
+    if (battle.aiActedFirst) {
+      battle.aiActedFirst = false;
+      if (battle.stunPlayer > 0) {
+        battle.stunPlayer--;
+        addLog('Your ' + getActive('player').card.name + ' is stunned!');
+        setTimeout(function() { startTurn(); }, 1200);
+      } else {
+        setTimeout(function() { battle.phase = 'playerTurn'; renderBattle(); }, 1000);
+      }
+    } else {
+      setTimeout(function() { startTurn(); }, 1200);
+    }
   };
 
   // ==========================================
@@ -783,7 +805,7 @@
       var diffColor = opp.difficulty === 'easy' ? '#5a8a65' : opp.difficulty === 'medium' ? '#d4a535' : '#9a3038';
       html += '<div class="arena-opponent-card" data-opponent="' + opp.id + '">' +
         '<div class="arena-opponent-portrait">' +
-          '<img src="' + IMAGE_PATH + 'opponents/' + opp.portrait + '" alt="' + opp.name + '" onerror="this.style.display=\'none\'">' +
+          '<img src="assets/messenger/' + opp.portrait + '" alt="' + opp.name + '" onerror="this.style.display=\'none\'">' +
         '</div>' +
         '<div class="arena-opponent-info">' +
           '<div class="arena-opponent-name">' + opp.name + '</div>' +

@@ -44,7 +44,8 @@ class ElxaOS {
             antivirus: new AntivirusProgram(this.windowManager, this.fileSystem, this.eventBus),
             viruslab: new VirusLabProgram(this.windowManager, this.fileSystem, this.eventBus),
             elxasheets: new ElxaSheetsProgram(this.windowManager, this.fileSystem, this.eventBus),
-            help: new HelpProgram(this.windowManager, this.fileSystem, this.eventBus)
+            help: new HelpProgram(this.windowManager, this.fileSystem, this.eventBus),
+            settings: new SettingsProgram(this.windowManager, this.fileSystem, this.eventBus)
         };
 
         // Initialize installed programs storage
@@ -160,6 +161,7 @@ class ElxaOS {
             'sssteam':      (args) => this.programs.browser.launch(args || 'sssteam.ex'),
         'elxasheets':   (args) => this.programs.elxasheets.launch(args),
         'help':         (args) => this.programs.help.launch(args),
+        'settings':     (args) => this.programs.settings.launch(args),
         };
     }
 

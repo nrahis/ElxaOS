@@ -21,6 +21,7 @@
 @import url('programs/elxabooks.css');
 @import url('programs/elxasheets.css');
 @import url('programs/help.css');
+@import url('programs/settings.css');
 @import url('programs/virus/lebron-james-virus.css');
 @import url('programs/virus/roblox-jumpscare-virus.css');
 @import url('programs/antivirus.css');
@@ -61,6 +62,7 @@
     --clockText: #333;
     --iconText: white;
     --iconTextShadow: rgba(0,0,0,0.8);
+    --systemFont: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* =================================
@@ -73,7 +75,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--systemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif);
     font-size: 11px;
     overflow: hidden;
     user-select: none;

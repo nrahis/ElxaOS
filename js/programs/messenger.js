@@ -74,6 +74,16 @@ class MessengerProgram {
             }
         });
 
+        // Sync when LLM settings are changed from the Settings program
+        this.eventBus.on('settings.llmChanged', () => {
+            // Settings program already wrote to our settings object,
+            // so just refresh the UI if the settings modal is open
+            const modal = document.getElementById('messengerSettingsModal');
+            if (modal && modal.style.display !== 'none') {
+                this.showSettings();
+            }
+        });
+
         this.initializeManagers();
         this.loadSettings();
     }
@@ -1770,6 +1780,9 @@ class MessengerProgram {
 
         this.hideSettings();
         ElxaUI.showMessage('Settings saved!', 'success');
+
+        // Notify Settings program (in case its LLM tab is open)
+        this.eventBus.emit('messenger.settingsChanged');
     }
 
     updateUserInfo() {

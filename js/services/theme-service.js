@@ -7,6 +7,7 @@ class ThemeService {
         this.currentTheme = 'classic';
         this.currentWallpaper = 'default';
         this.wallpaperFit = 'fill';  // fill, fit, stretch, center, tile
+        this.currentFont = 'segoeui';
         
         this.themes = {
             classic: {
@@ -741,6 +742,54 @@ class ThemeService {
             }
         };
         
+        this.fonts = {
+            segoeui: {
+                name: 'Segoe UI',
+                stack: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                source: 'system'
+            },
+            tahoma: {
+                name: 'Tahoma',
+                stack: "Tahoma, Geneva, Verdana, sans-serif",
+                source: 'system'
+            },
+            verdana: {
+                name: 'Verdana',
+                stack: "Verdana, Geneva, Tahoma, sans-serif",
+                source: 'system'
+            },
+            inter: {
+                name: 'Inter',
+                stack: "'Inter', sans-serif",
+                source: 'google'
+            },
+            roboto: {
+                name: 'Roboto',
+                stack: "'Roboto', sans-serif",
+                source: 'google'
+            },
+            dmsans: {
+                name: 'DM Sans',
+                stack: "'DM Sans', sans-serif",
+                source: 'google'
+            },
+            ubuntu: {
+                name: 'Ubuntu',
+                stack: "'Ubuntu', sans-serif",
+                source: 'google'
+            },
+            nunito: {
+                name: 'Nunito',
+                stack: "'Nunito', sans-serif",
+                source: 'google'
+            },
+            quicksand: {
+                name: 'Quicksand',
+                stack: "'Quicksand', sans-serif",
+                source: 'google'
+            }
+        };
+        
         this.customWallpapers = {}; // Store imported images and Paint creations
         this.assetWallpapers = {}; // Store wallpapers from assets/backgrounds folder
 
@@ -956,11 +1005,27 @@ class ThemeService {
             `;
         }).join('');
 
+        const fontOptions = Object.keys(this.fonts).map(fontKey => {
+            const font = this.fonts[fontKey];
+            const isSelected = fontKey === this.currentFont;
+            const badge = font.source === 'google'
+                ? '<div class="google-font-badge">G</div>'
+                : '';
+            return `
+                <div class="font-option ${isSelected ? 'selected' : ''}" data-font="${fontKey}">
+                    <div class="font-preview-sample" style="font-family: ${font.stack};">Aa</div>
+                    <div class="font-name">${font.name}</div>
+                    ${badge}
+                </div>
+            `;
+        }).join('');
+
         var contentHTML = `
             <div class="personalize-app">
                 <div class="personalize-tabs">
                     <div class="personalize-tab active" data-tab="themes">${ElxaIcons.renderAction('personalize')} Color Schemes</div>
                     <div class="personalize-tab" data-tab="wallpapers">${ElxaIcons.renderAction('image')} Wallpapers</div>
+                    <div class="personalize-tab" data-tab="fonts">${ElxaIcons.renderAction('text')} Fonts</div>
                 </div>
                 
                 <div class="personalize-content">
@@ -991,6 +1056,13 @@ class ThemeService {
                         </div>
                         <div class="personalize-wp-grid">
                             ${wallpaperOptions}
+                        </div>
+                    </div>
+                    
+                    <div class="personalize-panel" id="fontsPanel">
+                        <p class="font-panel-info">Choose a system font for ElxaOS. This affects all windows, menus, and UI text.</p>
+                        <div class="personalize-font-grid">
+                            ${fontOptions}
                         </div>
                     </div>
                 </div>
@@ -1054,6 +1126,14 @@ class ThemeService {
                 dialog.querySelectorAll('.wallpaper-option').forEach(o => o.classList.remove('selected'));
                 wallpaperOption.classList.add('selected');
                 this.previewWallpaper(wallpaperOption.dataset.wallpaper);
+            }
+            
+            // Font selection
+            const fontOption = e.target.closest('.font-option');
+            if (fontOption) {
+                dialog.querySelectorAll('.font-option').forEach(o => o.classList.remove('selected'));
+                fontOption.classList.add('selected');
+                this.applyFont(fontOption.dataset.font);
             }
             
             // Import image button
@@ -1458,6 +1538,13 @@ class ThemeService {
         }
     }
 
+    applyFont(fontKey) {
+        const font = this.fonts[fontKey];
+        if (!font) return;
+        this.currentFont = fontKey;
+        document.documentElement.style.setProperty('--systemFont', font.stack);
+    }
+
     applyTheme() {
         const theme = this.themes[this.currentTheme];
         const allWallpapers = { 
@@ -1470,6 +1557,7 @@ class ThemeService {
         console.log('🎨 Applying theme:', this.currentTheme, 'with wallpaper:', this.currentWallpaper);
         
         this.applyThemeColors(theme);
+        this.applyFont(this.currentFont);
         
         if (wallpaper) {
             this.applyWallpaper(wallpaper);
@@ -1620,6 +1708,7 @@ class ThemeService {
         this.currentTheme = 'classic';
         this.currentWallpaper = 'default';
         this.wallpaperFit = 'fill';
+        this.currentFont = 'segoeui';
         this.customWallpapers = {}; // Clear custom wallpapers too
         this.applyTheme();
         this.saveSettings(); // 🔥 Save the reset
@@ -1649,7 +1738,8 @@ class ThemeService {
                 theme: this.currentTheme,
                 wallpaper: this.currentWallpaper,
                 wallpaperFit: this.wallpaperFit,
-                customWallpapers: this.customWallpapers // Save custom wallpapers too!
+                font: this.currentFont,
+                customWallpapers: this.customWallpapers
                 // Note: We don't save assetWallpapers as they're loaded dynamically from the file system
             };
             
@@ -1669,6 +1759,7 @@ class ThemeService {
                 this.currentTheme = settings.theme || 'classic';
                 this.currentWallpaper = settings.wallpaper || 'default';
                 this.wallpaperFit = settings.wallpaperFit || 'fill';
+                this.currentFont = settings.font || 'segoeui';
                 
                 // Load custom wallpapers (imported images, Paint creations, etc.)
                 if (settings.customWallpapers) {

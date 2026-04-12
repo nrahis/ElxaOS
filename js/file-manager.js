@@ -1084,7 +1084,11 @@ class FileManagerProgram {
                                     icon = shortcutData.programInfo.icon;
                                 }
                                 program = shortcutData.programId;
-                                iconElement.dataset.installed = 'true';
+                                // Only mark as uninstallable if it's a user-installed game
+                                // (installed_ prefix = came from .abby installer, e.g. Sssteam games)
+                                if (shortcutData.programId.startsWith('installed_')) {
+                                    iconElement.dataset.installed = 'true';
+                                }
                                 if (shortcutData.launchArgs) {
                                     iconElement.dataset.launchargs = shortcutData.launchArgs;
                                 }

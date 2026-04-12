@@ -346,7 +346,7 @@ class Taskbar {
                     { program: 'help', icon: 'mdi-help-circle', label: 'Help' },
                     { separator: true },
                     { action: 'personalize', icon: 'mdi-palette', label: 'Personalize' },
-                    { action: 'userSettings', icon: 'mdi-account', label: 'User Settings' },
+                    { action: 'openSettings', icon: 'mdi-cog', label: 'Settings' },
                 ];
 
             default:
@@ -523,8 +523,8 @@ class Taskbar {
             elxaOS.eventBus.emit('system.shutdown');
         } else if (item.dataset.action === 'personalize') {
             elxaOS.themeService.showThemeDialog();
-        } else if (item.dataset.action === 'userSettings') {
-            elxaOS.loginService.showUserSettingsDialog();
+        } else if (item.dataset.action === 'openSettings') {
+            elxaOS.launchProgram('settings');
         } else if (item.dataset.action === 'logout') {
             elxaOS.loginService.logout();
         }

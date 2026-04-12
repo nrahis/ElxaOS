@@ -4,6 +4,41 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
+## Settings Program — Centralized Settings Panel — Session 59
+
+### New: Settings program (replaces User Settings dialog)
+- Renamed "User Settings" to "Settings" in Start Menu → System
+- Now opens as a proper windowed program instead of a modal dialog
+- Fixes scrolling bug where display name input would scroll with page
+- Three tabs: User, LLM, System
+
+### User tab
+- Display name, avatar picker, account info (same as old User Settings)
+- Save Changes and Change Password buttons
+
+### LLM tab
+- Mirrors all Messenger LLM settings: API key, model select, LLM enabled, cross-platform memory, history length, story progression, response length, auto-summarize
+- Changes sync bidirectionally with Messenger via EventBus (`settings.llmChanged` / `messenger.settingsChanged`)
+- Refresh Models button fetches available Gemini models
+
+### System tab
+- Refresh Desktop — re-syncs desktop icons from filesystem
+- Reload ElxaOS — reloads the page (keeps data)
+- Delete User — removes current user account + clears their registry data, then logs out. Double confirmation required. Default admin (kitkat) protected.
+
+### Files added
+- `js/programs/settings.js` — SettingsProgram class
+- `css/programs/settings.css` — tab styling, form groups, system buttons, danger zone
+
+### Files modified
+- `js/elxaos.js` — registered Settings in programs object + program registry
+- `js/taskbar.js` — changed system submenu from "User Settings" (userSettings action) to "Settings" (openSettings action → launches settings program)
+- `js/programs/messenger.js` — added `settings.llmChanged` listener to sync UI, emits `messenger.settingsChanged` after saving
+- `index.html` — added settings.js script tag
+- `css/desktop.css` — added settings.css import
+
+---
+
 ## ExWeb Directory — Search & Navigation — Session 58
 
 ### Enhanced Directory page
