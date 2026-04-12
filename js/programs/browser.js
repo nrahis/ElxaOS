@@ -411,7 +411,7 @@ class BrowserProgram {
             this.hideLoading();
 
             // Check if it's a search query or URL
-            if (input.includes('.ex') || input === 'directory') {
+            if (input.includes('.ex') || input === 'directory' || this.websiteRegistry[input]) {
                 this.loadPage(input);
             } else {
                 this.performSearch(input);
@@ -713,10 +713,17 @@ class BrowserProgram {
 
         if (results.length > 0) {
             results.slice(0, 10).forEach(site => {
+                const isExternal = site.type === 'external';
+                const urlDisplay = isExternal ? site.externalUrl.replace('https://', '') : `elxaos.interwebs/${site.url}`;
+                const externalBadge = isExternal ? `<span style="
+                    display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 10px;
+                    padding: 1px 6px; border-radius: 3px; margin-left: 6px; font-weight: 600;
+                    vertical-align: middle;
+                ">${ElxaIcons.render('mdi-open-in-new', { size: 10, color: '#1a73e8' })} Real Web</span>` : '';
                 content += `
                     <div class="search-result">
-                        <div class="result-url">elxaos.interwebs/${site.url}</div>
-                        <div class="result-title" onclick="elxaOS.programs.browser.loadPage('${site.url}')">${site.title}</div>
+                        <div class="result-url">${urlDisplay}</div>
+                        <div class="result-title" onclick="elxaOS.programs.browser.loadPage('${site.url}')">${site.title}${externalBadge}</div>
                         <div class="result-description">${site.searchData.description}</div>
                     </div>
                 `;
@@ -847,15 +854,22 @@ class BrowserProgram {
 
                 const sitesHTML = categorizedSites[category]
                     .sort((a, b) => a.site.title.localeCompare(b.site.title))
-                    .map(({ url, site }) => `
+                    .map(({ url, site }) => {
+                        const isExternal = site.type === 'external';
+                        const externalBadge = isExternal ? ` <span style="
+                            display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 10px;
+                            padding: 1px 5px; border-radius: 3px; margin-left: 4px; font-weight: 600;
+                            vertical-align: middle;
+                        ">${ElxaIcons.render('mdi-open-in-new', { size: 10, color: '#1a73e8' })} Real Web</span>` : '';
+                        return `
                         <tr class="directory-site-row" data-title="${site.title.toLowerCase()}" data-desc="${site.searchData.description.toLowerCase()}" data-keywords="${site.searchData.keywords.join(' ').toLowerCase()}">
                             <td style="width: 20px;">&bull;</td>
                             <td>
-                                <div class="site-link" onclick="elxaOS.programs.browser.loadPage('${url}')">${site.title}</div>
+                                <div class="site-link" onclick="elxaOS.programs.browser.loadPage('${url}')">${site.title}${externalBadge}</div>
                                 <div class="site-description">${site.searchData.description}</div>
                             </td>
                         </tr>
-                    `).join('');
+                    `;}).join('');
 
                 return `
                     <div class="category-section" id="dir-cat-${category}">
@@ -967,6 +981,11 @@ class BrowserProgram {
             return;
         }
 
+        if (site.type === 'external') {
+            this.showExternalLandingPage(url, site);
+            return;
+        }
+
         if (site.type === 'file') {
             console.log(`📄 Loading website file: ${site.path}`);
             this.showLoading();
@@ -1024,6 +1043,61 @@ class BrowserProgram {
                 this.showFileNotFoundPage(site, url);
             }
         }
+    }
+
+    showExternalLandingPage(url, site) {
+        const externalUrl = site.externalUrl;
+        const content = `
+            <div style="
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                min-height: 400px; padding: 40px 20px; text-align: center;
+                font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+            ">
+                <div style="
+                    background: white; border-radius: 12px; padding: 40px 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                    max-width: 500px; width: 100%;
+                ">
+                    <div style="font-size: 40px; margin-bottom: 16px;">
+                        ${ElxaIcons.render('mdi-open-in-new', { size: 40, color: '#4285f4' })}
+                    </div>
+                    <div style="font-size: 20px; font-weight: 600; color: #333; margin-bottom: 8px;">
+                        Leaving the ExWeb
+                    </div>
+                    <div style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                        Opening <b>${site.title}</b> in a new browser tab
+                    </div>
+                    <div style="
+                        background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px;
+                        font-family: monospace; font-size: 13px; color: #1a73e8; word-break: break-all;
+                    ">
+                        ${externalUrl}
+                    </div>
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="window.open('${externalUrl}', '_blank')" style="
+                            background: #4285f4; color: white; border: none; padding: 10px 24px;
+                            border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500;
+                        ">
+                            ${ElxaIcons.render('mdi-open-in-new', { size: 16, color: '#fff' })} Open Site
+                        </button>
+                        <button onclick="elxaOS.programs.browser.navigateToHome()" style="
+                            background: #f1f3f4; color: #333; border: none; padding: 10px 24px;
+                            border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500;
+                        ">
+                            Back to Snoogle
+                        </button>
+                    </div>
+                    <div style="font-size: 11px; color: #999; margin-top: 20px;">
+                        This site is on the real internet and is not part of the ExWeb.<br>
+                        Popup blocker active? Click "Open Site" above.
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.setPageContent(content);
+
+        // Auto-open the external URL in a new tab
+        window.open(externalUrl, '_blank');
     }
 
     async executePageScripts() {
@@ -1449,7 +1523,13 @@ class BrowserProgram {
 
         const urlInput = win.querySelector('#urlInput');
         if (urlInput) {
-            urlInput.value = this.currentUrl || 'snoogle.ex';
+            // Show the external URL for external sites
+            const site = this.websiteRegistry[this.currentUrl];
+            if (site && site.type === 'external') {
+                urlInput.value = site.externalUrl;
+            } else {
+                urlInput.value = this.currentUrl || 'snoogle.ex';
+            }
         }
     }
 

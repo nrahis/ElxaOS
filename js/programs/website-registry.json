@@ -437,6 +437,96 @@
             "category": "Charity"
         }
     },
+    "coolmathgames.com": {
+        "title": "CoolMath Games",
+        "type": "external",
+        "externalUrl": "https://www.coolmathgames.com",
+        "searchData": {
+            "keywords": ["math", "games", "cool math", "puzzles", "logic", "strategy", "fun", "free games", "brain teasers", "math games"],
+            "description": "Free online math and logic games. Strategy, puzzles, number games, and more — learning meets fun!",
+            "category": "Gaming"
+        }
+    },
+    "coolmath.com": {
+        "title": "Coolmath — Math Lessons",
+        "type": "external",
+        "externalUrl": "https://www.coolmath.com",
+        "searchData": {
+            "keywords": ["math", "lessons", "algebra", "pre-calculus", "cool math", "math help", "tutorials", "learn math"],
+            "description": "Free math lessons covering algebra, pre-calculus, and more. Clear explanations and practice problems for all levels.",
+            "category": "Education"
+        }
+    },
+    "coolmath4kids.com": {
+        "title": "Coolmath4Kids",
+        "type": "external",
+        "externalUrl": "https://www.coolmath4kids.com",
+        "searchData": {
+            "keywords": ["math", "kids", "cool math", "addition", "subtraction", "multiplication", "division", "math games", "lessons", "elementary"],
+            "description": "Math lessons, games, and activities designed for kids. Fun ways to learn addition, subtraction, multiplication, division, and more.",
+            "category": "Education"
+        }
+    },
+    "mathsisfun.com": {
+        "title": "Math is Fun",
+        "type": "external",
+        "externalUrl": "https://www.mathsisfun.com",
+        "searchData": {
+            "keywords": ["math", "mathematics", "geometry", "algebra", "numbers", "puzzles", "worksheets", "math help", "learn", "reference"],
+            "description": "Math explained in easy language with puzzles, games, quizzes, worksheets, and a forum. Covers all levels from elementary to advanced.",
+            "category": "Education"
+        }
+    },
+    "khanacademy.org": {
+        "title": "Khan Academy",
+        "type": "external",
+        "externalUrl": "https://www.khanacademy.org",
+        "searchData": {
+            "keywords": ["khan academy", "learning", "education", "math", "science", "reading", "courses", "free", "videos", "practice", "school", "tutoring"],
+            "description": "Free world-class education for anyone, anywhere. Courses in math, science, computing, economics, and more with practice exercises and video lessons.",
+            "category": "Education"
+        }
+    },
+    "scratch.mit.edu": {
+        "title": "Scratch — Create Stories, Games, and Animations",
+        "type": "external",
+        "externalUrl": "https://scratch.mit.edu",
+        "searchData": {
+            "keywords": ["scratch", "coding", "programming", "kids", "games", "animation", "create", "MIT", "blocks", "code", "learn to code"],
+            "description": "Create stories, games, and animations with Scratch from MIT. Learn to code with a visual block-based programming language designed for kids.",
+            "category": "Education"
+        }
+    },
+    "universalpaperclips.com": {
+        "title": "Universal Paperclips",
+        "type": "external",
+        "externalUrl": "https://www.decisionproblem.com/paperclips/",
+        "searchData": {
+            "keywords": ["paperclips", "clicker", "idle", "game", "incremental", "AI", "strategy", "universal paperclips"],
+            "description": "The classic idle clicker game about making paperclips. Start small and build your way to something much, much bigger.",
+            "category": "Gaming"
+        }
+    },
+    "pbskids.org": {
+        "title": "PBS KIDS — Games, Videos & More",
+        "type": "external",
+        "externalUrl": "https://pbskids.org",
+        "searchData": {
+            "keywords": ["PBS", "kids", "games", "videos", "learning", "educational", "TV", "shows", "Daniel Tiger", "Curious George", "Wild Kratts", "Arthur"],
+            "description": "Free educational games, videos, and activities from PBS KIDS. Featuring beloved characters from shows like Daniel Tiger, Curious George, and Wild Kratts.",
+            "category": "Education"
+        }
+    },
+    "oregontrail.ws": {
+        "title": "The Oregon Trail",
+        "type": "external",
+        "externalUrl": "https://oregontrail.ws/games/the-oregon-trail/",
+        "searchData": {
+            "keywords": ["oregon trail", "classic", "retro", "game", "history", "educational", "pioneer", "frontier", "adventure"],
+            "description": "Play the classic Oregon Trail game online! Guide your pioneer family across the American frontier in this legendary educational adventure.",
+            "category": "Gaming"
+        }
+    },
     "directory": {
         "title": "ExWeb Directory",
         "type": "directory",
