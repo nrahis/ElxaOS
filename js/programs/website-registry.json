@@ -494,7 +494,7 @@
         "searchData": {
             "keywords": ["scratch", "coding", "programming", "kids", "games", "animation", "create", "MIT", "blocks", "code", "learn to code"],
             "description": "Create stories, games, and animations with Scratch from MIT. Learn to code with a visual block-based programming language designed for kids.",
-            "category": "Education"
+            "category": "Technology"
         }
     },
     "universalpaperclips.com": {
@@ -525,6 +525,206 @@
             "keywords": ["oregon trail", "classic", "retro", "game", "history", "educational", "pioneer", "frontier", "adventure"],
             "description": "Play the classic Oregon Trail game online! Guide your pioneer family across the American frontier in this legendary educational adventure.",
             "category": "Gaming"
+        }
+    },
+    "musiclab.chromeexperiments.com": {
+        "title": "Chrome Music Lab",
+        "type": "external",
+        "externalUrl": "https://musiclab.chromeexperiments.com/",
+        "searchData": {
+            "keywords": ["music", "sound", "instruments", "rhythm", "melody", "song maker", "experiment", "creative", "Google", "audio"],
+            "description": "Hands-on music experiments from Google. Explore rhythm, melody, harmonics, and more with interactive tools like Song Maker.",
+            "category": "Education"
+        }
+    },
+    "thekidshouldseethis.com": {
+        "title": "The Kid Should See This",
+        "type": "external",
+        "externalUrl": "https://thekidshouldseethis.com/",
+        "searchData": {
+            "keywords": ["videos", "science", "nature", "art", "engineering", "curiosity", "kids", "educational videos", "wonder", "animals"],
+            "description": "Curated collection of smart, fascinating videos for curious kids and lifelong learners. Science, nature, art, engineering, and more.",
+            "category": "Science"
+        }
+    },
+    "amnh.org/ology": {
+        "title": "OLogy — American Museum of Natural History",
+        "type": "external",
+        "externalUrl": "https://www.amnh.org/explore/ology",
+        "searchData": {
+            "keywords": ["museum", "natural history", "science", "dinosaurs", "space", "biology", "paleontology", "archaeology", "AMNH", "New York"],
+            "description": "Science activities and resources from the American Museum of Natural History. Explore archaeology, astronomy, biology, paleontology, and more.",
+            "category": "Science"
+        }
+    },
+    "discoverwildlife.com": {
+        "title": "Discover Wildlife",
+        "type": "external",
+        "externalUrl": "https://www.discoverwildlife.com/",
+        "searchData": {
+            "keywords": ["wildlife", "animals", "nature", "birds", "mammals", "ocean", "conservation", "safari", "photography", "BBC"],
+            "description": "Wildlife news, facts, and stunning photography. Learn about animals, conservation, and the natural world from BBC Wildlife experts.",
+            "category": "Science"
+        }
+    },
+    "kids.nationalgeographic.com": {
+        "title": "National Geographic Kids",
+        "type": "external",
+        "externalUrl": "https://kids.nationalgeographic.com/",
+        "searchData": {
+            "keywords": ["national geographic", "animals", "nature", "science", "geography", "explore", "games", "facts", "kids", "wildlife", "planet"],
+            "description": "Explore the world with National Geographic Kids! Animal facts, games, quizzes, videos, and amazing stories about our planet.",
+            "category": "Science"
+        }
+    },
+    "typingclub.com": {
+        "title": "TypingClub — Learn Touch Typing",
+        "type": "external",
+        "externalUrl": "https://www.typingclub.com/",
+        "searchData": {
+            "keywords": ["typing", "keyboard", "touch typing", "lessons", "practice", "speed", "WPM", "learn to type", "keyboarding"],
+            "description": "Free typing lessons and practice. Learn touch typing with interactive exercises, games, and progress tracking.",
+            "category": "Technology"
+        }
+    },
+    "youtube.com/@misterwootube": {
+        "title": "Mister Woo",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@misterwootube",
+        "searchData": {
+            "keywords": ["math", "maths", "youtube", "video", "lessons", "tutorial", "mister woo", "eddie woo", "teacher", "algebra", "calculus"],
+            "description": "Engaging math lessons from award-winning teacher Eddie Woo. Clear explanations of everything from basic algebra to calculus.",
+            "category": "Education"
+        }
+    },
+    "youtube.com/@NileRed": {
+        "title": "NileRed",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@NileRed",
+        "searchData": {
+            "keywords": ["chemistry", "science", "experiments", "youtube", "video", "NileRed", "reactions", "lab", "chemical"],
+            "description": "Fascinating chemistry experiments and transformations. Watch ordinary materials become extraordinary through the power of chemistry.",
+            "category": "Science"
+        }
+    },
+    "youtube.com/@crashcourse": {
+        "title": "CrashCourse",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@crashcourse",
+        "searchData": {
+            "keywords": ["crash course", "youtube", "video", "history", "science", "biology", "chemistry", "physics", "literature", "education", "learning"],
+            "description": "Fast-paced educational courses on history, science, literature, and more. Taught by experts with fun animations and clear explanations.",
+            "category": "History"
+        }
+    },
+    "youtube.com/@TastingHistory": {
+        "title": "Tasting History",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@TastingHistory",
+        "searchData": {
+            "keywords": ["history", "food", "cooking", "youtube", "video", "recipes", "ancient", "historical", "tasting history"],
+            "description": "Learn history through food! Recreating recipes from ancient civilizations to the modern era while exploring the stories behind them.",
+            "category": "History"
+        }
+    },
+    "youtube.com/@khanacademy": {
+        "title": "Khan Academy (Video Lessons)",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@khanacademy",
+        "searchData": {
+            "keywords": ["khan academy", "youtube", "video", "math", "science", "lessons", "tutorials", "education", "learning", "free"],
+            "description": "Khan Academy's video lessons on YouTube. Math, science, economics, and more explained step by step.",
+            "category": "Education"
+        }
+    },
+    "youtube.com/@freecodecamp": {
+        "title": "freeCodeCamp",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@freecodecamp",
+        "searchData": {
+            "keywords": ["coding", "programming", "youtube", "video", "javascript", "python", "web development", "freeCodeCamp", "tutorials", "learn to code"],
+            "description": "Full-length coding tutorials and courses. Learn Python, JavaScript, web development, and more completely free.",
+            "category": "Technology"
+        }
+    },
+    "youtube.com/@TechnologyConnections": {
+        "title": "Technology Connections",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@TechnologyConnections",
+        "searchData": {
+            "keywords": ["technology", "engineering", "youtube", "video", "how things work", "electronics", "inventions", "appliances", "science"],
+            "description": "Deep dives into how everyday technology actually works. From dishwashers to traffic lights, the hidden engineering all around us.",
+            "category": "Technology"
+        }
+    },
+    "youtube.com/@AmericanExperiencePBS": {
+        "title": "American Experience PBS",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@AmericanExperiencePBS",
+        "searchData": {
+            "keywords": ["history", "American history", "PBS", "documentary", "youtube", "video", "USA", "historical"],
+            "description": "Award-winning PBS documentaries about American history. From the founding of the nation to modern times.",
+            "category": "History"
+        }
+    },
+    "youtube.com/@kurzgesagt": {
+        "title": "Kurzgesagt – In a Nutshell",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@kurzgesagt",
+        "searchData": {
+            "keywords": ["kurzgesagt", "science", "animation", "youtube", "video", "space", "biology", "physics", "in a nutshell", "infographic"],
+            "description": "Beautifully animated science videos explaining the biggest questions about life, the universe, and everything in between.",
+            "category": "Science"
+        }
+    },
+    "youtube.com/@Vsauce": {
+        "title": "Vsauce",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@Vsauce",
+        "searchData": {
+            "keywords": ["vsauce", "science", "philosophy", "youtube", "video", "michael stevens", "mind", "questions", "math", "physics"],
+            "description": "Mind-bending explorations of science, math, and philosophy. What would happen if... and other questions you never knew you had.",
+            "category": "Science"
+        }
+    },
+    "youtube.com/@EarthTouchTV": {
+        "title": "Earth Touch",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@EarthTouchTV",
+        "searchData": {
+            "keywords": ["wildlife", "nature", "animals", "youtube", "video", "documentary", "ocean", "safari", "earth", "conservation"],
+            "description": "Stunning wildlife footage and nature documentaries. Sharks, big cats, ocean life, and incredible animal encounters from around the world.",
+            "category": "Science"
+        }
+    },
+    "youtube.com/@corbinmaxey": {
+        "title": "Corbin Maxey",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@corbinmaxey",
+        "searchData": {
+            "keywords": ["animals", "reptiles", "wildlife", "youtube", "video", "corbin maxey", "snakes", "lizards", "zoology", "exotic"],
+            "description": "Animal expert Corbin Maxey introduces amazing animals up close. Reptiles, exotic creatures, and wildlife education.",
+            "category": "Science"
+        }
+    },
+    "youtube.com/@AntsCanada": {
+        "title": "AntsCanada",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@AntsCanada",
+        "searchData": {
+            "keywords": ["ants", "insects", "nature", "youtube", "video", "colony", "terrarium", "vivarium", "bugs", "entomology"],
+            "description": "Epic ant colony adventures and insect keeping. Watch colonies grow, face challenges, and build incredible underground worlds.",
+            "category": "Science"
+        }
+    },
+    "youtube.com/@extrahistory": {
+        "title": "Extra History",
+        "type": "external",
+        "externalUrl": "https://www.youtube.com/@extrahistory",
+        "searchData": {
+            "keywords": ["history", "animation", "youtube", "video", "extra history", "extra credits", "world history", "ancient", "medieval", "war"],
+            "description": "Animated world history series covering fascinating stories from ancient civilizations to modern conflicts. History made fun and accessible.",
+            "category": "History"
         }
     },
     "directory": {

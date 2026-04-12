@@ -537,7 +537,7 @@ class BrowserProgram {
         if (randomBtn) {
             randomBtn.addEventListener('click', () => {
                 const mainSites = Object.keys(this.websiteRegistry).filter(url =>
-                    !url.includes('/') &&
+                    (!url.includes('/') || this.websiteRegistry[url].type === 'external') &&
                     url !== 'directory' &&
                     this.websiteRegistry[url].type !== 'homepage'
                 );
@@ -714,16 +714,27 @@ class BrowserProgram {
         if (results.length > 0) {
             results.slice(0, 10).forEach(site => {
                 const isExternal = site.type === 'external';
-                const urlDisplay = isExternal ? site.externalUrl.replace('https://', '') : `elxaos.interwebs/${site.url}`;
-                const externalBadge = isExternal ? `<span style="
-                    display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 10px;
-                    padding: 1px 6px; border-radius: 3px; margin-left: 6px; font-weight: 600;
-                    vertical-align: middle;
-                ">${ElxaIcons.render('mdi-open-in-new', { size: 10, color: '#1a73e8' })} Real Web</span>` : '';
+                const isYouTube = isExternal && site.url.startsWith('youtube.com/');
+                const urlDisplay = isExternal ? site.externalUrl.replace('https://', '').replace('www.', '') : `elxaos.interwebs/${site.url}`;
+                let badges = '';
+                if (isExternal) {
+                    badges += `<span style="
+                        display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 10px;
+                        padding: 1px 6px; border-radius: 3px; margin-left: 6px; font-weight: 600;
+                        vertical-align: middle;
+                    ">${ElxaIcons.render('mdi-open-in-new', { size: 10, color: '#1a73e8' })} External Web</span>`;
+                }
+                if (isYouTube) {
+                    badges += `<span style="
+                        display: inline-block; background: #fce8e8; color: #cc0000; font-size: 10px;
+                        padding: 1px 6px; border-radius: 3px; margin-left: 3px; font-weight: 600;
+                        vertical-align: middle;
+                    ">${ElxaIcons.render('mdi-youtube', { size: 10, color: '#cc0000' })} YouTube</span>`;
+                }
                 content += `
                     <div class="search-result">
                         <div class="result-url">${urlDisplay}</div>
-                        <div class="result-title" onclick="elxaOS.programs.browser.loadPage('${site.url}')">${site.title}${externalBadge}</div>
+                        <div class="result-title" onclick="elxaOS.programs.browser.loadPage('${site.url}')">${site.title}${badges}</div>
                         <div class="result-description">${site.searchData.description}</div>
                     </div>
                 `;
@@ -819,9 +830,11 @@ class BrowserProgram {
             'Shopping': 'Shopping',
             'Social': 'Society and Culture',
             'Gaming': 'Recreation and Games',
-            'Personal': 'Regional and Personal',
+            'Science': 'Science and Nature',
+            'History': 'History',
             'Education': 'Education',
             'Technology': 'Computers and Internet',
+            'Personal': 'Regional and Personal',
             'Utilities': 'Reference',
             'Charity': 'Charity and Nonprofit'
         };
@@ -829,7 +842,7 @@ class BrowserProgram {
         const categorizedSites = {};
         Object.entries(this.websiteRegistry)
             .filter(([url, site]) => {
-                return !url.includes('/') && url !== 'directory' && site.type !== 'homepage';
+                return (!url.includes('/') || site.type === 'external') && url !== 'directory' && site.type !== 'homepage';
             })
             .forEach(([url, site]) => {
                 const category = site.searchData.category;
@@ -856,16 +869,27 @@ class BrowserProgram {
                     .sort((a, b) => a.site.title.localeCompare(b.site.title))
                     .map(({ url, site }) => {
                         const isExternal = site.type === 'external';
-                        const externalBadge = isExternal ? ` <span style="
-                            display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 10px;
-                            padding: 1px 5px; border-radius: 3px; margin-left: 4px; font-weight: 600;
-                            vertical-align: middle;
-                        ">${ElxaIcons.render('mdi-open-in-new', { size: 10, color: '#1a73e8' })} Real Web</span>` : '';
+                        const isYouTube = isExternal && url.startsWith('youtube.com/');
+                        let badges = '';
+                        if (isExternal) {
+                            badges += ` <span style="
+                                display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 10px;
+                                padding: 1px 5px; border-radius: 3px; margin-left: 4px; font-weight: 600;
+                                vertical-align: middle;
+                            ">${ElxaIcons.render('mdi-open-in-new', { size: 10, color: '#1a73e8' })} External Web</span>`;
+                        }
+                        if (isYouTube) {
+                            badges += `<span style="
+                                display: inline-block; background: #fce8e8; color: #cc0000; font-size: 10px;
+                                padding: 1px 5px; border-radius: 3px; margin-left: 3px; font-weight: 600;
+                                vertical-align: middle;
+                            ">${ElxaIcons.render('mdi-youtube', { size: 10, color: '#cc0000' })} YouTube</span>`;
+                        }
                         return `
                         <tr class="directory-site-row" data-title="${site.title.toLowerCase()}" data-desc="${site.searchData.description.toLowerCase()}" data-keywords="${site.searchData.keywords.join(' ').toLowerCase()}">
                             <td style="width: 20px;">&bull;</td>
                             <td>
-                                <div class="site-link" onclick="elxaOS.programs.browser.loadPage('${url}')">${site.title}${externalBadge}</div>
+                                <div class="site-link" onclick="elxaOS.programs.browser.loadPage('${url}')">${site.title}${badges}</div>
                                 <div class="site-description">${site.searchData.description}</div>
                             </td>
                         </tr>
