@@ -787,6 +787,46 @@ class ThemeService {
                 name: 'Quicksand',
                 stack: "'Quicksand', sans-serif",
                 source: 'google'
+            },
+            ibmplexsans: {
+                name: 'IBM Plex Sans',
+                stack: "'IBM Plex Sans', sans-serif",
+                source: 'google'
+            },
+            outfit: {
+                name: 'Outfit',
+                stack: "'Outfit', sans-serif",
+                source: 'google'
+            },
+            spacegrotesk: {
+                name: 'Space Grotesk',
+                stack: "'Space Grotesk', sans-serif",
+                source: 'google'
+            },
+            poppins: {
+                name: 'Poppins',
+                stack: "'Poppins', sans-serif",
+                source: 'google'
+            },
+            montserrat: {
+                name: 'Montserrat',
+                stack: "'Montserrat', sans-serif",
+                source: 'google'
+            },
+            raleway: {
+                name: 'Raleway',
+                stack: "'Raleway', sans-serif",
+                source: 'google'
+            },
+            exo2: {
+                name: 'Exo 2',
+                stack: "'Exo 2', sans-serif",
+                source: 'google'
+            },
+            barlow: {
+                name: 'Barlow',
+                stack: "'Barlow', sans-serif",
+                source: 'google'
             }
         };
         

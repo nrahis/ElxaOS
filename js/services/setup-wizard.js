@@ -985,7 +985,7 @@ class ElxaOSSetupWizard {
         }, 2000);
     }
 
-    transitionToLogin() {
+    async transitionToLogin() {
         try {
             // Check if login service is available
             if (typeof elxaOS !== 'undefined' && elxaOS.loginService) {
@@ -993,7 +993,7 @@ class ElxaOSSetupWizard {
                 
                 // Force reload the users in the login service
                 if (elxaOS.loginService.loadSavedUsers) {
-                    elxaOS.loginService.loadSavedUsers();
+                    await elxaOS.loginService.loadSavedUsers();
                 }
                 
                 // Show login screen

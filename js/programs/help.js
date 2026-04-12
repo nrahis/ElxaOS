@@ -15,25 +15,32 @@ class HelpProgram {
     // =========================================================
     // First-Launch Welcome Popup
     // =========================================================
-    _checkFirstLaunch() {
-        const seen = localStorage.getItem('elxaOS-help-offered');
-        if (seen) return;
+    async _checkFirstLaunch() {
+        // Per-user check via registry so each new account gets the help offer
+        try {
+            const seen = await elxaOS.registry.getState('helpOffered');
+            if (seen) return;
 
-        localStorage.setItem('elxaOS-help-offered', 'true');
+            await elxaOS.registry.setState('helpOffered', true);
+        } catch (e) {
+            // Fallback to localStorage if registry isn't ready
+            const seen = localStorage.getItem('elxaOS-help-offered');
+            if (seen) return;
+            localStorage.setItem('elxaOS-help-offered', 'true');
+        }
 
         // Short delay so the desktop has time to settle
         setTimeout(() => this._showWelcomePopup(), 1200);
     }
 
-    _showWelcomePopup() {
-        ElxaUI.showConfirmDialog({
+    async _showWelcomePopup() {
+        const yes = await ElxaUI.showConfirmDialog({
             title: 'Welcome to ElxaOS!',
-            message: `It looks like this is your first time here! Would you like to open the Help guide? It has tips on setting up email, banking, getting a job, and more.\n\nYou can always find Help later in Start → Utilities.`,
+            message: `It looks like this is your first time here! Would you like to open the Help guide? It has tips on setting up email, banking, getting a job, and more.\n\nYou can always find Help later in Start \u2192 Utilities.`,
             confirmText: 'Yes, show me!',
-            cancelText: 'No thanks',
-            onConfirm: () => this.launch(),
-            onCancel: () => {}
+            cancelText: 'No thanks'
         });
+        if (yes) this.launch();
     }
 
     // =========================================================

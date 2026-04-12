@@ -4,6 +4,20 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
+## More Fonts in Personalize — Session 60
+
+### Added: 8 new fonts to Personalize → Fonts tab
+- `ibmplexsans`: IBM Plex Sans — corporate/OS-professional feel
+- `outfit`: Outfit — crisp, modern, clean
+- `spacegrotesk`: Space Grotesk — techy/distinctive, popular in tech products
+- `poppins`: Poppins — smooth geometric, used widely in real apps
+- `montserrat`: Montserrat — bold, elegant, corporate
+- `raleway`: Raleway — refined and elegant, great for a sophisticated feel
+- `exo2`: Exo 2 — futuristic/techy without being juvenile
+- `barlow`: Barlow — clean and efficient, Linux-OS energy
+- Updated Google Fonts URL in `index.html` to load all 8 new families
+- Total fonts now: 3 system + 14 Google = 17 fonts
+
 ## Settings Program — Centralized Settings Panel — Session 59
 
 ### New: Settings program (replaces User Settings dialog)
