@@ -949,7 +949,8 @@ class InventoryService {
             purchaseDate: new Date().toISOString().split('T')[0],
             giftable: data.giftable !== undefined ? data.giftable : true,
             brand: data.brand || null,
-            image: data.image || null
+            image: data.image || null,
+            metadata: data.metadata || null
         };
 
         this._data.items.push(item);

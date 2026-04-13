@@ -1081,7 +1081,12 @@ class FileManagerProgram {
                                 if (customIconId) {
                                     icon = ElxaIcons.render(shortcutData.programId, 'desktop');
                                 } else {
-                                    icon = shortcutData.programInfo.icon;
+                                    var rawIcon = shortcutData.programInfo.icon;
+                                    if (rawIcon && rawIcon.indexOf('mdi-') === 0) {
+                                        icon = '<span class="mdi ' + rawIcon + ' elxa-icon-desktop"></span>';
+                                    } else {
+                                        icon = rawIcon;
+                                    }
                                 }
                                 program = shortcutData.programId;
                                 // Only mark as uninstallable if it's a user-installed game

@@ -586,6 +586,36 @@ class SimpleGame {
                     return null;
                 }
 
+            case 'scale_sweeper':
+                if (typeof ScaleSweeper !== 'undefined') {
+                    const scaleSweeper = new ScaleSweeper(this.windowManager, this.gameData);
+                    return scaleSweeper.launch(programInfo);
+                } else {
+                    console.error('ScaleSweeper class not found! Make sure scale-sweeper.js is loaded.');
+                    alert('Scale Sweeper not available. Please check if the game files are loaded.');
+                    return null;
+                }
+
+            case 'paddle_panic':
+                if (typeof PaddlePanic !== 'undefined') {
+                    const paddlePanic = new PaddlePanic(this.windowManager, this.gameData);
+                    return paddlePanic.launch(programInfo);
+                } else {
+                    console.error('PaddlePanic class not found! Make sure paddle-panic.js is loaded.');
+                    alert('Paddle Panic not available. Please check if the game files are loaded.');
+                    return null;
+                }
+
+            case 'snaketunes':
+                if (typeof SnakeTunesProgram !== 'undefined') {
+                    const snakeTunes = new SnakeTunesProgram(this.windowManager, null, (typeof elxaOS !== 'undefined' ? elxaOS.eventBus : null));
+                    return snakeTunes.launch();
+                } else {
+                    console.error('SnakeTunesProgram class not found!');
+                    alert('SnakeTunes not available. Please check if the app files are loaded.');
+                    return null;
+                }
+
             case 'target_game':
             default:
                 // Launch Target game (existing implementation)

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+  <!-- shadow -->
+  <ellipse cx="48" cy="86" rx="28" ry="5" fill="#1a1a1a" opacity="0.12"/>
+  <!-- bag body -->
+  <path d="M18 30 L22 78 Q22 82 26 82 L70 82 Q74 82 74 78 L78 30 Z" fill="#3478c6" stroke="#245ea0" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- body highlight left -->
+  <path d="M18 30 L22 78 Q22 82 26 82 L34 82 L30 30 Z" fill="white" opacity="0.1"/>
+  <!-- body shadow right -->
+  <path d="M68 30 L70 82 Q74 82 74 78 L78 30 Z" fill="#1a1a1a" opacity="0.1"/>
+  <!-- bag top rim -->
+  <rect x="16" y="26" width="64" height="8" rx="3" fill="#4a90d9" stroke="#2c6ab0" stroke-width="1"/>
+  <rect x="18" y="27" width="60" height="3" rx="2" fill="white" opacity="0.2"/>
+  <!-- handle -->
+  <path d="M34 26 Q34 12 48 12 Q62 12 62 26" fill="none" stroke="#2c6ab0" stroke-width="3" stroke-linecap="round"/>
+  <path d="M35 26 Q35 14 48 14 Q61 14 61 26" fill="none" stroke="#5ba0e0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <!-- app grid inside bag (3x2) -->
+  <!-- row 1 -->
+  <rect x="28" y="40" width="10" height="10" rx="2.5" fill="#34a853" stroke="#2d8f47" stroke-width="0.75"/>
+  <rect x="42" y="40" width="10" height="10" rx="2.5" fill="#fbbc04" stroke="#d4a003" stroke-width="0.75"/>
+  <rect x="56" y="40" width="10" height="10" rx="2.5" fill="#ea4335" stroke="#c5352a" stroke-width="0.75"/>
+  <!-- row 2 -->
+  <rect x="28" y="54" width="10" height="10" rx="2.5" fill="#a142f4" stroke="#8530d0" stroke-width="0.75"/>
+  <rect x="42" y="54" width="10" height="10" rx="2.5" fill="#ff6d01" stroke="#d45c00" stroke-width="0.75"/>
+  <rect x="56" y="54" width="10" height="10" rx="2.5" fill="#46bdc6" stroke="#389ea5" stroke-width="0.75"/>
+  <!-- small highlight on each app square -->
+  <rect x="29" y="41" width="8" height="3" rx="1.5" fill="white" opacity="0.25"/>
+  <rect x="43" y="41" width="8" height="3" rx="1.5" fill="white" opacity="0.25"/>
+  <rect x="57" y="41" width="8" height="3" rx="1.5" fill="white" opacity="0.25"/>
+  <rect x="29" y="55" width="8" height="3" rx="1.5" fill="white" opacity="0.25"/>
+  <rect x="43" y="55" width="8" height="3" rx="1.5" fill="white" opacity="0.25"/>
+  <rect x="57" y="55" width="8" height="3" rx="1.5" fill="white" opacity="0.25"/>
+  <!-- download arrow on bag front (below grid) -->
+  <path d="M48 68 L48 74" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M44 72 L48 76 L52 72" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+</svg>

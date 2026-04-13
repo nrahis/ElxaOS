@@ -1,0 +1,35 @@
+<div class="elxastore-root">
+
+    <!-- ===== TOP NAV ===== -->
+    <div class="es-topbar">
+        <div class="es-topbar-inner">
+            <div class="es-logo" onclick="ElxaStore.showStore()">
+                <span class="mdi mdi-store" style="font-size:20px;color:#4fc3f7;"></span> ElxaStore
+            </div>
+            <div class="es-nav-links">
+                <a class="es-nav-link active" data-view="store" onclick="ElxaStore.showStore()">Store</a>
+                <a class="es-nav-link" data-view="library" onclick="ElxaStore.showLibrary()">My Apps</a>
+            </div>
+            <div class="es-search-box">
+                <span class="mdi mdi-magnify"></span>
+                <input type="text" id="esSearch" placeholder="Search apps..." />
+            </div>
+            <div class="es-wallet" id="esWallet" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="es-main">
+        <!-- Store View -->
+        <div class="es-store" id="esStoreView"></div>
+        <!-- Detail View -->
+        <div class="es-detail" id="esDetailView" style="display:none;"></div>
+        <!-- Library View -->
+        <div class="es-library" id="esLibraryView" style="display:none;"></div>
+    </div>
+
+</div>
+
+<!-- ElxaStore scripts -->
+<script src="appstore-catalog.js"></script>
+<script src="appstore.js"></script>

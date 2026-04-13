@@ -747,6 +747,17 @@
             "category": "Shopping"
         }
     },
+    "elxastore.ex": {
+        "title": "ElxaStore \u2014 Apps for ElxaOS",
+        "type": "file",
+        "path": "./assets/interwebs/elxastore/index.html",
+        "css": "./assets/interwebs/elxastore/styles.css",
+        "searchData": {
+            "keywords": ["apps", "app store", "download", "install", "software", "elxastore", "marketplace", "utilities", "tools", "productivity"],
+            "description": "ElxaCorp\u2019s official app marketplace. Browse, buy, and install apps for ElxaOS. From productivity tools to creative software \u2014 find it all on ElxaStore.",
+            "category": "Utilities"
+        }
+    },
     "squiggly.ex": {
         "title": "Squiggly Wiggly - Online Grocery",
         "type": "file",

@@ -330,3 +330,99 @@ window.SSSTEAM_CATALOG = [
         }
     }
 ];
+/* SCALE_SWEEPER_ENTRY_START */
+window.SSSTEAM_CATALOG.push({
+    id: 'scale_sweeper',
+    name: 'Scale Sweeper',
+    description: 'The ground is crawling with Sussy Snakes and it\'s your job to find them all! Reveal tiles to uncover safe ground \u2014 the numbers tell you how many snakes are hiding nearby. Flag the suspicious spots, clear the safe ones, and whatever you do... don\'t step on a snake!\n\nThree difficulty levels from Beginner (9\u00d79) to Expert (16\u00d730). Classic puzzle gameplay with a Snakesian twist!',
+    shortDesc: 'Find the Sussy Snakes! Classic puzzle action, Snakesian style.',
+    price: 0,
+    priceDisplay: 'Free to Play',
+    icon: '<img src="./assets/games/scale-sweeper/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
+    iconEmoji: '\uD83D\uDC0D',
+    author: 'ElxaOS Games Studio',
+    version: '1.0',
+    rating: 4.3,
+    reviewCount: 1876,
+    tags: ['Puzzle', 'Classic', 'Free'],
+    heroColor: '#3d5a3a',
+    heroImage: './assets/interwebs/sssteam/images/scale-sweeper/cover.png',
+    screenshots: [],
+    features: [
+        'Classic Minesweeper gameplay with Sussy Snakes',
+        'Three difficulty levels: Easy, Medium, Hard',
+        'Best time tracking per difficulty',
+        'First click always safe \u2014 guaranteed opening',
+        'Chord reveal for speed-sweeping pros',
+        'Cute pixel art Snakesian style',
+        'Right-click flagging with counter'
+    ],
+    sysReqs: { os: 'ElxaOS 1.0+', ram: '8 MB', disk: '1 MB', display: 'VGA (640x480)' },
+    reviews: [
+        { author: 'PuzzleSnake_42', rating: 5, text: 'Finally a proper sweeper on ElxaOS! The pixel art style is adorable. My best Easy time is 12 seconds.', helpful: 234 },
+        { author: 'OfficeWorker_Snek', rating: 4, text: 'Just like the classic but with snakes instead of mines. Way more fun to find sussy snakes than boring old mines.', helpful: 187 },
+        { author: 'SpeedRunner_Rita', rating: 5, text: 'Hard mode (16\u00d730, 99 snakes) is BRUTAL. I love it. Chord reveal is a must for competitive times.', helpful: 156 },
+        { author: 'CasualGamer_Noodle', rating: 4, text: 'Great free game! Easy mode is perfect for learning. The face button changing expressions is a nice touch.', helpful: 98 }
+    ],
+    installerData: {
+        id: 'scale_sweeper',
+        name: 'Scale Sweeper',
+        description: 'Find the Sussy Snakes! Classic puzzle gameplay.',
+        icon: '<img src="./assets/games/scale-sweeper/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
+        version: '1.0',
+        author: 'ElxaOS Games Studio',
+        gameData: {
+            type: 'scale_sweeper',
+            difficulty: 'easy'
+        }
+    }
+});
+
+/* PADDLE_PANIC_ENTRY_START */
+window.SSSTEAM_CATALOG.push({
+    id: 'paddle_panic',
+    name: 'Paddle Panic',
+    description: 'A very serious table tennis simulator! Bounce a ball back and forth against the CPU in this totally-not-Pong arcade classic. Three difficulty modes from Chill to Turbo, rally tracking, particle effects, and the undying question: can you be the first to 7?\n\nFeatures smooth pixel art visuals, satisfying paddle deflection physics, and a ball trail that makes every rally feel cinematic. It\'s Pong. But with PANIC.',
+    shortDesc: 'Totally-not-Pong arcade action — first to 7 wins!',
+    price: 0,
+    priceDisplay: 'Free to Play',
+    icon: '<img src="./assets/games/paddle-panic/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
+    iconEmoji: '\uD83C\uDFD3',
+    author: 'ElxaOS Games Studio',
+    version: '1.0',
+    rating: 4.1,
+    reviewCount: 2341,
+    tags: ['Arcade', 'Classic', 'Free'],
+    heroColor: '#1a1a2e',
+    heroImage: './assets/interwebs/sssteam/images/paddle-panic/cover.png',
+    screenshots: [],
+    features: [
+        'Classic Pong gameplay with pixel art style',
+        'Three difficulty modes: Chill, Normal, Turbo',
+        'Rally counter and longest rally tracking',
+        'Particle effects on paddle hits and wall bounces',
+        'Ball trail for cinematic rallies',
+        'Win/loss record per difficulty',
+        'Pause with Escape, resume anytime',
+        'First to 7 points wins the match'
+    ],
+    sysReqs: { os: 'ElxaOS 1.0+', ram: '8 MB', disk: '1 MB', display: 'VGA (640x480)' },
+    reviews: [
+        { author: 'RetroGamer_Snek', rating: 5, text: 'It\'s Pong. It\'s free. The particle effects are surprisingly satisfying. What more do you want?', helpful: 312 },
+        { author: 'TurboChallenger', rating: 4, text: 'Turbo mode is NO JOKE. The CPU becomes a menace. Got a 23-hit rally though, proud of that.', helpful: 187 },
+        { author: 'ChillVibes_42', rating: 4, text: 'Perfect lunch break game. Chill mode is exactly what it says — just vibes and bouncing.', helpful: 145 },
+        { author: 'PaddlePro_99', rating: 3, text: 'Solid free game but I wish there was a 2-player mode. My sister wants to play too!', helpful: 203 }
+    ],
+    installerData: {
+        id: 'paddle_panic',
+        name: 'Paddle Panic',
+        description: 'A very serious table tennis simulator.',
+        icon: '<img src="./assets/games/paddle-panic/icon.png" style="width:1em;height:1em;object-fit:contain;vertical-align:middle">',
+        version: '1.0',
+        author: 'ElxaOS Games Studio',
+        gameData: {
+            type: 'paddle_panic',
+            difficulty: 'normal'
+        }
+    }
+});

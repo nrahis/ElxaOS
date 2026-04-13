@@ -4,7 +4,80 @@
 # When it's time to publish, pick the user-facing highlights
 # and write them up in updates.txt for the boot popup.
 
-## More Fonts in Personalize — Session 60
+## SnakeTunes Music Player — Session 58
+
+### Added: SnakeTunes — Desktop Music Player (First ElxaStore App!)
+- `js/programs/snaketunes-catalog.js` — Full music catalog data: 10 albums, ~360+ tracks with normalized display titles, album pricing, per-song pricing (§0.35 each)
+- `js/programs/snaketunes.js` — SnakeTunesProgram desktop app class with:
+  - iTunes-style layout: sidebar (Library/Store/Playlists), main content, Now Playing bar
+  - Library view: owned albums grid, All Songs list
+  - Store view: browse all 10 albums, buy individual songs or full albums at discount
+  - Album detail view: track list, play/buy buttons, ownership indicators
+  - Playlist system: create, delete, add/remove songs, play playlists (persisted via registry)
+  - MIDI playback engine: midi-player-js for parsing + soundfont-player for audio (piano soundfont)
+  - Playback controls: play/pause, next/prev, progress bar with seek, volume control
+  - Smart album pricing: buying individual songs first reduces album price accordingly
+  - Purchase flow via financeService.purchaseProduct() + inventoryService.addItems(subcategory: 'music')
+- `css/programs/snaketunes.css` — Dark theme styling, album art cards, track list, Now Playing bar, progress/volume bars
+- CDN dependencies added to index.html: midi-player-js (MIDI parsing), soundfont-player (instrument samples)
+
+### Modified: ElxaStore Integration
+- `assets/interwebs/elxastore/appstore-catalog.js` — Added SnakeTunes as first real app in ELXASTORE_CATALOG (§5.99, Entertainment category, reviews from Remi/Mrs. Snake-e/Sal). Removed from Coming Soon list.
+- `js/services/installer-service.js` — Added 'snaketunes' case to SimpleGame switch → creates SnakeTunesProgram and launches it
+- `css/desktop.css` — Added snaketunes.css import
+- `index.html` — Added CDN script tags (midi-player-js, soundfont-player) + snaketunes-catalog.js + snaketunes.js
+
+### Albums in Catalog
+- Card Captor Sakura (10 tracks, §2.49)
+- Chrono Cross (9 tracks, §2.29)
+- Final Fantasy VII (85 tracks, §14.99)
+- Final Fantasy VIII (76 tracks, §12.99)
+- Final Fantasy IX (97 tracks, §14.99)
+- Fullmetal Alchemist (7 tracks, §1.79)
+- Inuyasha (24 tracks, §5.99)
+- Kingdom Hearts (18 tracks, §4.49)
+- Legend of Dragoon (28 tracks, §6.99)
+- Neon Genesis Evangelion (16 tracks, §3.99)
+
+## ElxaStore — Session 57
+
+### Added: ElxaStore — ElxaCorp App Marketplace
+- New in-browser app store site at `elxastore.ex` — the official ElxaCorp app marketplace
+- `assets/interwebs/elxastore/index.html` — site HTML structure
+- `assets/interwebs/elxastore/styles.css` — clean modern app store styling (blue/white palette)
+- `assets/interwebs/elxastore/appstore-catalog.js` — data-driven catalog with template for easy app additions + Coming Soon entries
+- `assets/interwebs/elxastore/appstore.js` — full store logic (IIFE): browse, search, category filters, detail view, library, purchase (via financeService/purchaseProduct), install/uninstall (via installerService), wallet display
+- `assets/interwebs/elxastore/icon.svg` — Tango-style desktop icon (shopping bag with colorful app grid)
+- Desktop shortcut added to `index.html` — opens browser directly to `elxastore.ex`
+- Website registry entry added (`elxastore.ex` → Utilities category)
+- Added to `approvedWebsites` in `data/world-context.json`
+- Coming Soon entries: ElxaNotes Pro, ElxaCalendar, Pixel Studio, SnakeChat Desktop, SnakeTunes, CodeTangle
+- Install/uninstall dialog system matches Sssteam pattern (progress bars, themed steps, success/error states)
+- Category filtering: All, Productivity, Utilities, Creative, Education, Social, Business, Entertainment
+- Search functionality across app names, descriptions, and tags
+- `ElxaStore.addInstallSteps(appType, steps)` API for custom install step sequences per app
+
+## Scale Sweeper — Session 56
+
+### Added: Scale Sweeper game
+- New Minesweeper-style puzzle game for ElxaOS — find the Sussy Snakes!
+- `js/games/scale-sweeper.js` — full ScaleSweeper class with all game logic
+- `css/games/scale-sweeper.css` — pixel art style, green palette, classic bevel tiles
+- 3 difficulty presets: Easy (9×9, 10 snakes), Medium (16×16, 40), Hard (16×30, 99)
+- First-click safety guaranteed (snakes placed AFTER first click, safe zone = 3×3 around click)
+- Flood-reveal BFS for zero-count cells (classic opening cascade)
+- Chord reveal (click revealed number if flags match to auto-reveal neighbors)
+- Right-click flagging with live 🚩 counter display
+- LED-style counters (red-on-black) for snake count and timer
+- Face button: 😊 idle / 😮 clicking / 😎 won / 💀 lost
+- Best time tracking per difficulty via localStorage
+- Game over: reveals all snakes, marks wrong flags with ❌, highlights hit snake red
+- Win: auto-flags remaining snakes, saves best time, shows trophy toast
+- Added `case 'scale_sweeper'` to SimpleGame switch in `installer-service.js`
+- Added Scale Sweeper entry to `sssteam-catalog.js` (Free to Play)
+- Script tag added to `index.html`, CSS import added to `desktop.css`
+- Cover art directory created at `assets/interwebs/sssteam/images/scale-sweeper/`
+
 
 ### Added: 8 new fonts to Personalize → Fonts tab
 - `ibmplexsans`: IBM Plex Sans — corporate/OS-professional feel

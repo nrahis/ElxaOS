@@ -401,6 +401,7 @@
     { "url": "snakebook.ex", "description": "Social networking platform" },
     { "url": "dissscord.ex", "description": "Chat platform for communities" },
     { "url": "abbit.ex", "description": "Forum and discussion platform" },
-    { "url": "fashionco.ex", "description": "Scales & Tails Fashion Co. - Online fashion store" }
+    { "url": "fashionco.ex", "description": "Scales & Tails Fashion Co. - Online fashion store" },
+    { "url": "elxastore.ex", "description": "ElxaStore - ElxaCorp app marketplace for downloading apps" }
   ]
 }
